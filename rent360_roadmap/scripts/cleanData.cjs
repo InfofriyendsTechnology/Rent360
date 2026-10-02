@@ -1,0 +1,40 @@
+const fs = require('fs');
+let content = fs.readFileSync('src/data/roadmapData.js', 'utf8');
+
+// Remove milestone and status from DAILY_HISTORY
+content = content.replace(/\s*milestone:\s*".*?",/g, '');
+content = content.replace(/\s*status:\s*".*?",/g, '');
+
+// Rewrite ACHIEVEMENTS array
+const achievementsRegex = /export const ACHIEVEMENTS = \[([\s\S]*?)\];/;
+const newAchievements = `export const ACHIEVEMENTS = [
+  {
+    id: "ACH-001",
+    title: "Virasat Studio Production Go-Live",
+    titleGu: "વિરાસત સ્ટુડિયોમાં લાઈવ પ્રોડક્શન શરૂ",
+    date: "TBD",
+    descriptionEn: "Successfully deployed the Rent360 ERP at Virasat Studio and processed the first real-world customer rental booking.",
+    descriptionGu: "વિરાસત સ્ટુડિયોના કાઉન્ટર પર સોફ્ટવેર લાઈવ કર્યું અને રિયલ કસ્ટમરનું પહેલું રેન્ટલ બુકિંગ સફળતાપૂર્વક પ્રોસેસ કર્યું."
+  },
+  {
+    id: "ACH-002",
+    title: "Zero Double-Booking Validation",
+    titleGu: "ઝીરો ડબલ-બુકિંગનું પ્રમાણીકરણ",
+    date: "TBD",
+    descriptionEn: "Processed 100+ concurrent bookings without a single date clash or inventory overlap, proving the core architecture.",
+    descriptionGu: "એકસાથે 100 થી વધુ બુકિંગ્સ ડબલ-બુકિંગ કે એરર વગર પ્રોસેસ કર્યા અને સિસ્ટમની એક્યુરસી સાબિત કરી."
+  },
+  {
+    id: "ACH-003",
+    title: "First 10 Commercial SaaS Clients",
+    titleGu: "પ્રથમ 10 કોમર્શિયલ SaaS ક્લાયન્ટ્સ",
+    date: "TBD",
+    descriptionEn: "Successfully onboarded 10 external rental boutiques in Gujarat at the ₹9,999/year commercial plan.",
+    descriptionGu: "ગુજરાતના અન્ય 10 રેન્ટલ બુટિક્સને ₹9,999/વર્ષ ના પ્લાન સાથે સફળતાપૂર્વક સિસ્ટમમાં જોડ્યા."
+  }
+];`;
+
+content = content.replace(achievementsRegex, newAchievements);
+
+fs.writeFileSync('src/data/roadmapData.js', content);
+console.log('Done modifying roadmapData.js');

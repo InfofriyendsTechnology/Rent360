@@ -1,0 +1,53 @@
+================================================================================
+                       RENT360 — AI LOGO DESIGN BRIEF & PROMPTS
+================================================================================
+
+[ABOUT THE BRAND & SOFTWARE]
+• Brand Name: Rent360
+• Tagline / Ecosystem: Powered by InfoFriends Technology (Info360 Suite)
+• What it is: A modern, cloud-based ERP & POS SaaS software built specifically for 
+  luxury wedding attire and ethnic garment rental studios (Sherwanis, Indo-Western 
+  suits, Royal Jodhpuri suits, Blazers, Kurtas, Turbans/Safas, and Accessories).
+• Target Users: Premium wedding rental boutiques, groom studios, and ethnic fashion 
+  rental businesses.
+• Brand Values: Regal / Royal Heritage meets Ultra-Modern SaaS Technology, Trust, 
+  Flawless Precision, 360° Complete Studio Control.
+
+--------------------------------------------------------------------------------
+[COLOR PALETTE & VISUAL IDENTITY]
+• Primary Accent Blue: #0B60B0 (Deep Royal Sapphire Blue — signifies tech & trust)
+• Secondary Light Blue: #40A2D8 (Clean Sky Azure — subtle secondary accent)
+• Base Monochrome: #000000 (Pitch Pure Black) & #FFFFFF (Crisp Pure White)
+• Style Rule: Clean, flat vector, high contrast, zero noisy gradients. Clean solid 
+  colors that look stunning on both Dark (#000000) and Light (#FFFFFF) backgrounds.
+
+--------------------------------------------------------------------------------
+[LOGO DESIGN REQUIREMENTS & CONCEPTS]
+1. Mark Type: A modern minimalist app icon / vector monogram mark + clean wordmark.
+2. Visual Metaphors to explore:
+   - Option A: Modern geometric letter "R" combined with a seamless 360° circular 
+     orbit/ring (symbolizing the continuous rental lifecycle and 360° studio management).
+   - Option B: Minimalist royal motif (a subtle geometric crown crest or attire collar/lapel) 
+     abstracted into a tech-forward monogram.
+   - Option C: Clean, interlocking geometric lines forming "R360".
+3. Aesthetic: Clean, luxury, minimal, tech-forward, instantly recognizable at 16x16 
+   favicon size as well as on large store signboards and thermal invoices.
+4. What to Avoid: 
+   - DO NOT make it look like a cheap dry-cleaner or laundry app.
+   - DO NOT use messy multi-color gradients, 3D clay, or blurry shadows.
+   - DO NOT create cluttered, overly detailed vintage baroque illustrations.
+   - Must be clean vector, flat design, modern SaaS style.
+
+================================================================================
+             READY-TO-USE PROMPTS FOR MIDJOURNEY, DALL-E 3, IDEOGRAM & REVIEWS
+================================================================================
+
+--- PROMPT 1: MODERN MONOGRAM (RECOMMENDED FOR SAAS APP ICON) ---
+"Minimalist modern tech logo for 'Rent360', a luxury wedding attire rental SaaS platform. The logo mark features a sleek geometric letter 'R' seamlessly fused with a 360-degree circular orbit ring, symbolizing seamless rental cycles and royal elegance. Flat vector graphics, minimalist, bold clean lines, modern luxury aesthetic. Primary color: deep royal blue #0B60B0 with clean white on pure black background #000000. No gradients, no 3D effects, no realistic fabric. High-end SaaS corporate branding, Dribbble trending, vector SVG style --no messy details, 3d, realistic photos"
+
+--- PROMPT 2: ROYAL CREST + TECH MONOGRAM (LUXURY WEDDING ATTIRE FOCUS) ---
+"Ultra-minimalist modern logo icon for a royal garment rental ERP software named 'Rent360'. An abstract geometric fusion of a subtle royal crown peak and the letter 'R' inside a perfect circle. Pure minimalist luxury, sharp clean edges, flat design. Color palette: solid royal blue #0B60B0 and crisp white on a pitch black background. Modern luxury fashion tech, sleek, iconic, premium vector emblem --no photorealistic, gradients, bevel, noise"
+
+--- PROMPT 3: FULL WORDMARK + LOGO ICON (FOR HEADER & WEBSITE) ---
+"Professional corporate logo for 'Rent360' SaaS software. Includes a modern minimalist circular monogram icon on the left with letter 'R', and clean geometric typography 'Rent360' on the right. Bold, legible modern sans-serif typography like Sora font. Primary accent color #0B60B0 royal blue, monochrome black and white. Flat 2D vector, clean white background, high contrast, Silicon Valley SaaS style --no gradients, complex textures"
+================================================================================

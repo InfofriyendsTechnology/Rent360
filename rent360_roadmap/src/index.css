@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===================================================================
+   RENT360 PULSE — BRUTALIST-CLEAN EDITORIAL DESIGN
+   Light and Dark Mode Variables
+   =================================================================== */
+
+:root {
+  color-scheme: light;
+  
+  --bg-main: #ffffff;
+  --bg-card: #f8f9fa;
+  --bg-card-alt: #f1f3f5;
+  --bg-inverse: #ffffff;
+  
+  --text-main: #000000;
+  --text-muted: #64748b;
+  --text-inverse: #000000;
+  
+  --border-main: #000000;
+  --border-muted: #e2e8f0;
+  --border-inverse: #000000;
+  
+  --accent: #0B60B0;
+  --accent-dim: rgba(11, 96, 176, 0.1);
+  
+  /* Brutalist Shadows */
+  --shadow-sm: 2px 2px 0px 0px #000000;
+  --shadow-md: 3px 3px 0px 0px #000000;
+  --shadow-lg: 4px 4px 0px 0px #000000;
+  --shadow-accent-md: 3px 3px 0px 0px #0B60B0;
+  --shadow-accent-lg: 4px 4px 0px 0px #0B60B0;
+}
+
+.dark {
+  color-scheme: dark;
+  
+  --bg-main: #000000;
+  --bg-card: #0A0A0A;
+  --bg-card-alt: #060606;
+  --bg-inverse: #000000;
+  
+  --text-main: #ffffff;
+  --text-muted: #737373;
+  --text-inverse: #ffffff;
+  
+  --border-main: #1a1a1a;
+  --border-muted: #333333;
+  --border-inverse: #1a1a1a;
+  
+  --accent: #0B60B0;
+  --accent-dim: rgba(11, 96, 176, 0.2);
+  
+  /* Brutalist Shadows in Dark Mode */
+  --shadow-sm: 2px 2px 0px 0px #111111;
+  --shadow-md: 3px 3px 0px 0px #1a1a1a;
+  --shadow-lg: 4px 4px 0px 0px #1a1a1a;
+  --shadow-accent-md: 3px 3px 0px 0px #0B60B0;
+  --shadow-accent-lg: 4px 4px 0px 0px #0B60B0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: var(--border-main); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* Focus */
+*:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Buttons */
+button { font-family: inherit; cursor: pointer; }
+
+/* Utility classes mapping to CSS vars */
+.bg-main { background-color: var(--bg-main); }
+.bg-card { background-color: var(--bg-card); }
+.bg-card-alt { background-color: var(--bg-card-alt); }
+.bg-inverse { background-color: var(--bg-inverse); }
+
+.text-main { color: var(--text-main); }
+.text-muted { color: var(--text-muted); }
+.text-inverse { color: var(--text-inverse); }
+
+.border-main { border-color: var(--border-main); }
+.border-muted { border-color: var(--border-muted); }
+.border-inverse { border-color: var(--border-inverse); }
+
+.shadow-sm-brutal { box-shadow: var(--shadow-sm); }
+.shadow-md-brutal { box-shadow: var(--shadow-md); }
+.shadow-lg-brutal { box-shadow: var(--shadow-lg); }
+.shadow-accent-md { box-shadow: var(--shadow-accent-md); }
+.shadow-accent-lg { box-shadow: var(--shadow-accent-lg); }

@@ -1,0 +1,650 @@
+{
+  "title": "Dashboard | Virasat THE FASHION STUDIO",
+  "url": "https://shop.whitecoretechnology.com/dashboard",
+  "extractedAt": "9/26/2026, 12:08:25 PM",
+  "navigationMenus": [
+    {
+      "name": "Dashboard",
+      "url": "https://shop.whitecoretechnology.com/dashboard"
+    },
+    {
+      "name": "Available",
+      "url": "https://shop.whitecoretechnology.com/available"
+    },
+    {
+      "name": "Product Available",
+      "url": "https://shop.whitecoretechnology.com/product-available"
+    },
+    {
+      "name": "Master",
+      "url": "https://shop.whitecoretechnology.com/"
+    },
+    {
+      "name": "Users",
+      "url": "https://shop.whitecoretechnology.com/user"
+    },
+    {
+      "name": "Categories",
+      "url": "https://shop.whitecoretechnology.com/categories"
+    },
+    {
+      "name": "Size",
+      "url": "https://shop.whitecoretechnology.com/size"
+    },
+    {
+      "name": "Colors",
+      "url": "https://shop.whitecoretechnology.com/color"
+    },
+    {
+      "name": "Time Slots",
+      "url": "https://shop.whitecoretechnology.com/time-slot"
+    },
+    {
+      "name": "Reminder",
+      "url": "https://shop.whitecoretechnology.com/reminder"
+    },
+    {
+      "name": "Accounts",
+      "url": "https://shop.whitecoretechnology.com/accounts"
+    },
+    {
+      "name": "Security Accounts",
+      "url": "https://shop.whitecoretechnology.com/security-account"
+    },
+    {
+      "name": "Inventory",
+      "url": "https://shop.whitecoretechnology.com/"
+    },
+    {
+      "name": "Products",
+      "url": "https://shop.whitecoretechnology.com/products"
+    },
+    {
+      "name": "Accessory",
+      "url": "https://shop.whitecoretechnology.com/accessories"
+    },
+    {
+      "name": "Excel Import Product",
+      "url": "https://shop.whitecoretechnology.com/import-product"
+    },
+    {
+      "name": "Bulk Insert Product",
+      "url": "https://shop.whitecoretechnology.com/bulk-insert-products"
+    },
+    {
+      "name": "Items",
+      "url": "https://shop.whitecoretechnology.com/items"
+    },
+    {
+      "name": "Catalogue",
+      "url": "https://shop.whitecoretechnology.com/product-catalogue"
+    },
+    {
+      "name": "Transaction",
+      "url": "https://shop.whitecoretechnology.com/"
+    },
+    {
+      "name": "Bookings",
+      "url": "https://shop.whitecoretechnology.com/booking"
+    },
+    {
+      "name": "Income",
+      "url": "https://shop.whitecoretechnology.com/income"
+    },
+    {
+      "name": "Expense",
+      "url": "https://shop.whitecoretechnology.com/expense"
+    },
+    {
+      "name": "Sales",
+      "url": "https://shop.whitecoretechnology.com/sales"
+    },
+    {
+      "name": "Sales Return",
+      "url": "https://shop.whitecoretechnology.com/sales-return"
+    },
+    {
+      "name": "Purchases",
+      "url": "https://shop.whitecoretechnology.com/purchase"
+    },
+    {
+      "name": "Purchase Return",
+      "url": "https://shop.whitecoretechnology.com/purchase-return"
+    },
+    {
+      "name": "Washing",
+      "url": "https://shop.whitecoretechnology.com/washing"
+    },
+    {
+      "name": "Cancel Booking Credit",
+      "url": "https://shop.whitecoretechnology.com/Cancel-booking-credit"
+    },
+    {
+      "name": "Journal Vouchers",
+      "url": "https://shop.whitecoretechnology.com/journal-vouchers"
+    },
+    {
+      "name": "Payment Voucher",
+      "url": "https://shop.whitecoretechnology.com/payment-voucher"
+    },
+    {
+      "name": "Receipt Voucher",
+      "url": "https://shop.whitecoretechnology.com/receipt-voucher"
+    },
+    {
+      "name": "General Report",
+      "url": "https://shop.whitecoretechnology.com/"
+    },
+    {
+      "name": "Delivery",
+      "url": "https://shop.whitecoretechnology.com/delivery"
+    },
+    {
+      "name": "Return",
+      "url": "https://shop.whitecoretechnology.com/return"
+    },
+    {
+      "name": "Booked Product",
+      "url": "https://shop.whitecoretechnology.com/booked-product"
+    },
+    {
+      "name": "Security Transaction",
+      "url": "https://shop.whitecoretechnology.com/security"
+    },
+    {
+      "name": "Due Security",
+      "url": "https://shop.whitecoretechnology.com/due-security"
+    },
+    {
+      "name": "Product History",
+      "url": "https://shop.whitecoretechnology.com/product-history"
+    },
+    {
+      "name": "Accessory History",
+      "url": "https://shop.whitecoretechnology.com/accessory-history"
+    },
+    {
+      "name": "Stock Register",
+      "url": "https://shop.whitecoretechnology.com/stock-register"
+    },
+    {
+      "name": "Salesman",
+      "url": "https://shop.whitecoretechnology.com/salesman-report"
+    },
+    {
+      "name": "Customers",
+      "url": "https://shop.whitecoretechnology.com/customers"
+    },
+    {
+      "name": "Finance Report",
+      "url": "https://shop.whitecoretechnology.com/"
+    },
+    {
+      "name": "Product Performance",
+      "url": "https://shop.whitecoretechnology.com/product-performance"
+    },
+    {
+      "name": "Vendor Performance",
+      "url": "https://shop.whitecoretechnology.com/vendor-product-performance"
+    },
+    {
+      "name": "Pending Bills",
+      "url": "https://shop.whitecoretechnology.com/pending-bills"
+    },
+    {
+      "name": "Income/Expense",
+      "url": "https://shop.whitecoretechnology.com/income-expense"
+    },
+    {
+      "name": "Account Ledger",
+      "url": "https://shop.whitecoretechnology.com/account-ledger"
+    },
+    {
+      "name": "Daily CashBook",
+      "url": "https://shop.whitecoretechnology.com/daily-cashBook"
+    },
+    {
+      "name": "GST Report",
+      "url": "https://shop.whitecoretechnology.com/"
+    },
+    {
+      "name": "Booked Orders",
+      "url": "https://shop.whitecoretechnology.com/bookedOrder-report"
+    },
+    {
+      "name": "Sales",
+      "url": "https://shop.whitecoretechnology.com/sales-report"
+    },
+    {
+      "name": "Setting",
+      "url": "https://shop.whitecoretechnology.com/setting"
+    },
+    {
+      "name": "System Logs",
+      "url": "https://shop.whitecoretechnology.com/system-log"
+    },
+    {
+      "name": "Login User Device",
+      "url": "https://shop.whitecoretechnology.com/login-user-device"
+    },
+    {
+      "name": "NewWhat's New",
+      "url": "https://shop.whitecoretechnology.com/whats-new"
+    },
+    {
+      "name": "Tutorial",
+      "url": "https://shop.whitecoretechnology.com/tutorials"
+    },
+    {
+      "name": "About us",
+      "url": "https://www.rentopus.in/about"
+    },
+    {
+      "name": "Users",
+      "url": "https://shop.whitecoretechnology.com/user"
+    },
+    {
+      "name": "Categories",
+      "url": "https://shop.whitecoretechnology.com/categories"
+    },
+    {
+      "name": "Size",
+      "url": "https://shop.whitecoretechnology.com/size"
+    },
+    {
+      "name": "Colors",
+      "url": "https://shop.whitecoretechnology.com/color"
+    },
+    {
+      "name": "Time Slots",
+      "url": "https://shop.whitecoretechnology.com/time-slot"
+    },
+    {
+      "name": "Reminder",
+      "url": "https://shop.whitecoretechnology.com/reminder"
+    },
+    {
+      "name": "Accounts",
+      "url": "https://shop.whitecoretechnology.com/accounts"
+    },
+    {
+      "name": "Security Accounts",
+      "url": "https://shop.whitecoretechnology.com/security-account"
+    },
+    {
+      "name": "Products",
+      "url": "https://shop.whitecoretechnology.com/products"
+    },
+    {
+      "name": "Accessory",
+      "url": "https://shop.whitecoretechnology.com/accessories"
+    },
+    {
+      "name": "Excel Import Product",
+      "url": "https://shop.whitecoretechnology.com/import-product"
+    },
+    {
+      "name": "Bulk Insert Product",
+      "url": "https://shop.whitecoretechnology.com/bulk-insert-products"
+    },
+    {
+      "name": "Items",
+      "url": "https://shop.whitecoretechnology.com/items"
+    },
+    {
+      "name": "Catalogue",
+      "url": "https://shop.whitecoretechnology.com/product-catalogue"
+    },
+    {
+      "name": "Bookings",
+      "url": "https://shop.whitecoretechnology.com/booking"
+    },
+    {
+      "name": "Income",
+      "url": "https://shop.whitecoretechnology.com/income"
+    },
+    {
+      "name": "Expense",
+      "url": "https://shop.whitecoretechnology.com/expense"
+    },
+    {
+      "name": "Sales",
+      "url": "https://shop.whitecoretechnology.com/sales"
+    },
+    {
+      "name": "Sales Return",
+      "url": "https://shop.whitecoretechnology.com/sales-return"
+    },
+    {
+      "name": "Purchases",
+      "url": "https://shop.whitecoretechnology.com/purchase"
+    },
+    {
+      "name": "Purchase Return",
+      "url": "https://shop.whitecoretechnology.com/purchase-return"
+    },
+    {
+      "name": "Washing",
+      "url": "https://shop.whitecoretechnology.com/washing"
+    },
+    {
+      "name": "Cancel Booking Credit",
+      "url": "https://shop.whitecoretechnology.com/Cancel-booking-credit"
+    },
+    {
+      "name": "Journal Vouchers",
+      "url": "https://shop.whitecoretechnology.com/journal-vouchers"
+    },
+    {
+      "name": "Payment Voucher",
+      "url": "https://shop.whitecoretechnology.com/payment-voucher"
+    },
+    {
+      "name": "Receipt Voucher",
+      "url": "https://shop.whitecoretechnology.com/receipt-voucher"
+    },
+    {
+      "name": "Delivery",
+      "url": "https://shop.whitecoretechnology.com/delivery"
+    },
+    {
+      "name": "Return",
+      "url": "https://shop.whitecoretechnology.com/return"
+    },
+    {
+      "name": "Booked Product",
+      "url": "https://shop.whitecoretechnology.com/booked-product"
+    },
+    {
+      "name": "Security Transaction",
+      "url": "https://shop.whitecoretechnology.com/security"
+    },
+    {
+      "name": "Due Security",
+      "url": "https://shop.whitecoretechnology.com/due-security"
+    },
+    {
+      "name": "Product History",
+      "url": "https://shop.whitecoretechnology.com/product-history"
+    },
+    {
+      "name": "Accessory History",
+      "url": "https://shop.whitecoretechnology.com/accessory-history"
+    },
+    {
+      "name": "Stock Register",
+      "url": "https://shop.whitecoretechnology.com/stock-register"
+    },
+    {
+      "name": "Salesman",
+      "url": "https://shop.whitecoretechnology.com/salesman-report"
+    },
+    {
+      "name": "Customers",
+      "url": "https://shop.whitecoretechnology.com/customers"
+    },
+    {
+      "name": "Product Performance",
+      "url": "https://shop.whitecoretechnology.com/product-performance"
+    },
+    {
+      "name": "Vendor Performance",
+      "url": "https://shop.whitecoretechnology.com/vendor-product-performance"
+    },
+    {
+      "name": "Pending Bills",
+      "url": "https://shop.whitecoretechnology.com/pending-bills"
+    },
+    {
+      "name": "Income/Expense",
+      "url": "https://shop.whitecoretechnology.com/income-expense"
+    },
+    {
+      "name": "Account Ledger",
+      "url": "https://shop.whitecoretechnology.com/account-ledger"
+    },
+    {
+      "name": "Daily CashBook",
+      "url": "https://shop.whitecoretechnology.com/daily-cashBook"
+    },
+    {
+      "name": "Booked Orders",
+      "url": "https://shop.whitecoretechnology.com/bookedOrder-report"
+    },
+    {
+      "name": "Sales",
+      "url": "https://shop.whitecoretechnology.com/sales-report"
+    }
+  ],
+  "internalRoutes": [
+    {
+      "title": "Route",
+      "url": "https://shop.whitecoretechnology.com/"
+    },
+    {
+      "title": "Settings",
+      "url": "https://shop.whitecoretechnology.com/setting"
+    },
+    {
+      "title": "Route",
+      "url": "https://shop.whitecoretechnology.com/dashboard"
+    },
+    {
+      "title": "Available",
+      "url": "https://shop.whitecoretechnology.com/available"
+    },
+    {
+      "title": "Product Available",
+      "url": "https://shop.whitecoretechnology.com/product-available"
+    },
+    {
+      "title": "Users",
+      "url": "https://shop.whitecoretechnology.com/user"
+    },
+    {
+      "title": "Categories",
+      "url": "https://shop.whitecoretechnology.com/categories"
+    },
+    {
+      "title": "Size",
+      "url": "https://shop.whitecoretechnology.com/size"
+    },
+    {
+      "title": "Colors",
+      "url": "https://shop.whitecoretechnology.com/color"
+    },
+    {
+      "title": "Time Slots",
+      "url": "https://shop.whitecoretechnology.com/time-slot"
+    },
+    {
+      "title": "Reminder",
+      "url": "https://shop.whitecoretechnology.com/reminder"
+    },
+    {
+      "title": "Accounts",
+      "url": "https://shop.whitecoretechnology.com/accounts"
+    },
+    {
+      "title": "Security Accounts",
+      "url": "https://shop.whitecoretechnology.com/security-account"
+    },
+    {
+      "title": "Products",
+      "url": "https://shop.whitecoretechnology.com/products"
+    },
+    {
+      "title": "Accessory",
+      "url": "https://shop.whitecoretechnology.com/accessories"
+    },
+    {
+      "title": "Excel Import Product",
+      "url": "https://shop.whitecoretechnology.com/import-product"
+    },
+    {
+      "title": "Bulk Insert Product",
+      "url": "https://shop.whitecoretechnology.com/bulk-insert-products"
+    },
+    {
+      "title": "Items",
+      "url": "https://shop.whitecoretechnology.com/items"
+    },
+    {
+      "title": "Catalogue",
+      "url": "https://shop.whitecoretechnology.com/product-catalogue"
+    },
+    {
+      "title": "Bookings",
+      "url": "https://shop.whitecoretechnology.com/booking"
+    },
+    {
+      "title": "Income",
+      "url": "https://shop.whitecoretechnology.com/income"
+    },
+    {
+      "title": "Expense",
+      "url": "https://shop.whitecoretechnology.com/expense"
+    },
+    {
+      "title": "Sales",
+      "url": "https://shop.whitecoretechnology.com/sales"
+    },
+    {
+      "title": "Sales Return",
+      "url": "https://shop.whitecoretechnology.com/sales-return"
+    },
+    {
+      "title": "Purchases",
+      "url": "https://shop.whitecoretechnology.com/purchase"
+    },
+    {
+      "title": "Purchase Return",
+      "url": "https://shop.whitecoretechnology.com/purchase-return"
+    },
+    {
+      "title": "Washing",
+      "url": "https://shop.whitecoretechnology.com/washing"
+    },
+    {
+      "title": "Cancel Booking Credit",
+      "url": "https://shop.whitecoretechnology.com/Cancel-booking-credit"
+    },
+    {
+      "title": "Journal Vouchers",
+      "url": "https://shop.whitecoretechnology.com/journal-vouchers"
+    },
+    {
+      "title": "Payment Voucher",
+      "url": "https://shop.whitecoretechnology.com/payment-voucher"
+    },
+    {
+      "title": "Receipt Voucher",
+      "url": "https://shop.whitecoretechnology.com/receipt-voucher"
+    },
+    {
+      "title": "Delivery",
+      "url": "https://shop.whitecoretechnology.com/delivery"
+    },
+    {
+      "title": "Return",
+      "url": "https://shop.whitecoretechnology.com/return"
+    },
+    {
+      "title": "Booked Product",
+      "url": "https://shop.whitecoretechnology.com/booked-product"
+    },
+    {
+      "title": "Security Transaction",
+      "url": "https://shop.whitecoretechnology.com/security"
+    },
+    {
+      "title": "Due Security",
+      "url": "https://shop.whitecoretechnology.com/due-security"
+    },
+    {
+      "title": "Product History",
+      "url": "https://shop.whitecoretechnology.com/product-history"
+    },
+    {
+      "title": "Accessory History",
+      "url": "https://shop.whitecoretechnology.com/accessory-history"
+    },
+    {
+      "title": "Stock Register",
+      "url": "https://shop.whitecoretechnology.com/stock-register"
+    },
+    {
+      "title": "Salesman",
+      "url": "https://shop.whitecoretechnology.com/salesman-report"
+    },
+    {
+      "title": "Customers",
+      "url": "https://shop.whitecoretechnology.com/customers"
+    },
+    {
+      "title": "Product Performance",
+      "url": "https://shop.whitecoretechnology.com/product-performance"
+    },
+    {
+      "title": "Vendor Performance",
+      "url": "https://shop.whitecoretechnology.com/vendor-product-performance"
+    },
+    {
+      "title": "Pending Bills",
+      "url": "https://shop.whitecoretechnology.com/pending-bills"
+    },
+    {
+      "title": "Income/Expense",
+      "url": "https://shop.whitecoretechnology.com/income-expense"
+    },
+    {
+      "title": "Account Ledger",
+      "url": "https://shop.whitecoretechnology.com/account-ledger"
+    },
+    {
+      "title": "Daily CashBook",
+      "url": "https://shop.whitecoretechnology.com/daily-cashBook"
+    },
+    {
+      "title": "Booked Orders",
+      "url": "https://shop.whitecoretechnology.com/bookedOrder-report"
+    },
+    {
+      "title": "Sales",
+      "url": "https://shop.whitecoretechnology.com/sales-report"
+    },
+    {
+      "title": "System Logs",
+      "url": "https://shop.whitecoretechnology.com/system-log"
+    },
+    {
+      "title": "Login User Device",
+      "url": "https://shop.whitecoretechnology.com/login-user-device"
+    },
+    {
+      "title": "NewWhat's New",
+      "url": "https://shop.whitecoretechnology.com/whats-new"
+    },
+    {
+      "title": "Tutorial",
+      "url": "https://shop.whitecoretechnology.com/tutorials"
+    }
+  ],
+  "detectedFeatures": [
+    "Dashboard",
+    "0 of 0",
+    "Reminders",
+    "Bookings",
+    "Booking Earning",
+    "₹1,45,000.00"
+  ],
+  "buttonsAndActions": [
+    "Profile",
+    "Change Password",
+    "Change Master Password",
+    "Set Menu Permission",
+    "Settings",
+    "WhatsApp",
+    "Code: 08092026797"
+  ]
+}
