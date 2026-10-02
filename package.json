@@ -1,1 +1,7 @@
-{`n  "name": "rent360",`n  "private": true,`n  "workspaces": [`n    "apps/*"`n  ]`n}
+{
+  "name": "rent360",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ]
+}
