@@ -1,6 +1,6 @@
 import React from 'react';
 import { DAILY_HISTORY, TEAM_MEMBERS, ACHIEVEMENTS, FEATURE_IDEAS } from '../data/roadmapData';
-import { BarChart3, Activity, ListTodo, Zap, User } from 'lucide-react';
+import { BarChart3 } from 'lucide-react';
 
 export default function AnalyticsDashboard({ lang }) {
   const totalDays = DAILY_HISTORY.length;
@@ -60,10 +60,10 @@ export default function AnalyticsDashboard({ lang }) {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-        <StatBlock label={lang === 'gu' ? 'કુલ દિવસો' : 'TOTAL DAYS'} value={totalDays} icon={<Activity />} />
-        <StatBlock label={lang === 'gu' ? 'કુલ ટાસ્ક' : 'TOTAL TASKS'} value={totalTasks} icon={<ListTodo />} />
-        <StatBlock label={lang === 'gu' ? 'સિદ્ધિઓ' : 'ACHIEVEMENTS'} value={ACHIEVEMENTS.length} icon={<Zap />} />
-        <StatBlock label={lang === 'gu' ? 'ટીમ મેમ્બર્સ' : 'TEAM MEMBERS'} value={TEAM_MEMBERS.length} icon={<User />} />
+        <StatBlock label={lang === 'gu' ? 'કુલ દિવસો' : 'TOTAL DAYS'} value={totalDays} />
+        <StatBlock label={lang === 'gu' ? 'કુલ ટાસ્ક' : 'TOTAL TASKS'} value={totalTasks} />
+        <StatBlock label={lang === 'gu' ? 'સિદ્ધિઓ' : 'ACHIEVEMENTS'} value={ACHIEVEMENTS.length} />
+        <StatBlock label={lang === 'gu' ? 'ટીમ મેમ્બર્સ' : 'TEAM MEMBERS'} value={TEAM_MEMBERS.length} />
       </div>
 
       <div className="bg-card border-2 border-main shadow-md-brutal p-5 sm:p-6 mt-8">
@@ -169,10 +169,9 @@ export default function AnalyticsDashboard({ lang }) {
 }
 
 
-function StatBlock({ label, value, icon }) {
+function StatBlock({ label, value }) {
   return (
     <div className="bg-card border-2 border-main p-4 sm:p-5 flex flex-col justify-between shadow-sm-brutal">
-      <div className="text-muted w-4 h-4 mb-2">{icon}</div>
       <span className="block font-heading text-2xl sm:text-4xl font-black text-main">
         {value}
       </span>
