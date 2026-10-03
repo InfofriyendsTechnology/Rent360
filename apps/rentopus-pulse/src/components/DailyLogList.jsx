@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Check, X, Calendar } from 'lucide-react';
 import { DAILY_HISTORY } from '../data/roadmapData';
+import PromptGuide from './PromptGuide';
 
 export default function DailyLogList({ lang }) {
   const [expandedDay, setExpandedDay] = useState(DAILY_HISTORY[DAILY_HISTORY.length - 1]?.date);
   const [activeFilter, setActiveFilter] = useState(null);
   const [activeDateFilter, setActiveDateFilter] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleDay = (date) => {
     setExpandedDay(expandedDay === date ? null : date);
@@ -26,17 +28,8 @@ export default function DailyLogList({ lang }) {
     const [year, month, day] = val.split('-');
     const formatted = `${day}-${month}-${year}`;
     setActiveDateFilter(formatted);
-    setExpandedDay(formatted); // auto expand the selected date
+    setExpandedDay(formatted);
   };
-
-  // Convert DD-MM-YYYY to YYYY-MM-DD for the input
-  const getInputValue = (ddmmyyyy) => {
-    if (!ddmmyyyy) return "";
-    const [day, month, year] = ddmmyyyy.split('-');
-    return `${year}-${month}-${day}`;
-  };
-
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Filter logic
   let filteredHistory = DAILY_HISTORY;
@@ -59,6 +52,8 @@ export default function DailyLogList({ lang }) {
 
   return (
     <div className="space-y-0">
+      
+      <PromptGuide lang={lang} />
 
       {/* Section Label & Filter State */}
       <div className="flex items-start sm:items-center justify-between gap-4 mb-6">
