@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lightbulb, User, Link as LinkIcon, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
+import { Lightbulb, User, Link as LinkIcon, MessageSquare, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { FEATURE_IDEAS } from '../data/roadmapData';
 
 export default function IdeaBacklog({ lang, setActiveTab }) {
@@ -57,20 +57,21 @@ export default function IdeaBacklog({ lang, setActiveTab }) {
               : 'FUTURE PLANS, SOCIAL MEDIA REFERENCES & PENDING CONCEPTS.'}
           </p>
         </div>
-        <div className="bg-card px-4 py-2 border-2 border-main shadow-sm-brutal flex items-center gap-2 shrink-0 self-start">
-          <Lightbulb className="w-4 h-4 text-amber-500" />
-          <span className="font-black text-main">{filteredIdeas.length} PENDING</span>
+        <div className="bg-card px-4 py-2 sm:py-3 border-[3px] border-main shadow-sm-brutal flex items-center gap-2 shrink-0 self-start">
+          <Lightbulb className="w-5 h-5 text-amber-500" strokeWidth={2.5} />
+          <span className="font-black text-main text-[11px] sm:text-xs tracking-widest">{filteredIdeas.length} PENDING</span>
         </div>
       </div>
 
       {/* Search Row */}
-      <div className="mb-6 w-full">
+      <div className="mb-8 w-full relative">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-muted" strokeWidth={2.5} />
         <input 
           type="text" 
           placeholder={lang === 'gu' ? 'આઇડિયા સર્ચ કરો...' : 'Search ideas...'}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="bg-card text-main text-[11px] sm:text-xs font-bold px-3 py-2 border-2 border-main shadow-sm-brutal w-full sm:w-64 focus:outline-none focus:border-[#0B60B0]"
+          className="w-full bg-card text-main text-sm sm:text-base font-bold pl-12 sm:pl-14 pr-4 py-3 sm:py-4 border-[3px] border-main shadow-sm-brutal focus:outline-none focus:border-[#0B60B0] focus:ring-0 transition-colors placeholder:text-muted/60"
         />
       </div>
 
