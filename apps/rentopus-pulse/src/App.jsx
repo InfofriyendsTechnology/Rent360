@@ -8,7 +8,7 @@ import TeamSection from './components/TeamSection';
 import TeamList from './components/TeamList';
 
 export default function App() {
-  const [lang, setLang] = useState('gu');
+  const [lang, setLang] = useState('en');
   const [activeTab, setActiveTab] = useState('daily');
   const [theme, setTheme] = useState('dark');
 

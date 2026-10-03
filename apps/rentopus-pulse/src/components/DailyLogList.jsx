@@ -3,7 +3,7 @@ import { ChevronDown, ChevronRight, Check, X, Calendar, Search } from 'lucide-re
 import { DAILY_HISTORY } from '../data/roadmapData';
 
 export default function DailyLogList({ lang }) {
-  const [expandedDay, setExpandedDay] = useState(DAILY_HISTORY[DAILY_HISTORY.length - 1]?.date);
+  const [expandedDay, setExpandedDay] = useState(null);
   const [activeFilter, setActiveFilter] = useState(null);
   const [activeDateFilter, setActiveDateFilter] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -50,7 +50,7 @@ export default function DailyLogList({ lang }) {
   }
 
   return (
-    <div className="space-y-0">
+    <div>
 
       {/* Section Label */}
       <div className="flex items-start sm:items-center justify-between gap-4 mb-5">
@@ -88,7 +88,7 @@ export default function DailyLogList({ lang }) {
       </div>
 
       {/* Search & Filter Section */}
-      <div className="mb-8 space-y-4">
+      <div className="pb-6 space-y-4">
         {/* Full-width Search Bar */}
         <div className="relative w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-muted" strokeWidth={2.5} />

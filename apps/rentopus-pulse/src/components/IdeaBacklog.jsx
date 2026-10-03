@@ -43,7 +43,7 @@ export default function IdeaBacklog({ lang, setActiveTab }) {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div>
 
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b-2 border-main pb-4 mb-4">
@@ -64,15 +64,17 @@ export default function IdeaBacklog({ lang, setActiveTab }) {
       </div>
 
       {/* Search Row */}
-      <div className="mb-8 w-full relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-muted" strokeWidth={2.5} />
-        <input 
-          type="text" 
-          placeholder={lang === 'gu' ? 'આઇડિયા સર્ચ કરો...' : 'Search ideas...'}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-card text-main text-sm sm:text-base font-bold pl-12 sm:pl-14 pr-4 py-3 sm:py-4 border-[3px] border-main shadow-sm-brutal focus:outline-none focus:border-[#0B60B0] focus:ring-0 transition-colors placeholder:text-muted/60"
-        />
+      <div className="pb-6 w-full">
+        <div className="relative w-full">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-muted" strokeWidth={2.5} />
+          <input 
+            type="text" 
+            placeholder={lang === 'gu' ? 'આઇડિયા સર્ચ કરો...' : 'Search ideas...'}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-card text-main text-sm sm:text-base font-bold pl-12 sm:pl-14 pr-4 py-3 sm:py-4 border-[3px] border-main shadow-sm-brutal focus:outline-none focus:border-[#0B60B0] focus:ring-0 transition-colors placeholder:text-muted/60"
+          />
+        </div>
       </div>
 
       {/* Ideas Grid */}
