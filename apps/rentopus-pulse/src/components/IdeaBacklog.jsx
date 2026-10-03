@@ -46,7 +46,7 @@ export default function IdeaBacklog({ lang, setActiveTab }) {
     <div className="space-y-6 sm:space-y-8">
 
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-main pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b-2 border-main pb-4 mb-4">
         <div>
           <h2 className="font-heading text-xl sm:text-3xl font-black uppercase tracking-tight text-main mb-1 sm:mb-2">
             {lang === 'gu' ? 'આઇડિયા બેકલોગ' : 'FEATURE IDEAS BACKLOG'}
@@ -57,19 +57,21 @@ export default function IdeaBacklog({ lang, setActiveTab }) {
               : 'FUTURE PLANS, SOCIAL MEDIA REFERENCES & PENDING CONCEPTS.'}
           </p>
         </div>
-        <div className="flex flex-col sm:items-end gap-3">
-          <div className="bg-card px-4 py-2 border-2 border-main shadow-sm-brutal flex items-center gap-2 self-start sm:self-auto">
-            <Lightbulb className="w-4 h-4 text-amber-500" />
-            <span className="font-black text-main">{filteredIdeas.length} PENDING</span>
-          </div>
-          <input 
-            type="text" 
-            placeholder={lang === 'gu' ? 'આઇડિયા સર્ચ કરો...' : 'Search ideas...'}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-card text-main text-[11px] sm:text-xs font-bold px-3 py-2 border-2 border-main shadow-sm-brutal w-full sm:w-64 focus:outline-none focus:border-[#0B60B0]"
-          />
+        <div className="bg-card px-4 py-2 border-2 border-main shadow-sm-brutal flex items-center gap-2 shrink-0 self-start">
+          <Lightbulb className="w-4 h-4 text-amber-500" />
+          <span className="font-black text-main">{filteredIdeas.length} PENDING</span>
         </div>
+      </div>
+
+      {/* Search Row */}
+      <div className="mb-6 w-full">
+        <input 
+          type="text" 
+          placeholder={lang === 'gu' ? 'આઇડિયા સર્ચ કરો...' : 'Search ideas...'}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="bg-card text-main text-[11px] sm:text-xs font-bold px-3 py-2 border-2 border-main shadow-sm-brutal w-full sm:w-64 focus:outline-none focus:border-[#0B60B0]"
+        />
       </div>
 
       {/* Ideas Grid */}

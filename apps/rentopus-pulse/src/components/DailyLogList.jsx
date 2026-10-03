@@ -60,50 +60,13 @@ export default function DailyLogList({ lang }) {
   return (
     <div className="space-y-0">
 
-      {/* Section Label & Filter State */}
-      <div className="flex items-start sm:items-center justify-between gap-4 mb-6">
-        <div className="flex flex-col">
-          <h2 className="font-heading text-xl sm:text-2xl font-black uppercase tracking-tight text-main">
-            {lang === 'gu' ? 'દિવસવાર ટ્રેકિંગ હિસ્ટ્રી' : 'DAY-BY-DAY TRACKING HISTORY'}
-          </h2>
-          
-          <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <input 
-              type="text" 
-              placeholder={lang === 'gu' ? 'ટાસ્ક કે ટાઇટલ સર્ચ કરો...' : 'Search tasks or titles...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-card text-main text-[11px] sm:text-xs font-bold px-3 py-2 border-2 border-main shadow-sm-brutal w-full sm:w-64 focus:outline-none focus:border-[#0B60B0]"
-            />
-            
-            <div className="flex flex-wrap items-center gap-3">
-              {activeDateFilter && (
-                <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-bold text-muted uppercase">DATE:</span>
-                  <button 
-                    onClick={() => setActiveDateFilter(null)}
-                    className="flex items-center gap-1 bg-card text-main border-2 border-main px-2 py-0.5 text-[10px] font-mono font-black shadow-sm-brutal hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors"
-                  >
-                    {activeDateFilter} <X className="w-3 h-3" />
-                  </button>
-                </div>
-              )}
-              {activeFilter && (
-                <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-bold text-muted uppercase">MEMBER:</span>
-                  <button 
-                    onClick={() => setActiveFilter(null)}
-                    className="flex items-center gap-1 bg-[#0B60B0] text-white border-2 border-[#0B60B0] px-2 py-0.5 text-[10px] font-mono font-black shadow-sm-brutal hover:bg-red-500 hover:border-red-500 transition-colors"
-                  >
-                    [{activeFilter}] <X className="w-3 h-3" />
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-start sm:self-center">
+      {/* Section Label */}
+      <div className="flex items-start sm:items-center justify-between gap-4 mb-4">
+        <h2 className="font-heading text-xl sm:text-2xl font-black uppercase tracking-tight text-main">
+          {lang === 'gu' ? 'દિવસવાર ટ્રેકિંગ હિસ્ટ્રી' : 'DAY-BY-DAY TRACKING HISTORY'}
+        </h2>
+        
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {/* Calendar Picker Button */}
           <div className="relative">
             <button 
@@ -132,9 +95,48 @@ export default function DailyLogList({ lang }) {
         </div>
       </div>
 
+      {/* Search & Filter Row */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-6 w-full">
+        <input 
+          type="text" 
+          placeholder={lang === 'gu' ? 'ટાસ્ક કે ટાઇટલ સર્ચ કરો...' : 'Search tasks or titles...'}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="bg-card text-main text-[11px] sm:text-xs font-bold px-3 py-2 border-2 border-main shadow-sm-brutal w-full sm:w-64 focus:outline-none focus:border-[#0B60B0]"
+        />
+        
+        <div className="flex flex-wrap items-center gap-3">
+          {activeDateFilter && (
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-bold text-muted uppercase">DATE:</span>
+              <button 
+                onClick={() => setActiveDateFilter(null)}
+                className="flex items-center gap-1 bg-card text-main border-2 border-main px-2 py-0.5 text-[10px] font-mono font-black shadow-sm-brutal hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors"
+              >
+                {activeDateFilter} <X className="w-3 h-3" />
+              </button>
+            </div>
+          )}
+          {activeFilter && (
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-bold text-muted uppercase">MEMBER:</span>
+              <button 
+                onClick={() => setActiveFilter(null)}
+                className="flex items-center gap-1 bg-[#0B60B0] text-white border-2 border-[#0B60B0] px-2 py-0.5 text-[10px] font-mono font-black shadow-sm-brutal hover:bg-red-500 hover:border-red-500 transition-colors"
+              >
+                [{activeFilter}] <X className="w-3 h-3" />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Tree */}
-      <div className="border-l-[3px] border-main ml-2 sm:ml-4 space-y-0">
-        {filteredHistory.map((day) => {
+      <div className="relative ml-2 sm:ml-4 border-l-[3px] border-transparent">
+        {/* Main Vertical Line */}
+        <div className="absolute -left-[3px] top-[24px] bottom-4 w-[3px] bg-main z-0" />
+        
+        {filteredHistory.map((day, idx) => {
           const isOpen = expandedDay === day.date;
           // When filtering, only show tasks belonging to this member, else show all
           const allTasks = lang === 'gu' ? day.tasksGu : day.tasksEn;
@@ -143,7 +145,7 @@ export default function DailyLogList({ lang }) {
             : allTasks;
 
           return (
-            <div key={day.date} className="relative mb-5 sm:mb-6">
+            <div key={day.date} className="relative mb-5 sm:mb-6 z-10">
 
               {/* Connector dot */}
               <div className={`absolute -left-[9.5px] sm:-left-[10.5px] top-[14px] sm:top-[16px] w-4 h-4 border-2 ${
