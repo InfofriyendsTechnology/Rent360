@@ -1,0 +1,15 @@
+{
+  "name": "Rent360",
+  "tagline": "Roadmap to Completion & Daily Pulse",
+  "company": "InfoFriends Technology",
+  "ecosystem": "Info360 Suite",
+  "startDate": "2026-09-25",
+  "anchorStudio": "Virasat - The Fashion Studio, Gujarat (100% Lifetime Free)",
+  "subscriptionPricing": "₹9,999 / Year",
+  "techStack": {
+    "frontend": "React 18 + Vite + TypeScript + Tailwind CSS",
+    "backend": "Supabase (PostgreSQL)",
+    "database": "PostgreSQL with daterange exclusion constraints",
+    "architecture": "High-Speed Lightweight SPA + Real-Time Sync"
+  }
+}

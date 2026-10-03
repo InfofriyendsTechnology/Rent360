@@ -1,0 +1,22 @@
+[
+  {
+    "id": "001",
+    "name": "Yash Babariya",
+    "role": "IT Full Stack Developer",
+    "badge": "Core Architecture & Retail UX",
+    "avatar": "YB",
+    "email": "yash.infofriyend@gmail.com",
+    "accessLevel": "Admin / Member",
+    "focus": "Full-stack frontend/backend, leveraging live experience managing sister's Western wear shop"
+  },
+  {
+    "id": "002",
+    "name": "Shridhar Savaliya",
+    "role": "Professional Accountant & IT Full Stack Developer",
+    "badge": "Finance & Core Engineering",
+    "avatar": "SS",
+    "email": "shridhar.infofriyend@gmail.com",
+    "accessLevel": "Admin / Member",
+    "focus": "Security deposit ledger, GST audit, double-entry accounting, backend logic"
+  }
+]

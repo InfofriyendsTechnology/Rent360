@@ -1,0 +1,58 @@
+{
+  "date": "26-09-2026",
+  "dayNumber": 2,
+  "title": "Competitor Reverse-Engineering (SiteSnapPro)",
+  "titleGu": "કોમ્પિટિટર રિવર્સ-એન્જિનિયરિંગ અને 54 સ્ક્રીન ઓડિટ",
+  "members": [
+    "001"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Engineered automated Playwright crawler tool (SiteSnapPro) in Python."
+    },
+    {
+      "member": "001",
+      "text": "Audited all 54 routes/pages of competitor app (shop.whitecoretechnology.com)."
+    },
+    {
+      "member": "001",
+      "text": "Captured 54 full-page desktop screenshots (page_001.png to page_054.png)."
+    },
+    {
+      "member": "001",
+      "text": "Extracted structural JSON metadata (rentopus_admin_data.json) covering 52+ menus, forms, buttons, and billing flows."
+    },
+    {
+      "member": "001",
+      "text": "Pinpointed failure points: double-booking conflicts, lack of waterproof QR laundry tracking, and complicated refund flows."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "પાયથોન અને પ્લેરાઈટ (Playwright) ની મદદથી 'SiteSnapPro' ઓટોમેશન ટૂલ બનાવ્યું."
+    },
+    {
+      "member": "001",
+      "text": "કોમ્પિટિટર સોફ્ટવેરના તમામ 54 રૂટ્સ અને સ્ક્રીન્સનું ડીપ ક્રોલિંગ કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "તમામ 54 પેજીસના ફૂલ-પેજ સ્ક્રીનશોટ્સ (page_001 થી page_054) કેપ્ચર કર્યા."
+    },
+    {
+      "member": "001",
+      "text": "52+ ફંક્શનલ મેનૂ અને બટન્સનું JSON મેપિંગ કર્યું (rentopus_admin_data.json)."
+    },
+    {
+      "member": "001",
+      "text": "મુખ્ય સમસ્યાઓ શોધી: ડબલ બુકિંગ થવું, લોન્ડ્રીમાં વોટરપ્રૂફ QR નો અભાવ અને ડિપોઝિટ રિફંડની મુશ્કેલી."
+    }
+  ],
+  "deliverables": [
+    "54 Route Screenshots",
+    "rentopus_admin_data.json",
+    "Competitor Bottleneck Matrix"
+  ]
+}

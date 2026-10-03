@@ -1,0 +1,59 @@
+{
+  "date": "28-09-2026",
+  "dayNumber": 4,
+  "title": "Database Schema & Zero Double-Booking Math",
+  "titleGu": "ડેટાબેઝ સ્કીમા અને સોફ્ટવેર એનાલિસિસ",
+  "members": [
+    "001",
+    "002"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Architected PostgreSQL enterprise schema with multi-tenant isolation."
+    },
+    {
+      "member": "001",
+      "text": "Engineered mathematical exclusion constraint (EXCLUDE USING gist) on garment dateranges to make double-booking impossible."
+    },
+    {
+      "member": "002",
+      "text": "Performed rigorous software analysis and accounting ledger review."
+    },
+    {
+      "member": "001",
+      "text": "Engineered Security Deposit & Damage Ledger schema for accurate ₹5,000 refund calculations."
+    },
+    {
+      "member": "001",
+      "text": "Designed Thermal 80mm dual-copy customer/store receipt layout with alteration checklist (DETAILED_MODULE_BREAKDOWN_AND_BILLING.md)."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "પોસ્ટગ્રેસ (PostgreSQL) મલ્ટી-ટેનન્ટ એન્ટરપ્રાઇઝ ડેટાબેઝ સ્કીમા તૈયાર કર્યો."
+    },
+    {
+      "member": "001",
+      "text": "`daterange` એક્સક્લૂઝન કન્સ્ટ્રેઈન્ટથી ડેટાબેઝ લેવલે જ ડબલ બુકિંગ અટકાવવાનું ગણિત સેટ કર્યું."
+    },
+    {
+      "member": "002",
+      "text": "સોફ્ટવેરનું એનાલિસિસ કર્યું અને એકાઉન્ટિંગ લેજરનું સ્ટડી કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "સિક્યોરિટી ડિપોઝિટ અને ડેમેજ ડિડક્શન લેજરનું પરફેક્ટ સ્કીમા ડિઝાઇન કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "80mm થર્મલ ડ્યુઅલ-કોપી બિલ અને ટેલર અલ્ટરેશન સ્લિપનું મોડલ તૈયાર કર્યું."
+    }
+  ],
+  "deliverables": [
+    "DATABASE_SCHEMA.md",
+    "SYSTEM_ARCHITECTURE.md",
+    "Thermal Bill Layout Specs"
+  ]
+}

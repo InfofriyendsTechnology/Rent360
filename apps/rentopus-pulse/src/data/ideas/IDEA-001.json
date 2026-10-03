@@ -1,0 +1,33 @@
+{
+  "id": "IDEA-001",
+  "createdAt": "01-10-2026",
+  "title": "Modular & Customizable Feature Toggles",
+  "titleGu": "કસ્ટમ મોડ્યુલર ફીચર સિસ્ટમ",
+  "suggestedBy": "Yash Babariya",
+  "source": "Own Idea / Architecture Vision",
+  "descriptionEn": "Software shouldn't be bloated with permanent features that a client doesn't use. We will build a modular architecture where features can be toggled on/off based on the client's plan. If a client doesn't need a specific feature, they won't even see it, keeping their dashboard clean, comfortable, and highly customized to their exact needs.",
+  "descriptionGu": "સોફ્ટવેરમાં બિનજરૂરી ફીચર્સ કાયમી ન હોવા જોઈએ. આપણે એવી મોડ્યુલર સિસ્ટમ બનાવીશું જેમાં ક્લાયન્ટના પ્લાન પ્રમાણે ફીચર્સ ચાલુ/બંધ કરી શકાય. જો ક્લાયન્ટને કોઈ ફીચર નથી જોઈતું, તો તે એમના ડેશબોર્ડમાં દેખાશે જ નહીં. આનાથી સોફ્ટવેર એકદમ ક્લીન, કમ્ફર્ટેબલ અને કસ્ટમાઇઝેબલ રહેશે.",
+  "history": [
+    {
+      "date": "01-10-2026",
+      "author": "Example Context",
+      "type": "note",
+      "contentEn": "For example, if staff salary management is hardcoded in the software but the client uses a different tool for it, the uncustomizable salary feature becomes useless bloat.",
+      "contentGu": "ઉદાહરણ તરીકે: જો સ્ટાફ સેલરીનું ફીચર કાયમી હોય પણ ક્લાયન્ટ તેનો ઉપયોગ ન કરતો હોય, તો તે નકામું બની જાય છે. તેથી તેને કસ્ટમાઇઝેબલ રાખવું જરૂરી છે."
+    },
+    {
+      "date": "02-10-2026",
+      "author": "Shridhar Savaliya",
+      "type": "doubt",
+      "contentEn": "Doubt: If clients don't see a feature by default, how will they know about its advantages or even know that it exists?",
+      "contentGu": "પ્રશ્ન (Shridhar): જો ક્લાયન્ટને કોઈ ફીચર દેખાશે જ નહીં, તો તેમને એ ફીચરના ફાયદા કેવી રીતે ખબર પડશે? તેમને કેવી રીતે ખ્યાલ આવશે કે આવું કોઈ ફીચર છે?"
+    },
+    {
+      "date": "02-10-2026",
+      "author": "Yash Babariya",
+      "type": "reply",
+      "contentEn": "Reply: We will explain all available features to our clients very carefully during onboarding. If they explicitly don't want a feature after knowing about it, there is no reason to force it onto their dashboard.",
+      "contentGu": "જવાબ (Yash Babariya): આપણે ક્લાયન્ટને ઓનબોર્ડિંગ વખતે સોફ્ટવેરના બધા જ ફીચર્સ વિગતવાર સમજાવીશું. જો બધું જાણ્યા પછી પણ તેમને કોઈ ફીચર નથી જોઈતું, તો પછી આપણે શા માટે તે ફીચર પરાણે ઉમેરવું જોઈએ?"
+    }
+  ]
+}
