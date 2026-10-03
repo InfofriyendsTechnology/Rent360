@@ -4,49 +4,49 @@
   "title": "Minimalist Design Philosophy (The 92/8 Rule)",
   "titleGu": "સોશિયલ મીડિયા મિનિમલિસ્ટ ડિઝાઇન (92/8 રૂલ)",
   "members": [
-    "001"
+    "000"
   ],
   "tasksEn": [
     {
-      "member": "001",
+      "member": "000",
       "text": "Iterated brand palettes: Discarded eye-fatiguing loud gradients and neon fills."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Established the 92/8 Rule: 92% Clean Monochrome (Pure Pitch Black #000000 / Pure White #FFFFFF) + 8% Surgical Clean Blue (#0B60B0)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Configured high-end typography hierarchy: Sora (Headings/Financials) + Plus Jakarta Sans (UI/Body) + Inter (Data)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Created pure SVG line icons (zero childish emojis) and tested 6px rounded vs 0px sharp button corners."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Created interactive single-screen 100vh harness: theme_preview.html with live Light/Dark switch."
     }
   ],
   "tasksGu": [
     {
-      "member": "001",
+      "member": "000",
       "text": "આંખો ખેંચાય તેવા ગ્રેડિયન્ટ્સ સંપૂર્ણપણે રદ કર્યા."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "92/8 નિયમ લાગુ કર્યો: 92% ક્લીન મોનોક્રોમ (Black/White) અને 8% સર્જિકલ સોલિડ બ્લૂ (#0B60B0)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "`Sora` (હેડિંગ્સ), `Plus Jakarta Sans` (બોડી) અને `Inter` ફોન્ટ સ્કેલ નક્કી કરી."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "100% ક્લીન SVG વેક્ટર આઇકોન્સ અને બટન રેડિયસ (6px vs 0px) ની સરખામણી કરી."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "સંપૂર્ણ લાઈવ લાઈટ/ડાર્ક મોડ સાથે `theme_preview.html` પ્રિવ્યૂ પેજ બનાવ્યું."
     }
   ],

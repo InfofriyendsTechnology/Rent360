@@ -4,41 +4,41 @@
   "title": "Master Lifecycle & System Specifications",
   "titleGu": "માસ્ટર આર્કિટેક્ચર અને 6-સ્ટેજ ગારમેન્ટ લાઈફસાઈકલ",
   "members": [
-    "001"
+    "000"
   ],
   "tasksEn": [
     {
-      "member": "001",
+      "member": "000",
       "text": "Formulated the 6-Stage Garment Rental Lifecycle (Enquiry > Booking > Alteration > Pickup > Inspection/Return > Laundry)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Authored comprehensive master specification document (README.md)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Drafted 11-week tactical development roadmap from development to showroom pilot."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Specified automated WhatsApp cloud reminders for trial dates and return deadlines."
     }
   ],
   "tasksGu": [
     {
-      "member": "001",
+      "member": "000",
       "text": "શેરવાની/ઇન્ડો-વેસ્ટર્ન માટે 6-સ્ટેજ ગારમેન્ટ લાઈફસાઈકલ મોડેલ તૈયાર કર્યું."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "વિગતવાર માસ્ટર સ્પેસિફિકેશન ડોક્યુમેન્ટ (README.md) તૈયાર કર્યું."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "11 અઠવાડિયાનો વિગતવાર ડેવલપમેન્ટ રોડમેપ લોક કર્યો."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "ટ્રાયલ અને રિટર્ન માટે ઓટોમેટેડ વોટ્સએપ ક્લાઉડ નોટિફિકેશન સિસ્ટમ પ્લાન કરી."
     }
   ],

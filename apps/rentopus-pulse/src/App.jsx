@@ -34,14 +34,13 @@ export default function App() {
         {activeTab === 'daily' && <DailyLogList lang={lang} />}
         {activeTab === 'analytics' && <AnalyticsDashboard lang={lang} />}
         {activeTab === 'achievements' && <AchievementsList lang={lang} />}
-        {activeTab === 'ideas' && <IdeaBacklog lang={lang} />}
+        {activeTab === 'ideas' && <IdeaBacklog lang={lang} setActiveTab={setActiveTab} />}
         {activeTab === 'origin' && <TeamSection lang={lang} />}
         {activeTab === 'team' && <TeamList lang={lang} />}
       </main>
       <footer className="border-t-2 border-main py-6 mt-12 bg-card w-full mt-auto">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] text-muted font-bold uppercase tracking-widest text-center md:text-left">
           <span>RENT360 PULSE — INFOFRIYEND TECHNOLOGY</span>
-          <span>REACT + VITE + TAILWIND</span>
         </div>
       </footer>
     </div>

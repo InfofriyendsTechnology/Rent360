@@ -2,8 +2,41 @@ import React, { useState } from 'react';
 import { Lightbulb, User, Link as LinkIcon, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
 import { FEATURE_IDEAS } from '../data/roadmapData';
 
-export default function IdeaBacklog({ lang }) {
+export default function IdeaBacklog({ lang, setActiveTab }) {
   const [expandedId, setExpandedId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const parseMentions = (text) => {
+    if (!text) return text;
+    // Split by @000, @001, etc.
+    const parts = text.split(/(@\d{3})/g);
+    return parts.map((part, i) => {
+      if (part.match(/^@\d{3}$/)) {
+        return (
+          <button
+            key={i}
+            onClick={() => setActiveTab('team')}
+            className="inline-flex items-center mx-1 px-1.5 py-0.5 bg-[#0B60B0] text-white border-2 border-[#0B60B0] text-[10px] font-mono font-black shadow-sm-brutal hover:bg-main hover:text-[#0B60B0] transition-colors"
+          >
+            {part}
+          </button>
+        );
+      }
+      return part;
+    });
+  };
+
+  let filteredIdeas = FEATURE_IDEAS.filter(idea => idea.status !== 'COMPLETED');
+  if (searchQuery.trim() !== '') {
+    const q = searchQuery.toLowerCase();
+    filteredIdeas = filteredIdeas.filter(idea => {
+      const matchTitle = (idea.title || '').toLowerCase().includes(q);
+      const matchTitleGu = (idea.titleGu || '').toLowerCase().includes(q);
+      const matchDesc = (idea.descriptionEn || '').toLowerCase().includes(q);
+      const matchDescGu = (idea.descriptionGu || '').toLowerCase().includes(q);
+      return matchTitle || matchTitleGu || matchDesc || matchDescGu;
+    });
+  }
 
   const toggleIdea = (id) => {
     setExpandedId(expandedId === id ? null : id);
@@ -24,15 +57,24 @@ export default function IdeaBacklog({ lang }) {
               : 'FUTURE PLANS, SOCIAL MEDIA REFERENCES & PENDING CONCEPTS.'}
           </p>
         </div>
-        <div className="bg-card px-4 py-2 border-2 border-main shadow-sm-brutal flex items-center gap-2">
-          <Lightbulb className="w-4 h-4 text-amber-500" />
-          <span className="font-black text-main">{FEATURE_IDEAS.length} PENDING</span>
+        <div className="flex flex-col sm:items-end gap-3">
+          <div className="bg-card px-4 py-2 border-2 border-main shadow-sm-brutal flex items-center gap-2 self-start sm:self-auto">
+            <Lightbulb className="w-4 h-4 text-amber-500" />
+            <span className="font-black text-main">{filteredIdeas.length} PENDING</span>
+          </div>
+          <input 
+            type="text" 
+            placeholder={lang === 'gu' ? 'આઇડિયા સર્ચ કરો...' : 'Search ideas...'}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-card text-main text-[11px] sm:text-xs font-bold px-3 py-2 border-2 border-main shadow-sm-brutal w-full sm:w-64 focus:outline-none focus:border-[#0B60B0]"
+          />
         </div>
       </div>
 
       {/* Ideas Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-start">
-        {FEATURE_IDEAS.map((idea) => (
+        {filteredIdeas.map((idea) => (
           <div
             key={idea.id}
             className={`bg-card border-2 border-main transition-all ${
@@ -64,7 +106,7 @@ export default function IdeaBacklog({ lang }) {
               </h3>
               
               <p className="text-xs sm:text-sm text-muted font-medium leading-relaxed mb-4">
-                {lang === 'gu' ? idea.descriptionGu : idea.descriptionEn}
+                {parseMentions(lang === 'gu' ? idea.descriptionGu : idea.descriptionEn)}
               </p>
 
               {/* Footer / Actions */}
@@ -126,7 +168,7 @@ export default function IdeaBacklog({ lang }) {
                         <span className="text-[9px] font-mono font-bold text-muted">{h.date}</span>
                       </div>
                       <p className={`text-[11px] sm:text-xs font-medium leading-relaxed ${h.type === 'reply' ? 'text-main' : 'text-muted'}`}>
-                        {lang === 'gu' ? h.contentGu : h.contentEn}
+                        {parseMentions(lang === 'gu' ? h.contentGu : h.contentEn)}
                       </p>
                     </div>
                   ))}

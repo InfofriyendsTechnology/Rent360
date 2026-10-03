@@ -4,49 +4,49 @@
   "title": "Vercel Deployment, PWA Integration & Monorepo Setup",
   "titleGu": "Vercel લાઈવ ડિપ્લોયમેન્ટ, PWA અને મોનોરેપો સ્ટ્રક્ચર",
   "members": [
-    "001"
+    "000"
   ],
   "tasksEn": [
     {
-      "member": "001",
+      "member": "000",
       "text": "Successfully deployed Rent360 Pulse live on Vercel under the domain rent360daily.vercel.app."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Implemented full Progressive Web App (PWA) support allowing users to install the app natively on their devices."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Restructured the entire repository into a professional Monorepo (apps/rentopus-client & apps/rentopus-pulse)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Resolved deep JSON formatting issues and fixed Vercel edge routing errors."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Fixed the PWA transparent icon background issue on mobile by integrating the solid black Rent360 icon."
     }
   ],
   "tasksGu": [
     {
-      "member": "001",
+      "member": "000",
       "text": "Rent360 Pulse એપને Vercel પર લાઈવ ડિપ્લોય કરી (ડોમેઈન: rent360daily.vercel.app)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "પ્રોજેક્ટમાં PWA (Progressive Web App) સપોર્ટ એડ કર્યો જેથી એપ સીધી ફોનમાં ઇન્સ્ટોલ થઈ શકે."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "પ્રોજેક્ટ ફાઇલ્સને પ્રોપર મોનોરેપો (Monorepo) સ્ટ્રક્ચરમાં ગોઠવી (client અને pulse ફોલ્ડર્સ)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Vercel માં આવતી JSON એરર અને રાઉટિંગ (404) નો પ્રોબ્લેમ સોલ્વ કર્યો."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "મોબાઈલમાં આઇકોન વ્હાઇટ બોક્સ દેખાતો હતો તે કાળા લોગો સાથે ફિક્સ કર્યો."
     }
   ],

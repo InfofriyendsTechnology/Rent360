@@ -4,41 +4,41 @@
   "title": "The Spark & Virasat Studio Realization",
   "titleGu": "વિચારનો ઉદ્ભવ અને વિરાસત સ્ટુડિયોનું એનાલિસિસ",
   "members": [
-    "001"
+    "000"
   ],
   "tasksEn": [
     {
-      "member": "001",
+      "member": "000",
       "text": "Harsh Savaliya evaluated an existing rental software demo at Virasat - The Fashion Studio."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Yash Babariya (IT Full Stack Dev + Retail Mgmt Experience) & Harsh analyzed competitor software 'Rentopus'."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Identified critical industry flaws: market tools are slow, clunky, overpriced (₹16,000+), and lack boutique workflow logic."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Strategic decision taken: Build a custom, ultra-fast ERP (Rent360) for Virasat Studio (100% Free), and roll out to all Gujarat studios for ₹9,999/yr."
     }
   ],
   "tasksGu": [
     {
-      "member": "001",
+      "member": "000",
       "text": "હર્ષ સાવલિયાએ 'વિરાસત ધ ફેશન સ્ટુડિયો' ખાતે ચાલતા રેન્ટલ સોફ્ટવેર ડેમોનું ટેસ્ટિંગ કર્યું."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "યશભાઈ (IT ફૂલ સ્ટેક ડેવ. + રિટેલ મેનેજમેન્ટ અનુભવ) અને હર્ષભાઈએ કોમ્પિટિટર 'Rentopus' નું એનાલિસિસ કર્યું."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "ગંભીર ખામીઓ પકડી: માર્કેટના સોફ્ટવેર બહુ ધીમા, મોંઘા (₹16,000+) અને દુકાનની સાચી જરૂરિયાત વગરના બનેલા છે."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "મોટો નિર્ણય: વિરાસત સ્ટુડિયો માટે અતિ ઝડપી Rent360 બનાવવું (લાઈફટાઈમ ફ્રી), અને પછી ₹9,999/વર્ષમાં અન્ય સ્ટુડિયોઝને આપવું."
     }
   ],

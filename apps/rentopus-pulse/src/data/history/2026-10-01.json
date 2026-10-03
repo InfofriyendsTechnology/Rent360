@@ -4,45 +4,45 @@
   "title": "Framework Decision & Roadmap Application Launch",
   "titleGu": "ફ્રેમવર્ક લોકિંગ (React+Vite) અને રોડમેપ એપ્લિકેશન લૉન્ચ",
   "members": [
-    "001"
+    "000"
   ],
   "tasksEn": [
     {
-      "member": "001",
+      "member": "000",
       "text": "Evaluated Next.js vs. React + Vite: Yash Babariya's real testing proved Next.js was bloated and sluggish on local reloads."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Locked winning framework: React 18 + Vite + TypeScript (ultra-fast <50ms HMR, lightweight SPA for counter POS)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Documented exact team superpowers: Yash Babariya (IT Full Stack Dev + Retail Mgmt Experience), Shridhar (Accountant & Full Stack Dev), Harsh (Virasat Studio Partner)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Created PROJECT_JOURNAL_AND_ROADMAP.md for persistent historical logging."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "Engineered 'Rent360 Pulse' tracking application using the custom daily reporting format."
     }
   ],
   "tasksGu": [
     {
-      "member": "001",
+      "member": "000",
       "text": "Next.js ના બદલે અતિ ઝડપી અને હળવું **React 18 + Vite + TypeScript** ફાઇનલ કર્યું."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "ટીમના રોલ્સ નોંધ્યા: યશભાઈ (IT ફૂલ સ્ટેક ડેવ. + રિટેલ અનુભવ), શ્રીધરભાઈ (એકાઉન્ટન્ટ + ફૂલ સ્ટેક), હર્ષભાઈ (વિરાસત સ્ટુડિયો પાર્ટનર)."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "પરમેનન્ટ હિસ્ટ્રી લોગ માટે `PROJECT_JOURNAL_AND_ROADMAP.md` બનાવ્યું."
     },
     {
-      "member": "001",
+      "member": "000",
       "text": "કસ્ટમ ડેઇલી રિપોર્ટિંગ ફોર્મેટનો ઉપયોગ કરીને 'Rent360 Pulse' ટ્રેકિંગ એપ ઊભી કરી."
     }
   ],

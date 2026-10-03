@@ -36,6 +36,8 @@ export default function DailyLogList({ lang }) {
     return `${year}-${month}-${day}`;
   };
 
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Filter logic
   let filteredHistory = DAILY_HISTORY;
   if (activeFilter) {
@@ -43,6 +45,16 @@ export default function DailyLogList({ lang }) {
   }
   if (activeDateFilter) {
     filteredHistory = filteredHistory.filter(day => day.date === activeDateFilter);
+  }
+  if (searchQuery.trim() !== '') {
+    const q = searchQuery.toLowerCase();
+    filteredHistory = filteredHistory.filter(day => {
+      const matchTitle = (day.title || '').toLowerCase().includes(q);
+      const matchTitleGu = (day.titleGu || '').toLowerCase().includes(q);
+      const matchTasksEn = (day.tasksEn || []).some(t => (t.text || t).toLowerCase().includes(q));
+      const matchTasksGu = (day.tasksGu || []).some(t => (t.text || t).toLowerCase().includes(q));
+      return matchTitle || matchTitleGu || matchTasksEn || matchTasksGu;
+    });
   }
 
   return (
@@ -55,33 +67,43 @@ export default function DailyLogList({ lang }) {
             {lang === 'gu' ? 'દિવસવાર ટ્રેકિંગ હિસ્ટ્રી' : 'DAY-BY-DAY TRACKING HISTORY'}
           </h2>
           
-          <div className="mt-2 flex flex-wrap items-center gap-3">
-            {activeDateFilter && (
-              <div className="flex items-center gap-2">
-                <span className="text-[9px] font-bold text-muted uppercase">DATE:</span>
-                <button 
-                  onClick={() => setActiveDateFilter(null)}
-                  className="flex items-center gap-1 bg-card text-main border-2 border-main px-2 py-0.5 text-[10px] font-mono font-black shadow-sm-brutal hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors"
-                >
-                  {activeDateFilter} <X className="w-3 h-3" />
-                </button>
-              </div>
-            )}
-            {activeFilter && (
-              <div className="flex items-center gap-2">
-                <span className="text-[9px] font-bold text-muted uppercase">MEMBER:</span>
-                <button 
-                  onClick={() => setActiveFilter(null)}
-                  className="flex items-center gap-1 bg-[#0B60B0] text-white border-2 border-[#0B60B0] px-2 py-0.5 text-[10px] font-mono font-black shadow-sm-brutal hover:bg-red-500 hover:border-red-500 transition-colors"
-                >
-                  [{activeFilter}] <X className="w-3 h-3" />
-                </button>
-              </div>
-            )}
+          <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <input 
+              type="text" 
+              placeholder={lang === 'gu' ? 'ટાસ્ક કે ટાઇટલ સર્ચ કરો...' : 'Search tasks or titles...'}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-card text-main text-[11px] sm:text-xs font-bold px-3 py-2 border-2 border-main shadow-sm-brutal w-full sm:w-64 focus:outline-none focus:border-[#0B60B0]"
+            />
+            
+            <div className="flex flex-wrap items-center gap-3">
+              {activeDateFilter && (
+                <div className="flex items-center gap-2">
+                  <span className="text-[9px] font-bold text-muted uppercase">DATE:</span>
+                  <button 
+                    onClick={() => setActiveDateFilter(null)}
+                    className="flex items-center gap-1 bg-card text-main border-2 border-main px-2 py-0.5 text-[10px] font-mono font-black shadow-sm-brutal hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors"
+                  >
+                    {activeDateFilter} <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+              {activeFilter && (
+                <div className="flex items-center gap-2">
+                  <span className="text-[9px] font-bold text-muted uppercase">MEMBER:</span>
+                  <button 
+                    onClick={() => setActiveFilter(null)}
+                    className="flex items-center gap-1 bg-[#0B60B0] text-white border-2 border-[#0B60B0] px-2 py-0.5 text-[10px] font-mono font-black shadow-sm-brutal hover:bg-red-500 hover:border-red-500 transition-colors"
+                  >
+                    [{activeFilter}] <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-start sm:self-center">
           {/* Calendar Picker Button */}
           <div className="relative">
             <button 

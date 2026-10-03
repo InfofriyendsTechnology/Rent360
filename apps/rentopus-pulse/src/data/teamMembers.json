@@ -1,5 +1,16 @@
 [
   {
+    "id": "000",
+    "name": "InfoFriyends Technology",
+    "role": "Project Manager / Admin",
+    "roleGu": "પ્રોજેક્ટ મેનેજર / એડમિન",
+    "accessLevel": "Admin",
+    "email": "admin@infofriyends.com",
+    "avatar": "IFT",
+    "badge": "Core Strategy & Operations",
+    "focus": "Overall system administration, AI workflow guidance, and monorepo management"
+  },
+  {
     "id": "001",
     "name": "Yash Babariya",
     "role": "IT Full Stack Developer",

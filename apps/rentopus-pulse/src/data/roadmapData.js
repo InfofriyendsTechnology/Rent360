@@ -1,6 +1,5 @@
 import projectInfoRaw from './projectInfo.json';
 import teamMembersRaw from './teamMembers.json';
-import achievementsRaw from './achievements.json';
 
 // Use Vite's glob import to automatically pull all JSON files in the folders
 // eager: true means they are imported directly in the bundle, not lazy loaded.
@@ -10,7 +9,6 @@ const ideaModules = import.meta.glob('./ideas/*.json', { eager: true });
 // Convert the objects returned by Vite into arrays
 export const PROJECT_INFO = projectInfoRaw;
 export const TEAM_MEMBERS = teamMembersRaw;
-export const ACHIEVEMENTS = achievementsRaw;
 
 // Map modules and sort by dayNumber (or date)
 export const DAILY_HISTORY = Object.values(historyModules)

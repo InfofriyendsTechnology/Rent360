@@ -1,5 +1,5 @@
 import React from 'react';
-import { DAILY_HISTORY, TEAM_MEMBERS, ACHIEVEMENTS, FEATURE_IDEAS } from '../data/roadmapData';
+import { DAILY_HISTORY, TEAM_MEMBERS, FEATURE_IDEAS } from '../data/roadmapData';
 import { BarChart3 } from 'lucide-react';
 
 export default function AnalyticsDashboard({ lang }) {
@@ -62,7 +62,7 @@ export default function AnalyticsDashboard({ lang }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
         <StatBlock label={lang === 'gu' ? 'કુલ દિવસો' : 'TOTAL DAYS'} value={totalDays} />
         <StatBlock label={lang === 'gu' ? 'કુલ ટાસ્ક' : 'TOTAL TASKS'} value={totalTasks} />
-        <StatBlock label={lang === 'gu' ? 'સિદ્ધિઓ' : 'ACHIEVEMENTS'} value={ACHIEVEMENTS.length} />
+        <StatBlock label={lang === 'gu' ? 'સિદ્ધિઓ' : 'ACHIEVEMENTS'} value={FEATURE_IDEAS.filter(i => i.status === 'COMPLETED').length} />
         <StatBlock label={lang === 'gu' ? 'ટીમ મેમ્બર્સ' : 'TEAM MEMBERS'} value={TEAM_MEMBERS.length} />
       </div>
 
