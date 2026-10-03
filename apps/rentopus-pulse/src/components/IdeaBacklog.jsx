@@ -110,7 +110,7 @@ export default function IdeaBacklog({ lang, setActiveTab }) {
                 {lang === 'gu' ? idea.titleGu : idea.title}
               </h3>
               
-              <p className="text-xs sm:text-sm text-muted font-medium leading-relaxed mb-4">
+              <p className="text-xs sm:text-sm text-main opacity-90 font-medium leading-relaxed mb-4">
                 {parseMentions(lang === 'gu' ? idea.descriptionGu : idea.descriptionEn)}
               </p>
 
@@ -139,7 +139,7 @@ export default function IdeaBacklog({ lang, setActiveTab }) {
 
               {/* Expanded History Thread */}
               {expandedId === idea.id && idea.history && (
-                <div className="mt-6 pt-5 border-t-2 border-main space-y-4">
+                <div className="mt-6 pt-5 border-t-2 border-main space-y-4 animate-slide-down">
                   <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2">
                     <MessageSquare className="w-3 h-3" />
                     {lang === 'gu' ? 'ચર્ચા અને ઇવોલ્યુશન' : 'DISCUSSION & EVOLUTION THREAD'}
@@ -172,7 +172,7 @@ export default function IdeaBacklog({ lang, setActiveTab }) {
                         </div>
                         <span className="text-[9px] font-mono font-bold text-muted">{h.date}</span>
                       </div>
-                      <p className={`text-[11px] sm:text-xs font-medium leading-relaxed ${h.type === 'reply' ? 'text-main' : 'text-muted'}`}>
+                      <p className={`text-[11px] sm:text-xs font-medium leading-relaxed ${h.type === 'reply' ? 'text-main' : 'text-main opacity-80'}`}>
                         {parseMentions(lang === 'gu' ? h.contentGu : h.contentEn)}
                       </p>
                     </div>

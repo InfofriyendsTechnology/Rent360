@@ -179,7 +179,7 @@ export default function DailyLogList({ lang }) {
 
               {/* Expanded Content */}
               {isOpen && (
-                <div className="w-[calc(100%-1rem)] sm:w-[calc(100%-1.5rem)] ml-4 sm:ml-6 pl-3 sm:pl-5 border-l-[3px] border-main mt-5 mb-2 space-y-4 sm:space-y-5 transition-colors">
+                <div className="w-[calc(100%-1rem)] sm:w-[calc(100%-1.5rem)] ml-4 sm:ml-6 pl-3 sm:pl-5 border-l-[3px] border-main mt-5 mb-2 space-y-4 sm:space-y-5 animate-slide-down">
 
                   {/* Team Members Who Worked */}
                   <div className="flex items-center gap-2">
@@ -320,7 +320,7 @@ function BrutalistCalendar({ activeDateFilter, setActiveDateFilter, closeCalenda
   };
 
   return (
-    <div className="absolute top-[calc(100%+0.5rem)] right-0 p-4 bg-card border-2 border-main shadow-lg-brutal z-50 w-64 sm:w-72">
+    <div className="absolute top-[calc(100%+0.5rem)] right-0 p-4 bg-card border-2 border-main shadow-lg-brutal z-50 w-64 sm:w-72 animate-slide-down">
       <div className="flex justify-between items-center mb-4">
         <button onClick={handlePrevMonth} className="p-1 border-2 border-main hover:bg-main hover:text-main bg-card transition-colors">
           <ChevronDown className="w-4 h-4 rotate-90" />

@@ -41,7 +41,7 @@ export default function AchievementsList({ lang }) {
                 <h3 className="font-heading text-lg sm:text-xl font-black text-main uppercase leading-tight mb-2">
                   {lang === 'gu' ? ach.titleGu : ach.title}
                 </h3>
-                <p className="text-sm text-muted font-medium leading-relaxed mb-4">
+                <p className="text-sm text-main opacity-90 font-medium leading-relaxed mb-4">
                   {lang === 'gu' ? ach.descriptionGu : ach.descriptionEn}
                 </p>
               </div>
