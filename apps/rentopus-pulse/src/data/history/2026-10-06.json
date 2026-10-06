@@ -1,8 +1,8 @@
 {
   "date": "06-10-2026",
   "dayNumber": 12,
-  "title": "Backend Architecture & Node.js Setup",
-  "titleGu": "બેકએન્ડ આર્કિટેક્ચર અને સિસ્ટમ સેટઅપ",
+  "title": "Stores Management & Premium UI",
+  "titleGu": "સ્ટોર્સ મેનેજમેન્ટ અને પ્રીમિયમ UI",
   "members": [
     "000"
   ],
@@ -26,6 +26,18 @@
     {
       "member": "000",
       "text": "Configured a single 'npm run dev' command using concurrently to run the frontend on port 25926 and backend on port 61026."
+    },
+    {
+      "member": "000",
+      "text": "Fixed Redux persistence logic to properly retain user session and roles across browser reloads."
+    },
+    {
+      "member": "000",
+      "text": "Completed the Super Admin Stores Management module with full CRUD operations via API."
+    },
+    {
+      "member": "000",
+      "text": "Upgraded the overall UI from a harsh Brutalist design to a Premium Soft SaaS theme (glassmorphism, subtle gradients, soft shadows)."
     }
   ],
   "tasksGu": [
@@ -48,11 +60,26 @@
     {
       "member": "000",
       "text": "એક જ કમાન્ડ (npm run dev) થી ફ્રન્ટએન્ડ (Port 25926) અને બેકએન્ડ (Port 61026) બંને એકસાથે રન થાય એવું એડવાન્સ સેટઅપ કર્યું."
+    },
+    {
+      "member": "000",
+      "text": "પેજ રિફ્રેશ કરવાથી યુઝર લોગઆઉટ થઈ જતો હતો એ Redux નો ઈશ્યુ સોલ્વ કર્યો."
+    },
+    {
+      "member": "000",
+      "text": "સુપર એડમિન માટે Stores Management પેજ બનાવ્યું, જેમાં નવો સ્ટોર એડ કરવો, એડિટ અને ડિલીટ કરવાની સુવિધા (APIs સાથે) પૂરી કરી."
+    },
+    {
+      "member": "000",
+      "text": "UI ને વધુ એટ્રેક્ટિવ અને પ્રીમિયમ બનાવવા માટે જૂની કડક થીમ કાઢીને નવી Premium Soft SaaS થીમ લગાવી (ગ્લાસ ઈફેક્ટ અને સોફ્ટ શેડો સાથે)."
     }
   ],
   "deliverables": [
     "Rent360 Monorepo Structure",
     "Concurrent Dev Server",
-    "Node.js Backend Setup"
+    "Node.js Backend Setup",
+    "Redux Persistence Fix",
+    "Stores Management UI & APIs",
+    "Premium SaaS Theme Redesign"
   ]
 }
