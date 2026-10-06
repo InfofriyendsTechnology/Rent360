@@ -1,0 +1,58 @@
+{
+  "date": "06-10-2026",
+  "dayNumber": 12,
+  "title": "Backend Architecture & Node.js Setup",
+  "titleGu": "બેકએન્ડ આર્કિટેક્ચર અને સિસ્ટમ સેટઅપ",
+  "members": [
+    "000"
+  ],
+  "tasksEn": [
+    {
+      "member": "000",
+      "text": "Concluded NOT to use Supabase in favor of a Custom Node.js + Express backend to maintain full control over complex ERP business logic."
+    },
+    {
+      "member": "000",
+      "text": "Finalized Prisma ORM for database queries to combine the ease of MongoDB with the safety of PostgreSQL."
+    },
+    {
+      "member": "000",
+      "text": "Planned the deployment architecture: Neon.tech (Database), Render (Node Backend), Vercel (React Frontend) for a $0 starting cost, with a future migration to AWS RDS."
+    },
+    {
+      "member": "000",
+      "text": "Restructured the codebase into a clean monorepo: apps/rent360 containing frontend/ and backend/ folders."
+    },
+    {
+      "member": "000",
+      "text": "Configured a single 'npm run dev' command using concurrently to run the frontend on port 25926 and backend on port 61026."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "000",
+      "text": "જટિલ બિઝનેસ લોજીક પર પૂરો કંટ્રોલ રાખવા માટે Supabase (BaaS) કેન્સલ કરીને અલગથી Custom Node.js + Express બેકએન્ડ બનાવવાનો ફાઇનલ નિર્ણય લીધો."
+    },
+    {
+      "member": "000",
+      "text": "MongoDB જેવી કોડિંગ સ્પીડ અને PostgreSQL જેવી સિક્યુરિટી એકસાથે મેળવવા માટે ડેટાબેઝ ક્વેરી માટે Prisma ORM ફાઇનલ કર્યું."
+    },
+    {
+      "member": "000",
+      "text": "સ્ટાર્ટઅપ માટે ઝીરો બજેટ આર્કિટેક્ચર (Neon, Render, Vercel) પ્લાન કર્યું, અને ભવિષ્યમાં ક્લાયન્ટ આવે ત્યારે AWS RDS પર શિફ્ટ થવાનો માસ્ટર પ્લાન બનાવ્યો."
+    },
+    {
+      "member": "000",
+      "text": "પ્રોજેક્ટ ફોલ્ડર્સ વ્યવસ્થિત ગોઠવ્યા: એક જ 'rent360' ફોલ્ડરમાં 'frontend' અને 'backend' ફોલ્ડર સેટ કર્યા."
+    },
+    {
+      "member": "000",
+      "text": "એક જ કમાન્ડ (npm run dev) થી ફ્રન્ટએન્ડ (Port 25926) અને બેકએન્ડ (Port 61026) બંને એકસાથે રન થાય એવું એડવાન્સ સેટઅપ કર્યું."
+    }
+  ],
+  "deliverables": [
+    "Rent360 Monorepo Structure",
+    "Concurrent Dev Server",
+    "Node.js Backend Setup"
+  ]
+}

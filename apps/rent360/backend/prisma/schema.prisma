@@ -1,0 +1,590 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. STORES
+model Store {
+  id                  String   @id @default(uuid())
+  name                String
+  owner_name          String
+  mobile              String   @unique
+  email               String?
+  address             String?
+  city                String?
+  state               String?
+  pincode             String?
+  gst_number          String?
+  logo_url            String?
+  upi_id              String?
+  subscription_status String   @default("ACTIVE")
+  plan_id             String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  users                 User[]
+  roles                 Role[]
+  customers             Customer[]
+  categories            Category[]
+  products              Product[]
+  productItems          ProductItem[]
+  bookings              Booking[]
+  offers                Offer[]
+  paymentModes          PaymentMode[]
+  bankAccounts          StoreBankAccount[]
+  transactionCategories TransactionCategory[]
+  transactions          Transaction[]
+  vendorTypes           VendorType[]
+  vendors               Vendor[]
+  serviceTypes          ServiceType[]
+  itemServiceLogs       ItemServiceLog[]
+  timeSlots             TimeSlot[]
+  accessories           Accessory[]
+  attendances           Attendance[]
+  holidays              Holiday[]
+  staffLeaves           StaffLeave[]
+  staffSalaries         StaffSalary[]
+  staffAdvances         StaffAdvance[]
+  reminders             Reminder[]
+  creditVouchers        CreditVoucher[]
+  auditLogs             AuditLog[]
+  purchaseInvoices      PurchaseInvoice[]
+  retailSales           RetailSale[]
+  subscriptions         StoreSubscription[]
+}
+
+// 2. ROLES
+model Role {
+  id          String   @id @default(uuid())
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name        String
+  permissions Json     @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+}
+
+// 3. USERS
+model User {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  roleId    String?
+  role      Role?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  name      String
+  mobile    String   @unique
+  password  String
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookingsCreated Booking[]      @relation("BookingSalesman")
+  transactions    Transaction[]  @relation("TransactionStaff")
+  attendances     Attendance[]
+  staffLeaves     StaffLeave[]
+  staffSalaries   StaffSalary[]
+  staffAdvances   StaffAdvance[]
+  reminders       Reminder[]     @relation("ReminderAssignedTo")
+  auditLogs       AuditLog[]
+  retailSales     RetailSale[]   @relation("RetailSalesman")
+}
+
+// 4. CATEGORIES
+model Category {
+  id            String    @id @default(uuid())
+  storeId       String
+  store         Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  category_code String
+  name          String
+  description   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  products      Product[]
+}
+
+// 5. PRODUCTS
+model Product {
+  id                    String         @id @default(uuid())
+  storeId               String
+  store                 Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  categoryId            String
+  category              Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  product_code          String
+  name                  String
+  base_rent_price       Float          @default(0.0)
+  base_security_deposit Float          @default(0.0)
+  image_urls            Json           @default("[]")
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  productItems          ProductItem[]
+  purchaseItems         PurchaseItem[]
+}
+
+// 6. PRODUCT_ITEMS
+model ProductItem {
+  id              String   @id @default(uuid())
+  storeId         String
+  store           Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  sku_code        String   @unique
+  size            String?
+  color           String?
+  status          String   @default("AVAILABLE")
+  condition_notes String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  bookingItems    BookingItem[]
+  serviceLogs     ItemServiceLog[]
+  retailSaleItems RetailSaleItem[]
+}
+
+// 7. CUSTOMERS
+model Customer {
+  id               String   @id @default(uuid())
+  storeId          String
+  store            Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  full_name        String
+  mobile           String
+  alternate_mobile String?
+  address          String?
+  city             String?
+  pincode          String?
+  reference_by     String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  bookings       Booking[]
+  reminders      Reminder[]
+  creditVouchers CreditVoucher[]
+  retailSales    RetailSale[]
+}
+
+// 8. BOOKINGS
+model Booking {
+  id             String    @id @default(uuid())
+  storeId        String
+  store          Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customerId     String
+  customer       Customer  @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  booking_no     String
+  event_type     String
+  event_date     DateTime
+  timeSlotId     String?
+  timeSlot       TimeSlot? @relation(fields: [timeSlotId], references: [id], onDelete: SetNull)
+  pickup_date    DateTime
+  return_date    DateTime
+  total_rent     Float     @default(0.0)
+  total_security Float     @default(0.0)
+  offerId        String?
+  offer          Offer?    @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  discount       Float     @default(0.0)
+  tax_amount     Float     @default(0.0)
+  internal_notes String?
+  status         String    @default("UPCOMING")
+  salesmanId     String?
+  salesman       User?     @relation("BookingSalesman", fields: [salesmanId], references: [id])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  bookingItems   BookingItem[]
+  transactions   Transaction[]
+  creditVouchers CreditVoucher[]
+  reminders      Reminder[]
+}
+
+// 9. OFFERS
+model Offer {
+  id             String    @id @default(uuid())
+  storeId        String
+  store          Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  offer_code     String
+  offer_name     String
+  discount_type  String
+  discount_value Float
+  valid_until    DateTime
+  is_active      Boolean   @default(true)
+  bookings       Booking[]
+}
+
+// 10. BOOKING_ITEMS
+model BookingItem {
+  id                  String      @id @default(uuid())
+  bookingId           String
+  booking             Booking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  productItemId       String
+  productItem         ProductItem @relation(fields: [productItemId], references: [id], onDelete: Restrict)
+  rent_price          Float
+  security_deposit    Float
+  tailor_measurements Json        @default("{}")
+  tailor_status       String      @default("PENDING")
+  bundled_accessories Json        @default("[]")
+  item_status         String      @default("PICKED_UP")
+}
+
+// 11. PAYMENT_MODES
+model PaymentMode {
+  id           String        @id @default(uuid())
+  storeId      String
+  store        Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name         String
+  is_active    Boolean       @default(true)
+  transactions Transaction[]
+  salaries     StaffSalary[]
+}
+
+// 12. STORE_BANK_ACCOUNTS
+model StoreBankAccount {
+  id             String        @id @default(uuid())
+  storeId        String
+  store          Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  account_name   String
+  account_number String
+  ifsc_code      String?
+  transactions   Transaction[]
+}
+
+// 13. TRANSACTION_CATEGORIES
+model TransactionCategory {
+  id            String        @id @default(uuid())
+  storeId       String
+  store         Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  category_type String // INCOME, EXPENSE
+  name          String
+  transactions  Transaction[]
+}
+
+// 14. TRANSACTIONS
+model Transaction {
+  id                  String               @id @default(uuid())
+  storeId             String
+  store               Store                @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  bookingId           String?
+  booking             Booking?             @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  retailSaleId        String?
+  retailSale          RetailSale?          @relation(fields: [retailSaleId], references: [id], onDelete: SetNull)
+  purchaseId          String?
+  purchaseInvoice     PurchaseInvoice?     @relation(fields: [purchaseId], references: [id], onDelete: SetNull)
+  categoryId          String?
+  transactionCategory TransactionCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  bankAccountId       String?
+  bankAccount         StoreBankAccount?    @relation(fields: [bankAccountId], references: [id], onDelete: SetNull)
+  paymentModeId       String
+  paymentMode         PaymentMode          @relation(fields: [paymentModeId], references: [id], onDelete: Restrict)
+  transaction_type    String // CREDIT, DEBIT
+  amount              Float
+  reference_no        String?
+  remarks             String?
+  performedById       String?
+  performedBy         User?                @relation("TransactionStaff", fields: [performedById], references: [id])
+  createdAt           DateTime             @default(now())
+}
+
+// 15. VENDOR_TYPES
+model VendorType {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name      String
+  createdAt DateTime @default(now())
+  vendors   Vendor[]
+}
+
+// 16. VENDORS
+model Vendor {
+  id               String            @id @default(uuid())
+  storeId          String
+  store            Store             @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  vendorTypeId     String
+  vendorType       VendorType        @relation(fields: [vendorTypeId], references: [id], onDelete: Restrict)
+  name             String
+  mobile           String
+  address          String?
+  createdAt        DateTime          @default(now())
+  serviceLogs      ItemServiceLog[]
+  purchaseInvoices PurchaseInvoice[]
+}
+
+// 17. SERVICE_TYPES
+model ServiceType {
+  id          String           @id @default(uuid())
+  storeId     String
+  store       Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name        String
+  createdAt   DateTime         @default(now())
+  serviceLogs ItemServiceLog[]
+}
+
+// 18. ITEM_SERVICE_LOGS
+model ItemServiceLog {
+  id              String      @id @default(uuid())
+  storeId         String
+  store           Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  vendorId        String
+  vendor          Vendor      @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  productItemId   String
+  productItem     ProductItem @relation(fields: [productItemId], references: [id], onDelete: Restrict)
+  serviceTypeId   String
+  serviceType     ServiceType @relation(fields: [serviceTypeId], references: [id], onDelete: Restrict)
+  sent_date       DateTime
+  expected_return DateTime
+  actual_return   DateTime?
+  service_cost    Float       @default(0.0)
+  status          String      @default("IN_SERVICE")
+  createdAt       DateTime    @default(now())
+}
+
+// 19. TIME_SLOTS
+model TimeSlot {
+  id         String    @id @default(uuid())
+  storeId    String
+  store      Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name       String
+  start_time String
+  end_time   String
+  createdAt  DateTime  @default(now())
+  bookings   Booking[]
+}
+
+// 20. ACCESSORIES
+model Accessory {
+  id              String           @id @default(uuid())
+  storeId         String
+  store           Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  item_name       String
+  item_type       String
+  total_stock     Int              @default(0)
+  alert_limit     Int              @default(0)
+  createdAt       DateTime         @default(now())
+  retailSaleItems RetailSaleItem[]
+}
+
+// 21. ATTENDANCE
+model Attendance {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime
+  status    String
+  clock_in  String?
+  clock_out String?
+  remarks   String?
+  createdAt DateTime @default(now())
+}
+
+// 22. HOLIDAYS
+model Holiday {
+  id           String   @id @default(uuid())
+  storeId      String
+  store        Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  date         DateTime
+  name         String
+  holiday_type String
+  createdAt    DateTime @default(now())
+}
+
+// 23. STAFF_LEAVES
+model StaffLeave {
+  id         String   @id @default(uuid())
+  storeId    String
+  store      Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  start_date DateTime
+  end_date   DateTime
+  leave_type String
+  reason     String?
+  status     String   @default("PENDING")
+  createdAt  DateTime @default(now())
+}
+
+// 24. STAFF_SALARIES
+model StaffSalary {
+  id                String         @id @default(uuid())
+  storeId           String
+  store             Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  userId            String
+  user              User           @relation(fields: [userId], references: [id], onDelete: Restrict)
+  month_year        String
+  base_salary       Float
+  commission        Float          @default(0.0)
+  bonus_amount      Float          @default(0.0)
+  leave_deductions  Float          @default(0.0)
+  advance_deduction Float          @default(0.0)
+  net_payable       Float
+  status            String         @default("PENDING")
+  paid_on           DateTime?
+  paymentModeId     String?
+  paymentMode       PaymentMode?   @relation(fields: [paymentModeId], references: [id], onDelete: SetNull)
+  createdAt         DateTime       @default(now())
+  staffAdvances     StaffAdvance[]
+}
+
+// 25. STAFF_ADVANCES
+model StaffAdvance {
+  id         String       @id @default(uuid())
+  storeId    String
+  store      Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  amount     Float
+  date_taken DateTime
+  reason     String?
+  is_settled Boolean      @default(false)
+  salaryId   String?
+  salary     StaffSalary? @relation(fields: [salaryId], references: [id], onDelete: SetNull)
+  createdAt  DateTime     @default(now())
+}
+
+// 26. REMINDERS
+model Reminder {
+  id            String   @id @default(uuid())
+  storeId       String
+  store         Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customerId    String
+  customer      Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  bookingId     String?
+  booking       Booking? @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  reminder_date DateTime
+  title         String
+  description   String?
+  assignedToId  String?
+  assignedTo    User?    @relation("ReminderAssignedTo", fields: [assignedToId], references: [id])
+  status        String   @default("PENDING")
+  createdAt     DateTime @default(now())
+}
+
+// 27. CREDIT_VOUCHERS
+model CreditVoucher {
+  id                String   @id @default(uuid())
+  storeId           String
+  store             Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customerId        String
+  customer          Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  originalBookingId String?
+  originalBooking   Booking? @relation(fields: [originalBookingId], references: [id], onDelete: SetNull)
+  voucher_code      String
+  total_amount      Float
+  balance_amount    Float
+  expiry_date       DateTime
+  is_active         Boolean  @default(true)
+  createdAt         DateTime @default(now())
+}
+
+// 28. AUDIT_LOGS
+model AuditLog {
+  id          String   @id @default(uuid())
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action_type String
+  table_name  String
+  record_id   String
+  old_data    Json?
+  new_data    Json?
+  ip_address  String?
+  device_info String?
+  createdAt   DateTime @default(now())
+}
+
+// 29. PURCHASE_INVOICES
+model PurchaseInvoice {
+  id           String    @id @default(uuid())
+  storeId      String
+  store        Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  vendorId     String
+  vendor       Vendor    @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  invoice_no   String
+  invoice_date DateTime
+  total_amount Float
+  paid_amount  Float     @default(0.0)
+  due_date     DateTime?
+  status       String    @default("UNPAID")
+  createdAt    DateTime  @default(now())
+
+  purchaseItems PurchaseItem[]
+  transactions  Transaction[]
+}
+
+// 30. PURCHASE_ITEMS
+model PurchaseItem {
+  id              String          @id @default(uuid())
+  purchaseId      String
+  purchaseInvoice PurchaseInvoice @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  productId       String?
+  product         Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  item_name       String
+  quantity        Int
+  unit_price      Float
+  total_price     Float
+}
+
+// 31. RETAIL_SALES
+model RetailSale {
+  id           String   @id @default(uuid())
+  storeId      String
+  store        Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customerId   String
+  customer     Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  bill_no      String
+  sale_date    DateTime
+  total_amount Float
+  discount     Float    @default(0.0)
+  tax_amount   Float    @default(0.0)
+  final_amount Float
+  salesmanId   String?
+  salesman     User?    @relation("RetailSalesman", fields: [salesmanId], references: [id])
+  createdAt    DateTime @default(now())
+
+  retailSaleItems RetailSaleItem[]
+  transactions    Transaction[]
+}
+
+// 32. RETAIL_SALE_ITEMS
+model RetailSaleItem {
+  id            String       @id @default(uuid())
+  retailSaleId  String
+  retailSale    RetailSale   @relation(fields: [retailSaleId], references: [id], onDelete: Cascade)
+  productItemId String?
+  productItem   ProductItem? @relation(fields: [productItemId], references: [id], onDelete: SetNull)
+  accessoryId   String?
+  accessory     Accessory?   @relation(fields: [accessoryId], references: [id], onDelete: SetNull)
+  quantity      Int
+  price         Float
+}
+
+// 33. SUBSCRIPTION_PLANS (Global)
+model SubscriptionPlan {
+  id                 String              @id @default(uuid())
+  name               String
+  price_per_month    Float
+  price_per_year     Float
+  max_bookings       Int
+  max_staff          Int
+  features           Json                @default("[]")
+  is_active          Boolean             @default(true)
+  storeSubscriptions StoreSubscription[]
+}
+
+// 34. STORE_SUBSCRIPTIONS
+model StoreSubscription {
+  id               String           @id @default(uuid())
+  storeId          String
+  store            Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  planId           String
+  plan             SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Restrict)
+  start_date       DateTime
+  end_date         DateTime
+  status           String           @default("ACTIVE")
+  last_paid_amount Float
+  createdAt        DateTime         @default(now())
+}

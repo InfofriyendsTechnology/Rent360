@@ -1,0 +1,71 @@
+// Rent360 Plus Theme Colors (Brutalist-Clean Editorial)
+
+:root {
+  --bg-main: #ffffff;
+  --bg-card: #f8f9fa;
+  --bg-card-alt: #f1f3f5;
+  --bg-inverse: #000000;
+  
+  --text-main: #000000;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+  
+  --border-main: #000000;
+  --border-muted: #e2e8f0;
+  
+  --accent: #0B60B0;
+  --danger: #dc3545;
+  
+  // Brutalist Shadows
+  --shadow-sm: 2px 2px 0px 0px #000000;
+  --shadow-md: 3px 3px 0px 0px #000000;
+  --shadow-lg: 4px 4px 0px 0px #000000;
+  --shadow-accent-md: 3px 3px 0px 0px #0B60B0;
+}
+
+.dark {
+  --bg-main: #000000;
+  --bg-card: #0A0A0A;
+  --bg-card-alt: #060606;
+  --bg-inverse: #ffffff;
+  
+  --text-main: #ffffff;
+  --text-muted: #737373;
+  --text-inverse: #000000;
+  
+  --border-main: #333333;
+  --border-muted: #1a1a1a;
+  
+  --accent: #0B60B0;
+  --danger: #ef4444;
+  
+  // Brutalist Shadows
+  --shadow-sm: 2px 2px 0px 0px #1a1a1a;
+  --shadow-md: 3px 3px 0px 0px #333333;
+  --shadow-lg: 4px 4px 0px 0px #333333;
+  --shadow-accent-md: 3px 3px 0px 0px #0B60B0;
+}
+
+$bg-main: var(--bg-main);
+$bg-card: var(--bg-card);
+$bg-card-alt: var(--bg-card-alt);
+$bg-inverse: var(--bg-inverse);
+
+$text-main: var(--text-main);
+$text-muted: var(--text-muted);
+$text-inverse: var(--text-inverse);
+
+$border-main: var(--border-main);
+$border-muted: var(--border-muted);
+
+$accent: var(--accent);
+$danger: var(--danger);
+
+$shadow-sm: var(--shadow-sm);
+$shadow-md: var(--shadow-md);
+$shadow-lg: var(--shadow-lg);
+$shadow-accent-md: var(--shadow-accent-md);
+
+$font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+$font-size-base: 16px;
+$border-radius: 0px;

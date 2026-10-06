@@ -1,0 +1,126 @@
+@import '../../styles/variables';
+
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background-color: $bg-card;
+  border-right: 2px solid $border-main;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 50;
+
+  .sidebar-brand {
+    height: 80px; /* Exact match to Header height */
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid $border-main;
+
+    .brand-logo {
+      width: 45px;
+      height: 45px;
+      background-color: $bg-main;
+      border: 2px solid $border-main;
+      box-shadow: 2px 2px 0px 0px $accent;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .brand-text {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: $text-main;
+      letter-spacing: -0.5px;
+    }
+  }
+
+  .sidebar-menu {
+    flex: 1;
+    padding: 20px 15px;
+    overflow-y: auto;
+
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 12px 15px;
+      color: $text-main;
+      text-decoration: none;
+      font-weight: 600;
+      border: 2px solid transparent;
+      border-radius: 0;
+      transition: all 0.2s ease;
+      margin-right: 5px; /* Give space for shadow */
+      margin-bottom: 5px;
+
+      .icon {
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+      }
+
+      &:hover {
+        background-color: $bg-card-alt;
+        border-color: $border-muted;
+      }
+
+      &.active {
+        background-color: $accent; /* Solid blue like the Add button */
+        border-color: $border-main;
+        box-shadow: 3px 3px 0px 0px $border-main; /* Brutalist shadow */
+        color: #ffffff; /* Explicitly white text so it's always visible */
+        transform: translate(-2px, -2px);
+      }
+    }
+  }
+
+  .sidebar-footer {
+    padding: 20px;
+    border-top: 2px solid $border-main;
+
+    .logout-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px;
+      background-color: $danger; /* Solid red */
+      border: 2px solid $border-main;
+      color: #ffffff; /* White text */
+      font-weight: 700;
+      box-shadow: 3px 3px 0px 0px $border-main;
+      transition: all 0.2s ease;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken(#dc3545, 10%);
+        transform: translate(-2px, -2px);
+        box-shadow: 5px 5px 0px 0px $border-main;
+      }
+
+      &:active {
+        transform: translate(1px, 1px);
+        box-shadow: none;
+      }
+    }
+  }
+}

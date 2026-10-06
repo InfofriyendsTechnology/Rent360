@@ -1,0 +1,231 @@
+@import '../styles/variables';
+
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-layout {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-main;
+  position: relative;
+  
+  /* Full-page Brutalist dot background */
+  background-image: radial-gradient($border-muted 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  animation: fadeInSlideUp 0.5s ease-out;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-card;
+  border: 2px solid $border-main;
+  box-shadow: $shadow-sm;
+  color: $text-main;
+  z-index: 20;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInSlideUp 0.6s ease-out;
+  
+  &:hover {
+    background-color: $bg-card-alt;
+    transform: translate(-2px, -2px) scale(1.05);
+    box-shadow: $shadow-md;
+  }
+}
+
+.login-box {
+  width: 100%;
+  max-width: 450px;
+  padding: 40px;
+  background-color: $bg-card;
+  border: 3px solid $border-main;
+  box-shadow: 8px 8px 0px 0px $border-main; 
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInSlideUp 0.4s ease-out forwards;
+  
+  &:hover {
+    box-shadow: 10px 10px 0px 0px $border-main;
+    transform: translate(-2px, -2px);
+  }
+  
+  .brand-header {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+
+      .logo-icon-box {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $bg-main;
+        border: 2px solid $border-main;
+        box-shadow: 4px 4px 0px 0px $accent;
+        padding: 5px;
+        
+        .form-logo-icon {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+
+      .logo-text {
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+        color: $text-main;
+      }
+    }
+
+    p {
+      color: $text-muted;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+  }
+
+  .error-alert {
+    background-color: rgba($danger, 0.1);
+    color: $danger;
+    padding: 12px;
+    border: 2px solid $danger;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      label {
+        font-weight: 700;
+        color: $text-main;
+        font-size: 0.95rem;
+      }
+
+      .password-input-wrapper {
+        position: relative;
+        display: block;
+        width: 100%;
+
+        input {
+          width: 100%;
+          padding-right: 45px;
+        }
+
+        .toggle-password {
+          position: absolute;
+          right: 0;
+          top: 0;
+          height: 100%;
+          width: 45px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          color: $text-muted;
+          cursor: pointer;
+
+          &:hover {
+            color: $text-main;
+          }
+        }
+      }
+
+      input {
+        width: 100%;
+        padding: 14px;
+        font-size: 1rem;
+        background-color: $bg-card-alt;
+        border: 2px solid $border-main; /* Strong dark border */
+        border-radius: $border-radius;
+        color: $text-main;
+        transition: all 0.2s ease;
+
+        &:focus {
+          border-color: $accent;
+          background-color: $bg-main;
+          box-shadow: $shadow-accent-md;
+          outline: none;
+        }
+
+        &:-webkit-autofill,
+        &:-webkit-autofill:hover, 
+        &:-webkit-autofill:focus, 
+        &:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 30px var(--bg-card-alt) inset !important;
+          -webkit-text-fill-color: var(--text-main) !important;
+          transition: background-color 5000s ease-in-out 0s;
+        }
+      }
+    }
+
+    .btn-primary {
+      margin-top: 10px;
+      background-color: $accent;
+      color: #ffffff;
+      border: 2px solid $border-main;
+      padding: 16px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      box-shadow: $shadow-md;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      width: 100%;
+      
+      &:hover:not(:disabled) {
+        transform: translate(-2px, -2px);
+        box-shadow: $shadow-lg;
+      }
+
+      &:active:not(:disabled) {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+      }
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
