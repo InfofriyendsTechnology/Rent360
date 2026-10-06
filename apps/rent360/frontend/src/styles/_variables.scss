@@ -1,26 +1,29 @@
-// Rent360 Plus Theme Colors (Brutalist-Clean Editorial)
+// Modern SaaS Soft Theme Variables (Original Colors)
 
 :root {
-  --bg-main: #ffffff;
-  --bg-card: #f8f9fa;
-  --bg-card-alt: #f1f3f5;
-  --bg-inverse: #000000;
+  --bg-main: #f0f4f8; /* Soft blue-gray background */
+  --bg-card: #ffffff;
+  --bg-card-alt: #f8fafc;
+  --bg-inverse: #0f172a;
   
-  --text-main: #000000;
+  --text-main: #1e293b;
   --text-muted: #64748b;
   --text-inverse: #ffffff;
   
-  --border-main: #000000;
-  --border-muted: #e2e8f0;
+  --border-main: rgba(0, 0, 0, 0.08);
+  --border-muted: rgba(0, 0, 0, 0.04);
   
-  --accent: #0B60B0;
-  --danger: #dc3545;
+  --accent: #0B60B0; /* Original Blue */
+  --accent-hover: #1472cb; /* Brighter Blue */
+  --accent-light: #eef5fc; /* Very light accent for hovers */
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
   
-  // Brutalist Shadows
-  --shadow-sm: 2px 2px 0px 0px #000000;
-  --shadow-md: 3px 3px 0px 0px #000000;
-  --shadow-lg: 4px 4px 0px 0px #000000;
-  --shadow-accent-md: 3px 3px 0px 0px #0B60B0;
+  // Premium Soft Shadows
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(149, 157, 165, 0.15);
+  --shadow-lg: 0 16px 32px rgba(149, 157, 165, 0.2);
+  --shadow-accent-md: 0 8px 20px rgba(11, 96, 176, 0.25);
 }
 
 .dark {
@@ -30,20 +33,23 @@
   --bg-inverse: #ffffff;
   
   --text-main: #ffffff;
-  --text-muted: #737373;
+  --text-muted: #a3a3a3;
   --text-inverse: #000000;
   
-  --border-main: #333333;
-  --border-muted: #1a1a1a;
+  --border-main: rgba(255, 255, 255, 0.1);
+  --border-muted: rgba(255, 255, 255, 0.04);
   
   --accent: #0B60B0;
+  --accent-hover: #0d73d3;
+  --accent-light: rgba(11, 96, 176, 0.15);
   --danger: #ef4444;
+  --danger-hover: #f87171;
   
-  // Brutalist Shadows
-  --shadow-sm: 2px 2px 0px 0px #1a1a1a;
-  --shadow-md: 3px 3px 0px 0px #333333;
-  --shadow-lg: 4px 4px 0px 0px #333333;
-  --shadow-accent-md: 3px 3px 0px 0px #0B60B0;
+  // Soft Shadows for Dark Mode
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.8);
+  --shadow-accent-md: 0 8px 20px rgba(11, 96, 176, 0.3);
 }
 
 $bg-main: var(--bg-main);
@@ -59,7 +65,10 @@ $border-main: var(--border-main);
 $border-muted: var(--border-muted);
 
 $accent: var(--accent);
+$accent-hover: var(--accent-hover);
+$accent-light: var(--accent-light);
 $danger: var(--danger);
+$danger-hover: var(--danger-hover);
 
 $shadow-sm: var(--shadow-sm);
 $shadow-md: var(--shadow-md);
@@ -67,5 +76,6 @@ $shadow-lg: var(--shadow-lg);
 $shadow-accent-md: var(--shadow-accent-md);
 
 $font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-$font-size-base: 16px;
-$border-radius: 0px;
+$font-size-base: 14px;
+$border-radius: 12px;
+$border-radius-sm: 8px;

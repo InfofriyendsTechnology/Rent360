@@ -11,6 +11,7 @@ const StoresList = () => {
   const [loading, setLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingStoreId, setEditingStoreId] = useState(null);
   const [formData, setFormData] = useState({
     name: '', owner_name: '', mobile: '', email: '', 
     address: '', city: '', state: '', pincode: '', gst_number: ''
@@ -39,19 +40,61 @@ const StoresList = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const openAddModal = () => {
+    setEditingStoreId(null);
+    setFormData({ name: '', owner_name: '', mobile: '', email: '', address: '', city: '', state: '', pincode: '', gst_number: '' });
+    setIsModalOpen(true);
+  };
+
+  const handleEdit = (store) => {
+    setEditingStoreId(store.id);
+    setFormData({
+      name: store.name || '',
+      owner_name: store.owner_name || '',
+      mobile: store.mobile || '',
+      email: store.email || '',
+      address: store.address || '',
+      city: store.city || '',
+      state: store.state || '',
+      pincode: store.pincode || '',
+      gst_number: store.gst_number || ''
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this store?')) return;
+    try {
+      await axios.delete(`http://localhost:61026/api/stores/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('Store deleted successfully!');
+      fetchStores();
+    } catch (error) {
+      console.error('Error deleting store:', error);
+      toast.error('Failed to delete store.');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:61026/api/stores', formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      toast.success('Store created successfully!');
+      if (editingStoreId) {
+        await axios.put(`http://localhost:61026/api/stores/${editingStoreId}`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        toast.success('Store updated successfully!');
+      } else {
+        await axios.post('http://localhost:61026/api/stores', formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        toast.success('Store created successfully!');
+      }
       setIsModalOpen(false);
-      setFormData({ name: '', owner_name: '', mobile: '', email: '', address: '', city: '', state: '', pincode: '', gst_number: '' });
       fetchStores();
     } catch (error) {
-      console.error('Error creating store:', error);
-      toast.error(error.response?.data?.message || 'Failed to create store.');
+      console.error('Error saving store:', error);
+      toast.error(error.response?.data?.message || 'Failed to save store.');
     }
   };
 
@@ -62,7 +105,7 @@ const StoresList = () => {
           <h1 className="page-title">Stores Management</h1>
           <p className="page-subtitle">Manage all tenant stores across the platform.</p>
         </div>
-        <button className="brutal-btn primary" onClick={() => setIsModalOpen(true)}>
+        <button className="brutal-btn primary" onClick={openAddModal}>
           <FiPlus />
           <span>Add New Store</span>
         </button>
@@ -106,10 +149,10 @@ const StoresList = () => {
                     </td>
                     <td>
                       <div className="action-btns">
-                        <button className="icon-btn edit" title="Edit">
+                        <button className="icon-btn edit" title="Edit" onClick={() => handleEdit(store)}>
                           <FiEdit />
                         </button>
-                        <button className="icon-btn delete" title="Delete">
+                        <button className="icon-btn delete" title="Delete" onClick={() => handleDelete(store.id)}>
                           <FiTrash2 />
                         </button>
                       </div>
@@ -129,7 +172,7 @@ const StoresList = () => {
             className="brutal-modal"
           >
             <div className="modal-header">
-              <h2>Add New Store</h2>
+              <h2>{editingStoreId ? 'Edit Store' : 'Add New Store'}</h2>
               <button className="close-btn" onClick={() => setIsModalOpen(false)}>×</button>
             </div>
             <div className="modal-body">
@@ -174,7 +217,7 @@ const StoresList = () => {
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="brutal-btn" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                  <button type="submit" className="brutal-btn primary">Create Store</button>
+                  <button type="submit" className="brutal-btn primary">{editingStoreId ? 'Save Changes' : 'Create Store'}</button>
                 </div>
               </form>
             </div>

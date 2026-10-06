@@ -27,7 +27,13 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+      <Toaster 
+        position="top-right" 
+        toastOptions={{ 
+          duration: 3000,
+          className: 'brutal-toast'
+        }} 
+      />
       <Routes>
         <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
         

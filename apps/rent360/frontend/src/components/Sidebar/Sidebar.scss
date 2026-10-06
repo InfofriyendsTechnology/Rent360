@@ -4,7 +4,7 @@
   width: 260px;
   height: 100vh;
   background-color: $bg-card;
-  border-right: 2px solid $border-main;
+  border-right: 1px solid $border-main;
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -18,14 +18,15 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    border-bottom: 2px solid $border-main;
+    border-bottom: 1px solid $border-main;
 
     .brand-logo {
-      width: 45px;
-      height: 45px;
+      width: 40px;
+      height: 40px;
       background-color: $bg-main;
-      border: 2px solid $border-main;
-      box-shadow: 2px 2px 0px 0px $accent;
+      border: 1px solid $border-muted;
+      border-radius: $border-radius-sm;
+      box-shadow: $shadow-sm;
       padding: 5px;
       display: flex;
       align-items: center;
@@ -39,8 +40,8 @@
     }
 
     .brand-text {
-      font-size: 1.6rem;
-      font-weight: 800;
+      font-size: 1.4rem;
+      font-weight: 700;
       color: $text-main;
       letter-spacing: -0.5px;
     }
@@ -54,72 +55,69 @@
     nav {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
     }
 
     .menu-item {
       display: flex;
       align-items: center;
       gap: 15px;
-      padding: 12px 15px;
-      color: $text-main;
+      padding: 10px 14px;
+      color: $text-muted;
       text-decoration: none;
-      font-weight: 600;
-      border: 2px solid transparent;
-      border-radius: 0;
+      font-weight: 500;
+      border-radius: $border-radius-sm;
       transition: all 0.2s ease;
-      margin-right: 5px; /* Give space for shadow */
-      margin-bottom: 5px;
+      margin-bottom: 2px;
 
       .icon {
         font-size: 1.2rem;
         display: flex;
         align-items: center;
+        opacity: 0.8;
       }
 
       &:hover {
         background-color: $bg-card-alt;
-        border-color: $border-muted;
+        color: $text-main;
       }
 
       &.active {
-        background-color: $accent; /* Solid blue like the Add button */
-        border-color: $border-main;
-        box-shadow: 3px 3px 0px 0px $border-main; /* Brutalist shadow */
-        color: #ffffff; /* Explicitly white text so it's always visible */
-        transform: translate(-2px, -2px);
+        background: linear-gradient(90deg, rgba(11, 96, 176, 0.1) 0%, rgba(11, 96, 176, 0.02) 100%);
+        color: $accent;
+        font-weight: 700;
+        box-shadow: inset 4px 0 0 $accent;
+        
+        .icon {
+          opacity: 1;
+        }
       }
     }
   }
 
   .sidebar-footer {
     padding: 20px;
-    border-top: 2px solid $border-main;
+    border-top: 1px solid $border-main;
 
     .logout-btn {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      padding: 12px;
-      background-color: $danger; /* Solid red */
-      border: 2px solid $border-main;
-      color: #ffffff; /* White text */
-      font-weight: 700;
-      box-shadow: 3px 3px 0px 0px $border-main;
+      gap: 8px;
+      padding: 10px;
+      background-color: transparent;
+      border: 1px solid $border-main;
+      color: $text-main;
+      font-weight: 500;
+      border-radius: $border-radius-sm;
       transition: all 0.2s ease;
       cursor: pointer;
 
       &:hover {
-        background-color: darken(#dc3545, 10%);
-        transform: translate(-2px, -2px);
-        box-shadow: 5px 5px 0px 0px $border-main;
-      }
-
-      &:active {
-        transform: translate(1px, 1px);
-        box-shadow: none;
+        background-color: rgba(220, 53, 69, 0.1); /* Soft red */
+        border-color: rgba(220, 53, 69, 0.3);
+        color: $danger;
       }
     }
   }

@@ -35,7 +35,7 @@ export const setupSuperAdmin = async () => {
 
     const store = await prisma.store.create({
       data: {
-        name: 'Rent360 Master Store',
+        name: 'Rent360',
         owner_name: 'System Admin',
         mobile,
         subscription_status: 'ACTIVE'

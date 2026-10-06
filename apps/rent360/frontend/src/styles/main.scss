@@ -26,30 +26,45 @@ button {
   border: 1px solid $border-main;
   background-color: $bg-main;
   color: $text-main;
-  box-shadow: $shadow-md;
+  border-radius: $border-radius-sm;
+  box-shadow: $shadow-sm;
   transition: all 0.2s ease;
 
   &:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: $shadow-lg;
+    background-color: $bg-card-alt;
+    border-color: $border-muted;
   }
 
   &:active {
-    transform: translate(2px, 2px);
+    transform: translateY(1px);
     box-shadow: none;
   }
 }
 
 input {
   font-family: $font-family;
-  border: 2px solid $border-main;
-  background-color: $bg-main;
+  border: 1px solid $border-main;
+  background-color: $bg-card;
   color: $text-main;
-  padding: 10px;
+  padding: 10px 14px;
+  border-radius: $border-radius-sm;
   outline: none;
+  transition: all 0.2s ease;
 
   &:focus {
     border-color: $accent;
-    box-shadow: $shadow-accent-md;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
   }
+}
+
+// React Hot Toast styling
+.brutal-toast {
+  background-color: $bg-card !important;
+  color: $text-main !important;
+  border: 1px solid $border-main !important;
+  border-radius: $border-radius !important;
+  box-shadow: $shadow-lg !important;
+  font-family: $font-family !important;
+  font-weight: 500 !important;
+  padding: 16px 24px !important;
 }
