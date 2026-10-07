@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import DashboardLayout from './components/Layout/DashboardLayout';
 import StoresList from './pages/Stores/StoresList';
 import PlansList from './pages/Plans/PlansList';
+import SubscriptionsList from './pages/Subscriptions/SubscriptionsList';
 import DashboardHome from './pages/Dashboard/DashboardHome';
 
 // Temporary placeholder components for remaining routes
@@ -49,7 +50,7 @@ const App = () => {
             <>
               <Route path="stores" element={<StoresList />} />
               <Route path="plans" element={<PlansList />} />
-              <Route path="subscriptions" element={<PlansList />} />
+              <Route path="subscriptions" element={<SubscriptionsList />} />
             </>
           )}
 

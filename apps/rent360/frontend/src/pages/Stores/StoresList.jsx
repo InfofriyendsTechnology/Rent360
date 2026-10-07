@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   FiPlus, FiEdit2, FiTrash2, FiX, FiCheck, FiKey, 
-  FiEye, FiEyeOff, FiMapPin, FiPhone, FiMail, FiCreditCard,
-  FiCalendar, FiZap
+  FiEye, FiEyeOff, FiMapPin, FiPhone, FiMail
 } from 'react-icons/fi';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -30,18 +29,6 @@ const StoresList = () => {
   const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
-
-  // Dedicated Subscription Assignment Modal
-  const [subModalStore, setSubModalStore] = useState(null);
-  const [subFormData, setSubFormData] = useState({
-    planId: '',
-    billing_cycle: 'YEARLY',
-    start_date: new Date().toISOString().split('T')[0],
-    end_date: '',
-    status: 'ACTIVE',
-    last_paid_amount: 9999
-  });
-  const [savingSub, setSavingSub] = useState(false);
 
   // Store/Company Form State
   const [formData, setFormData] = useState({
@@ -214,102 +201,6 @@ const StoresList = () => {
     }
   };
 
-  // Dedicated Subscription Assignment Handler
-  const openSubModal = (store) => {
-    setSubModalStore(store);
-    const existingSub = store.subscriptions?.[0];
-    const defaultPlan = plans.find(p => p.id === existingSub?.planId) || 
-                        plans.find(p => p.name.toUpperCase().includes('GROWTH')) || 
-                        plans[0];
-
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-    
-    // Default 1 year from now
-    const nextYear = new Date(today);
-    nextYear.setFullYear(nextYear.getFullYear() + 1);
-    const nextYearStr = nextYear.toISOString().split('T')[0];
-
-    const defaultPrice = defaultPlan?.price_per_year || 9999;
-
-    setSubFormData({
-      planId: defaultPlan?.id || '',
-      billing_cycle: 'YEARLY',
-      start_date: todayStr,
-      end_date: nextYearStr,
-      status: store.subscription_status || 'ACTIVE',
-      last_paid_amount: defaultPrice
-    });
-  };
-
-  const handlePlanSelect = (plan) => {
-    const isYearly = subFormData.billing_cycle === 'YEARLY';
-    const amount = isYearly ? (plan.price_per_year || 0) : (plan.price_per_month || 0);
-
-    setSubFormData(prev => ({
-      ...prev,
-      planId: plan.id,
-      last_paid_amount: amount
-    }));
-  };
-
-  const handleCycleChange = (cycle) => {
-    const selectedPlan = plans.find(p => p.id === subFormData.planId) || plans[0];
-    const startDate = subFormData.start_date ? new Date(subFormData.start_date) : new Date();
-    const endDate = new Date(startDate);
-
-    if (cycle === 'YEARLY') {
-      endDate.setFullYear(endDate.getFullYear() + 1);
-    } else {
-      endDate.setMonth(endDate.getMonth() + 1);
-    }
-
-    const amount = cycle === 'YEARLY' 
-      ? (selectedPlan?.price_per_year || 9999) 
-      : (selectedPlan?.price_per_month || 999);
-
-    setSubFormData(prev => ({
-      ...prev,
-      billing_cycle: cycle,
-      end_date: endDate.toISOString().split('T')[0],
-      last_paid_amount: amount
-    }));
-  };
-
-  const handleSaveSubscription = async (e) => {
-    e.preventDefault();
-    if (!subModalStore || !subFormData.planId) {
-      toast.error('Please select a subscription plan');
-      return;
-    }
-
-    setSavingSub(true);
-    try {
-      await axios.post(
-        'http://localhost:61026/api/storeSubscriptions',
-        {
-          storeId: subModalStore.id,
-          planId: subFormData.planId,
-          billing_cycle: subFormData.billing_cycle,
-          start_date: subFormData.start_date,
-          end_date: subFormData.end_date,
-          status: subFormData.status,
-          last_paid_amount: Number(subFormData.last_paid_amount) || 0
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      toast.success(`Subscription activated successfully for ${subModalStore.name}!`);
-      setSubModalStore(null);
-      fetchStores();
-    } catch (error) {
-      console.error('Error starting subscription:', error);
-      toast.error(error.response?.data?.message || 'Failed to start subscription');
-    } finally {
-      setSavingSub(false);
-    }
-  };
-
   const getInitials = (name) => {
     if (!name) return 'ST';
     const parts = name.trim().split(' ');
@@ -352,8 +243,7 @@ const StoresList = () => {
                 <th>Company / Store</th>
                 <th>Owner Name</th>
                 <th>Contact Mobile</th>
-                <th>City & Location</th>
-                <th>Subscription Plan</th>
+                <th>City &amp; Location</th>
                 <th>GST Number</th>
                 <th>Status</th>
                 <th className="text-right">Actions</th>
@@ -362,23 +252,18 @@ const StoresList = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="8" className="text-center state-message">
+                  <td colSpan="7" className="text-center state-message">
                     Loading companies...
                   </td>
                 </tr>
               ) : stores.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="text-center state-message">
+                  <td colSpan="7" className="text-center state-message">
                     No companies found. Click <strong>+ Add Company</strong> to register one!
                   </td>
                 </tr>
               ) : (
                 stores.map((store) => {
-                  const activeSub = store.subscriptions?.[0];
-                  const hasActivePlan = Boolean(activeSub?.plan);
-                  const planName = activeSub?.plan?.name || '';
-                  const isYearly = (activeSub?.last_paid_amount || 0) >= 3000;
-
                   return (
                     <tr key={store.id}>
                       <td>
@@ -405,28 +290,6 @@ const StoresList = () => {
                           {store.city ? `${store.city}, ${store.state || 'Gujarat'}` : (store.address || '—')}
                         </span>
                       </td>
-                      <td className="plan-col-cell">
-                        {hasActivePlan ? (
-                          <div className="store-plan-badge-wrap" onClick={() => openSubModal(store)} title="Click to manage subscription">
-                            <span className={`plan-badge-pill ${planName.toLowerCase()}`}>
-                              <FiZap className="badge-icon" />
-                              {planName}
-                            </span>
-                            <span className="plan-cycle-subtext">
-                              {isYearly ? 'Yearly' : 'Monthly'} · ₹{(activeSub.last_paid_amount || 0).toLocaleString('en-IN')}
-                            </span>
-                          </div>
-                        ) : (
-                          <button 
-                            className="assign-plan-pill-btn" 
-                            onClick={() => openSubModal(store)}
-                            title="Assign a SaaS plan to this store"
-                          >
-                            <FiCreditCard className="btn-icon" />
-                            <span>Assign Plan</span>
-                          </button>
-                        )}
-                      </td>
                       <td>
                         <span className="gst-text">
                           {store.gst_number || 'Unregistered'}
@@ -440,15 +303,6 @@ const StoresList = () => {
                       </td>
                       <td className="text-right">
                         <div className="row-action-btns">
-                          {/* Assign / Change Subscription */}
-                          <button 
-                            className="icon-action-btn subscription" 
-                            title={hasActivePlan ? "Renew / Change Plan" : "Assign Subscription Plan"} 
-                            onClick={() => openSubModal(store)}
-                          >
-                            <FiCreditCard />
-                          </button>
-
                           {/* Edit Company Profile */}
                           <button 
                             className="icon-action-btn edit" 
@@ -502,6 +356,7 @@ const StoresList = () => {
 
             <form onSubmit={handleSubmit}>
               <div className="modal-body">
+                {/* Row 1: Store & Owner */}
                 <div className="form-row-2">
                   <div className="form-field">
                     <label>Store Name *</label>
@@ -527,6 +382,7 @@ const StoresList = () => {
                   </div>
                 </div>
 
+                {/* Row 2: Mobile & Email */}
                 <div className="form-row-2">
                   <div className="form-field">
                     <label>Mobile Number *</label>
@@ -551,18 +407,18 @@ const StoresList = () => {
                   </div>
                 </div>
 
-                <div className="form-field">
-                  <label>Store Address</label>
-                  <input 
-                    type="text" 
-                    name="address" 
-                    placeholder="Shop No, Complex, Street area..." 
-                    value={formData.address} 
-                    onChange={handleChange} 
-                  />
-                </div>
-
-                <div className="form-row-3">
+                {/* Row 3: Address & City */}
+                <div className="form-row-2">
+                  <div className="form-field">
+                    <label>Store Address</label>
+                    <input 
+                      type="text" 
+                      name="address" 
+                      placeholder="Shop No, Complex, Street area..." 
+                      value={formData.address} 
+                      onChange={handleChange} 
+                    />
+                  </div>
                   <div className="form-field">
                     <label>City</label>
                     <input 
@@ -573,6 +429,10 @@ const StoresList = () => {
                       onChange={handleChange} 
                     />
                   </div>
+                </div>
+
+                {/* Row 4: State & Pincode */}
+                <div className="form-row-2">
                   <div className="form-field">
                     <label>State</label>
                     <input 
@@ -595,42 +455,43 @@ const StoresList = () => {
                   </div>
                 </div>
 
-                <div className="form-field">
-                  <label>GST Number</label>
-                  <input 
-                    type="text" 
-                    name="gst_number" 
-                    placeholder="24AAAAA0000A1Z5" 
-                    value={formData.gst_number} 
-                    onChange={handleChange} 
-                  />
-                </div>
-
-                {/* Password field inside Store form */}
-                <div className="form-field password-integrated-field">
-                  <label>
-                    {editingStoreId 
-                      ? (editingStoreHasPassword ? 'Change Password' : 'Set Password')
-                      : 'Set Password *'}
-                  </label>
-                  <div className="password-box">
+                {/* Row 5: GST Number & Password */}
+                <div className="form-row-2">
+                  <div className="form-field">
+                    <label>GST Number</label>
                     <input 
-                      type={showFormPassword ? 'text' : 'password'} 
-                      name="password" 
-                      placeholder={editingStoreId 
-                        ? (editingStoreHasPassword ? 'Enter new password to update' : 'Set new password for this store')
-                        : 'Set access password (min 6 chars)'} 
-                      value={formData.password} 
+                      type="text" 
+                      name="gst_number" 
+                      placeholder="24AAAAA0000A1Z5" 
+                      value={formData.gst_number} 
                       onChange={handleChange} 
-                      required={!editingStoreId}
                     />
-                    <button 
-                      type="button" 
-                      className="eye-btn" 
-                      onClick={() => setShowFormPassword(!showFormPassword)}
-                    >
-                      {showFormPassword ? <FiEyeOff /> : <FiEye />}
-                    </button>
+                  </div>
+                  <div className="form-field password-integrated-field">
+                    <label>
+                      {editingStoreId 
+                        ? (editingStoreHasPassword ? 'Change Password' : 'Set Password')
+                        : 'Set Password *'}
+                    </label>
+                    <div className="password-box">
+                      <input 
+                        type={showFormPassword ? 'text' : 'password'} 
+                        name="password" 
+                        placeholder={editingStoreId 
+                          ? (editingStoreHasPassword ? 'Enter new password to update' : 'Set new password')
+                          : 'Set access password (min 6 chars)'} 
+                        value={formData.password} 
+                        onChange={handleChange} 
+                        required={!editingStoreId}
+                      />
+                      <button 
+                        type="button" 
+                        className="eye-btn" 
+                        onClick={() => setShowFormPassword(!showFormPassword)}
+                      >
+                        {showFormPassword ? <FiEyeOff /> : <FiEye />}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -718,161 +579,6 @@ const StoresList = () => {
                   {savingPassword 
                     ? (passwordModalStore.hasPassword ? 'Updating...' : 'Setting...') 
                     : (passwordModalStore.hasPassword ? 'Change Password' : 'Set Password')}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* DEDICATED ASSIGN / START SUBSCRIPTION MODAL */}
-      {subModalStore && (
-        <div className="bond-modal-overlay" onClick={() => setSubModalStore(null)}>
-          <div className="bond-modal-card subscription-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <div>
-                <h2>Assign / Start Subscription</h2>
-                <p>Activate SaaS rental tier for <strong>{subModalStore.name}</strong> ({subModalStore.owner_name})</p>
-              </div>
-              <button className="modal-close" onClick={() => setSubModalStore(null)}>
-                <FiX />
-              </button>
-            </div>
-
-            <form onSubmit={handleSaveSubscription}>
-              <div className="modal-body">
-                {/* Store Profile Context */}
-                <div className="company-access-banner">
-                  <div className="access-item">
-                    <span className="access-label">Store:</span>
-                    <span className="access-val">{subModalStore.name}</span>
-                  </div>
-                  <div className="access-item">
-                    <span className="access-label">Owner Mobile:</span>
-                    <span className="access-val code">{subModalStore.mobile}</span>
-                  </div>
-                  <div className="access-item">
-                    <span className="access-label">Current Plan:</span>
-                    <span className="access-val">
-                      {subModalStore.subscriptions?.[0]?.plan?.name || 'No Active Plan'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Billing Cycle Toggle */}
-                <div className="cycle-toggle-section">
-                  <label className="section-label">Select Billing Term:</label>
-                  <div className="cycle-pills-wrap">
-                    <button
-                      type="button"
-                      className={`cycle-pill-btn ${subFormData.billing_cycle === 'YEARLY' ? 'active' : ''}`}
-                      onClick={() => handleCycleChange('YEARLY')}
-                    >
-                      <FiZap className="zap-icon" />
-                      <span>Yearly (Recommended · Best Value)</span>
-                    </button>
-                    <button
-                      type="button"
-                      className={`cycle-pill-btn ${subFormData.billing_cycle === 'MONTHLY' ? 'active' : ''}`}
-                      onClick={() => handleCycleChange('MONTHLY')}
-                    >
-                      <span>Monthly Term</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Plan Tier Selection Grid */}
-                <div className="plan-selection-section">
-                  <label className="section-label">Choose Subscription Tier:</label>
-                  <div className="plan-cards-grid">
-                    {plans.map((p) => {
-                      const isSelected = subFormData.planId === p.id;
-                      const isGrowth = p.name.toUpperCase().includes('GROWTH');
-                      const displayPrice = subFormData.billing_cycle === 'YEARLY'
-                        ? `₹${(p.price_per_year || 0).toLocaleString('en-IN')}/year`
-                        : `₹${(p.price_per_month || 0).toLocaleString('en-IN')}/month`;
-
-                      return (
-                        <div
-                          key={p.id}
-                          className={`plan-select-card ${isSelected ? 'selected' : ''} ${isGrowth ? 'popular' : ''}`}
-                          onClick={() => handlePlanSelect(p)}
-                        >
-                          <div className="card-top-line">
-                            <span className="plan-name-label">{p.name}</span>
-                            {isSelected ? (
-                              <span className="select-check"><FiCheck /></span>
-                            ) : null}
-                          </div>
-                          <div className="plan-price-label">{displayPrice}</div>
-                          <div className="plan-meta-sub">
-                            <span>{p.max_staff === 0 ? 'Unlimited Salesman' : `${p.max_staff} Salesman`}</span>
-                            <span className="dot-sep">•</span>
-                            <span>Unlimited Bookings</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Dates Configuration */}
-                <div className="form-row-2">
-                  <div className="form-field">
-                    <label>Start Date *</label>
-                    <input 
-                      type="date"
-                      value={subFormData.start_date}
-                      onChange={(e) => setSubFormData({ ...subFormData, start_date: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>Expiry / Renewal Date *</label>
-                    <input 
-                      type="date"
-                      value={subFormData.end_date}
-                      onChange={(e) => setSubFormData({ ...subFormData, end_date: e.target.value })}
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Amount Paid & Status */}
-                <div className="form-row-2">
-                  <div className="form-field">
-                    <label>Amount Collected (₹) *</label>
-                    <input 
-                      type="number"
-                      value={subFormData.last_paid_amount}
-                      onChange={(e) => setSubFormData({ ...subFormData, last_paid_amount: e.target.value })}
-                      required
-                      min="0"
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>Subscription Status *</label>
-                    <select 
-                      value={subFormData.status}
-                      onChange={(e) => setSubFormData({ ...subFormData, status: e.target.value })}
-                    >
-                      <option value="ACTIVE">ACTIVE (Full Platform Access)</option>
-                      <option value="TRIAL">TRIAL (14-Day Free Evaluation)</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div className="modal-footer">
-                <button 
-                  type="button" 
-                  className="pill-btn-secondary" 
-                  onClick={() => setSubModalStore(null)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="pill-btn-primary" disabled={savingSub}>
-                  {savingSub ? 'Starting Plan...' : 'Start Subscription'}
                 </button>
               </div>
             </form>

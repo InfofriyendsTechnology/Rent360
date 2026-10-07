@@ -1,0 +1,60 @@
+{
+  "date": "07-10-2026",
+  "dayNumber": 13,
+  "title": "Dashboard Metrics & Subscriptions Refactoring",
+  "titleGu": "ડેશબોર્ડ લાઈવ મેટ્રિક્સ અને સબ્સ્ક્રિપ્શન મોડ્યુલ રિફેક્ટર",
+  "members": [
+    "001"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Connected Superadmin Dashboard to live PostgreSQL database metrics, removing all hardcoded fake data."
+    },
+    {
+      "member": "001",
+      "text": "Decoupled subscription assignment from the Stores page and created a dedicated, standalone Subscriptions management page."
+    },
+    {
+      "member": "001",
+      "text": "Refactored the Stores form layout into a clean, uniform 2-column grid and eliminated default Windows scrollbars across the app."
+    },
+    {
+      "member": "001",
+      "text": "Fixed complex SCSS syntax and import path errors preventing the frontend from compiling properly."
+    },
+    {
+      "member": "001",
+      "text": "Simplified the Assign Subscription modal to match the minimalist Bond CRM aesthetic and user requirements."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "સુપરએડમિન ડેશબોર્ડમાં દેખાતા બધા ખોટા આંકડા કાઢીને ડાયરેક્ટ ડેટાબેઝ (PostgreSQL) માંથી લાઈવ મેટ્રિક્સ (કંપની અને સબ્સ્ક્રિપ્શન કાઉન્ટ) બતાવ્યા."
+    },
+    {
+      "member": "001",
+      "text": "સ્ટોર્સ (Stores) પેજમાંથી સબ્સ્ક્રિપ્શન મેનેજ કરવાનું લોજીક કાઢીને, આખું એક અલગ 'Subscriptions' પેજ બનાવ્યું."
+    },
+    {
+      "member": "001",
+      "text": "સ્ટોર એડ કરવાના ફોર્મને 2-કોલમ ગ્રીડમાં વ્યવસ્થિત સેટ કર્યું અને Windows ના ખરાબ દેખાતા સ્ક્રોલબારને આખી એપમાંથી કાઢીને ક્લીન કર્યા."
+    },
+    {
+      "member": "001",
+      "text": "ફ્રન્ટએન્ડની ડીઝાઈનમાં આવતી SCSS (સ્ટાઈલિંગ) અને ઈમ્પોર્ટની જટિલ એરર્સ (syntax errors) સોલ્વ કરી."
+    },
+    {
+      "member": "001",
+      "text": "Assign Subscription મોડલને એકદમ સિમ્પલ બનાવ્યું, જેથી ક્લાયન્ટને ડેટા ભરવામાં સરળતા રહે અને થીમ સાથે મેચ થાય."
+    }
+  ],
+  "deliverables": [
+    "Live Dashboard Analytics API",
+    "Dedicated Subscriptions Page",
+    "Stores Form Grid Refactor",
+    "Custom Scrollbar Implementation",
+    "SCSS Compilation Fixes"
+  ]
+}

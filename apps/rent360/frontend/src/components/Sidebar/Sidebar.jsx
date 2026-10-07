@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   FiHome, FiBox, FiUsers, FiSettings, FiLogOut, 
-  FiCreditCard, FiShield, FiSearch, FiBell 
+  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers 
 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/authSlice';
@@ -83,10 +83,17 @@ const Sidebar = () => {
                 </NavLink>
                 <NavLink 
                   to="/plans" 
-                  className={({ isActive }) => (isActive || window.location.pathname.startsWith('/plans') || window.location.pathname.startsWith('/subscriptions')) ? 'menu-pill active' : 'menu-pill'}
+                  className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                >
+                  <span className="icon"><FiLayers /></span>
+                  <span className="text">Plans</span>
+                </NavLink>
+                <NavLink 
+                  to="/subscriptions" 
+                  className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
                 >
                   <span className="icon"><FiCreditCard /></span>
-                  <span className="text">Plans</span>
+                  <span className="text">Subscriptions</span>
                 </NavLink>
               </>
             ) : (

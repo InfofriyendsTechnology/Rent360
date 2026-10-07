@@ -427,7 +427,7 @@
 
   .bond-modal-card {
     width: 100%;
-    max-width: 600px;
+    max-width: 680px;
     background-color: $bg-card;
     border-radius: 24px;
     border: 1px solid $border-main;
@@ -439,19 +439,19 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 26px 30px;
+      padding: 16px 28px;
       border-bottom: 1px solid $border-main;
 
       h2 {
-        font-size: 1.35rem;
+        font-size: 1.25rem;
         font-weight: 700;
         color: $text-main;
         letter-spacing: -0.02em;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
       }
 
       p {
-        font-size: 0.85rem;
+        font-size: 0.84rem;
         color: $text-muted;
       }
 
@@ -477,41 +477,48 @@
     }
 
     .modal-body {
-      padding: 26px 30px;
-      max-height: 70vh;
+      padding: 16px 28px;
+      max-height: 80vh;
       overflow-y: auto;
+      scrollbar-width: none; // Completely eliminates ugly Firefox scrollbar
+      -ms-overflow-style: none; // Completely eliminates ugly IE/Edge scrollbar
 
-      .form-grid {
+      &::-webkit-scrollbar {
+        display: none; // Completely eliminates ugly Chrome/Edge scrollbar
+      }
+
+      .form-row-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 18px;
+        gap: 14px;
+        margin-bottom: 12px;
 
-        .form-field.full {
-          grid-column: 1 / -1;
+        &:last-child {
+          margin-bottom: 0;
         }
       }
 
       .form-field {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 5px;
         width: 100%;
 
         label {
-          font-size: 0.84rem;
+          font-size: 0.8rem;
           font-weight: 600;
-          color: $text-main;
+          color: $text-muted;
           letter-spacing: -0.01em;
         }
 
         input {
-          height: 46px;
-          padding: 0 16px;
+          height: 40px;
+          padding: 0 14px;
           background-color: $bg-card-alt;
           border: 1px solid $border-main;
-          border-radius: 12px;
+          border-radius: 10px;
           color: $text-main;
-          font-size: 0.92rem;
+          font-size: 0.88rem;
           font-family: inherit;
           outline: none;
           box-sizing: border-box;
@@ -541,11 +548,11 @@
         }
 
         .plan-select {
-          height: 46px;
+          height: 40px;
           padding: 0 14px;
           background-color: $bg-card-alt;
           border: 1px solid $border-main;
-          border-radius: 12px;
+          border-radius: 10px;
           color: $text-main;
           font-size: 0.88rem;
           font-family: inherit;
@@ -583,10 +590,10 @@
         .password-box {
           display: flex;
           align-items: center;
-          height: 46px;
+          height: 40px;
           background-color: $bg-card-alt;
           border: 1px solid $border-main;
-          border-radius: 12px;
+          border-radius: 10px;
           padding: 0 14px;
           width: 100%;
           box-sizing: border-box;
@@ -601,7 +608,7 @@
             flex: 1 !important;
             box-shadow: none !important;
             color: $text-main !important;
-            font-size: 0.92rem !important;
+            font-size: 0.88rem !important;
             outline: none !important;
 
             &::placeholder {
@@ -628,8 +635,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 6px;
-            font-size: 1.15rem;
+            padding: 4px;
+            font-size: 1.1rem;
             border-radius: 6px;
             transition: color 0.15s ease;
             flex-shrink: 0;
@@ -653,13 +660,13 @@
       display: flex;
       justify-content: flex-end;
       gap: 12px;
-      padding: 20px 30px;
+      padding: 14px 28px;
       border-top: 1px solid $border-main;
       background-color: $bg-card-alt;
 
       .pill-btn-secondary {
-        height: 44px;
-        padding: 0 22px;
+        height: 40px;
+        padding: 0 20px;
         border-radius: $border-radius-pill;
         border: 1px solid $border-main;
         background-color: $bg-card;
@@ -676,8 +683,8 @@
       }
 
       .pill-btn-primary {
-        height: 44px;
-        padding: 0 24px;
+        height: 40px;
+        padding: 0 22px;
         border-radius: $border-radius-pill;
         border: none;
         background-color: $bg-pill-dark;

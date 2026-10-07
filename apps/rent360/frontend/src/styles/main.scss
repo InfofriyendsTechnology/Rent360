@@ -44,6 +44,42 @@ input {
   }
 }
 
+/* Modern Minimalist Scrollbar (Eliminates ugly Windows default scrollbars) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.25);
+  }
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+}
+
+.dark * {
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
 // Toast styling matching Bond CRM
 .brutal-toast {
   background-color: $bg-card !important;
