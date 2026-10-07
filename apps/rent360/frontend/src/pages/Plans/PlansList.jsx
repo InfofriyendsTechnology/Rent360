@@ -385,8 +385,6 @@ const PlansList = () => {
         <>
           {/* Main Pricing Showcase Section - Shown ONLY in Cards View */}
           <div className="pricing-showcase-hero">
-            <p className="hero-subtext">No credit card required. Cancel anytime.</p>
-
             {/* Toggle Bar: Monthly vs Yearly */}
             <div className="billing-cycle-switch">
               <span className={`switch-label ${!isYearly ? 'active' : ''}`}>Monthly</span>
