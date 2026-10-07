@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiHome, FiBox, FiUsers, FiSettings, FiLogOut, FiCreditCard, FiShield } from 'react-icons/fi';
+import { 
+  FiHome, FiBox, FiUsers, FiSettings, FiLogOut, 
+  FiCreditCard, FiShield, FiSearch, FiBell 
+} from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/authSlice';
 import './Sidebar.scss';
@@ -25,50 +28,125 @@ const Sidebar = () => {
     dispatch(logout());
   };
 
-  const menuItems = isSuperAdmin ? [
-    { name: 'Dashboard', icon: <FiHome />, path: '/' },
-    { name: 'Stores', icon: <FiBox />, path: '/stores' },
-    { name: 'Subscriptions', icon: <FiCreditCard />, path: '/subscriptions' },
-    { name: 'Global Settings', icon: <FiSettings />, path: '/settings' },
-  ] : [
-    { name: 'Dashboard', icon: <FiHome />, path: '/' },
-    { name: 'Inventory', icon: <FiBox />, path: '/inventory' },
-    { name: 'Customers', icon: <FiUsers />, path: '/customers' },
-    { name: 'Roles', icon: <FiShield />, path: '/roles' },
-    { name: 'Settings', icon: <FiSettings />, path: '/settings' },
-  ];
-
   return (
-    <div className="sidebar">
+    <aside className="sidebar">
+      {/* Brand Header */}
       <div className="sidebar-brand">
-        <div className="brand-logo">
-          <img src={sidebarLogo} alt="Rent360 Logo" />
+        <div className="brand-logo-card">
+          <img src={sidebarLogo} alt="Rent360" />
         </div>
-        <h2 className="brand-text">RENT360</h2>
+        <div className="brand-title-wrap">
+          <span className="brand-name">Rent360</span>
+          <span className="brand-sub">Platform</span>
+        </div>
       </div>
 
-      <div className="sidebar-menu">
-        <nav>
-          {menuItems.map((item, index) => (
+      {/* Pill Search Input */}
+      <div className="sidebar-search">
+        <FiSearch className="search-icon" />
+        <input type="text" placeholder="Search everything" readOnly />
+        <span className="shortcut-badge">⌘K</span>
+      </div>
+
+      {/* Menu Sections */}
+      <div className="sidebar-scroll">
+        <div className="menu-group">
+          <span className="group-title">WORKSPACE</span>
+          <nav>
             <NavLink 
-              to={item.path} 
-              key={index} 
-              className={({ isActive }) => isActive ? 'menu-item active' : 'menu-item'}
+              to="/" 
+              end
+              className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
             >
-              <span className="icon">{item.icon}</span>
-              <span className="text">{item.name}</span>
+              <span className="icon"><FiHome /></span>
+              <span className="text">Overview</span>
             </NavLink>
-          ))}
-        </nav>
+            <div className="menu-pill muted">
+              <span className="icon"><FiBell /></span>
+              <span className="text">Notifications</span>
+              <span className="count-badge">3</span>
+            </div>
+          </nav>
+        </div>
+
+        <div className="menu-group">
+          <span className="group-title">{isSuperAdmin ? 'MANAGEMENT' : 'RECORDS'}</span>
+          <nav>
+            {isSuperAdmin ? (
+              <>
+                <NavLink 
+                  to="/stores" 
+                  className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                >
+                  <span className="icon"><FiBox /></span>
+                  <span className="text">Stores</span>
+                </NavLink>
+                <NavLink 
+                  to="/plans" 
+                  className={({ isActive }) => (isActive || window.location.pathname.startsWith('/plans') || window.location.pathname.startsWith('/subscriptions')) ? 'menu-pill active' : 'menu-pill'}
+                >
+                  <span className="icon"><FiCreditCard /></span>
+                  <span className="text">Plans</span>
+                </NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink 
+                  to="/inventory" 
+                  className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                >
+                  <span className="icon"><FiBox /></span>
+                  <span className="text">Inventory</span>
+                </NavLink>
+                <NavLink 
+                  to="/customers" 
+                  className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                >
+                  <span className="icon"><FiUsers /></span>
+                  <span className="text">Customers</span>
+                </NavLink>
+                <NavLink 
+                  to="/roles" 
+                  className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                >
+                  <span className="icon"><FiShield /></span>
+                  <span className="text">Roles</span>
+                </NavLink>
+              </>
+            )}
+          </nav>
+        </div>
+
+        <div className="menu-group">
+          <span className="group-title">SETTINGS</span>
+          <nav>
+            <NavLink 
+              to="/settings" 
+              className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+            >
+              <span className="icon"><FiSettings /></span>
+              <span className="text">Settings</span>
+            </NavLink>
+          </nav>
+        </div>
       </div>
 
+      {/* Footer Profile Card */}
       <div className="sidebar-footer">
-        <button className="logout-btn" onClick={handleLogout}>
-          <FiLogOut />
-          <span>Logout</span>
-        </button>
+        <div className="user-profile-card">
+          <div className="profile-avatar">
+            {user?.name ? user.name.slice(0, 2).toUpperCase() : 'AD'}
+          </div>
+          <div className="profile-info">
+            <span className="profile-name">{user?.name || 'Main Admin'}</span>
+            <span className="profile-role">{isSuperAdmin ? 'Super Admin' : 'Store Admin'}</span>
+          </div>
+          <button className="logout-icon-btn" onClick={handleLogout} title="Logout">
+            <FiLogOut />
+          </button>
+        </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

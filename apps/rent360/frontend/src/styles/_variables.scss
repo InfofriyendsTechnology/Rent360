@@ -1,60 +1,81 @@
-// Modern SaaS Soft Theme Variables (Original Colors)
+// Bond CRM Minimalist Warm Aesthetic Theme (Rent360 with Blue Highlights)
 
 :root {
-  --bg-main: #f0f4f8; /* Soft blue-gray background */
-  --bg-card: #ffffff;
-  --bg-card-alt: #f8fafc;
-  --bg-inverse: #0f172a;
+  --bg-canvas: #EBE9E1;      /* Outer warm oat canvas frame */
+  --bg-main: #F6F5F0;        /* Main inner workspace */
+  --bg-card: #FFFFFF;        /* Crisp clean white cards & sidebar */
+  --bg-card-alt: #EFEFE9;    /* Secondary pill & table header background */
+  --bg-card-hover: #F8F8F5;  /* Subtle row hover */
+  --bg-pill-dark: #18181B;   /* Black active pill button */
+  --bg-inverse: #18181B;
   
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --text-inverse: #ffffff;
+  --text-main: #18181B;      /* Deep sharp charcoal */
+  --text-muted: #71717A;     /* Clean secondary text */
+  --text-inverse: #FFFFFF;   /* Text on dark pills */
   
-  --border-main: rgba(0, 0, 0, 0.08);
-  --border-muted: rgba(0, 0, 0, 0.04);
+  --border-main: rgba(0, 0, 0, 0.06);  /* Soft hairline border */
+  --border-muted: rgba(0, 0, 0, 0.03);
+  --border-pill: rgba(0, 0, 0, 0.08);
   
-  --accent: #0B60B0; /* Original Blue */
-  --accent-hover: #1472cb; /* Brighter Blue */
-  --accent-light: #eef5fc; /* Very light accent for hovers */
-  --danger: #ef4444;
-  --danger-hover: #dc2626;
+  /* Blue Highlight (replacing yellow in reference image) */
+  --accent: #0B60B0;
+  --accent-hover: #094F91;
+  --accent-light: #E6F0FA;   /* Soft blue highlight tint */
+  --accent-border: #BCD5F0;
   
-  // Premium Soft Shadows
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 8px 24px rgba(149, 157, 165, 0.15);
-  --shadow-lg: 0 16px 32px rgba(149, 157, 165, 0.2);
-  --shadow-accent-md: 0 8px 20px rgba(11, 96, 176, 0.25);
+  --success: #15803D;
+  --success-light: #DCFCE7;
+  --danger: #DC2626;
+  --danger-hover: #B91C1C;
+  --danger-light: #FEE2E2;
+  
+  // Bond CRM Ultra-soft diffuse shadows
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.06);
+  --shadow-pill: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .dark {
-  --bg-main: #000000;
-  --bg-card: #0A0A0A;
-  --bg-card-alt: #060606;
-  --bg-inverse: #ffffff;
+  --bg-canvas: #09090B;
+  --bg-main: #121215;
+  --bg-card: #18181C;
+  --bg-card-alt: #222227;
+  --bg-card-hover: #26262B;
+  --bg-pill-dark: #FFFFFF;
+  --bg-inverse: #FFFFFF;
   
-  --text-main: #ffffff;
-  --text-muted: #a3a3a3;
-  --text-inverse: #000000;
+  --text-main: #F4F4F6;
+  --text-muted: #A1A1AA;
+  --text-inverse: #18181B;
   
-  --border-main: rgba(255, 255, 255, 0.1);
+  --border-main: rgba(255, 255, 255, 0.08);
   --border-muted: rgba(255, 255, 255, 0.04);
+  --border-pill: rgba(255, 255, 255, 0.12);
   
-  --accent: #0B60B0;
-  --accent-hover: #0d73d3;
-  --accent-light: rgba(11, 96, 176, 0.15);
-  --danger: #ef4444;
-  --danger-hover: #f87171;
+  --accent: #3B82F6;
+  --accent-hover: #60A5FA;
+  --accent-light: rgba(59, 130, 246, 0.15);
+  --accent-border: rgba(59, 130, 246, 0.3);
   
-  // Soft Shadows for Dark Mode
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.8);
-  --shadow-accent-md: 0 8px 20px rgba(11, 96, 176, 0.3);
+  --success: #22C55E;
+  --success-light: rgba(34, 197, 94, 0.15);
+  --danger: #EF4444;
+  --danger-hover: #DC2626;
+  --danger-light: rgba(239, 68, 68, 0.15);
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.6);
+  --shadow-pill: 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 
+$bg-canvas: var(--bg-canvas);
 $bg-main: var(--bg-main);
 $bg-card: var(--bg-card);
 $bg-card-alt: var(--bg-card-alt);
+$bg-card-hover: var(--bg-card-hover);
+$bg-pill-dark: var(--bg-pill-dark);
 $bg-inverse: var(--bg-inverse);
 
 $text-main: var(--text-main);
@@ -63,19 +84,30 @@ $text-inverse: var(--text-inverse);
 
 $border-main: var(--border-main);
 $border-muted: var(--border-muted);
+$border-pill: var(--border-pill);
 
 $accent: var(--accent);
 $accent-hover: var(--accent-hover);
 $accent-light: var(--accent-light);
+$accent-border: var(--accent-border);
+$success: var(--success);
+$success-light: var(--success-light);
 $danger: var(--danger);
 $danger-hover: var(--danger-hover);
+$danger-light: var(--danger-light);
 
 $shadow-sm: var(--shadow-sm);
 $shadow-md: var(--shadow-md);
 $shadow-lg: var(--shadow-lg);
-$shadow-accent-md: var(--shadow-accent-md);
+$shadow-pill: var(--shadow-pill);
+$shadow-accent-md: 0 4px 14px rgba(11, 96, 176, 0.25);
 
-$font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+$font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 $font-size-base: 14px;
-$border-radius: 12px;
-$border-radius-sm: 8px;
+
+/* Bond CRM Characteristic Radii */
+$border-radius-pill: 9999px;
+$border-radius-card: 20px;
+$border-radius-inner: 14px;
+$border-radius-sm: 10px;
+$border-radius: 16px;

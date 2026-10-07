@@ -72,5 +72,8 @@ router.use("/purchaseItems", purchaseItemRoutes);
 router.use("/retailSales", retailSaleRoutes);
 router.use("/retailSaleItems", retailSaleItemRoutes);
 router.use("/subscriptionPlans", subscriptionPlanRoutes);
+router.use("/plans", subscriptionPlanRoutes);
 router.use("/storeSubscriptions", storeSubscriptionRoutes);
+router.use("/subscriptions", storeSubscriptionRoutes);
+router.use("/store-subscriptions", storeSubscriptionRoutes);
 export default router;

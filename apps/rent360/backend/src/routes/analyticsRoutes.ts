@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getDashboardStats } from "../controllers/analyticsController";
+import { getDashboardStats, getSuperAdminStats } from "../controllers/analyticsController";
 import { authenticate } from "../middleware/auth";
 
 const router = Router();
@@ -7,5 +7,6 @@ const router = Router();
 router.use(authenticate);
 
 router.get("/dashboard", getDashboardStats);
+router.get("/superadmin", getSuperAdminStats);
 
 export default router;

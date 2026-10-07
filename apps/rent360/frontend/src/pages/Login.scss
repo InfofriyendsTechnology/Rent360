@@ -1,231 +1,257 @@
 @import '../styles/variables';
 
-@keyframes fadeInSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.login-layout {
+.bond-login-layout {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $bg-main;
+  background-color: $bg-canvas;
+  padding: 20px;
+  box-sizing: border-box;
   position: relative;
-  
-  /* Full-page Brutalist dot background */
-  background-image: radial-gradient($border-muted 1px, transparent 1px);
-  background-size: 20px 20px;
-  background-position: 0 0, 10px 10px;
-  animation: fadeInSlideUp 0.5s ease-out;
-}
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(220, 240, 218, 0.4) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(245, 244, 238, 0.8) 0px, transparent 50%);
 
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: $bg-card;
-  border: 2px solid $border-main;
-  box-shadow: $shadow-sm;
-  color: $text-main;
-  z-index: 20;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeInSlideUp 0.6s ease-out;
-  
-  &:hover {
-    background-color: $bg-card-alt;
-    transform: translate(-2px, -2px) scale(1.05);
-    box-shadow: $shadow-md;
-  }
-}
-
-.login-box {
-  width: 100%;
-  max-width: 450px;
-  padding: 40px;
-  background-color: $bg-card;
-  border: 3px solid $border-main;
-  box-shadow: 8px 8px 0px 0px $border-main; 
-  z-index: 10;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeInSlideUp 0.4s ease-out forwards;
-  
-  &:hover {
-    box-shadow: 10px 10px 0px 0px $border-main;
-    transform: translate(-2px, -2px);
-  }
-  
-  .brand-header {
-    margin-bottom: 40px;
+  /* Floating Theme Toggle in top right */
+  .bond-theme-btn {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: $bg-card;
+    border: 1px solid $border-main;
+    color: $text-muted;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    text-align: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: $shadow-sm;
+    transition: all 0.2s ease;
 
-    .logo-row {
+    &:hover {
+      color: $text-main;
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+  }
+
+  /* Floating Centered White Card (24px radius matching Bond CRM) */
+  .bond-login-card {
+    width: 100%;
+    max-width: 440px;
+    background-color: $bg-card;
+    border-radius: 24px;
+    border: 1px solid $border-main;
+    box-shadow: $shadow-lg;
+    padding: 44px 36px;
+    box-sizing: border-box;
+    animation: bondCardFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Brand Header */
+    .login-brand-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 15px;
+      text-align: center;
+      margin-bottom: 30px;
 
-      .logo-icon-box {
-        width: 50px;
-        height: 50px;
+      .brand-logo-pill {
+        width: 48px;
+        height: 48px;
+        border-radius: 13px;
+        background-color: $bg-pill-dark;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: $bg-main;
-        border: 2px solid $border-main;
-        box-shadow: 4px 4px 0px 0px $accent;
-        padding: 5px;
-        
-        .form-logo-icon {
+        padding: 9px;
+        margin-bottom: 16px;
+        box-shadow: $shadow-sm;
+
+        img {
           width: 100%;
           height: 100%;
           object-fit: contain;
+          filter: invert(1);
         }
       }
 
-      .logo-text {
-        font-size: 2.2rem;
+      .brand-title {
+        font-size: 1.85rem;
         font-weight: 800;
-        letter-spacing: -1px;
         color: $text-main;
+        letter-spacing: -0.035em;
+        line-height: 1.2;
+        margin-bottom: 6px;
+      }
+
+      .brand-subtitle {
+        color: $text-muted;
+        font-size: 0.9rem;
+        font-weight: 400;
       }
     }
 
-    p {
-      color: $text-muted;
+    /* Error Alert */
+    .bond-error-alert {
+      background-color: $danger-light;
+      color: $danger;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 0.85rem;
       font-weight: 500;
-      font-size: 0.95rem;
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      margin-bottom: 22px;
+      text-align: center;
+      line-height: 1.4;
     }
-  }
 
-  .error-alert {
-    background-color: rgba($danger, 0.1);
-    color: $danger;
-    padding: 12px;
-    border: 2px solid $danger;
-    margin-bottom: 20px;
-    font-weight: 600;
-    text-align: center;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-
-    .input-group {
+    /* Form Fields */
+    .login-form {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 20px;
 
-      label {
-        font-weight: 700;
-        color: $text-main;
-        font-size: 0.95rem;
-      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
 
-      .password-input-wrapper {
-        position: relative;
-        display: block;
-        width: 100%;
-
-        input {
-          width: 100%;
-          padding-right: 45px;
+        label {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: $text-main;
         }
 
-        .toggle-password {
-          position: absolute;
-          right: 0;
-          top: 0;
-          height: 100%;
-          width: 45px;
+        .input-wrapper {
           display: flex;
           align-items: center;
-          justify-content: center;
-          background: transparent !important;
-          border: none !important;
-          box-shadow: none !important;
-          color: $text-muted;
-          cursor: pointer;
+          height: 46px;
+          background-color: $bg-card-alt;
+          border: 1px solid transparent;
+          border-radius: 12px;
+          padding: 0 14px;
+          transition: all 0.2s ease;
+          box-sizing: border-box;
 
-          &:hover {
+          .input-icon {
+            color: $text-muted;
+            font-size: 1.05rem;
+            margin-right: 10px;
+            flex-shrink: 0;
+          }
+
+          input {
+            border: none !important;
+            background: transparent !important;
+            outline: none !important;
+            padding: 0 !important;
+            height: 100%;
+            width: 100%;
+            font-size: 0.9rem;
             color: $text-main;
+            font-family: inherit;
+            box-shadow: none !important;
+
+            &::placeholder {
+              color: $text-muted;
+              opacity: 0.7;
+            }
+
+            /* Transparent Webkit Autofill */
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover, 
+            &:-webkit-autofill:focus, 
+            &:-webkit-autofill:active {
+              -webkit-background-clip: text !important;
+              background-clip: text !important;
+              -webkit-text-fill-color: var(--text-main) !important;
+              caret-color: var(--text-main) !important;
+              transition: background-color 5000000s ease-in-out 0s !important;
+              box-shadow: 0 0 0 1000px transparent inset !important;
+              -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+            }
+          }
+
+          .eye-toggle-btn {
+            background: transparent;
+            border: none;
+            color: $text-muted;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            box-shadow: none;
+
+            &:hover {
+              color: $text-main;
+            }
+          }
+
+          &:focus-within {
+            background-color: $bg-card;
+            border-color: $accent;
+            box-shadow: 0 0 0 3px $accent-light;
           }
         }
       }
 
-      input {
-        width: 100%;
-        padding: 14px;
-        font-size: 1rem;
-        background-color: $bg-card-alt;
-        border: 2px solid $border-main; /* Strong dark border */
-        border-radius: $border-radius;
-        color: $text-main;
-        transition: all 0.2s ease;
+      /* Black Pill Button matching Bond CRM */
+      .bond-submit-btn {
+        height: 46px;
+        margin-top: 6px;
+        background-color: $bg-pill-dark;
+        color: $text-inverse;
+        border: none;
+        border-radius: $border-radius-pill;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: $shadow-pill;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        &:focus {
-          border-color: $accent;
-          background-color: $bg-main;
-          box-shadow: $shadow-accent-md;
-          outline: none;
+        &:hover:not(:disabled) {
+          filter: brightness(1.15);
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
         }
 
-        &:-webkit-autofill,
-        &:-webkit-autofill:hover, 
-        &:-webkit-autofill:focus, 
-        &:-webkit-autofill:active {
-          -webkit-box-shadow: 0 0 0 30px var(--bg-card-alt) inset !important;
-          -webkit-text-fill-color: var(--text-main) !important;
-          transition: background-color 5000s ease-in-out 0s;
+        &:active:not(:disabled) {
+          transform: translateY(0);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
       }
     }
 
-    .btn-primary {
-      margin-top: 10px;
-      background-color: $accent;
-      color: #ffffff;
-      border: 2px solid $border-main;
-      padding: 16px;
-      font-size: 1.1rem;
-      font-weight: 800;
-      box-shadow: $shadow-md;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      width: 100%;
-      
-      &:hover:not(:disabled) {
-        transform: translate(-2px, -2px);
-        box-shadow: $shadow-lg;
-      }
+    /* Footer text */
+    .login-card-footer {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: $text-muted;
+      letter-spacing: 0.02em;
+    }
+  }
 
-      &:active:not(:disabled) {
-        transform: translate(2px, 2px);
-        box-shadow: none;
-      }
-
-      &:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-      }
+  @keyframes bondCardFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
   }
 }

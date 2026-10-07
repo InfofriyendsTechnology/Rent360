@@ -10,7 +10,7 @@
 body {
   font-family: $font-family;
   font-size: $font-size-base;
-  background-color: $bg-main;
+  background-color: $bg-canvas;
   color: $text-main;
   -webkit-font-smoothing: antialiased;
 }
@@ -23,48 +23,35 @@ a {
 button {
   cursor: pointer;
   font-family: $font-family;
-  border: 1px solid $border-main;
-  background-color: $bg-main;
-  color: $text-main;
-  border-radius: $border-radius-sm;
-  box-shadow: $shadow-sm;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: $bg-card-alt;
-    border-color: $border-muted;
-  }
-
-  &:active {
-    transform: translateY(1px);
-    box-shadow: none;
-  }
+  outline: none;
 }
 
 input {
   font-family: $font-family;
-  border: 1px solid $border-main;
-  background-color: $bg-card;
-  color: $text-main;
-  padding: 10px 14px;
-  border-radius: $border-radius-sm;
   outline: none;
-  transition: all 0.2s ease;
 
-  &:focus {
-    border-color: $accent;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover, 
+  &:-webkit-autofill:focus, 
+  &:-webkit-autofill:active {
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: var(--text-main) !important;
+    caret-color: var(--text-main) !important;
+    transition: background-color 5000000s ease-in-out 0s !important;
+    box-shadow: 0 0 0 1000px transparent inset !important;
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
   }
 }
 
-// React Hot Toast styling
+// Toast styling matching Bond CRM
 .brutal-toast {
   background-color: $bg-card !important;
   color: $text-main !important;
   border: 1px solid $border-main !important;
-  border-radius: $border-radius !important;
+  border-radius: 14px !important;
   box-shadow: $shadow-lg !important;
   font-family: $font-family !important;
   font-weight: 500 !important;
-  padding: 16px 24px !important;
+  padding: 14px 22px !important;
 }

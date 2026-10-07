@@ -5,10 +5,10 @@ import { Toaster } from 'react-hot-toast';
 import Login from './pages/Login';
 import DashboardLayout from './components/Layout/DashboardLayout';
 import StoresList from './pages/Stores/StoresList';
+import PlansList from './pages/Plans/PlansList';
+import DashboardHome from './pages/Dashboard/DashboardHome';
 
-// Temporary dashboard components
-const DashboardHome = () => <div style={{ padding: 20 }}><h1>Dashboard Overview</h1></div>;
-const SubscriptionsPage = () => <div style={{ padding: 20 }}><h1>Subscriptions</h1></div>;
+// Temporary placeholder components for remaining routes
 const SettingsPage = () => <div style={{ padding: 20 }}><h1>Settings</h1></div>;
 const InventoryPage = () => <div style={{ padding: 20 }}><h1>Inventory Management</h1></div>;
 const CustomersPage = () => <div style={{ padding: 20 }}><h1>Customers</h1></div>;
@@ -48,7 +48,8 @@ const App = () => {
           {user?.role === 'SUPER_ADMIN' && (
             <>
               <Route path="stores" element={<StoresList />} />
-              <Route path="subscriptions" element={<SubscriptionsPage />} />
+              <Route path="plans" element={<PlansList />} />
+              <Route path="subscriptions" element={<PlansList />} />
             </>
           )}
 

@@ -3,18 +3,37 @@
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  background-color: $bg-card-alt;
+  background-color: $bg-canvas;
+  padding: 16px;
+  gap: 18px;
+  box-sizing: border-box;
 
   .dashboard-main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
+    gap: 16px;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
 
   .dashboard-content {
     flex: 1;
-    padding: 30px;
-    background-color: $bg-main;
+    padding: 4px 6px;
+    background: transparent;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-layout {
+    padding: 8px;
+    gap: 10px;
+
+    .dashboard-content {
+      padding: 4px;
+    }
   }
 }

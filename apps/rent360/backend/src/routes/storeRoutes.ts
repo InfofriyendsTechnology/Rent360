@@ -5,6 +5,7 @@ import {
   getStoreById,
   updateStore,
   deleteStore,
+  setStoreAdminPassword,
 } from "../controllers/storeController";
 import { authenticate } from "../middleware/auth";
 import validator from "../utils/validators";
@@ -19,5 +20,6 @@ router.get("/", getAllStores);
 router.post("/", validator({ body: createStoreSchema }), createStore);
 router.get("/:id", getStoreById);
 router.put("/:id", validator({ body: updateStoreSchema }), updateStore);
+router.put("/:id/password", setStoreAdminPassword);
 router.delete("/:id", deleteStore);
 export default router;
