@@ -35,6 +35,7 @@ import retailSaleRoutes from "./retailSaleRoutes";
 import retailSaleItemRoutes from "./retailSaleItemRoutes";
 import subscriptionPlanRoutes from "./subscriptionPlanRoutes";
 import storeSubscriptionRoutes from "./storeSubscriptionRoutes";
+import bucketRoutes from "./bucketRoutes";
 
 const router = Router();
 router.use("/auth", authRoutes);
@@ -76,4 +77,5 @@ router.use("/plans", subscriptionPlanRoutes);
 router.use("/storeSubscriptions", storeSubscriptionRoutes);
 router.use("/subscriptions", storeSubscriptionRoutes);
 router.use("/store-subscriptions", storeSubscriptionRoutes);
+router.use("/bucket", bucketRoutes);
 export default router;

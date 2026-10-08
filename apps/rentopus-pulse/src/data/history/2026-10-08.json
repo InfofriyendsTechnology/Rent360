@@ -1,0 +1,60 @@
+{
+  "date": "08-10-2026",
+  "dayNumber": 14,
+  "title": "Cloud Storage Explorer & Profile Picture Management",
+  "titleGu": "ક્લાઉડ સ્ટોરેજ એક્સપ્લોરર અને પ્રોફાઇલ પિક્ચર મેનેજમેન્ટ",
+  "members": [
+    "001"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Built a complete Cloudinary Bucket Explorer (Rent360) allowing admins to view, browse, and manage uploaded media directly from the dashboard."
+    },
+    {
+      "member": "001",
+      "text": "Fixed Cloudinary Admin API limitations by correctly creating folders dynamically during uploads and filtering deep-nested files in the explorer."
+    },
+    {
+      "member": "001",
+      "text": "Implemented a robust Profile Picture upload and deletion system with proper Cloudinary synchronization, database nullification, and cache-busting."
+    },
+    {
+      "member": "001",
+      "text": "Fixed critical React UI crashes and CSS layout bugs, including Sidebar profile formatting and the Bucket Explorer grid view redesign."
+    },
+    {
+      "member": "001",
+      "text": "Documented a new QR-code inventory concept and analyzed shop owner feedback for the Rentopus Pulse ideas sector."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "ક્લાઉડિનરી (Cloudinary) બકેટ એક્સપ્લોરર બનાવ્યું, જેથી એડમિન સીધા જ ડેશબોર્ડમાંથી બધા અપલોડ કરેલા ફોટા અને ફોલ્ડર જોઈ શકે અને ડીલીટ કરી શકે."
+    },
+    {
+      "member": "001",
+      "text": "ક્લાઉડિનરીમાં નવા ફોલ્ડર જાતે ક્રિએટ થાય અને ફોલ્ડરની અંદરના ફોટા બરાબર દેખાય (nested files) તેનું લોજીક ફિક્સ કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "પ્રોફાઈલ પિક્ચર અપલોડ કરવાનું અને ડીલીટ કરવાનું ફીચર બનાવ્યું, જે ડાયરેક્ટ ડેટાબેઝ અને ક્લાઉડિનરી બંને સાથે રિયલ ટાઈમમાં સિન્ક થાય છે."
+    },
+    {
+      "member": "001",
+      "text": "સાઈડબારમાં ડીલીટ બટનની ડીઝાઈન અને બકેટ એક્સપ્લોરરનું ગ્રીડ લેઆઉટ બગડતું હતું, તે ક્રેશ અને CSS એરર સોલ્વ કરી."
+    },
+    {
+      "member": "001",
+      "text": "રેન્ટોપસ પલ્સ (Pulse) માં ગ્રાહકો માટે QR-કોડ સિસ્ટમનો નવો આઇડિયા અને દુકાનદારોના અભિપ્રાય (Conclusion) વિશે ડોક્યુમેન્ટ ઉમેર્યું."
+    }
+  ],
+  "deliverables": [
+    "Cloudinary Bucket Explorer UI",
+    "Cloudinary Folder Auto-Creation Logic",
+    "Profile Picture Upload & Delete System",
+    "Sidebar UI Enhancements",
+    "Pulse Idea Document (IDEA-003)"
+  ]
+}

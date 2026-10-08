@@ -1,0 +1,19 @@
+{
+  "id": "IDEA-003",
+  "createdAt": "08-10-2026",
+  "title": "QR Code Customer Catalog & Status System",
+  "titleGu": "QR કોડ આધારિત કસ્ટમર કેટલોગ અને સ્ટેટસ સિસ્ટમ",
+  "suggestedBy": "Concept Discussion",
+  "source": "Field Research & Shop Owners",
+  "descriptionEn": "A QR-code based system for walk-in customers. Customers or salesmen can scan a QR code to view the clothing catalog (e.g., Sherwanis, Jodhpuris) under different categories. The system would display real-time stock availability, showing how many pieces are sold out and which ones are already booked ('Please do not book').",
+  "descriptionGu": "સ્ટોરમાં આવતા ગ્રાહકો માટે એક QR કોડ સિસ્ટમ બનાવવાનો વિચાર. ગ્રાહક કે સેલ્સમેન QR સ્કેન કરીને કેટેગરી (જેમ કે શેરવાની, જોધપુરી) મુજબ કપડાં જોઈ શકે. સિસ્ટમમાં એ દેખાડે કે કેટલા પીસ વેચાઈ ગયા છે અને કેટલાનું બુકિંગ થઈ ગયું છે ('Please do not book').",
+  "history": [
+    {
+      "date": "08-10-2026",
+      "author": "Field Feedback (Shop Owners)",
+      "type": "conclusion",
+      "contentEn": "After discussing this concept with actual shop owners, they advised against it. In the rental clothing field, pricing is not strictly fixed. Salesmen use bargaining strategies based on the customer's profile, aiming for a price above a set 'minimum margin'. Showing exact transparent pricing or availability details directly to customers ruins their bargaining ability and can cause customers to back down from the deal. They prefer keeping the 'extra' pricing hidden to maintain negotiation leverage.",
+      "contentGu": "દુકાનદારો સાથે વાત કર્યા પછી જાણવા મળ્યું કે આ સિસ્ટમ તેમના ફિલ્ડ માટે નકામી છે. રેન્ટલ કપડાંના ફિલ્ડમાં ભાવ ફિક્સ હોતા નથી. સેલ્સમેન ગ્રાહકને જોઈને ભાવતાલ કરે છે અને એક 'મિનિમમ પ્રાઈઝ' ઉપર વધારાનો નફો ચડાવીને ભાવ કહે છે. જો ગ્રાહકને બધી વિગતો ડાયરેક્ટ દેખાઈ જાય, તો સેલ્સમેન ભાવતાલ નથી કરી શકતો અને ગ્રાહકો પાછા જતા રહે છે (backdown). તેથી ગ્રાહકને સીધી સિસ્ટમ દેખાડવી યોગ્ય નથી."
+    }
+  ]
+}

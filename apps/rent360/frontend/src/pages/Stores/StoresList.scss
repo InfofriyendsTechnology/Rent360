@@ -180,6 +180,15 @@
         letter-spacing: 0.04em;
       }
 
+      .avatar-image {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid $border-main;
+        flex-shrink: 0;
+      }
+
       .store-text {
         display: flex;
         flex-direction: column;
@@ -904,6 +913,34 @@
     to {
       opacity: 1;
       transform: scale(1) translateY(0);
+    }
+  }
+}
+
+
+.logo-upload-field {
+  .logo-preview-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    .logo-preview-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid $border-main;
+    }
+    .logo-placeholder {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      background: $bg-canvas;
+      border: 1px dashed $border-main;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: $text-muted;
     }
   }
 }

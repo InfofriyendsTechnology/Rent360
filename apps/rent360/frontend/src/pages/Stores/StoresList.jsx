@@ -41,6 +41,7 @@ const StoresList = () => {
     state: '',
     pincode: '',
     gst_number: '',
+    logo_url: '',
     password: ''
   });
   const [showFormPassword, setShowFormPassword] = useState(false);
@@ -86,6 +87,45 @@ const StoresList = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 300;
+        const MAX_HEIGHT = 300;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const webpDataUrl = canvas.toDataURL('image/webp', 0.8);
+        setFormData((prev) => ({ ...prev, logo_url: webpDataUrl }));
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const openAddModal = () => {
     setEditingStoreId(null);
     setEditingStoreHasPassword(false);
@@ -99,6 +139,7 @@ const StoresList = () => {
       state: '',
       pincode: '',
       gst_number: '',
+      logo_url: '',
       password: ''
     });
     setShowFormPassword(false);
@@ -118,6 +159,7 @@ const StoresList = () => {
       state: store.state || '',
       pincode: store.pincode || '',
       gst_number: store.gst_number || '',
+      logo_url: store.logo_url || '',
       password: store.adminPassword || ''
     });
     setShowFormPassword(false);
@@ -268,9 +310,13 @@ const StoresList = () => {
                     <tr key={store.id}>
                       <td>
                         <div className="store-identity">
-                          <div className="avatar-initials">
-                            {getInitials(store.name)}
-                          </div>
+                          {store.logo_url ? (
+                            <img src={store.logo_url} alt="Logo" className="avatar-image" />
+                          ) : (
+                            <div className="avatar-initials">
+                              {getInitials(store.name)}
+                            </div>
+                          )}
                           <div className="store-text">
                             <span className="store-name">{store.name}</span>
                             {store.email && (
@@ -356,6 +402,23 @@ const StoresList = () => {
 
             <form onSubmit={handleSubmit}>
               <div className="modal-body">
+                {/* Logo Upload */}
+                <div className="form-field logo-upload-field">
+                  <label>Company Logo (Auto-compressed to WebP)</label>
+                  <div className="logo-preview-wrap">
+                    {formData.logo_url ? (
+                      <img src={formData.logo_url} alt="Preview" className="logo-preview-img" />
+                    ) : (
+                      <div className="logo-placeholder">No Logo</div>
+                    )}
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={handleLogoUpload} 
+                    />
+                  </div>
+                </div>
+
                 {/* Row 1: Store & Owner */}
                 <div className="form-row-2">
                   <div className="form-field">

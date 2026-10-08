@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import Login from './pages/Login';
 import DashboardLayout from './components/Layout/DashboardLayout';
 import StoresList from './pages/Stores/StoresList';
+import BucketExplorer from './pages/Bucket/BucketExplorer';
 import PlansList from './pages/Plans/PlansList';
 import SubscriptionsList from './pages/Subscriptions/SubscriptionsList';
 import DashboardHome from './pages/Dashboard/DashboardHome';
@@ -49,6 +50,7 @@ const App = () => {
           {user?.role === 'SUPER_ADMIN' && (
             <>
               <Route path="stores" element={<StoresList />} />
+            <Route path="bucket" element={<BucketExplorer />} />
               <Route path="plans" element={<PlansList />} />
               <Route path="subscriptions" element={<SubscriptionsList />} />
             </>

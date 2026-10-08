@@ -15,6 +15,7 @@ export const updateStore = async (req: Request, res: Response) => {
       state, 
       pincode, 
       gst_number, 
+      logo_url,
       subscription_status,
       password,
       admin_password
@@ -32,6 +33,7 @@ export const updateStore = async (req: Request, res: Response) => {
         ...(state !== undefined && { state }),
         ...(pincode !== undefined && { pincode }),
         ...(gst_number !== undefined && { gst_number }),
+        ...(logo_url !== undefined && { logo_url }),
         ...(subscription_status !== undefined && { subscription_status }),
       },
     });

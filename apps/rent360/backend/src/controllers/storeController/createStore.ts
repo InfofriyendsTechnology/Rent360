@@ -15,6 +15,7 @@ export const createStore = async (req: Request, res: Response) => {
       state, 
       pincode, 
       gst_number,
+      logo_url,
       plan_id,
       admin_password,
       password
@@ -67,6 +68,7 @@ export const createStore = async (req: Request, res: Response) => {
           state: state || null,
           pincode: pincode || null,
           gst_number: gst_number || null,
+          logo_url: logo_url || null,
           plan_id: targetPlan?.id || null,
           subscription_status: 'ACTIVE'
         }

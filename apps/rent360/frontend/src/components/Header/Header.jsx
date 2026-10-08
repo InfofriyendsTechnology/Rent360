@@ -79,8 +79,12 @@ const Header = () => {
         </button>
 
         {/* Circular User Avatar */}
-        <div className="avatar-circle">
-          {user?.name ? user.name.slice(0, 2).toUpperCase() : 'AD'}
+        <div className="avatar-circle" style={{ overflow: 'hidden' }}>
+          {user?.profile_pic ? (
+            <img src={user.profile_pic} alt="DP" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          ) : (
+            user?.name ? user.name.slice(0, 2).toUpperCase() : 'AD'
+          )}
         </div>
       </div>
     </header>

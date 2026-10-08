@@ -76,12 +76,13 @@ model User {
   store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
   roleId    String?
   role      Role?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
-  name      String
-  mobile    String   @unique
-  password  String
-  status    String   @default("ACTIVE")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  name        String
+  mobile      String   @unique
+  password    String
+  profile_pic String?
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   bookingsCreated Booking[]      @relation("BookingSalesman")
   transactions    Transaction[]  @relation("TransactionStaff")
