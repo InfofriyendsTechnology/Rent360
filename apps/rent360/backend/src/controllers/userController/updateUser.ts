@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../../utils/prisma";
 import responseHandler from "../../utils/responseHandler";
 import { v2 as cloudinary } from "cloudinary";
+import bcrypt from "bcryptjs";
 
 // Configure Cloudinary
 cloudinary.config({
@@ -12,8 +13,17 @@ cloudinary.config({
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const updateData = { ...req.body };
-    const existingUser = await (prisma as any).user.findUnique({ 
+    const { password, ...rest } = req.body;
+    let updateData = { ...rest };
+    
+    if (!updateData.roleId) {
+      updateData.roleId = null;
+    }
+    if (password) {
+      updateData.password = await bcrypt.hash(password, 10);
+    }
+
+    const existingUser = await prisma.user.findUnique({ 
       where: { id: req.params.id },
       include: { role: true, store: true }
     });
@@ -37,7 +47,6 @@ export const updateUser = async (req: Request, res: Response) => {
       
       const fullPublicId = `${folderPath}/${safeName}_profile`;
 
-      // Explicitly create the folder so it appears in the Bucket Explorer (api.sub_folders)
       try {
         await cloudinary.api.create_folder(folderPath);
       } catch (e) {
@@ -53,11 +62,13 @@ export const updateUser = async (req: Request, res: Response) => {
       updateData.profile_pic = uploadResponse.secure_url;
     }
 
-    const data = await (prisma as any).user.update({
+    const data = await prisma.user.update({
       where: { id: req.params.id },
       data: updateData,
     });
-    return responseHandler.success(res, "Updated successfully", data);
+    
+    const { password: _, ...sanitized } = data;
+    return responseHandler.success(res, "Updated successfully", sanitized);
   } catch (error) {
     console.error("Cloudinary/Update Error:", error);
     return responseHandler.internalServerError(res, error);

@@ -9,12 +9,13 @@ import BucketExplorer from './pages/Bucket/BucketExplorer';
 import PlansList from './pages/Plans/PlansList';
 import SubscriptionsList from './pages/Subscriptions/SubscriptionsList';
 import DashboardHome from './pages/Dashboard/DashboardHome';
+import RolesList from './pages/Roles/RolesList';
+import UsersList from './pages/Users/UsersList';
 
 // Temporary placeholder components for remaining routes
 const SettingsPage = () => <div style={{ padding: 20 }}><h1>Settings</h1></div>;
 const InventoryPage = () => <div style={{ padding: 20 }}><h1>Inventory Management</h1></div>;
 const CustomersPage = () => <div style={{ padding: 20 }}><h1>Customers</h1></div>;
-const RolesPage = () => <div style={{ padding: 20 }}><h1>Role Management</h1></div>;
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -61,11 +62,12 @@ const App = () => {
             <>
               <Route path="inventory" element={<InventoryPage />} />
               <Route path="customers" element={<CustomersPage />} />
+              <Route path="staff" element={<UsersList />} />
+              <Route path="roles" element={<RolesList />} />
             </>
           )}
 
           {/* Shared Routes */}
-          <Route path="roles" element={<RolesPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
         

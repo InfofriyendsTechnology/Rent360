@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { 
   FiPlus, FiEdit2, FiTrash2, FiX, FiCheck, FiKey, 
-  FiEye, FiEyeOff, FiMapPin, FiPhone, FiMail
+  FiEye, FiEyeOff, FiMapPin, FiPhone, FiMail, FiLogIn
 } from 'react-icons/fi';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { loginSuccess } from '../../store/authSlice';
 import toast from 'react-hot-toast';
 import './StoresList.scss';
 
@@ -15,7 +16,7 @@ const DEFAULT_PLANS_FALLBACK = [
 ];
 
 const StoresList = () => {
-  const { token } = useSelector((state) => state.auth);
+  const { token, user } = useSelector((state) => state.auth);
   const [stores, setStores] = useState([]);
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,11 +47,29 @@ const StoresList = () => {
   });
   const [showFormPassword, setShowFormPassword] = useState(false);
   const [editingStoreHasPassword, setEditingStoreHasPassword] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchStores();
     fetchPlans();
   }, []);
+
+  const handleLoginAsStore = async (storeId) => {
+    try {
+      const res = await axios.post(`http://localhost:61026/api/stores/${storeId}/login-as`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Save Super Admin session before switching
+      localStorage.setItem('superAdminToken', token);
+      localStorage.setItem('superAdminUser', JSON.stringify(user));
+      
+      toast.success('Logged in successfully!');
+      dispatch(loginSuccess(res.data.data));
+    } catch (error) {
+      console.error('Error logging in as store:', error);
+      toast.error(error.response?.data?.message || 'Failed to login as store');
+    }
+  };
 
   const fetchStores = async () => {
     try {
@@ -349,6 +368,16 @@ const StoresList = () => {
                       </td>
                       <td className="text-right">
                         <div className="row-action-btns">
+                          {/* Login as Store */}
+                          <button 
+                            className="icon-action-btn edit" 
+                            title="Login as Store" 
+                            onClick={() => handleLoginAsStore(store.id)}
+                            style={{ color: '#2563eb', background: '#eff6ff' }}
+                          >
+                            <FiLogIn />
+                          </button>
+
                           {/* Edit Company Profile */}
                           <button 
                             className="icon-action-btn edit" 

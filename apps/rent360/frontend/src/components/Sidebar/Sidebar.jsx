@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   FiHome, FiBox, FiUsers, FiSettings, FiLogOut, FiTrash2, 
-  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive
+  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive, FiCornerUpLeft
 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout, updateUser } from '../../store/authSlice';
+import { logout, updateUser, loginSuccess } from '../../store/authSlice';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import ProfileUploadModal from '../ProfileUploadModal/ProfileUploadModal';
@@ -13,6 +13,7 @@ import './Sidebar.scss';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const fileInputRef = useRef(null);
@@ -21,6 +22,22 @@ const Sidebar = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const isSuperAdmin = user?.role === 'SUPER_ADMIN';
+  const superAdminToken = localStorage.getItem('superAdminToken');
+
+  const handleReturnToSuperAdmin = () => {
+    const sToken = localStorage.getItem('superAdminToken');
+    const userStr = localStorage.getItem('superAdminUser');
+    if (sToken && userStr) {
+      try {
+        const sUser = JSON.parse(userStr);
+        localStorage.removeItem('superAdminToken');
+        localStorage.removeItem('superAdminUser');
+        dispatch(loginSuccess({ user: sUser, token: sToken }));
+        navigate('/stores');
+        toast.success("Returned to Super Admin");
+      } catch (err) {}
+    }
+  };
   const sidebarLogo = theme === 'dark' ? '/assets/logo/Rent360_icon_White.png' : '/assets/logo/Rent360_icon_Black.png';
 
   useEffect(() => {
@@ -180,6 +197,13 @@ const Sidebar = () => {
                     <span className="text">Customers</span>
                   </NavLink>
                   <NavLink 
+                    to="/staff" 
+                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                  >
+                    <span className="icon"><FiUsers /></span>
+                    <span className="text">Team Members</span>
+                  </NavLink>
+                  <NavLink 
                     to="/roles" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
                   >
@@ -207,6 +231,16 @@ const Sidebar = () => {
 
         {/* Footer Profile Card */}
         <div className="sidebar-footer">
+          {superAdminToken && (
+            <button 
+              className="return-admin-btn" 
+              onClick={handleReturnToSuperAdmin}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '10px 14px', marginBottom: '12px', background: '#2563eb', color: '#fff', borderRadius: '12px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: '500' }}
+            >
+              <FiCornerUpLeft />
+              Return to Super Admin
+            </button>
+          )}
           <input 
             type="file" 
             accept="image/*" 

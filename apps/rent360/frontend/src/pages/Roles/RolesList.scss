@@ -1,0 +1,34 @@
+@import '../../styles/variables';
+
+.perm-pill {
+  background: var(--bg-card-alt);
+  color: var(--text-main);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border-main);
+}
+
+.perm-checkbox-label {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  cursor: pointer;
+  font-size: 14px !important;
+  color: var(--text-main) !important;
+  font-weight: 500 !important;
+  
+  input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    flex-shrink: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+    margin: 0 !important;
+    border: none !important;
+    appearance: auto !important; /* Ensure it looks like a checkbox */
+  }
+}
