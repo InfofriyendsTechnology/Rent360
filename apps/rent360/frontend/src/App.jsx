@@ -11,6 +11,7 @@ import SubscriptionsList from './pages/Subscriptions/SubscriptionsList';
 import DashboardHome from './pages/Dashboard/DashboardHome';
 import RolesList from './pages/Roles/RolesList';
 import UsersList from './pages/Users/UsersList';
+import Profile from './pages/Profile/Profile';
 
 // Temporary placeholder components for remaining routes
 const SettingsPage = () => <div style={{ padding: 20 }}><h1>Settings</h1></div>;
@@ -48,17 +49,17 @@ const App = () => {
           <Route index element={<DashboardHome />} />
           
           {/* Super Admin Routes */}
-          {user?.role === 'SUPER_ADMIN' && (
+          {(user?.role === 'SUPER_ADMIN' || !user?.role) && (
             <>
               <Route path="stores" element={<StoresList />} />
-            <Route path="bucket" element={<BucketExplorer />} />
+              <Route path="bucket" element={<BucketExplorer />} />
               <Route path="plans" element={<PlansList />} />
               <Route path="subscriptions" element={<SubscriptionsList />} />
             </>
           )}
 
           {/* Store Admin Routes */}
-          {user?.role !== 'SUPER_ADMIN' && (
+          {(user?.role !== 'SUPER_ADMIN' && user?.role) && (
             <>
               <Route path="inventory" element={<InventoryPage />} />
               <Route path="customers" element={<CustomersPage />} />
@@ -69,6 +70,7 @@ const App = () => {
 
           {/* Shared Routes */}
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
         
         <Route path="*" element={<Navigate to="/" />} />

@@ -32,20 +32,42 @@ export const updateUser = async (req: Request, res: Response) => {
       return responseHandler.notFound(res, "User not found");
     }
 
-    // Check if profile_pic is a base64 string
-    if (updateData.profile_pic && updateData.profile_pic.startsWith("data:image")) {
-      const roleName = existingUser.role?.name || 'USER';
+    // Helper function to delete old image from Cloudinary
+    const destroyOldCloudinaryImage = async (imageUrl: string) => {
+      try {
+        const urlParts = imageUrl.split('/');
+        const uploadIndex = urlParts.findIndex(p => p === 'upload');
+        if (uploadIndex !== -1 && urlParts.length > uploadIndex + 2) {
+          const publicIdWithExt = urlParts.slice(uploadIndex + 2).join('/');
+          const oldPublicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
+          if (oldPublicId) {
+            await cloudinary.uploader.destroy(oldPublicId, { invalidate: true });
+            console.log("Deleted old profile pic from Cloudinary:", oldPublicId);
+          }
+        }
+      } catch (delErr) {
+        console.error("Failed to delete old profile pic from Cloudinary:", delErr);
+      }
+    };
+
+    // If user explicitly removes the picture (profile_pic === null)
+    if (updateData.profile_pic === null && existingUser.profile_pic) {
+      await destroyOldCloudinaryImage(existingUser.profile_pic);
+    } 
+    // If user uploads a new picture
+    else if (updateData.profile_pic && updateData.profile_pic.startsWith("data:image")) {
+      const isSuperAdmin = existingUser.role?.name === 'SUPER_ADMIN' || !existingUser.roleId;
       const storeName = existingUser.store?.name ? existingUser.store.name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() : 'default_store';
-      const safeName = existingUser.name ? existingUser.name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() : 'user';
       
       let folderPath = '';
-      if (roleName === 'SUPER_ADMIN') {
+      if (isSuperAdmin) {
         folderPath = `rent360/super_admin/profiles`;
       } else {
         folderPath = `rent360/stores/${storeName}/profiles`;
       }
       
-      const fullPublicId = `${folderPath}/${safeName}_profile`;
+      const cleanName = existingUser.name ? existingUser.name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() : 'user';
+      const fullPublicId = `${folderPath}/${cleanName}_profile`;
 
       try {
         await cloudinary.api.create_folder(folderPath);
@@ -53,9 +75,15 @@ export const updateUser = async (req: Request, res: Response) => {
         console.log("Folder might already exist or create_folder failed:", e);
       }
 
+      // Delete old image before uploading new one
+      if (existingUser.profile_pic) {
+        await destroyOldCloudinaryImage(existingUser.profile_pic);
+      }
+
       const uploadResponse = await cloudinary.uploader.upload(updateData.profile_pic, {
         public_id: fullPublicId,
         overwrite: true,
+        invalidate: true,
         resource_type: "image",
       });
       // Replace base64 with actual Cloudinary URL

@@ -310,8 +310,8 @@
         padding: 0 12px;
         border-radius: $border-radius-pill;
         border: 1px dashed $border-main;
-        background-color: transparent;
-        color: $text-muted;
+        background-color: $bg-card-alt;
+        color: $text-main;
         font-size: 0.78rem;
         font-weight: 600;
         cursor: pointer;
@@ -379,8 +379,8 @@
         height: 36px;
         border-radius: $border-radius-pill;
         border: 1px solid transparent;
-        background-color: transparent;
-        color: $text-muted;
+        background-color: $bg-card-alt;
+        color: $text-main;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -944,3 +944,157 @@
     }
   }
 }
+
+
+.preview-empty {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  
+  .img-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background: $bg-canvas;
+    border: 1px dashed $border-main;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: $text-muted;
+  }
+  
+  .custom-file-upload {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: $bg-card-alt;
+    color: $text-main;
+    border: 1px solid $border-main;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+      background-color: $border-main;
+    }
+  }
+}
+
+.preview-has-image {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  
+  img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid $border-main;
+  }
+  
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--danger-color, #ff4d4f);
+    color: var(--danger-color, #ff4d4f);
+    border-radius: 16px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+      background: rgba(255, 77, 79, 0.1);
+    }
+  }
+}
+
+.sleek-logo-field {
+  margin-bottom: 24px;
+  
+  .sleek-logo-upload {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 8px;
+
+    .logo-upload-circle {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      background: $bg-card-alt;
+      border: 2px dashed $border-main;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.2s ease;
+
+      .empty-state {
+        color: $text-muted;
+        font-size: 28px;
+        display: flex;
+        transition: color 0.2s;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .hover-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      &:hover {
+        border-color: $accent;
+        border-style: solid;
+        
+        .empty-state {
+          color: $accent;
+        }
+        
+        .hover-overlay {
+          opacity: 1;
+        }
+      }
+    }
+
+    .remove-logo-btn {
+      background: transparent;
+      border: none;
+      color: var(--danger-color, #ff4d4f);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      
+      &:hover {
+        background: rgba(255, 77, 79, 0.1);
+      }
+    }
+  }
+}
+
