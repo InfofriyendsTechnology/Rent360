@@ -88,33 +88,42 @@ export const setupSuperAdmin = async () => {
     console.log('⏳ Creating new Super Admin from .env...');
     const hashedPassword = await bcrypt.hash(passwordText, 10);
 
-    const store = await prisma.store.create({
-      data: {
-        name: 'Rent360',
-        owner_name: 'System Admin',
-        mobile,
-        subscription_status: 'ACTIVE'
-      }
-    });
+    let store = await prisma.store.findFirst({ where: { mobile } });
+    if (!store) {
+      store = await prisma.store.create({
+        data: {
+          name: 'Rent360',
+          owner_name: 'System Admin',
+          mobile,
+          subscription_status: 'ACTIVE'
+        }
+      });
+    }
 
-    const role = await prisma.role.create({
-      data: {
-        storeId: store.id,
-        name: 'SUPER_ADMIN',
-        permissions: ['ALL']
-      }
-    });
+    let role = await prisma.role.findFirst({ where: { storeId: store.id, name: 'SUPER_ADMIN' } });
+    if (!role) {
+      role = await prisma.role.create({
+        data: {
+          storeId: store.id,
+          name: 'SUPER_ADMIN',
+          permissions: ['ALL']
+        }
+      });
+    }
 
-    await prisma.user.create({
-      data: {
-        storeId: store.id,
-        roleId: role.id,
-        name: 'System Admin',
-        mobile,
-        password: hashedPassword,
-        status: 'ACTIVE'
-      }
-    });
+    let user = await prisma.user.findFirst({ where: { mobile } });
+    if (!user) {
+      await prisma.user.create({
+        data: {
+          storeId: store.id,
+          roleId: role.id,
+          name: 'System Admin',
+          mobile,
+          password: hashedPassword,
+          status: 'ACTIVE'
+        }
+      });
+    }
 
     console.log(`🚀 Super Admin created successfully (Mobile: ${mobile})!`);
   } catch (error) {

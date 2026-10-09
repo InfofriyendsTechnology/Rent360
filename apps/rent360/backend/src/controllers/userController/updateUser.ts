@@ -27,9 +27,13 @@ export const updateUser = async (req: Request, res: Response) => {
       where: { id: req.params.id },
       include: { role: true, store: true }
     });
-    
+
     if (!existingUser) {
       return responseHandler.notFound(res, "User not found");
+    }
+
+    if (existingUser.storeId !== (req as any).user?.storeId) {
+      return responseHandler.unauthorized(res, "You can only update users in your own store");
     }
 
     // Check if profile_pic is a base64 string

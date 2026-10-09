@@ -4,8 +4,16 @@ import responseHandler from "../../utils/responseHandler";
 
 export const updateRole = async (req: Request, res: Response) => {
   try {
-    const data = await (prisma as any).role.update({
-      where: { id: req.params.id },
+    const roleId = req.params.id;
+    const storeId = (req as any).user?.storeId;
+
+    const existing = await prisma.role.findFirst({ where: { id: roleId, storeId } });
+    if (!existing) {
+      return responseHandler.notFound(res, "Role not found");
+    }
+
+    const data = await prisma.role.update({
+      where: { id: roleId },
       data: req.body,
     });
     return responseHandler.success(res, "Updated successfully", data);
