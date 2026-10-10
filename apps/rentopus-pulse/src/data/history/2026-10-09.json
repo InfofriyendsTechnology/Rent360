@@ -1,0 +1,70 @@
+{
+  "date": "09-10-2026",
+  "dayNumber": 15,
+  "title": "UI Template Board, Component Refactoring & Core Fixes",
+  "titleGu": "UI ટેમ્પલેટ બોર્ડ, કમ્પોનન્ટ રિફેક્ટરિંગ અને કોર ફિક્સીસ",
+  "members": [
+    "001",
+    "002"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Implemented a 'Template Board' with reusable UI components (DataTable, AvatarCell, RowActions, StatusPill) for consistent design."
+    },
+    {
+      "member": "001",
+      "text": "Completely refactored the StoresList page to use the new standardized UI components, reducing code duplication."
+    },
+    {
+      "member": "001",
+      "text": "Redesigned the Company Logo upload UI in the edit modal to use a premium, sleek avatar-style file uploader with hover effects."
+    },
+    {
+      "member": "002",
+      "text": "Integrated Cloudinary base64 image upload functionality into the backend updateStore and createStore controllers."
+    },
+    {
+      "member": "002",
+      "text": "Fixed a critical routing bug in 'Login as Store' that prevented proper redirection to the store dashboard."
+    },
+    {
+      "member": "002",
+      "text": "Replaced ugly native browser confirmation alerts with a beautifully styled custom ConfirmModal for destructive actions."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "પ્રોજેક્ટની ડીઝાઈન એકસરખી રહે તે માટે 'Template Board' બનાવ્યું, જેમાં Reusable UI Components (DataTable, AvatarCell વગેરે) ડેવલપ કર્યા."
+    },
+    {
+      "member": "001",
+      "text": "StoresList પેજને આખું ફરીથી રિફેક્ટર કર્યું અને નવા UI કોમ્પોનન્ટ્સનો ઉપયોગ કર્યો, જેથી વારંવાર લખાતો કોડ ઓછો થઈ જાય."
+    },
+    {
+      "member": "001",
+      "text": "કંપનીનો લોગો અપલોડ કરવા માટે જૂની ડીઝાઈન કાઢીને એકદમ મોડર્ન અને પ્રીમિયમ 'Avatar Style' ફાઈલ અપલોડર બનાવ્યું."
+    },
+    {
+      "member": "002",
+      "text": "બેકએન્ડના અપડેટ અને ક્રિએટ સ્ટોર (createStore & updateStore) માં ક્લાઉડિનરી (Cloudinary) બેઝ64 ઈમેજ અપલોડ કરવાનું લોજીક સેટ કર્યું."
+    },
+    {
+      "member": "002",
+      "text": "'Login as Store' બટન પર ક્લિક કરવાથી પેજ અટકી જતું હતું, એ બગ સોલ્વ કરીને સ્ટોર ડેશબોર્ડમાં સીધું રીડાયરેક્ટ (Redirect) થાય તેવું સેટ કર્યું."
+    },
+    {
+      "member": "002",
+      "text": "કંપની ડીલીટ કરતી વખતે આવતા બ્રાઉઝરના જૂના એલર્ટ (native warning popup) ને કાઢીને આપણું નવું 'ConfirmModal' સેટ કર્યું."
+    }
+  ],
+  "deliverables": [
+    "UI Template Board Components",
+    "Refactored StoresList Page",
+    "Sleek Logo Upload UI",
+    "Cloudinary Store Logo Integration",
+    "Login as Store Redirect Fix",
+    "ConfirmModal Global Replacement"
+  ]
+}
