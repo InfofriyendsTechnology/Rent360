@@ -7,6 +7,7 @@ import {
   deleteUser,
 } from "../controllers/userController";
 import { authenticate } from "../middleware/auth";
+import { authorize } from "../middleware/authorize";
 import validator from "../utils/validators";
 import {
   createUserSchema,
@@ -15,9 +16,12 @@ import {
 
 const router = Router();
 router.use(authenticate);
-router.get("/", getAllUsers);
-router.post("/", validator({ body: createUserSchema }), createUser);
-router.get("/:id", getUserById);
+
+const requireManageStaff = authorize(["ALL", "SETTINGS_MANAGE"]);
+
+router.get("/", requireManageStaff, getAllUsers);
+router.post("/", requireManageStaff, validator({ body: createUserSchema }), createUser);
+router.get("/:id", requireManageStaff, getUserById);
 router.put("/:id", validator({ body: updateUserSchema }), updateUser);
-router.delete("/:id", deleteUser);
+router.delete("/:id", requireManageStaff, deleteUser);
 export default router;

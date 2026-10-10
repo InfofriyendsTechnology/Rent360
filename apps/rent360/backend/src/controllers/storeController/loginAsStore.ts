@@ -36,6 +36,7 @@ export const loginAsStore = async (req: Request, res: Response) => {
         id: user.id,
         name: user.name,
         role: user.role?.name,
+        permissions: (user.role?.permissions as unknown as string[]) || [],
         store: {
           id: user.store.id,
           name: user.store.name,

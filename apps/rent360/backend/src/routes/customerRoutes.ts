@@ -7,6 +7,7 @@ import {
   deleteCustomer,
 } from "../controllers/customerController";
 import { authenticate } from "../middleware/auth";
+import { authorize } from "../middleware/authorize";
 import validator from "../utils/validators";
 import {
   createCustomerSchema,
@@ -15,6 +16,7 @@ import {
 
 const router = Router();
 router.use(authenticate);
+router.use(authorize(["ALL", "CUSTOMERS_MANAGE"]));
 router.get("/", getAllCustomers);
 router.post("/", validator({ body: createCustomerSchema }), createCustomer);
 router.get("/:id", getCustomerById);

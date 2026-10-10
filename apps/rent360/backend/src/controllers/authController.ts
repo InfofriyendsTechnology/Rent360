@@ -108,6 +108,7 @@ export const login = async (req: Request, res: Response) => {
         id: user.id,
         name: user.name,
         role: user.role?.name,
+        permissions: (user.role?.permissions as unknown as string[]) || [],
         profile_pic: user.profile_pic,
         store: {
           id: user.store.id,

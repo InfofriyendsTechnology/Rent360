@@ -166,18 +166,25 @@ const Sidebar = () => {
                     <span className="text">Plans</span>
                   </NavLink>
                   <NavLink 
-                    to="/bucket"
-                  className={({ isActive }) => isActive ? "menu-pill active" : "menu-pill"}
-                >
-                  <span className="icon"><FiHardDrive /></span>
-                  <span className="text">Bucket Storage</span>
-                </NavLink>
-                <NavLink 
-                  to="/subscriptions" 
+                    to="/subscriptions" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
                   >
                     <span className="icon"><FiCreditCard /></span>
                     <span className="text">Subscriptions</span>
+                  </NavLink>
+                  <NavLink 
+                    to="/staff" 
+                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                  >
+                    <span className="icon"><FiUsers /></span>
+                    <span className="text">Team Members</span>
+                  </NavLink>
+                  <NavLink 
+                    to="/roles" 
+                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                  >
+                    <span className="icon"><FiShield /></span>
+                    <span className="text">Roles</span>
                   </NavLink>
                 </>
               ) : (
@@ -196,20 +203,24 @@ const Sidebar = () => {
                     <span className="icon"><FiUsers /></span>
                     <span className="text">Customers</span>
                   </NavLink>
-                  <NavLink 
-                    to="/staff" 
-                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
-                  >
-                    <span className="icon"><FiUsers /></span>
-                    <span className="text">Team Members</span>
-                  </NavLink>
-                  <NavLink 
-                    to="/roles" 
-                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
-                  >
-                    <span className="icon"><FiShield /></span>
-                    <span className="text">Roles</span>
-                  </NavLink>
+                  {(user?.role === 'STORE_ADMIN' || (user?.permissions || []).includes('ALL') || (user?.permissions || []).includes('SETTINGS_MANAGE')) && (
+                    <>
+                      <NavLink 
+                        to="/staff" 
+                        className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                      >
+                        <span className="icon"><FiUsers /></span>
+                        <span className="text">Team Members</span>
+                      </NavLink>
+                      <NavLink 
+                        to="/roles" 
+                        className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                      >
+                        <span className="icon"><FiShield /></span>
+                        <span className="text">Roles</span>
+                      </NavLink>
+                    </>
+                  )}
                 </>
               )}
             </nav>

@@ -36,6 +36,26 @@ export const updateUser = async (req: Request, res: Response) => {
       return responseHandler.unauthorized(res, "You can only update users in your own store");
     }
 
+    const currentUserId = (req as any).user?.id;
+    const currentUserRole = (req as any).user?.role;
+    const dbCurrentUser = await prisma.user.findUnique({ where: { id: currentUserId }, include: { role: true } });
+    const userPermissions = dbCurrentUser?.role?.permissions || [];
+    const hasManageStaff = userPermissions.includes("ALL") || userPermissions.includes("SETTINGS_MANAGE");
+
+    // If updating someone else, must have manage staff permission
+    if (existingUser.id !== currentUserId && !hasManageStaff) {
+      return responseHandler.unauthorized(res, "You do not have permission to update other users");
+    }
+
+    // A user without manage staff permission can only update their own profile pic/password/name, not their role
+    if (!hasManageStaff && updateData.roleId && updateData.roleId !== existingUser.roleId) {
+       return responseHandler.unauthorized(res, "You cannot change your own role");
+    }
+
+    if (existingUser.role?.name === "SUPER_ADMIN" && updateData.roleId !== existingUser.roleId) {
+      return responseHandler.unauthorized(res, "You cannot change the role of the primary store owner");
+    }
+
     // Check if profile_pic is a base64 string
     if (updateData.profile_pic && updateData.profile_pic.startsWith("data:image")) {
       const roleName = existingUser.role?.name || 'USER';
