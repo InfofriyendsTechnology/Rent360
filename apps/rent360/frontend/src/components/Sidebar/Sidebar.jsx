@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout, updateUser, loginSuccess } from '../../store/authSlice';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import ProfileUploadModal from '../ProfileUploadModal/ProfileUploadModal';
+
 import './Sidebar.scss';
 
 const Sidebar = () => {
@@ -16,12 +16,12 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-  const fileInputRef = useRef(null);
   
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  
+  
+  
 
-  const isSuperAdmin = user?.role === 'SUPER_ADMIN';
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
   const superAdminToken = localStorage.getItem('superAdminToken');
 
   const handleReturnToSuperAdmin = () => {
@@ -52,57 +52,9 @@ const Sidebar = () => {
     dispatch(logout());
   };
 
-  const handleProfileClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setSelectedImage(reader.result);
-        setIsModalOpen(true);
-      };
-      reader.readAsDataURL(file);
-    }
-    e.target.value = null; // reset
-  };
-
-  const handleUploadCroppedImage = async (base64Image) => {
-    try {
-      const res = await axios.put(`http://localhost:61026/api/users/${user.id}`, 
-        { profile_pic: base64Image },
-        { headers: { Authorization: `Bearer ${token}` }}
-      );
-      
-      // Update Redux state with Cloudinary URL returned from backend
-      if (res.data?.data?.profile_pic) {
-        dispatch(updateUser({ profile_pic: res.data.data.profile_pic }));
-        toast.success("Profile picture updated successfully!");
-      }
-    } catch (err) {
-      console.error("Error updating profile pic:", err);
-      toast.error("Failed to update profile picture");
-    }
-  };
+  const handleProfileClick = () => { navigate('/profile'); };
 
   
-  const handleRemoveProfilePic = async (e) => {
-    e.stopPropagation();
-    if (!window.confirm("Are you sure you want to remove your profile picture?")) return;
-    try {
-      await axios.put(`http://localhost:61026/api/users/${user.id}`, 
-        { profile_pic: null },
-        { headers: { Authorization: `Bearer ${token}` }}
-      );
-      dispatch(updateUser({ profile_pic: null }));
-    } catch(err) {
-      console.error(err);
-    }
-  };
 
   return (
     <>
@@ -252,37 +204,15 @@ const Sidebar = () => {
               Return to Super Admin
             </button>
           )}
-          <input 
-            type="file" 
-            accept="image/*" 
-            ref={fileInputRef} 
-            style={{ display: 'none' }} 
-            onChange={handleFileChange} 
-          />
+          
           <div className="user-profile-card">
-            <div className="profile-avatar" onClick={handleProfileClick} style={{ cursor: 'pointer', overflow: 'hidden', position: 'relative' }} title="Change Profile Picture">
+            <div className="profile-avatar" onClick={handleProfileClick} style={{ cursor: 'pointer', overflow: 'hidden', position: 'relative' }} title="Profile Settings">
               {user?.profile_pic ? (
                 <img src={user.profile_pic} alt="DP" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
                 user?.name ? user.name.slice(0, 2).toUpperCase() : 'AD'
               )}
-              {user?.profile_pic && (
-                <button 
-                  onClick={handleRemoveProfilePic} 
-                  title="Remove Picture" 
-                  style={{ 
-                    position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, 
-                    background: 'rgba(239,68,68,0.8)', color: 'white', 
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    border: 'none', opacity: 0, transition: 'opacity 0.2s',
-                    width: '100%', height: '100%'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = 0}
-                >
-                  <FiTrash2 size={16} />
-                </button>
-              )}
+              
             </div>
             <div className="profile-info">
               <span className="profile-name">{user?.name || 'Main Admin'}</span>
@@ -295,14 +225,20 @@ const Sidebar = () => {
         </div>
       </aside>
       
-      <ProfileUploadModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        imageSrc={selectedImage} 
-        onUpload={handleUploadCroppedImage} 
-      />
+      
+
+      
     </>
   );
 };
 
 export default Sidebar;
+
+
+
+
+
+
+
+
+

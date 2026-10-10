@@ -2,6 +2,13 @@ import { Request, Response } from "express";
 import prisma from "../../utils/prisma";
 import responseHandler from "../../utils/responseHandler";
 import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export const createStore = async (req: Request, res: Response) => {
   try {
@@ -57,6 +64,18 @@ export const createStore = async (req: Request, res: Response) => {
     // 4. Atomic Transaction: Store + Store Admin Role + Store Admin User + Subscription
     const result = await prisma.$transaction(async (tx) => {
       // Create Store
+      
+      let finalLogoUrl = logo_url;
+      if (logo_url && logo_url.startsWith("data:image")) {
+        const cleanName = (name || "store").replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
+        const uploadResponse = await cloudinary.uploader.upload(logo_url, {
+          folder: `rent360/stores/logos`,
+          public_id: `${cleanName}_logo`,
+          overwrite: true
+        });
+        finalLogoUrl = uploadResponse.secure_url;
+      }
+
       const store = await tx.store.create({
         data: {
           name,
@@ -68,7 +87,7 @@ export const createStore = async (req: Request, res: Response) => {
           state: state || null,
           pincode: pincode || null,
           gst_number: gst_number || null,
-          logo_url: logo_url || null,
+          logo_url: finalLogoUrl || null,
           plan_id: targetPlan?.id || null,
           subscription_status: 'ACTIVE'
         }
@@ -151,3 +170,5 @@ export const createStore = async (req: Request, res: Response) => {
     return responseHandler.internalServerError(res, error.message || error);
   }
 };
+
+

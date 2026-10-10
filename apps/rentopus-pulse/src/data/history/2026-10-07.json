@@ -4,7 +4,8 @@
   "title": "Dashboard Metrics & Subscriptions Refactoring",
   "titleGu": "ડેશબોર્ડ લાઈવ મેટ્રિક્સ અને સબ્સ્ક્રિપ્શન મોડ્યુલ રિફેક્ટર",
   "members": [
-    "001"
+    "001",
+    "002"
   ],
   "tasksEn": [
     {
@@ -24,7 +25,7 @@
       "text": "Fixed complex SCSS syntax and import path errors preventing the frontend from compiling properly."
     },
     {
-      "member": "001",
+      "member": "002",
       "text": "Simplified the Assign Subscription modal to match the minimalist Bond CRM aesthetic and user requirements."
     }
   ],

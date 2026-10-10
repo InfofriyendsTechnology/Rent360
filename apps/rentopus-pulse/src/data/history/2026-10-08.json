@@ -1,10 +1,11 @@
 {
   "date": "08-10-2026",
   "dayNumber": 14,
-  "title": "Cloud Storage Explorer & Profile Picture Management",
-  "titleGu": "ક્લાઉડ સ્ટોરેજ એક્સપ્લોરર અને પ્રોફાઇલ પિક્ચર મેનેજમેન્ટ",
+  "title": "Cloud Storage, Media Management & Access Controls",
+  "titleGu": "ક્લાઉડ સ્ટોરેજ, મીડિયા મેનેજમેન્ટ અને એક્સેસ કંટ્રોલ્સ",
   "members": [
-    "001"
+    "001",
+    "002"
   ],
   "tasksEn": [
     {
@@ -26,6 +27,14 @@
     {
       "member": "001",
       "text": "Documented a new QR-code inventory concept and analyzed shop owner feedback for the Rentopus Pulse ideas sector."
+    },
+    {
+      "member": "002",
+      "text": "Developed the Roles List and Users List pages to manage platform access and permissions."
+    },
+    {
+      "member": "002",
+      "text": "Implemented the 'Login as Store' functionality, allowing admins to seamlessly switch into a specific store's dashboard."
     }
   ],
   "tasksGu": [
@@ -48,6 +57,14 @@
     {
       "member": "001",
       "text": "રેન્ટોપસ પલ્સ (Pulse) માં ગ્રાહકો માટે QR-કોડ સિસ્ટમનો નવો આઇડિયા અને દુકાનદારોના અભિપ્રાય (Conclusion) વિશે ડોક્યુમેન્ટ ઉમેર્યું."
+    },
+    {
+      "member": "002",
+      "text": "પ્લેટફોર્મના એક્સેસ અને પરમિશનને મેનેજ કરવા માટે રોલ્સ લિસ્ટ (Roles List) અને યુઝર્સ લિસ્ટ (Users List) ના નવા પેજ ડેવલપ કર્યા."
+    },
+    {
+      "member": "002",
+      "text": "એડમિન સીધા જ કોઈપણ સ્ટોરના ડેશબોર્ડમાં લોગીન કરી શકે તેના માટે 'Login as Store' નું નવું ફીચર બનાવ્યું."
     }
   ],
   "deliverables": [
@@ -55,6 +72,8 @@
     "Cloudinary Folder Auto-Creation Logic",
     "Profile Picture Upload & Delete System",
     "Sidebar UI Enhancements",
-    "Pulse Idea Document (IDEA-003)"
+    "Pulse Idea Document (IDEA-003)",
+    "Roles & Users List Pages",
+    "Login as Store Feature"
   ]
 }
