@@ -4,8 +4,7 @@
   "title": "UI Template Board, Component Refactoring & Core Fixes",
   "titleGu": "UI ટેમ્પલેટ બોર્ડ, કમ્પોનન્ટ રિફેક્ટરિંગ અને કોર ફિક્સીસ",
   "members": [
-    "001",
-    "002"
+    "001"
   ],
   "tasksEn": [
     {
@@ -21,15 +20,15 @@
       "text": "Redesigned the Company Logo upload UI in the edit modal to use a premium, sleek avatar-style file uploader with hover effects."
     },
     {
-      "member": "002",
+      "member": "001",
       "text": "Integrated Cloudinary base64 image upload functionality into the backend updateStore and createStore controllers."
     },
     {
-      "member": "002",
+      "member": "001",
       "text": "Fixed a critical routing bug in 'Login as Store' that prevented proper redirection to the store dashboard."
     },
     {
-      "member": "002",
+      "member": "001",
       "text": "Replaced ugly native browser confirmation alerts with a beautifully styled custom ConfirmModal for destructive actions."
     }
   ],
@@ -47,15 +46,15 @@
       "text": "કંપનીનો લોગો અપલોડ કરવા માટે જૂની ડીઝાઈન કાઢીને એકદમ મોડર્ન અને પ્રીમિયમ 'Avatar Style' ફાઈલ અપલોડર બનાવ્યું."
     },
     {
-      "member": "002",
+      "member": "001",
       "text": "બેકએન્ડના અપડેટ અને ક્રિએટ સ્ટોર (createStore & updateStore) માં ક્લાઉડિનરી (Cloudinary) બેઝ64 ઈમેજ અપલોડ કરવાનું લોજીક સેટ કર્યું."
     },
     {
-      "member": "002",
+      "member": "001",
       "text": "'Login as Store' બટન પર ક્લિક કરવાથી પેજ અટકી જતું હતું, એ બગ સોલ્વ કરીને સ્ટોર ડેશબોર્ડમાં સીધું રીડાયરેક્ટ (Redirect) થાય તેવું સેટ કર્યું."
     },
     {
-      "member": "002",
+      "member": "001",
       "text": "કંપની ડીલીટ કરતી વખતે આવતા બ્રાઉઝરના જૂના એલર્ટ (native warning popup) ને કાઢીને આપણું નવું 'ConfirmModal' સેટ કર્યું."
     }
   ],
