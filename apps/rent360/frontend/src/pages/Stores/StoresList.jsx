@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { 
   FiPlus, FiEdit2, FiTrash2, FiX, FiCheck, FiKey, 
   FiEye, FiEyeOff, FiMapPin, FiPhone, FiMail, FiLogIn,
-  FiImage, FiUploadCloud
+  FiImage, FiUploadCloud, FiLoader
 } from 'react-icons/fi';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { loginSuccess } from '../../store/authSlice';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import ImageAdjustModal from '../../components/ProfileUploadModal/ProfileUploadModal';
 import { DataTable, AvatarCell, StatusPill, RowActions } from '../../components/ui';
 import './StoresList.scss';
 
@@ -24,10 +25,18 @@ const StoresList = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Modals
+  // Modals & Action Loading States
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStoreId, setEditingStoreId] = useState(null);
   const [storeToDelete, setStoreToDelete] = useState(null);
+  const [isDeletingStore, setIsDeletingStore] = useState(false);
+  const [isRemoveLogoModalOpen, setIsRemoveLogoModalOpen] = useState(false);
+  const [isRemovingLogo, setIsRemovingLogo] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const [loggingInStoreId, setLoggingInStoreId] = useState(null);
+  const [logoImageToAdjust, setLogoImageToAdjust] = useState(null);
+  const [isAdjustModalOpen, setIsAdjustModalOpen] = useState(false);
 
   // Store/Company Form State
   const [formData, setFormData] = useState({
@@ -53,7 +62,9 @@ const StoresList = () => {
   }, []);
 
   const handleLoginAsStore = async (storeId) => {
+    if (loggingInStoreId) return;
     try {
+      setLoggingInStoreId(storeId);
       const res = await axios.post(`http://localhost:61026/api/stores/${storeId}/login-as`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -67,6 +78,8 @@ const StoresList = () => {
     } catch (error) {
       console.error('Error logging in as store:', error);
       toast.error(error.response?.data?.message || 'Failed to login as store');
+    } finally {
+      setLoggingInStoreId(null);
     }
   };
 
@@ -103,13 +116,23 @@ const StoresList = () => {
 
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setFormData({ ...formData, logo_url: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setLogoImageToAdjust(event.target.result);
+      setIsAdjustModalOpen(true);
+    };
+    reader.onerror = () => {
+      toast.error('Failed to read image file');
+    };
+    reader.readAsDataURL(file);
+    e.target.value = null;
+  };
+
+  const handleApplyCroppedLogo = (croppedBase64) => {
+    setFormData(prev => ({ ...prev, logo_url: croppedBase64 }));
+    setIsAdjustModalOpen(false);
+    toast.success('Logo adjusted');
   };
 
   const openAddModal = () => {
@@ -146,22 +169,50 @@ const StoresList = () => {
   const executeDelete = async () => {
     if (!storeToDelete) return;
     try {
+      setIsDeletingStore(true);
       await axios.delete(`http://localhost:61026/api/stores/${storeToDelete}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      toast.success('Company deleted successfully!');
+      toast.success('Company deleted successfully');
       fetchStores();
     } catch (error) {
       console.error('Error deleting store:', error);
-      toast.error('Failed to delete store.');
+      toast.error('Failed to delete store');
     } finally {
+      setIsDeletingStore(false);
       setStoreToDelete(null);
+    }
+  };
+
+  const handleConfirmRemoveLogo = async () => {
+    try {
+      setIsRemovingLogo(true);
+      if (editingStoreId && formData.logo_url && !formData.logo_url.startsWith('data:image')) {
+        await axios.put(`http://localhost:61026/api/stores/${editingStoreId}`, {
+          logo_url: null
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setStores(prev => prev.map(s => s.id === editingStoreId ? { ...s, logo_url: null } : s));
+        toast.success('Company logo removed successfully');
+      } else {
+        toast.success('Logo removed from form');
+      }
+      setFormData(prev => ({ ...prev, logo_url: '' }));
+    } catch (err) {
+      console.error('Error removing logo:', err);
+      toast.error('Failed to remove company logo');
+    } finally {
+      setIsRemovingLogo(false);
+      setIsRemoveLogoModalOpen(false);
     }
   };
 
   // Submit Company Form
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSaving || isUploadingLogo) return;
+    setIsSaving(true);
     try {
       if (editingStoreId) {
         // Build payload dynamically (only include password if typed)
@@ -184,6 +235,8 @@ const StoresList = () => {
     } catch (error) {
       console.error('Error saving store:', error);
       toast.error(error.response?.data?.message || 'Failed to save store');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -232,8 +285,9 @@ const StoresList = () => {
             { label: 'Status' },
             { label: 'Actions', align: 'right' }
           ]}
-          data={loading ? [] : stores}
-          emptyMessage={loading ? "Loading companies..." : "No companies found. Click + Add Company to register one!"}
+          data={stores}
+          loading={loading}
+          emptyMessage="No companies found. Click + Add Company to register one!"
           keyExtractor={(store) => store.id}
           renderRow={(store) => (
             <>
@@ -257,7 +311,13 @@ const StoresList = () => {
               <td className="text-right">
                 <RowActions 
                   actions={[
-                    { icon: FiLogIn, variant: 'login', title: 'Login as Store', onClick: () => handleLoginAsStore(store.id) },
+                    { 
+                      icon: loggingInStoreId === store.id ? FiLoader : FiLogIn, 
+                      variant: `login ${loggingInStoreId === store.id ? 'is-loading' : ''}`, 
+                      title: loggingInStoreId === store.id ? 'Logging in...' : 'Login as Store', 
+                      onClick: () => handleLoginAsStore(store.id),
+                      disabled: loggingInStoreId !== null
+                    },
                     { icon: FiEdit2, variant: 'edit', title: 'Edit Company', onClick: () => handleEdit(store) },
                     { icon: FiTrash2, variant: 'delete', title: 'Delete Company', onClick: () => setStoreToDelete(store.id) }
                   ]}
@@ -282,7 +342,7 @@ const StoresList = () => {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} autoComplete="off">
               <div className="modal-body">
                 {/* Premium Sleek Logo Upload */}
                 <div className="form-field sleek-logo-field">
@@ -295,7 +355,11 @@ const StoresList = () => {
                         onChange={handleLogoUpload} 
                         style={{ display: "none" }}
                       />
-                      {formData.logo_url ? (
+                      {isUploadingLogo ? (
+                        <div className="uploading-spinner">
+                          <FiLoader className="spin-icon" />
+                        </div>
+                      ) : formData.logo_url ? (
                         <img src={formData.logo_url} alt="Company Logo" />
                       ) : (
                         <div className="empty-state">
@@ -311,7 +375,7 @@ const StoresList = () => {
                       <button 
                         type="button" 
                         className="remove-logo-btn" 
-                        onClick={() => setFormData({...formData, logo_url: ''})}
+                        onClick={() => setIsRemoveLogoModalOpen(true)}
                       >
                         Remove Logo
                       </button>
@@ -440,6 +504,7 @@ const StoresList = () => {
                       <input 
                         type={showFormPassword ? 'text' : 'password'} 
                         name="password" 
+                        autoComplete="new-password"
                         placeholder={editingStoreId 
                           ? (editingStoreHasPassword ? '••••••••' : 'Set new password')
                           : 'Set access PIN or password'} 
@@ -447,6 +512,7 @@ const StoresList = () => {
                         onChange={handleChange} 
                         required={!editingStoreId}
                       />
+
                       <button 
                         type="button" 
                         className="eye-btn" 
@@ -468,8 +534,19 @@ const StoresList = () => {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="pill-btn-primary">
-                  {editingStoreId ? 'Save Changes' : 'Register Company'}
+                <button 
+                  type="submit" 
+                  className="pill-btn-primary" 
+                  disabled={isSaving || isUploadingLogo}
+                >
+                  {isSaving ? (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                      <FiLoader className="spin-icon" />
+                      {editingStoreId ? 'Saving Changes...' : 'Registering...'}
+                    </span>
+                  ) : (
+                    editingStoreId ? 'Save Changes' : 'Register Company'
+                  )}
                 </button>
               </div>
             </form>
@@ -480,11 +557,33 @@ const StoresList = () => {
       <ConfirmModal 
         isOpen={!!storeToDelete}
         title="Delete Company"
-        message="Are you sure you want to delete this company store? This action cannot be undone."
+        message="Are you sure you want to delete this company?"
         confirmText="Delete"
         onConfirm={executeDelete}
         onCancel={() => setStoreToDelete(null)}
+        isLoading={isDeletingStore}
         isDestructive={true}
+      />
+
+      <ConfirmModal 
+        isOpen={isRemoveLogoModalOpen}
+        title="Remove Logo"
+        message="Are you sure you want to remove this logo?"
+        confirmText="Remove"
+        onConfirm={handleConfirmRemoveLogo}
+        onCancel={() => setIsRemoveLogoModalOpen(false)}
+        isLoading={isRemovingLogo}
+        isDestructive={true}
+      />
+
+      <ImageAdjustModal 
+        isOpen={isAdjustModalOpen}
+        onClose={() => setIsAdjustModalOpen(false)}
+        imageSrc={logoImageToAdjust}
+        onUpload={handleApplyCroppedLogo}
+        title="Adjust Company Logo"
+        cropShape="round"
+        aspect={1}
       />
     </div>
   );

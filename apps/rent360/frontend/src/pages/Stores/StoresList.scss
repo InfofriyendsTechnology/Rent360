@@ -1099,3 +1099,31 @@
   }
 }
 
+.uploading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $accent;
+  font-size: 26px;
+}
+
+.spin-icon {
+  animation: spinSlow 0.85s linear infinite;
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-action-btn.is-loading {
+  opacity: 0.75;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+

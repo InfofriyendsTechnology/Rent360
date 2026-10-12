@@ -55,8 +55,6 @@ const App = () => {
               <Route path="bucket" element={<BucketExplorer />} />
               <Route path="plans" element={<PlansList />} />
               <Route path="subscriptions" element={<SubscriptionsList />} />
-              <Route path="staff" element={<UsersList />} />
-              <Route path="roles" element={<RolesList />} />
             </>
           )}
 

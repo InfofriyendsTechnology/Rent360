@@ -9,6 +9,7 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+import { cleanupIfEmpty } from "../utils/cloudinaryHelper";
 
 export const getBucketStats = async (req: Request, res: Response) => {
   try {
@@ -47,7 +48,35 @@ export const getBucketFolders = async (req: Request, res: Response) => {
       folders = await cloudinary.api.sub_folders(path as string);
     }
     
-    return responseHandler.success(res, "Folders fetched", folders.folders || []);
+    let folderList = folders.folders || [];
+
+    // Under 'rent360/stores', filter out obsolete legacy folders like direct 'logos'
+    if (path === 'rent360/stores') {
+      folderList = folderList.filter((f: any) => f.name !== 'logos');
+    }
+
+    // Filter out and auto-delete any empty folders so no empty folders are ever shown
+    const validFolders = [];
+    for (const f of folderList) {
+      try {
+        const sub = await cloudinary.api.sub_folders(f.path).catch(() => ({ folders: [] }));
+        const files = await cloudinary.api.resources({ type: 'upload', prefix: `${f.path}/`, max_results: 1 }).catch(() => ({ resources: [] }));
+        
+        if ((sub.folders && sub.folders.length > 0) || (files.resources && files.resources.length > 0)) {
+          validFolders.push(f);
+        } else {
+          // If empty, clean it up from Cloudinary
+          console.log("Auto-cleaning empty folder:", f.path);
+          await cloudinary.api.delete_folder(f.path).catch(() => {});
+        }
+      } catch (err) {
+        validFolders.push(f);
+      }
+    }
+
+    validFolders.sort((a: any, b: any) => a.name.localeCompare(b.name));
+    
+    return responseHandler.success(res, "Folders fetched", validFolders);
   } catch (error: any) {
     console.error("Cloudinary Folders Error:", error);
     if (error?.http_code === 404) {
@@ -75,10 +104,7 @@ export const getBucketFiles = async (req: Request, res: Response) => {
     // Cloudinary returns ALL files matching the prefix, including those in deep subfolders.
     // We need to filter them so only files strictly in THIS folder are returned.
     const strictFiles = (resources.resources || []).filter((file: any) => {
-      // file.public_id looks like "rent360/users/profiles/super_admin_profile"
-      // If we remove the prefix "rent360/", we get "users/profiles/super_admin_profile"
       const remainingPath = file.public_id.replace(prefix, '');
-      // If there are no slashes in the remaining path, it means it's a direct child!
       return !remainingPath.includes('/');
     });
     
@@ -110,9 +136,57 @@ export const deleteBucketFile = async (req: Request, res: Response) => {
       });
     }
 
+    // Also remove from DB if any store is using this as their logo
+    const storesWithLogo = await prisma.store.findMany({
+      where: { logo_url: { contains: public_id } }
+    });
+
+    for (const store of storesWithLogo) {
+      await prisma.store.update({
+        where: { id: store.id },
+        data: { logo_url: null }
+      });
+    }
+
+    // Auto-clean folder if it has become empty after deleting this file
+    const folderPath = public_id.substring(0, public_id.lastIndexOf("/"));
+    if (folderPath) {
+      await cleanupIfEmpty(folderPath);
+    }
+
     return responseHandler.success(res, "File deleted successfully", { public_id });
   } catch (error) {
     console.error("Cloudinary Delete Error:", error);
     return responseHandler.internalServerError(res, error);
+  }
+};
+
+export const deleteBucketFolder = async (req: Request, res: Response) => {
+  try {
+    const { path } = req.body;
+    if (!path) {
+      return responseHandler.badRequest(res, "Folder path is required");
+    }
+
+    if (path === "rent360" || path === "rent360/stores") {
+      return responseHandler.badRequest(res, "Cannot delete root system folders");
+    }
+
+    // Delete any remaining files in folder
+    await cloudinary.api.delete_resources_by_prefix(`${path}/`, { invalidate: true }).catch(() => {});
+
+    // Delete any subfolders
+    const sub = await cloudinary.api.sub_folders(path).catch(() => ({ folders: [] }));
+    for (const sf of sub.folders || []) {
+      await cloudinary.api.delete_folder(sf.path).catch(() => {});
+    }
+
+    const delRes = await cloudinary.api.delete_folder(path);
+    console.log("Deleted bucket folder:", path, delRes);
+
+    return responseHandler.success(res, "Folder deleted successfully", { path });
+  } catch (error: any) {
+    console.error("Cloudinary Folder Delete Error:", error);
+    return responseHandler.internalServerError(res, error.error || error.message || error);
   }
 };

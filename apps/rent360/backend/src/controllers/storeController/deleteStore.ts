@@ -10,24 +10,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+import { deleteStoreCloudinaryFolders } from "../../utils/cloudinaryHelper";
+
 export const deleteStore = async (req: Request, res: Response) => {
   try {
     const store = await prisma.store.findUnique({ where: { id: req.params.id } });
-    if (store && store.logo_url) {
-      try {
-        const urlParts = store.logo_url.split('/');
-        const uploadIndex = urlParts.findIndex(p => p === 'upload');
-        if (uploadIndex !== -1 && urlParts.length > uploadIndex + 2) {
-          const publicIdWithExt = urlParts.slice(uploadIndex + 2).join('/');
-          const oldPublicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
-          if (oldPublicId) {
-            await cloudinary.uploader.destroy(oldPublicId, { invalidate: true });
-            console.log("Deleted old store logo from Cloudinary on store delete:", oldPublicId);
-          }
-        }
-      } catch (delErr) {
-        console.error("Failed to delete old store logo on store delete:", delErr);
-      }
+    if (store) {
+      await deleteStoreCloudinaryFolders(store.name);
     }
 
     await (prisma as any).store.delete({ where: { id: req.params.id } });

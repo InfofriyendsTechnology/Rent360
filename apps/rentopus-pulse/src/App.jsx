@@ -6,6 +6,7 @@ import AchievementsList from './components/AchievementsList';
 import IdeaBacklog from './components/IdeaBacklog';
 import TeamSection from './components/TeamSection';
 import TeamList from './components/TeamList';
+import MistakesLeaderboard from './components/MistakesLeaderboard';
 
 export default function App() {
   const [lang, setLang] = useState('en');
@@ -32,6 +33,7 @@ export default function App() {
       />
       <main className="max-w-[1100px] w-full mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 flex-1">
         {activeTab === 'daily' && <DailyLogList lang={lang} />}
+        {activeTab === 'leaderboard' && <MistakesLeaderboard lang={lang} />}
         {activeTab === 'analytics' && <AnalyticsDashboard lang={lang} />}
         {activeTab === 'achievements' && <AchievementsList lang={lang} />}
         {activeTab === 'ideas' && <IdeaBacklog lang={lang} setActiveTab={setActiveTab} />}

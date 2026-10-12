@@ -12,6 +12,7 @@ import {
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Skeleton, TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
 import './DashboardHome.scss';
 
 const DashboardHome = () => {
@@ -185,7 +186,9 @@ const DashboardHome = () => {
               <FiShoppingBag />
             </div>
           </div>
-          <div className="kpi-figure">{totalPlansSoldCount}</div>
+          <div className="kpi-figure">
+            {loading ? <Skeleton width="80px" height="36px" /> : totalPlansSoldCount}
+          </div>
           <div className="kpi-bottom">
             <span className="trend-badge">
               <FiCheckCircle /> Real-time DB sync
@@ -202,7 +205,9 @@ const DashboardHome = () => {
               <FiDollarSign />
             </div>
           </div>
-          <div className="kpi-figure">{grossRevenueSold}</div>
+          <div className="kpi-figure">
+            {loading ? <Skeleton width="120px" height="36px" /> : grossRevenueSold}
+          </div>
           <div className="kpi-bottom">
             <span className="trend-badge highlight">
               <FiArrowUpRight /> ₹{(liveStats?.arr || 0).toLocaleString('en-IN')} ARR
@@ -219,7 +224,9 @@ const DashboardHome = () => {
               <FiTrendingUp />
             </div>
           </div>
-          <div className="kpi-figure">{netPlatformProfit}</div>
+          <div className="kpi-figure">
+            {loading ? <Skeleton width="120px" height="36px" /> : netPlatformProfit}
+          </div>
           <div className="kpi-bottom">
             <span className="trend-badge highlight">
               <FiActivity /> 75% Operating Margin
@@ -236,7 +243,9 @@ const DashboardHome = () => {
               <FiLayers />
             </div>
           </div>
-          <div className="kpi-figure">{totalStoresCount}</div>
+          <div className="kpi-figure">
+            {loading ? <Skeleton width="80px" height="36px" /> : totalStoresCount}
+          </div>
           <div className="kpi-bottom">
             <span className="trend-badge">
               <FiShield /> {liveStats?.activeStores || 0} Active Stores
@@ -415,7 +424,9 @@ const DashboardHome = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {storesAndBuyersList.length === 0 ? (
+                  {loading ? (
+                    <TableRowSkeleton rows={5} columns={8} />
+                  ) : storesAndBuyersList.length === 0 ? (
                     <tr>
                       <td colSpan="8" className="empty-cell text-center">
                         No stores found. Go to <strong>Company Stores</strong> to register stores and assign plans!

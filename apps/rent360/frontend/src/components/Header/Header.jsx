@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiBell, FiSun, FiMoon, FiPlus } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './Header.scss';
 
 const Header = () => {
@@ -9,6 +9,7 @@ const Header = () => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [activePeriod, setActivePeriod] = useState('Quarter');
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -79,7 +80,12 @@ const Header = () => {
         </button>
 
         {/* Circular User Avatar */}
-        <div className="avatar-circle" style={{ overflow: 'hidden' }}>
+        <div 
+          className="avatar-circle" 
+          style={{ overflow: 'hidden', cursor: 'pointer' }}
+          onClick={() => navigate('/profile')}
+          title="Super Admin Profile Settings"
+        >
           {user?.profile_pic ? (
             <img src={user.profile_pic} alt="DP" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (

@@ -1,7 +1,8 @@
 import React from 'react';
+import { TableRowSkeleton } from '../Skeleton/Skeleton';
 
 // Main Table Wrapper Component
-export const DataTable = ({ columns, data, renderRow, keyExtractor, emptyMessage = "No data available" }) => {
+export const DataTable = ({ columns, data, renderRow, keyExtractor, emptyMessage = "No data available", loading = false }) => {
   return (
     <div className="table-responsive">
       <table className="bond-table">
@@ -15,7 +16,9 @@ export const DataTable = ({ columns, data, renderRow, keyExtractor, emptyMessage
           </tr>
         </thead>
         <tbody>
-          {data && data.length > 0 ? (
+          {loading ? (
+            <TableRowSkeleton rows={5} columns={columns.length} />
+          ) : data && data.length > 0 ? (
             data.map((item, idx) => (
               <tr key={keyExtractor ? keyExtractor(item) : idx}>
                 {renderRow(item)}

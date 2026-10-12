@@ -1,0 +1,35 @@
+[
+  {
+    "id": "ERR-001",
+    "date": "10-10-2026",
+    "member": "002",
+    "memberName": "Shridhar Savaliya",
+    "auditedBy": "001",
+    "auditedByName": "Yash Babariya",
+    "title": "Super Admin Sidebar Corruption & Route Leak",
+    "titleGu": "સુપર એડમિન સાઈડબારમાંથી બકેટ ડિલીટ અને સ્ટોર રોલ્સ લીક",
+    "description": "Accidentally removed Bucket Storage from Super Admin sidebar and leaked Store Admin's Roles and Team routes into Super Admin in commit 69df011.",
+    "descriptionGu": "કમિટ 69df011 માં સુપર એડમિનના સાઈડબારમાંથી Bucket Storage કાઢી નાખ્યું અને સ્ટોર એડમિનના Roles તથા Team રૂટ્સ સુપર એડમિનમાં ઘૂસાડી દીધા.",
+    "severity": "HIGH",
+    "penaltyMarks": 3,
+    "status": "FIXED",
+    "statusGu": "સોલ્વ થઈ ગયું"
+  },
+  {
+    "id": "ERR-002",
+    "date": "12-10-2026",
+    "member": "002",
+    "memberName": "Shridhar Savaliya",
+    "auditedBy": "000",
+    "auditedByName": "InfoFriyends Technology",
+    "title": "Sticky Direct Login Session & Team Member 500 Crash",
+    "titleGu": "સુપર એડમિન સ્ટીકી સેશન અને ટીમ મેમ્બરમાં 500 સર્વર ક્રેશ એરર",
+    "description": "Direct store login token remained active after logout causing persistent Return to Super Admin button, and unhandled duplicate mobile check in user creation threw a 500 internal server error instead of validation response.",
+    "descriptionGu": "સ્ટોર ડાયરેક્ટ લોગિન પછી લોગઆઉટ થવા છતાં સુપર એડમિન બટન દેખાતું રહ્યું, અને ટીમ મેમ્બર બનાવતી વખતે ડુપ્લિકેટ મોબાઈલ નંબર પર 500 સર્વર એરર આવતી હતી.",
+    "severity": "HIGH",
+    "penaltyMarks": 3,
+    "status": "FIXED",
+    "statusGu": "સોલ્વ થઈ ગયું"
+  }
+]
+

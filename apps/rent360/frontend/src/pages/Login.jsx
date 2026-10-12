@@ -41,6 +41,8 @@ const Login = () => {
       });
 
       if (response.data.success) {
+        localStorage.removeItem('superAdminToken');
+        localStorage.removeItem('superAdminUser');
         dispatch(loginSuccess(response.data.data));
       }
     } catch (err) {

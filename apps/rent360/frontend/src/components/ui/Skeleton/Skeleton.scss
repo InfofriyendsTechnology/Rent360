@@ -1,0 +1,82 @@
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.03) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s infinite ease-in-out;
+  border-radius: 6px;
+}
+
+body:not(.dark) .skeleton-shimmer {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+}
+
+.skeleton-box {
+  display: block;
+}
+
+/* Folder / Bucket Grid Skeleton */
+.skeleton-grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 24px;
+  width: 100%;
+
+  .skeleton-folder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+
+    .skeleton-icon-wrapper {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+    }
+
+    .skeleton-text-line {
+      width: 70px;
+      height: 14px;
+      border-radius: 4px;
+    }
+  }
+}
+
+/* Table Row Skeleton */
+.skeleton-table-row {
+  td {
+    padding: 16px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    .skeleton-cell-line {
+      height: 16px;
+      border-radius: 4px;
+    }
+  }
+}
+
+/* Card Skeleton */
+.skeleton-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+
+  .skeleton-plan-card {
+    height: 320px;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

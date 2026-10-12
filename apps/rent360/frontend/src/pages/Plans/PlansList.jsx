@@ -8,6 +8,8 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import './PlansList.scss';
+import { CardSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 
 // Exact feature lists matching the reference standard
 const DEFAULT_PLANS_FALLBACK = [
@@ -93,6 +95,8 @@ const PlansList = () => {
   const [isSubscribersModalOpen, setIsSubscribersModalOpen] = useState(false);
   const [selectedPlanForSubs, setSelectedPlanForSubs] = useState(null);
   const [savingPlan, setSavingPlan] = useState(false);
+  const [planToDelete, setPlanToDelete] = useState(null);
+  const [isDeletingPlan, setIsDeletingPlan] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -213,26 +217,30 @@ const PlansList = () => {
     }
   };
 
-  const handleDelete = async (plan) => {
+  const handleDelete = (plan) => {
     const subscriberCount = plan._count?.storeSubscriptions || 0;
     if (subscriberCount > 0) {
       toast.error(`Cannot delete plan: ${subscriberCount} stores have active subscriptions linked to it. You can pause it instead.`);
       return;
     }
+    setPlanToDelete(plan);
+  };
 
-    if (!window.confirm(`Are you sure you want to delete "${plan.name}"? This action cannot be undone.`)) {
-      return;
-    }
-
+  const handleConfirmDeletePlan = async () => {
+    if (!planToDelete) return;
     try {
-      await axios.delete(`http://localhost:61026/api/plans/${plan.id}`, {
+      setIsDeletingPlan(true);
+      await axios.delete(`http://localhost:61026/api/plans/${planToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Plan deleted successfully');
-      setPlans(prev => prev.filter(p => p.id !== plan.id));
+      setPlans(prev => prev.filter(p => p.id !== planToDelete.id));
     } catch (error) {
       console.error('Error deleting plan:', error);
       toast.error(error.response?.data?.message || 'Failed to delete plan');
+    } finally {
+      setIsDeletingPlan(false);
+      setPlanToDelete(null);
     }
   };
 
@@ -377,9 +385,8 @@ const PlansList = () => {
 
       {/* Plans Presentation */}
       {loading ? (
-        <div className="plans-loading-state">
-          <div className="loading-spinner" />
-          <p>Loading subscription plans...</p>
+        <div style={{ padding: '20px 0' }}>
+          <CardSkeleton count={3} />
         </div>
       ) : viewMode === 'cards' ? (
         <>
@@ -882,6 +889,17 @@ const PlansList = () => {
           </div>
         </div>
       )}
+
+      <ConfirmModal 
+        isOpen={!!planToDelete}
+        title="Delete Plan"
+        message={planToDelete ? `Are you sure you want to delete "${planToDelete.name}"?` : ''}
+        confirmText="Delete"
+        onConfirm={handleConfirmDeletePlan}
+        onCancel={() => setPlanToDelete(null)}
+        isLoading={isDeletingPlan}
+        isDestructive={true}
+      />
     </div>
   );
 };

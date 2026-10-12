@@ -9,6 +9,7 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+import { getStoreSlug, getStoreAssetFolder, ensureStoreFolders, deleteCloudinaryAsset } from "../../utils/cloudinaryHelper";
 
 export const updateStore = async (req: Request, res: Response) => {
   try {
@@ -29,18 +30,33 @@ export const updateStore = async (req: Request, res: Response) => {
     } = req.body;
 
     
+    const existingStore = await prisma.store.findUnique({ where: { id: req.params.id } });
+    if (!existingStore) {
+      return responseHandler.notFound(res, "Store not found");
+    }
+
+    const storeName = name || existingStore.name;
+    const storeSlug = getStoreSlug(storeName);
+    await ensureStoreFolders(storeName);
+
     let finalLogoUrl = logo_url;
     if (logo_url && logo_url.startsWith("data:image")) {
-      const cleanName = (name || "store").replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
+      if (existingStore.logo_url) {
+        await deleteCloudinaryAsset(existingStore.logo_url);
+      }
+      const logoFolder = getStoreAssetFolder(storeName, "logos");
       const uploadResponse = await cloudinary.uploader.upload(logo_url, {
-        folder: `rent360/stores/logos`,
-        public_id: `${cleanName}_logo`,
+        folder: logoFolder,
+        asset_folder: logoFolder,
+        public_id: `${storeSlug}_logo`,
         overwrite: true,
         invalidate: true
       });
       finalLogoUrl = uploadResponse.secure_url;
-    } else if (logo_url === null) {
-      // Handle explicit deletion if needed, but for now just pass null
+    } else if (logo_url === null || logo_url === "" || logo_url === "null") {
+      if (existingStore.logo_url) {
+        await deleteCloudinaryAsset(existingStore.logo_url);
+      }
       finalLogoUrl = null;
     }
 

@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss';
 import './RolesList.scss';
+import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 
 const ALL_PERMISSIONS = [
   'DASHBOARD_VIEW',
@@ -24,6 +26,9 @@ const RolesList = () => {
   // Modals state
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [editingRoleId, setEditingRoleId] = useState(null);
+  const [roleToDelete, setRoleToDelete] = useState(null);
+  const [isDeletingRole, setIsDeletingRole] = useState(false);
+  const [isSavingRole, setIsSavingRole] = useState(false);
   const [roleForm, setRoleForm] = useState({ name: '', permissions: [] });
 
   useEffect(() => {
@@ -58,7 +63,9 @@ const RolesList = () => {
 
   const handleRoleSubmit = async (e) => {
     e.preventDefault();
+    if (isSavingRole) return;
     try {
+      setIsSavingRole(true);
       if (editingRoleId) {
         await axios.put(`http://localhost:61026/api/roles/${editingRoleId}`, roleForm, {
           headers: { Authorization: `Bearer ${token}` }
@@ -74,19 +81,26 @@ const RolesList = () => {
       fetchData();
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to save role');
+    } finally {
+      setIsSavingRole(false);
     }
   };
 
-  const handleDeleteRole = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this role?')) return;
+
+  const handleConfirmDeleteRole = async () => {
+    if (!roleToDelete) return;
     try {
-      await axios.delete(`http://localhost:61026/api/roles/${id}`, {
+      setIsDeletingRole(true);
+      await axios.delete(`http://localhost:61026/api/roles/${roleToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      toast.success('Role deleted');
+      toast.success('Role deleted successfully');
       fetchData();
     } catch (error) {
       toast.error('Failed to delete role');
+    } finally {
+      setIsDeletingRole(false);
+      setRoleToDelete(null);
     }
   };
 
@@ -134,7 +148,7 @@ const RolesList = () => {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="3" className="text-center state-message">Loading roles...</td></tr>
+                <TableRowSkeleton rows={5} columns={3} />
               ) : roles.length === 0 ? (
                 <tr><td colSpan="3" className="text-center state-message">No roles found</td></tr>
               ) : (
@@ -159,7 +173,7 @@ const RolesList = () => {
                     <td className="text-right">
                       <div className="row-action-btns">
                         <button className="icon-action-btn edit" onClick={() => openRoleModal(r)}><FiEdit2 /></button>
-                        <button className="icon-action-btn delete" onClick={() => handleDeleteRole(r.id)}><FiTrash2 /></button>
+                        <button className="icon-action-btn delete" onClick={() => setRoleToDelete(r)}><FiTrash2 /></button>
                       </div>
                     </td>
                   </tr>
@@ -204,12 +218,26 @@ const RolesList = () => {
               </div>
               <div className="modal-footer">
                 <button type="button" className="pill-btn-secondary" onClick={() => setIsRoleModalOpen(false)}>Cancel</button>
-                <button type="submit" className="pill-btn-primary">Save Role</button>
+                <button type="submit" className="pill-btn-primary" disabled={isSavingRole}>
+                  {isSavingRole ? 'Saving...' : 'Save Role'}
+                </button>
               </div>
+
             </form>
           </div>
         </div>
       )}
+
+      <ConfirmModal 
+        isOpen={!!roleToDelete}
+        title="Delete Role"
+        message={roleToDelete ? `Are you sure you want to delete "${roleToDelete.name}"?` : ''}
+        confirmText="Delete"
+        onConfirm={handleConfirmDeleteRole}
+        onCancel={() => setRoleToDelete(null)}
+        isLoading={isDeletingRole}
+        isDestructive={true}
+      />
     </div>
   );
 };

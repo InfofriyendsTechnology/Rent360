@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss'; // Reuse store styles for consistency
+import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 
 const CustomersList = () => {
   const { token } = useSelector((state) => state.auth);
@@ -14,6 +16,8 @@ const CustomersList = () => {
   // Modals state
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [editingCustomerId, setEditingCustomerId] = useState(null);
+  const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [isDeletingCustomer, setIsDeletingCustomer] = useState(false);
   const [customerForm, setCustomerForm] = useState({ 
     full_name: '', 
     mobile: '', 
@@ -104,14 +108,18 @@ const CustomersList = () => {
     }
   };
 
-  const handleDeleteCustomer = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this customer?')) return;
+  const handleConfirmDeleteCustomer = async () => {
+    if (!customerToDelete) return;
     try {
-      await axios.delete(`http://localhost:61026/api/customers/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      setIsDeletingCustomer(true);
+      await axios.delete(`http://localhost:61026/api/customers/${customerToDelete.id}`, { headers: { Authorization: `Bearer ${token}` } });
       toast.success('Customer deleted successfully');
       fetchData();
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to delete customer');
+    } finally {
+      setIsDeletingCustomer(false);
+      setCustomerToDelete(null);
     }
   };
 
@@ -160,7 +168,7 @@ const CustomersList = () => {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="4" className="text-center state-message">Loading customers...</td></tr>
+                <TableRowSkeleton rows={5} columns={4} />
               ) : customers.length === 0 ? (
                 <tr><td colSpan="4" className="text-center state-message">No customers found</td></tr>
               ) : (
@@ -204,7 +212,7 @@ const CustomersList = () => {
                     <td className="text-right">
                       <div className="row-action-btns">
                         <button className="icon-action-btn edit" onClick={() => openCustomerModal(c)}><FiEdit2 /></button>
-                        <button className="icon-action-btn delete" onClick={() => handleDeleteCustomer(c.id)}><FiTrash2 /></button>
+                        <button className="icon-action-btn delete" onClick={() => setCustomerToDelete(c)}><FiTrash2 /></button>
                       </div>
                     </td>
                   </tr>
@@ -225,7 +233,7 @@ const CustomersList = () => {
               </div>
               <button className="modal-close" onClick={closeCustomerModal}><FiX /></button>
             </div>
-            <form onSubmit={handleCustomerSubmit}>
+            <form onSubmit={handleCustomerSubmit} autoComplete="off">
               <div className="modal-body">
                 <div className="form-row-2">
                   <div className="form-field">
@@ -311,6 +319,17 @@ const CustomersList = () => {
           </div>
         </div>
       )}
+
+      <ConfirmModal 
+        isOpen={!!customerToDelete}
+        title="Delete Customer"
+        message={customerToDelete ? `Are you sure you want to delete "${customerToDelete.full_name}"?` : ''}
+        confirmText="Delete"
+        onConfirm={handleConfirmDeleteCustomer}
+        onCancel={() => setCustomerToDelete(null)}
+        isLoading={isDeletingCustomer}
+        isDestructive={true}
+      />
     </div>
   );
 };

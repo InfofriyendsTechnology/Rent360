@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import './SubscriptionsList.scss';
+import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
 
 const SubscriptionsList = () => {
   const { token } = useSelector((state) => state.auth);
@@ -218,7 +219,7 @@ const SubscriptionsList = () => {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="7" className="state-message text-center">Loading...</td></tr>
+                <TableRowSkeleton rows={5} columns={7} />
               ) : filtered.length === 0 ? (
                 <tr><td colSpan="7" className="state-message text-center">No subscriptions yet. Click <strong>Assign Subscription</strong> to add one.</td></tr>
               ) : (

@@ -1,12 +1,29 @@
 {
   "date": "12-10-2026",
   "dayNumber": 18,
-  "title": "Automated Sunday & Weekend Break Feature in Pulse",
-  "titleGu": "પલ્સમાં રવિવાર (Sunday) અને વીકેન્ડ બ્રેક ફીચરનું ઇમ્પ્લીમેન્ટેશન",
+  "title": "Super Admin Security Fix, Member Scorecard & Weekend Automation",
+  "titleGu": "સુપર એડમિન સિક્યોરિટી ફિક્સ, મેમ્બર સ્કોરકાર્ડ મોડ્યુલ અને વીકેન્ડ ઓટોમેશન",
   "members": [
-    "000"
+    "000",
+    "001"
   ],
   "tasksEn": [
+    {
+      "member": "001",
+      "text": "Conducted codebase quality audit and detected Super Admin routing corruption (ERR-001) where Bucket Storage was accidentally deleted and Store Admin's roles/team leaked into Super Admin navigation."
+    },
+    {
+      "member": "001",
+      "text": "Proposed and designed the core idea and rules for the Member Score & Mistakes Leaderboard system (+1 point per completed task, -3 points penalty per mistake) to enforce team accountability and code quality."
+    },
+    {
+      "member": "000",
+      "text": "Patched Super Admin security in Rent360 frontend by cleaning leaked Store Admin routes (staff, roles) from App.jsx and restoring Bucket Storage in Super Admin Sidebar."
+    },
+    {
+      "member": "000",
+      "text": "Engineered the complete Member Scorecard & Mistakes module in Rentopus Pulse (MistakesLeaderboard.jsx) with KPI summary metrics, expandable mistake audits, and integrated it under Extras in the main navigation."
+    },
     {
       "member": "000",
       "text": "Architected and implemented automated Sunday and weekend break classification across Rentopus Pulse so official off-days are recognized as scheduled breaks instead of negative unlogged days."
@@ -18,6 +35,22 @@
   ],
   "tasksGu": [
     {
+      "member": "001",
+      "text": "કોડબેઝ ક્વોલિટી ઑડિટ કરીને સુપર એડમિનની મોટી ભૂલ (ERR-001) શોધી કાઢી, જેમાં બકેટ સ્ટોરેજ ડિલીટ થઈ ગયું હતું અને સ્ટોર એડમિનના રૂટ્સ સુપર એડમિનમાં લીક થયા હતા."
+    },
+    {
+      "member": "001",
+      "text": "ટીમ મેમ્બર્સની જવાબદારી અને ક્વોલિટી જળવાય તે માટે 'Score & Mistakes Leaderboard' સિસ્ટમનો કોન્સેપ્ટ અને નિયમો આપ્યા (દરેક ટાસ્ક માટે +૧ પોઈન્ટ અને દરેક ભૂલ માટે -૩ પોઈન્ટ્સ પેનલ્ટી કપાત)."
+    },
+    {
+      "member": "000",
+      "text": "Rent360 ફ્રન્ટએન્ડમાં સુપર એડમિન સિક્યોરિટી ફિક્સ કરી; App.jsx માંથી લીક થયેલા સ્ટોર રોલ્સ અને સ્ટાફ રૂટ્સ હટાવ્યા તથા સાઈડબારમાં Bucket Storage પુનઃસ્થાપિત કર્યું."
+    },
+    {
+      "member": "000",
+      "text": "Rentopus Pulse માં નવું 'Score & Mistakes' મોડ્યુલ (MistakesLeaderboard.jsx) ડેવલપ કર્યું, જેમાં KPI કાર્ડ્સ, વિગતવાર ભૂલ ઑડિટ અને માસ્ટર મિસ્ટેક્સ રજિસ્ટર બનાવીને નેવિગેશનમાં Extras હેઠળ કનેક્ટ કર્યું."
+    },
+    {
       "member": "000",
       "text": "રેન્ટોપસ પલ્સમાં રવિવાર (Sunday) માટે ઓટોમેટેડ વીકેન્ડ બ્રેક સિસ્ટમ બનાવી જેથી સત્તાવાર રજાના દિવસોને 'કામ નથી કર્યું' એવું નેગેટિવ ન ગણવામાં આવે."
     },
@@ -27,7 +60,8 @@
     }
   ],
   "deliverables": [
-    "Automated Sunday / Weekend Break Detection",
-    "Pulse UI & Analytics Weekend Support"
+    "Super Admin Route Leak Patch & Bucket Storage Restore",
+    "Rentopus Pulse Member Scorecard & Mistakes Register",
+    "Automated Sunday / Weekend Break Detection"
   ]
 }

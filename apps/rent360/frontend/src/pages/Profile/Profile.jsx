@@ -182,9 +182,9 @@ const Profile = () => {
 
       <ConfirmModal 
         isOpen={isDeleteConfirmOpen}
-        title="Remove Profile Picture"
-        message="Are you sure you want to remove your profile picture? This action cannot be undone."
-        confirmText="Remove Picture"
+        title="Remove Photo"
+        message="Are you sure you want to remove your photo?"
+        confirmText="Remove"
         onConfirm={executeRemoveProfilePic}
         onCancel={() => setIsDeleteConfirmOpen(false)}
         isLoading={isDeleting}

@@ -35,6 +35,7 @@ export const RowActions = ({ actions }) => {
           title={act.title}
           icon={act.icon}
           onClick={act.onClick}
+          disabled={act.disabled}
         />
       ))}
     </div>

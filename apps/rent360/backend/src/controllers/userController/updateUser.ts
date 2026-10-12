@@ -10,6 +10,7 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+import { getStoreAssetFolder, getStoreSlug } from "../../utils/cloudinaryHelper";
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
@@ -34,6 +35,20 @@ export const updateUser = async (req: Request, res: Response) => {
 
     if (existingUser.storeId !== (req as any).user?.storeId) {
       return responseHandler.unauthorized(res, "You can only update users in your own store");
+    }
+
+    if (updateData.mobile) {
+      const trimmedMobile = updateData.mobile.trim();
+      updateData.mobile = trimmedMobile;
+      const duplicateUser = await prisma.user.findFirst({
+        where: {
+          mobile: trimmedMobile,
+          id: { not: req.params.id }
+        }
+      });
+      if (duplicateUser) {
+        return responseHandler.badRequest(res, "A member with this mobile number already exists.");
+      }
     }
 
     const currentUserId = (req as any).user?.id;
@@ -81,16 +96,14 @@ export const updateUser = async (req: Request, res: Response) => {
     // If user uploads a new picture
     else if (updateData.profile_pic && updateData.profile_pic.startsWith("data:image")) {
       const isSuperAdmin = existingUser.role?.name === 'SUPER_ADMIN' || !existingUser.roleId;
-      const storeName = existingUser.store?.name ? existingUser.store.name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() : 'default_store';
-      
       let folderPath = '';
       if (isSuperAdmin) {
         folderPath = `rent360/super_admin/profiles`;
       } else {
-        folderPath = `rent360/stores/${storeName}/profiles`;
+        folderPath = getStoreAssetFolder(existingUser.store?.name || 'default_store', 'profiles');
       }
       
-      const cleanName = existingUser.name ? existingUser.name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() : 'user';
+      const cleanName = getStoreSlug(existingUser.name || 'user');
       const fullPublicId = `${folderPath}/${cleanName}_profile`;
 
       try {
@@ -121,9 +134,13 @@ export const updateUser = async (req: Request, res: Response) => {
     
     const { password: _, ...sanitized } = data;
     return responseHandler.success(res, "Updated successfully", sanitized);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Cloudinary/Update Error:", error);
-    return responseHandler.internalServerError(res, error);
+    if (error?.code === "P2002") {
+      return responseHandler.badRequest(res, "A member with this mobile number already exists.");
+    }
+    return responseHandler.internalServerError(res, error.message || error);
   }
+
 };
 

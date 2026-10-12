@@ -9,6 +9,7 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+import { getStoreSlug, getStoreAssetFolder, ensureStoreFolders } from "../../utils/cloudinaryHelper";
 
 export const createStore = async (req: Request, res: Response) => {
   try {
@@ -66,12 +67,17 @@ export const createStore = async (req: Request, res: Response) => {
       // Create Store
       
       let finalLogoUrl = logo_url;
+      const storeSlug = getStoreSlug(name);
+      await ensureStoreFolders(name);
+
       if (logo_url && logo_url.startsWith("data:image")) {
-        const cleanName = (name || "store").replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
+        const logoFolder = getStoreAssetFolder(name, "logos");
         const uploadResponse = await cloudinary.uploader.upload(logo_url, {
-          folder: `rent360/stores/logos`,
-          public_id: `${cleanName}_logo`,
-          overwrite: true
+          folder: logoFolder,
+          asset_folder: logoFolder,
+          public_id: `${storeSlug}_logo`,
+          overwrite: true,
+          invalidate: true
         });
         finalLogoUrl = uploadResponse.secure_url;
       }
@@ -100,6 +106,27 @@ export const createStore = async (req: Request, res: Response) => {
           name: 'STORE_ADMIN',
           permissions: ['ALL']
         }
+      });
+
+      // Create default staff roles
+      await tx.role.createMany({
+        data: [
+          {
+            storeId: store.id,
+            name: 'Store Manager',
+            permissions: ['DASHBOARD_VIEW', 'INVENTORY_MANAGE', 'CUSTOMERS_MANAGE', 'BILLING_CREATE', 'REPORTS_VIEW', 'SETTINGS_MANAGE']
+          },
+          {
+            storeId: store.id,
+            name: 'Sales Executive',
+            permissions: ['DASHBOARD_VIEW', 'INVENTORY_MANAGE', 'CUSTOMERS_MANAGE', 'BILLING_CREATE']
+          },
+          {
+            storeId: store.id,
+            name: 'Tailor / Staff',
+            permissions: ['INVENTORY_MANAGE']
+          }
+        ]
       });
 
       // Create Store Admin User

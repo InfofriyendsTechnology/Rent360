@@ -22,7 +22,7 @@ export const authorize = (requiredPermissions: string[]) => {
         return responseHandler.unauthorized(res, "User role not found");
       }
 
-      const userPermissions = dbUser.role.permissions || [];
+      const userPermissions = ((dbUser.role.permissions as unknown) as string[]) || [];
 
       // If user has 'ALL' permission, they can do anything
       if (userPermissions.includes("ALL")) {

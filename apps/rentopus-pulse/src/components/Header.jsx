@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Globe, Sun, Moon, Menu, X } from 'lucide-react';
+import { Globe, Sun, Moon, Menu, X, Trophy } from 'lucide-react';
 
 export default function Header({ lang, setLang, activeTab, setActiveTab, theme, toggleTheme }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExtraOpen, setIsExtraOpen] = useState(false);
 
   const extraTabs = [
+    { id: 'leaderboard',  label: 'SCORE & MISTAKES' },
     { id: 'analytics',    label: 'ANALYTICS' },
     { id: 'achievements', label: 'ACHIEVEMENTS' },
     { id: 'ideas',        label: 'IDEAS & BACKLOG' },

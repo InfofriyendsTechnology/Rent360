@@ -95,12 +95,34 @@ export const login = async (req: Request, res: Response) => {
       return responseHandler.forbidden(res, MESSAGES.AUTH.INACTIVE_ACCOUNT);
     }
 
+    // If user has no role, ensure STORE_ADMIN role exists and assign it
+    if (!user.roleId || !user.role) {
+      let storeAdminRole = await prisma.role.findFirst({
+        where: { storeId: user.storeId, name: "STORE_ADMIN" }
+      });
+      if (!storeAdminRole) {
+        storeAdminRole = await prisma.role.create({
+          data: {
+            storeId: user.storeId,
+            name: "STORE_ADMIN",
+            permissions: ["ALL"]
+          }
+        });
+      }
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: { roleId: storeAdminRole.id },
+        include: { role: true, store: true }
+      });
+    }
+
     // Generate Token
     const token = jwt.sign(
       { id: user.id, storeId: user.storeId, role: user.role?.name },
       process.env.JWT_SECRET || "Rent360SuperSecretKey2026",
       { expiresIn: "7d" },
     );
+
 
     return responseHandler.success(res, MESSAGES.AUTH.LOGIN_SUCCESS, {
       token,

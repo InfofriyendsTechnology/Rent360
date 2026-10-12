@@ -3,7 +3,15 @@ import Cropper from 'react-easy-crop';
 import { FiX, FiCheck, FiZoomIn, FiZoomOut } from 'react-icons/fi';
 import './ProfileUploadModal.scss';
 
-const ProfileUploadModal = ({ isOpen, onClose, imageSrc, onUpload }) => {
+const ProfileUploadModal = ({ 
+  isOpen, 
+  onClose, 
+  imageSrc, 
+  onUpload, 
+  title = "Adjust Picture",
+  cropShape = "round",
+  aspect = 1
+}) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -26,8 +34,8 @@ const ProfileUploadModal = ({ isOpen, onClose, imageSrc, onUpload }) => {
 
       const ctx = canvas.getContext('2d');
 
-      canvas.width = 250;
-      canvas.height = 250;
+      canvas.width = 400;
+      canvas.height = 400;
 
       ctx.drawImage(
         image,
@@ -37,11 +45,11 @@ const ProfileUploadModal = ({ isOpen, onClose, imageSrc, onUpload }) => {
         croppedAreaPixels.height,
         0,
         0,
-        250,
-        250
+        400,
+        400
       );
 
-      const base64Image = canvas.toDataURL('image/webp', 0.85);
+      const base64Image = canvas.toDataURL('image/jpeg', 0.9);
       await onUpload(base64Image);
       setIsUploading(false);
       onClose();
@@ -57,7 +65,7 @@ const ProfileUploadModal = ({ isOpen, onClose, imageSrc, onUpload }) => {
     <div className="profile-upload-modal-overlay">
       <div className="profile-upload-modal">
         <div className="modal-header">
-          <h3>Adjust Profile Picture</h3>
+          <h3>{title}</h3>
           <button className="close-btn" onClick={onClose} disabled={isUploading}>
             <FiX />
           </button>
@@ -68,8 +76,8 @@ const ProfileUploadModal = ({ isOpen, onClose, imageSrc, onUpload }) => {
             image={imageSrc}
             crop={crop}
             zoom={zoom}
-            aspect={1}
-            cropShape="round"
+            aspect={aspect}
+            cropShape={cropShape}
             showGrid={false}
             onCropChange={setCrop}
             onCropComplete={onCropComplete}
@@ -97,7 +105,7 @@ const ProfileUploadModal = ({ isOpen, onClose, imageSrc, onUpload }) => {
             Cancel
           </button>
           <button className="save-btn" onClick={createCroppedImage} disabled={isUploading}>
-            {isUploading ? 'Uploading...' : 'Save Picture'} <FiCheck />
+            {isUploading ? 'Saving...' : 'Apply & Save'} <FiCheck />
           </button>
         </div>
       </div>
