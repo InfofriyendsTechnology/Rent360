@@ -79,19 +79,35 @@ export default function AnalyticsDashboard({ lang }) {
             return (
               <div key={idx} className="h-full flex flex-col justify-end items-center flex-1 min-w-[40px] group">
                 <span className="text-[10px] font-bold text-main mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  {day.isWeekend ? (lang === 'gu' ? 'રજા' : 'Break') : day.isNoWorkDay ? '0' : taskCount}
+                  {day.isWeekend ? (lang === 'gu' ? 'રવિવાર' : 'SUNDAY') : day.isNoWorkDay ? '0' : taskCount}
                 </span>
                 <div className="flex-1 w-full flex flex-col justify-end">
-                  <div 
-                    className={`w-full border-2 border-main transition-all ${
-                      day.isWeekend 
-                        ? 'bg-amber-400/30 border-dashed border-amber-500/50' 
-                        : day.isNoWorkDay 
+                  {day.isWeekend ? (
+                    <div 
+                      className="w-full transition-all flex items-center justify-center overflow-hidden cursor-default shadow-sm"
+                      style={{
+                        height: '75%',
+                        background: 'repeating-linear-gradient(-45deg, #FACC15, #FACC15 6px, #EAB308 6px, #EAB308 12px)'
+                      }}
+                      title="Sunday — Scheduled Weekend"
+                    >
+                      <span 
+                        className="text-[9px] font-black font-mono tracking-widest text-black select-none opacity-95 drop-shadow-[0_1px_1px_rgba(255,255,255,0.4)]"
+                        style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+                      >
+                        SUNDAY
+                      </span>
+                    </div>
+                  ) : (
+                    <div 
+                      className={`w-full border-2 border-main transition-all ${
+                        day.isNoWorkDay 
                           ? 'bg-red-500' 
                           : 'bg-[#0B60B0] hover:bg-main'
-                    }`}
-                    style={{ height: `${Math.max(day.isNoWorkDay || day.isWeekend ? 6 : 5, heightPercentage)}%` }}
-                  ></div>
+                      }`}
+                      style={{ height: `${Math.max(day.isNoWorkDay ? 6 : 5, heightPercentage)}%` }}
+                    ></div>
+                  )}
                 </div>
                 <span className="text-[8px] sm:text-[9px] font-mono font-bold text-muted mt-2 rotate-45 sm:rotate-0 origin-left">
                   D{day.dayNumber}
