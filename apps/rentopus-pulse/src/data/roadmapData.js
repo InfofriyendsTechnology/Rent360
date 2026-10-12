@@ -50,19 +50,39 @@ if (rawHistory.length > 0) {
       actualLog.dayNumber = currentDayNum; // Ensure sequential numbering
       filledHistory.push(actualLog);
     } else {
-      filledHistory.push({
-        date: dateStr,
-        dayNumber: currentDayNum,
-        title: "No Updates Logged",
-        titleGu: "કોઈ કામ નોંધાયેલ નથી",
-        isNoWorkDay: true,
-        noWorkReason: "No tasks or updates were recorded in the system for this day.",
-        noWorkReasonGu: "આજના દિવસ માટે સિસ્ટમમાં કોઈ અપડેટ નોંધાયેલ નથી.",
-        members: [],
-        tasksEn: [],
-        tasksGu: [],
-        deliverables: []
-      });
+      const isSunday = currentDate.getDay() === 0;
+
+      if (isSunday) {
+        filledHistory.push({
+          date: dateStr,
+          dayNumber: currentDayNum,
+          title: "Sunday — Scheduled Weekend Break",
+          titleGu: "રવિવાર — સાપ્તાહિક રજા",
+          isWeekend: true,
+          isNoWorkDay: false,
+          weekendReason: "Scheduled Sunday break. Official non-working day for all team members.",
+          weekendReasonGu: "સાપ્તાહિક રવિવારની રજા. તમામ ટીમ મેમ્બર્સ માટે સત્તાવાર રજાનો દિવસ.",
+          members: [],
+          tasksEn: [],
+          tasksGu: [],
+          deliverables: []
+        });
+      } else {
+        filledHistory.push({
+          date: dateStr,
+          dayNumber: currentDayNum,
+          title: "No Updates Logged",
+          titleGu: "કોઈ કામ નોંધાયેલ નથી",
+          isWeekend: false,
+          isNoWorkDay: true,
+          noWorkReason: "No tasks or updates were recorded in the system for this day.",
+          noWorkReasonGu: "આજના દિવસ માટે સિસ્ટમમાં કોઈ અપડેટ નોંધાયેલ નથી.",
+          members: [],
+          tasksEn: [],
+          tasksGu: [],
+          deliverables: []
+        });
+      }
     }
 
     // Move to next day

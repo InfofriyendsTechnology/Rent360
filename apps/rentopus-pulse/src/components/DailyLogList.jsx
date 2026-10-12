@@ -168,7 +168,11 @@ export default function DailyLogList({ lang }) {
                   </span>
                 </div>
                 <div className="flex items-center gap-3 self-end sm:self-auto flex-shrink-0">
-                  {!day.isNoWorkDay && tasks && (
+                  {day.isWeekend ? (
+                    <span className="text-[9px] sm:text-[10px] px-2 py-1 font-bold border-2 bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30">
+                      {lang === 'gu' ? 'રવિવાર (રજા)' : 'SUNDAY BREAK'}
+                    </span>
+                  ) : !day.isNoWorkDay && tasks && (
                     <span className="text-[9px] sm:text-[10px] px-2 py-1 font-bold border-2 bg-card-alt text-muted border-main">
                       {tasks.length} TASKS
                     </span>
@@ -200,6 +204,10 @@ export default function DailyLogList({ lang }) {
                           [{m}]
                         </button>
                       ))
+                    ) : day.isWeekend ? (
+                      <span className="bg-amber-500/20 text-amber-600 dark:text-amber-400 border-2 border-amber-500/40 px-1.5 py-0.5 text-[9px] font-mono font-black shadow-sm-brutal">
+                        {lang === 'gu' ? 'સાપ્તાહિક રજા' : 'WEEKEND'}
+                      </span>
                     ) : (
                       <span className="bg-red-500 text-white border-2 border-main px-1.5 py-0.5 text-[9px] font-mono font-black shadow-sm-brutal">
                         N/A
@@ -207,8 +215,18 @@ export default function DailyLogList({ lang }) {
                     )}
                   </div>
 
-                  {/* No Work Day Alert */}
-                  {day.isNoWorkDay ? (
+                  {/* Weekend Alert vs No Work Day Alert */}
+                  {day.isWeekend ? (
+                    <div className="p-4 bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-500 shadow-sm-brutal">
+                      <div className="text-amber-600 dark:text-amber-400 font-bold uppercase tracking-widest text-[10px] mb-2 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                        {lang === 'gu' ? 'સાપ્તાહિક રવિવારની રજા' : 'SCHEDULED SUNDAY BREAK'}
+                      </div>
+                      <p className="text-sm font-medium text-main">
+                        {lang === 'gu' ? day.weekendReasonGu : day.weekendReason}
+                      </p>
+                    </div>
+                  ) : day.isNoWorkDay ? (
                     <div className="p-4 bg-red-50 dark:bg-red-950/20 border-2 border-red-500 shadow-sm-brutal">
                       <div className="text-red-600 dark:text-red-400 font-bold uppercase tracking-widest text-[10px] mb-2 flex items-center gap-2">
                         <span className="w-2 h-2 bg-red-500 rounded-full"></span>

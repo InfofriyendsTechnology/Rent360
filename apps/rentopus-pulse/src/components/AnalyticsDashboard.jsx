@@ -15,7 +15,9 @@ export default function AnalyticsDashboard({ lang }) {
     let tasksCompleted = 0;
 
     DAILY_HISTORY.forEach(day => {
-      if (day.isNoWorkDay) {
+      if (day.isWeekend) {
+        // Scheduled weekend break — do NOT penalize as noWorkDays!
+      } else if (day.isNoWorkDay) {
         noWorkDays++;
       } else {
         const didWorkToday = day.members && day.members.includes(member.id);
@@ -73,16 +75,22 @@ export default function AnalyticsDashboard({ lang }) {
         <div className="flex items-end gap-2 sm:gap-4 h-48 sm:h-64 mt-4 overflow-x-auto pb-2 border-b-2 border-main">
           {DAILY_HISTORY.map((day, idx) => {
             const taskCount = day.tasksEn ? day.tasksEn.length : 0;
-            const heightPercentage = day.isNoWorkDay ? 0 : (taskCount / maxTasks) * 100;
+            const heightPercentage = day.isNoWorkDay || day.isWeekend ? 0 : (taskCount / maxTasks) * 100;
             return (
               <div key={idx} className="h-full flex flex-col justify-end items-center flex-1 min-w-[40px] group">
                 <span className="text-[10px] font-bold text-main mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  {day.isNoWorkDay ? '0' : taskCount}
+                  {day.isWeekend ? (lang === 'gu' ? 'રજા' : 'Break') : day.isNoWorkDay ? '0' : taskCount}
                 </span>
                 <div className="flex-1 w-full flex flex-col justify-end">
                   <div 
-                    className={`w-full border-2 border-main transition-all ${day.isNoWorkDay ? 'bg-red-500' : 'bg-[#0B60B0] hover:bg-main'}`}
-                    style={{ height: `${Math.max(day.isNoWorkDay ? 5 : 5, heightPercentage)}%` }}
+                    className={`w-full border-2 border-main transition-all ${
+                      day.isWeekend 
+                        ? 'bg-amber-400/30 border-dashed border-amber-500/50' 
+                        : day.isNoWorkDay 
+                          ? 'bg-red-500' 
+                          : 'bg-[#0B60B0] hover:bg-main'
+                    }`}
+                    style={{ height: `${Math.max(day.isNoWorkDay || day.isWeekend ? 6 : 5, heightPercentage)}%` }}
                   ></div>
                 </div>
                 <span className="text-[8px] sm:text-[9px] font-mono font-bold text-muted mt-2 rotate-45 sm:rotate-0 origin-left">
