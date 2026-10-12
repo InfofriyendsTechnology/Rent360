@@ -26,7 +26,7 @@ export const getAllSubscriptionPlans = async (req: Request, res: Response) => {
         max_bookings: 0,
         max_staff: 2,
         features: [
-          "Up to 100 Inventory",
+          "Up to 100 Collection Items",
           "2 Salesman Accounts",
           "Multi device login",
           "All Features Included",
@@ -43,7 +43,7 @@ export const getAllSubscriptionPlans = async (req: Request, res: Response) => {
         max_bookings: 0,
         max_staff: 10,
         features: [
-          "Unlimited Inventory",
+          "Unlimited Collection",
           "10 Salesman Accounts",
           "Multi device login",
           "All Features Included",
@@ -60,7 +60,7 @@ export const getAllSubscriptionPlans = async (req: Request, res: Response) => {
         max_bookings: 0,
         max_staff: 0,
         features: [
-          "Unlimited Inventory",
+          "Unlimited Collection",
           "Unlimited Salesman",
           "Multi device login",
           "Priority Support & Training",

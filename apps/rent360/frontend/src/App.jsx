@@ -16,7 +16,7 @@ import Profile from './pages/Profile/Profile';
 
 // Temporary placeholder components for remaining routes
 const SettingsPage = () => <div style={{ padding: 20 }}><h1>Settings</h1></div>;
-const InventoryPage = () => <div style={{ padding: 20 }}><h1>Inventory Management</h1></div>;
+const CollectionPage = () => <div style={{ padding: 20 }}><h1>Collection Management</h1></div>;
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -61,7 +61,8 @@ const App = () => {
           {/* Store Admin Routes */}
           {(user?.role !== 'SUPER_ADMIN' && user?.role) && (
             <>
-              <Route path="inventory" element={<InventoryPage />} />
+              <Route path="collection" element={<CollectionPage />} />
+              <Route path="inventory" element={<Navigate to="/collection" replace />} />
               <Route path="customers" element={<CustomersList />} />
               <Route path="staff" element={<UsersList />} />
               <Route path="roles" element={<RolesList />} />

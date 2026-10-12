@@ -145,11 +145,11 @@ const Sidebar = () => {
               ) : (
                 <>
                   <NavLink 
-                    to="/inventory" 
+                    to="/collection" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
                   >
                     <span className="icon"><FiBox /></span>
-                    <span className="text">Inventory</span>
+                    <span className="text">Collection</span>
                   </NavLink>
                   <NavLink 
                     to="/customers" 

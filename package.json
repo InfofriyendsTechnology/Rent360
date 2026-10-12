@@ -3,5 +3,10 @@
   "private": true,
   "workspaces": [
     "apps/*"
-  ]
+  ],
+  "scripts": {
+    "dev": "npm run dev --prefix apps/rent360",
+    "dev:frontend": "npm run dev --prefix apps/rent360/frontend",
+    "dev:backend": "npm run dev --prefix apps/rent360/backend"
+  }
 }

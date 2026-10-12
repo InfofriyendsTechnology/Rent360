@@ -162,7 +162,7 @@ const RolesList = () => {
                         {r.permissions && r.permissions.length > 0 ? (
                           r.permissions.map(p => (
                             <span key={p} className="perm-pill">
-                              {p.replace('_', ' ')}
+                              {p === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : p.replace('_', ' ')}
                             </span>
                           ))
                         ) : (
@@ -210,7 +210,7 @@ const RolesList = () => {
                           checked={roleForm.permissions.includes(perm)}
                           onChange={() => togglePermission(perm)}
                         />
-                        <span>{perm.replace('_', ' ')}</span>
+                        <span>{perm === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : perm.replace('_', ' ')}</span>
                       </label>
                     ))}
                   </div>

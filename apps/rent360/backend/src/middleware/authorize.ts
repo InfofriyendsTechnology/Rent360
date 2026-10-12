@@ -29,8 +29,13 @@ export const authorize = (requiredPermissions: string[]) => {
         return next();
       }
 
+      // Treat INVENTORY_MANAGE and COLLECTION_MANAGE as interchangeable
+      const effectivePermissions = new Set(userPermissions);
+      if (effectivePermissions.has("INVENTORY_MANAGE")) effectivePermissions.add("COLLECTION_MANAGE");
+      if (effectivePermissions.has("COLLECTION_MANAGE")) effectivePermissions.add("INVENTORY_MANAGE");
+
       // Check if user has at least one of the required permissions
-      const hasPermission = requiredPermissions.some(perm => userPermissions.includes(perm));
+      const hasPermission = requiredPermissions.some(perm => effectivePermissions.has(perm));
       
       if (!hasPermission) {
         return responseHandler.unauthorized(res, "You do not have permission to perform this action");
