@@ -1,0 +1,60 @@
+{
+  "date": "11-10-2026",
+  "dayNumber": 16,
+  "title": "Customer Management Module, Data Isolation & Authorization",
+  "titleGu": "કસ્ટમર મેનેજમેન્ટ મોડ્યુલ, ડેટા આઇસોલેશન અને ઓથોરાઇઝેશન",
+  "members": [
+    "002"
+  ],
+  "tasksEn": [
+    {
+      "member": "002",
+      "text": "Engineered the complete CustomersList frontend interface with responsive data table, real-time search, filters, and modal forms matching the Bond CRM design system."
+    },
+    {
+      "member": "002",
+      "text": "Created comprehensive backend Zod validations for customer creation and modifications (customer.validation.ts) covering mobile, GST, and address formats."
+    },
+    {
+      "member": "002",
+      "text": "Developed customer RESTful controllers (create, update, delete, getAll, getById) with strict multi-tenant data isolation per store."
+    },
+    {
+      "member": "002",
+      "text": "Built and integrated the authorize middleware (authorize.ts) to protect API routes and enforce role-based permissions."
+    },
+    {
+      "member": "002",
+      "text": "Integrated Customers routing into App.jsx and configured active link states in the main Sidebar navigation."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "002",
+      "text": "કસ્ટમર મેનેજમેન્ટ માટે આખું CustomersList ફ્રન્ટએન્ડ પેજ બનાવ્યું, જેમાં સર્ચ, ફિલ્ટર્સ અને એડ/એડિટ મોડલ્સ બોન્ડ CRM થીમ મુજબ સેટ કર્યા."
+    },
+    {
+      "member": "002",
+      "text": "નવા કસ્ટમર ઉમેરવા અને અપડેટ કરવા માટે બેકએન્ડમાં Zod વેલિડેશન સ્કીમા (customer.validation.ts) તૈયાર કર્યા."
+    },
+    {
+      "member": "002",
+      "text": "કસ્ટમરના તમામ API કંટ્રોલર્સ (create, update, delete, getAll, getById) મલ્ટી-ટેનન્ટ ડેટા સિક્યોરિટી સાથે બનાવ્યા જેથી દરેક સ્ટોરનો ડેટા અલગ રહે."
+    },
+    {
+      "member": "002",
+      "text": "API રાઉટ્સની સિક્યોરિટી અને રોલ-બેઝ્ડ પરમિશન માટે નવું Authorize Middleware (authorize.ts) ડેવલપ કર્યું."
+    },
+    {
+      "member": "002",
+      "text": "App.jsx માં કસ્ટમર રૂટ્સ એડ કર્યા અને સાઈડબારમાં Customers નું નવું નેવિગેશન કનેક્ટ કર્યું."
+    }
+  ],
+  "deliverables": [
+    "CustomersList UI & Management Page",
+    "Customer Zod Validation Schemas",
+    "Multi-tenant Customer API Controllers",
+    "Role & Tenant Authorization Middleware",
+    "Sidebar Navigation & Route Integration"
+  ]
+}
