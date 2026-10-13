@@ -120,3 +120,30 @@
     }
   }
 }
+
+@media (max-width: 480px) {
+  .profile-upload-modal-overlay {
+    padding: 10px;
+
+    .profile-upload-modal {
+      width: 100%;
+      border-radius: 18px;
+
+      .modal-header {
+        padding: 14px 16px;
+      }
+
+      .crop-container {
+        height: 240px;
+      }
+
+      .controls {
+        padding: 12px 16px;
+      }
+
+      .modal-footer {
+        padding: 12px 16px;
+      }
+    }
+  }
+}

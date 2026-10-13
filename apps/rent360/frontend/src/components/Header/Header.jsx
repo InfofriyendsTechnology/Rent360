@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FiBell, FiSun, FiMoon, FiPlus } from 'react-icons/fi';
+import { FiBell, FiSun, FiMoon, FiPlus, FiMenu } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Header.scss';
 
-const Header = () => {
+const Header = ({ onToggleSidebar }) => {
   const { user } = useSelector((state) => state.auth);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [activePeriod, setActivePeriod] = useState('Quarter');
@@ -39,11 +39,22 @@ const Header = () => {
 
   return (
     <header className="dashboard-header-capsule">
-      {/* Left: Breadcrumbs */}
-      <div className="header-breadcrumbs">
-        <span className="crumb-root">Workspace</span>
-        <span className="crumb-slash">/</span>
-        <span className="crumb-active">{getBreadcrumbTitle()}</span>
+      {/* Left: Hamburger & Breadcrumbs */}
+      <div className="header-left-wrap">
+        <button 
+          type="button" 
+          className="mobile-hamburger-btn" 
+          onClick={onToggleSidebar}
+          aria-label="Toggle navigation menu"
+          title="Open menu"
+        >
+          <FiMenu />
+        </button>
+        <div className="header-breadcrumbs">
+          <span className="crumb-root">Workspace</span>
+          <span className="crumb-slash">/</span>
+          <span className="crumb-active">{getBreadcrumbTitle()}</span>
+        </div>
       </div>
 
       {/* Right: Controls & Actions matching Bond CRM */}

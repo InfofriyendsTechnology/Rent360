@@ -196,3 +196,39 @@
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 480px) {
+  .profile-settings-overlay {
+    padding: 10px;
+  }
+
+  .profile-settings-content {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 18px;
+
+    .modal-header {
+      padding: 14px 18px;
+
+      h3 {
+        font-size: 1.1rem;
+      }
+    }
+
+    .modal-body {
+      padding: 18px 14px;
+      gap: 20px;
+
+      .avatar-section {
+        .avatar-wrapper {
+          width: 96px;
+          height: 96px;
+        }
+      }
+
+      .info-section {
+        padding: 14px;
+      }
+    }
+  }
+}

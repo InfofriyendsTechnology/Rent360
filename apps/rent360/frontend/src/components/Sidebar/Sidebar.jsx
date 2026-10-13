@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   FiHome, FiBox, FiUsers, FiSettings, FiLogOut, FiTrash2, 
-  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive, FiCornerUpLeft
+  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive, FiCornerUpLeft, FiX
 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, updateUser, loginSuccess } from '../../store/authSlice';
@@ -11,15 +11,11 @@ import toast from 'react-hot-toast';
 
 import './Sidebar.scss';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-  
-  
-  
-  
 
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
   const superAdminToken = localStorage.getItem('superAdminToken');
@@ -41,6 +37,7 @@ const Sidebar = () => {
         localStorage.removeItem('superAdminToken');
         localStorage.removeItem('superAdminUser');
         dispatch(loginSuccess({ user: sUser, token: sToken }));
+        onClose?.();
         navigate('/stores');
         toast.success("Returned to Super Admin");
       } catch (err) {}
@@ -53,22 +50,24 @@ const Sidebar = () => {
       setTheme(localStorage.getItem('theme') || 'light');
     };
     window.addEventListener('themeChanged', handleThemeChange);
-      return () => window.removeEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('superAdminToken');
     localStorage.removeItem('superAdminUser');
+    onClose?.();
     dispatch(logout());
   };
 
-  const handleProfileClick = () => { navigate('/profile'); };
-
-  
+  const handleProfileClick = () => { 
+    onClose?.();
+    navigate('/profile'); 
+  };
 
   return (
     <>
-      <aside className="sidebar">
+      <aside className={`sidebar ${isOpen ? 'mobile-open' : ''}`}>
         {/* Brand Header */}
         <div className="sidebar-brand">
           <div className="brand-logo-card">
@@ -78,6 +77,15 @@ const Sidebar = () => {
             <span className="brand-name">Rent360</span>
             <span className="brand-sub">Platform</span>
           </div>
+          <button 
+            type="button" 
+            className="mobile-sidebar-close" 
+            onClick={onClose} 
+            aria-label="Close menu"
+            title="Close navigation"
+          >
+            <FiX />
+          </button>
         </div>
 
         {/* Pill Search Input */}
@@ -96,6 +104,7 @@ const Sidebar = () => {
                 to="/" 
                 end
                 className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                onClick={onClose}
               >
                 <span className="icon"><FiHome /></span>
                 <span className="text">Overview</span>
@@ -116,6 +125,7 @@ const Sidebar = () => {
                   <NavLink 
                     to="/stores" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                    onClick={onClose}
                   >
                     <span className="icon"><FiBox /></span>
                     <span className="text">Stores</span>
@@ -123,6 +133,7 @@ const Sidebar = () => {
                   <NavLink 
                     to="/plans" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                    onClick={onClose}
                   >
                     <span className="icon"><FiLayers /></span>
                     <span className="text">Plans</span>
@@ -130,6 +141,7 @@ const Sidebar = () => {
                   <NavLink 
                     to="/subscriptions" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                    onClick={onClose}
                   >
                     <span className="icon"><FiCreditCard /></span>
                     <span className="text">Subscriptions</span>
@@ -137,6 +149,7 @@ const Sidebar = () => {
                   <NavLink 
                     to="/bucket"
                     className={({ isActive }) => isActive ? "menu-pill active" : "menu-pill"}
+                    onClick={onClose}
                   >
                     <span className="icon"><FiHardDrive /></span>
                     <span className="text">Bucket Storage</span>
@@ -147,6 +160,7 @@ const Sidebar = () => {
                   <NavLink 
                     to="/collection" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                    onClick={onClose}
                   >
                     <span className="icon"><FiBox /></span>
                     <span className="text">Collection</span>
@@ -154,6 +168,7 @@ const Sidebar = () => {
                   <NavLink 
                     to="/customers" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                    onClick={onClose}
                   >
                     <span className="icon"><FiUsers /></span>
                     <span className="text">Customers</span>
@@ -163,6 +178,7 @@ const Sidebar = () => {
                       <NavLink 
                         to="/staff" 
                         className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                        onClick={onClose}
                       >
                         <span className="icon"><FiUsers /></span>
                         <span className="text">Team Members</span>
@@ -170,6 +186,7 @@ const Sidebar = () => {
                       <NavLink 
                         to="/roles" 
                         className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                        onClick={onClose}
                       >
                         <span className="icon"><FiShield /></span>
                         <span className="text">Roles</span>
@@ -187,6 +204,7 @@ const Sidebar = () => {
               <NavLink 
                 to="/settings" 
                 className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                onClick={onClose}
               >
                 <span className="icon"><FiSettings /></span>
                 <span className="text">Settings</span>
@@ -215,7 +233,6 @@ const Sidebar = () => {
               ) : (
                 user?.name ? user.name.slice(0, 2).toUpperCase() : 'AD'
               )}
-              
             </div>
             <div className="profile-info">
               <span className="profile-name">{user?.name || 'Main Admin'}</span>
@@ -227,10 +244,6 @@ const Sidebar = () => {
           </div>
         </div>
       </aside>
-      
-      
-
-      
     </>
   );
 };

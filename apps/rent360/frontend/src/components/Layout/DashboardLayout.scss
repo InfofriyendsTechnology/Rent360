@@ -27,13 +27,47 @@
   }
 }
 
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(18, 18, 22, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1040;
+  animation: fadeInBackdrop 0.2s ease-out;
+}
+
+@keyframes fadeInBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @media (max-width: 1024px) {
   .dashboard-layout {
-    padding: 8px;
+    padding: 10px 8px;
     gap: 10px;
+    flex-direction: column;
+
+    .dashboard-main {
+      gap: 12px;
+    }
 
     .dashboard-content {
-      padding: 4px;
+      padding: 2px 0;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-layout {
+    padding: 8px 6px;
+
+    .dashboard-main {
+      gap: 10px;
+    }
+
+    .dashboard-content {
+      padding: 0;
     }
   }
 }

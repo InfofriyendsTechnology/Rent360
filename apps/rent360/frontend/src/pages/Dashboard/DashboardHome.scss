@@ -829,3 +829,187 @@
     }
   }
 }
+
+@media (max-width: 1024px) {
+  .superadmin-dashboard {
+    gap: 16px;
+
+    .pipeline-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .superadmin-dashboard {
+    gap: 14px;
+
+    .dashboard-hero-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+
+      .hero-text {
+        .hero-title {
+          font-size: 1.6rem;
+        }
+
+        .hero-subtitle {
+          font-size: 0.84rem;
+        }
+      }
+
+      .hero-actions {
+        width: 100%;
+        gap: 8px;
+
+        .layout-toggle-pill,
+        .time-filter-pill {
+          padding: 3px;
+
+          .layout-btn,
+          .time-btn {
+            padding: 5px 10px;
+            font-size: 0.76rem;
+          }
+        }
+
+        .hero-pill-btn {
+          height: 36px;
+          padding: 0 16px;
+          font-size: 0.82rem;
+        }
+      }
+    }
+
+    .metrics-bento-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+
+      .bento-kpi-card {
+        padding: 14px 14px;
+        border-radius: 16px;
+
+        .kpi-figure {
+          font-size: 1.7rem;
+          margin-bottom: 8px;
+        }
+
+        .kpi-bottom {
+          font-size: 0.72rem;
+        }
+      }
+    }
+
+    .analytics-card,
+    .recent-tenants-card,
+    .comprehensive-table-card {
+      padding: 16px 14px;
+      border-radius: 16px;
+
+      .card-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+
+        .header-meta-right {
+          width: 100%;
+          justify-content: space-between;
+          gap: 8px;
+        }
+      }
+
+      .card-footer-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+
+    .comprehensive-table-card {
+      .table-toolbar-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+
+        .search-filter-box {
+          width: 100%;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+
+          .search-input-wrap {
+            width: 100%;
+            box-sizing: border-box;
+
+            input {
+              min-width: 0;
+              width: 100%;
+            }
+          }
+
+          .tier-filter-chips {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            box-sizing: border-box;
+          }
+        }
+      }
+
+      .pipeline-table.full-table {
+        th,
+        td {
+          padding: 10px 12px;
+          font-size: 0.8rem;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .pipeline-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+
+      .pipeline-table {
+        th,
+        td {
+          padding: 10px 12px;
+          font-size: 0.8rem;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .superadmin-dashboard {
+    .metrics-bento-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-hero-bar {
+      .hero-text {
+        .hero-title {
+          font-size: 1.4rem;
+        }
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+
+        .layout-toggle-pill,
+        .time-filter-pill,
+        .hero-pill-btn {
+          width: 100%;
+          justify-content: center;
+          text-align: center;
+          box-sizing: border-box;
+        }
+      }
+    }
+  }
+}

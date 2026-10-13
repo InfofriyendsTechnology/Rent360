@@ -479,3 +479,55 @@
   }
 }
 
+@media (max-width: 768px) {
+  .subscriptions-view {
+    padding: 12px 8px;
+    gap: 14px;
+  }
+
+  .subs-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+
+    .title-section {
+      .main-title {
+        font-size: 1.4rem;
+      }
+    }
+  }
+
+  .subs-controls-bar {
+    width: 100%;
+
+    .search-wrap {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+    }
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .subs-table {
+    th,
+    td {
+      padding: 10px 12px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+  }
+
+  .cycle-pills-wrap {
+    flex-direction: column;
+
+    .cycle-pill-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+

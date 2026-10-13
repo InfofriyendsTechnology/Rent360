@@ -255,3 +255,55 @@
     }
   }
 }
+
+@media (max-width: 480px) {
+  .bond-login-layout {
+    padding: 16px 12px;
+
+    .bond-theme-btn {
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      font-size: 0.9rem;
+    }
+
+    .bond-login-card {
+      padding: 28px 20px;
+      border-radius: 20px;
+
+      .login-brand-header {
+        margin-bottom: 22px;
+
+        .brand-logo-pill {
+          width: 42px;
+          height: 42px;
+          margin-bottom: 12px;
+        }
+
+        .brand-title {
+          font-size: 1.5rem;
+        }
+
+        .brand-subtitle {
+          font-size: 0.82rem;
+        }
+      }
+
+      .login-form {
+        gap: 16px;
+
+        .form-group {
+          .input-wrapper {
+            height: 42px;
+          }
+        }
+
+        .bond-submit-btn {
+          height: 42px;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}

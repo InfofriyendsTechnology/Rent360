@@ -124,3 +124,41 @@
   from { opacity: 0; transform: translateY(20px) scale(0.95); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+@media (max-width: 480px) {
+  .confirm-modal-overlay {
+    padding: 12px;
+
+    .confirm-modal {
+      width: 100%;
+      padding: 20px 16px;
+      border-radius: 18px;
+
+      .modal-icon {
+        margin-bottom: 14px;
+        font-size: 2.4rem;
+      }
+
+      .modal-content {
+        margin-bottom: 20px;
+
+        h3 {
+          font-size: 1.1rem;
+        }
+
+        p {
+          font-size: 0.85rem;
+        }
+      }
+
+      .modal-actions {
+        gap: 8px;
+
+        button {
+          padding: 8px 12px;
+          font-size: 0.88rem;
+        }
+      }
+    }
+  }
+}
