@@ -25,25 +25,24 @@ export const getAllRoles = async (req: Request | any, res: Response) => {
     }
 
     let roles = await prisma.role.findMany({
-      where: { storeId },
+      where: { 
+        storeId,
+        name: { notIn: ['STORE_ADMIN', 'SUPER_ADMIN'] }
+      },
       orderBy: { createdAt: 'asc' }
     });
 
-    // Auto-seed default staff roles if store has only STORE_ADMIN or no roles
-    const nonAdminRoles = roles.filter(r => r.name !== 'STORE_ADMIN' && r.name !== 'SUPER_ADMIN');
-    if (nonAdminRoles.length === 0) {
+    // Auto-seed default staff roles if store has no staff roles
+    if (roles.length === 0) {
       for (const def of DEFAULT_STORE_ROLES) {
-        const exists = roles.some(r => r.name.toLowerCase() === def.name.toLowerCase());
-        if (!exists) {
-          const newRole = await prisma.role.create({
-            data: {
-              storeId,
-              name: def.name,
-              permissions: def.permissions
-            }
-          });
-          roles.push(newRole);
-        }
+        const newRole = await prisma.role.create({
+          data: {
+            storeId,
+            name: def.name,
+            permissions: def.permissions
+          }
+        });
+        roles.push(newRole);
       }
     }
 

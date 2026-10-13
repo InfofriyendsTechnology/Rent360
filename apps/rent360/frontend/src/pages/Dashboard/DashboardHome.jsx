@@ -13,10 +13,15 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Skeleton, TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import StoreDashboard from './StoreDashboard';
 import './DashboardHome.scss';
 
 const DashboardHome = () => {
   const { user, token } = useSelector((state) => state.auth);
+  
+  if (user?.role && user?.role !== 'SUPER_ADMIN') {
+    return <StoreDashboard />;
+  }
   
   // Layout Switcher: 'GRID' vs 'TABLE'
   const [viewLayout, setViewLayout] = useState('GRID');

@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 
 export const setStoreAdminPassword = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { password } = req.body;
 
     if (!password || password.trim().length < 6) {

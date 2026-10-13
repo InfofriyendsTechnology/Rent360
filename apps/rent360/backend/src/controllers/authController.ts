@@ -63,13 +63,63 @@ export const registerStore = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { mobile, password } = req.body;
+    const { mobile, username, identifier, password } = req.body;
+    const loginId = (identifier || username || mobile || "").trim();
 
-    // Find User
-    const user = await prisma.user.findUnique({
-      where: { mobile },
+    if (!loginId || !password) {
+      return responseHandler.unauthorized(
+        res,
+        MESSAGES.AUTH.INVALID_CREDENTIALS,
+      );
+    }
+
+    // 1. Find User by mobile, username, or name
+    let user: any = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { mobile: loginId },
+          { username: { equals: loginId, mode: "insensitive" } },
+          { name: { equals: loginId, mode: "insensitive" } },
+        ],
+      },
       include: { role: true, store: true },
     });
+
+    // 2. If not found and identifier is admin alias, check Super Admin
+    if (
+      !user &&
+      (loginId.toLowerCase() === "admin" ||
+        loginId.toLowerCase() === "superadmin" ||
+        loginId.toLowerCase() === "super admin")
+    ) {
+      user = await prisma.user.findFirst({
+        where: {
+          role: { name: "SUPER_ADMIN" },
+        },
+        include: { role: true, store: true },
+      });
+    }
+
+    // 3. If still not found, check if it matches a Store username or name
+    if (!user) {
+      const store = await prisma.store.findFirst({
+        where: {
+          OR: [
+            { username: { equals: loginId, mode: "insensitive" } },
+            { name: { equals: loginId, mode: "insensitive" } },
+          ],
+        },
+      });
+      if (store) {
+        user = await prisma.user.findFirst({
+          where: {
+            storeId: store.id,
+            role: { name: "STORE_ADMIN" },
+          },
+          include: { role: true, store: true },
+        });
+      }
+    }
 
     if (!user) {
       return responseHandler.unauthorized(
@@ -77,6 +127,7 @@ export const login = async (req: Request, res: Response) => {
         MESSAGES.AUTH.INVALID_CREDENTIALS,
       );
     }
+
 
     // Verify Password
     const isMatch = await bcrypt.compare(password, user.password);

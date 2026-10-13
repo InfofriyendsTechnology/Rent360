@@ -149,7 +149,7 @@ const Profile = () => {
             <div className="data-grid">
               <div className="data-item">
                 <label>Business / Store Name</label>
-                <span>{user?.store?.name || (isSuperAdmin ? 'Rentopus HQ' : 'Not Provided')}</span>
+                <span>{user?.store?.name || (isSuperAdmin ? 'Rent360 HQ' : 'Not Provided')}</span>
               </div>
               <div className="data-item">
                 <label>GST Number</label>

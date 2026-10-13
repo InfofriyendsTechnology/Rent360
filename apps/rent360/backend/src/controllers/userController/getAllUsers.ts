@@ -6,7 +6,12 @@ export const getAllUsers = async (req: Request | any, res: Response) => {
   try {
     const storeId = req.user?.storeId;
     const data = await prisma.user.findMany({
-      where: { storeId },
+      where: { 
+        storeId,
+        role: {
+          name: { notIn: ['STORE_ADMIN', 'SUPER_ADMIN'] }
+        }
+      },
       include: { role: true },
       orderBy: { createdAt: 'desc' }
     });

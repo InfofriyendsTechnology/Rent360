@@ -71,19 +71,23 @@ export const setupSuperAdmin = async () => {
     }
 
     if (existingAdmin) {
-      // If mobile or password has changed in .env, we update the existing super admin
+      const updates: any = {};
       if (existingAdmin.mobile !== mobile) {
-        const hashedPassword = await bcrypt.hash(passwordText, 10);
+        updates.mobile = mobile;
+        updates.password = await bcrypt.hash(passwordText, 10);
+      }
+      if (!existingAdmin.username) {
+        updates.username = 'superadmin';
+      }
+      if (Object.keys(updates).length > 0) {
         await prisma.user.update({
           where: { id: existingAdmin.id },
-          data: { mobile, password: hashedPassword }
+          data: updates
         });
-        console.log(`✅ Super Admin credentials updated from .env (Mobile: ${mobile})`);
-      } else {
-        console.log(`✅ Super Admin already exists (Mobile: ${mobile})`);
       }
       return;
     }
+
 
     console.log('⏳ Creating new Super Admin from .env...');
     const hashedPassword = await bcrypt.hash(passwordText, 10);
@@ -118,12 +122,14 @@ export const setupSuperAdmin = async () => {
           storeId: store.id,
           roleId: role.id,
           name: 'System Admin',
+          username: 'superadmin',
           mobile,
           password: hashedPassword,
           status: 'ACTIVE'
         }
       });
     }
+
 
     console.log(`🚀 Super Admin created successfully (Mobile: ${mobile})!`);
   } catch (error) {

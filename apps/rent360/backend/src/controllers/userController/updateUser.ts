@@ -14,6 +14,7 @@ import { getStoreAssetFolder, getStoreSlug } from "../../utils/cloudinaryHelper"
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
+    const userId = req.params.id as string;
     const { password, ...rest } = req.body;
     let updateData = { ...rest };
     
@@ -24,8 +25,8 @@ export const updateUser = async (req: Request, res: Response) => {
       updateData.password = await bcrypt.hash(password, 10);
     }
 
-    const existingUser = await prisma.user.findUnique({ 
-      where: { id: req.params.id },
+    const existingUser: any = await prisma.user.findUnique({ 
+      where: { id: userId },
       include: { role: true, store: true }
     });
 
@@ -43,7 +44,7 @@ export const updateUser = async (req: Request, res: Response) => {
       const duplicateUser = await prisma.user.findFirst({
         where: {
           mobile: trimmedMobile,
-          id: { not: req.params.id }
+          id: { not: userId }
         }
       });
       if (duplicateUser) {
@@ -67,8 +68,15 @@ export const updateUser = async (req: Request, res: Response) => {
        return responseHandler.unauthorized(res, "You cannot change your own role");
     }
 
-    if (existingUser.role?.name === "SUPER_ADMIN" && updateData.roleId !== existingUser.roleId) {
-      return responseHandler.unauthorized(res, "You cannot change the role of the primary store owner");
+    if ((existingUser.role?.name === "SUPER_ADMIN" || existingUser.role?.name === "STORE_ADMIN") && updateData.roleId && updateData.roleId !== existingUser.roleId) {
+      return responseHandler.unauthorized(res, "You cannot change the role of the store owner");
+    }
+
+    if (updateData.roleId && updateData.roleId !== existingUser.roleId) {
+      const targetRole = await prisma.role.findUnique({ where: { id: updateData.roleId } });
+      if (targetRole && (targetRole.name === 'STORE_ADMIN' || targetRole.name === 'SUPER_ADMIN')) {
+        return responseHandler.badRequest(res, "Store Admin role cannot be assigned to team members.");
+      }
     }
 
     // Helper function to delete old image from Cloudinary
@@ -128,7 +136,7 @@ export const updateUser = async (req: Request, res: Response) => {
     }
 
     const data = await prisma.user.update({
-      where: { id: req.params.id },
+      where: { id: userId },
       data: updateData,
     });
     

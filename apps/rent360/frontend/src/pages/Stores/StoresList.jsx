@@ -41,6 +41,7 @@ const StoresList = () => {
   // Store/Company Form State
   const [formData, setFormData] = useState({
     name: '',
+    username: '',
     owner_name: '',
     mobile: '',
     email: '',
@@ -138,7 +139,7 @@ const StoresList = () => {
   const openAddModal = () => {
     setEditingStoreId(null);
     setFormData({
-      name: '', owner_name: '', mobile: '', email: '',
+      name: '', username: '', owner_name: '', mobile: '', email: '',
       address: '', city: '', state: '', pincode: '',
       gst_number: '', logo_url: '', password: ''
     });
@@ -151,6 +152,7 @@ const StoresList = () => {
     setEditingStoreHasPassword(store.hasPassword || false);
     setFormData({
       name: store.name,
+      username: store.username || '',
       owner_name: store.owner_name || '',
       mobile: store.mobile || '',
       email: store.email || '',
@@ -295,7 +297,7 @@ const StoresList = () => {
                 <AvatarCell 
                   src={store.logo_url}
                   title={store.name}
-                  subtitle={store.email}
+                  subtitle={store.username ? `@${store.username}${store.email ? ` • ${store.email}` : ''}` : store.email}
                   fallbackChars={getInitials(store.name)}
                 />
               </td>
@@ -383,19 +385,34 @@ const StoresList = () => {
                   </div>
                 </div>
 
-                {/* Row 1: Company & Owner Name */}
+                {/* Row 1: Company & Username */}
                 <div className="form-row-2">
                   <div className="form-field">
                     <label>Company / Store Name *</label>
                     <input 
                       type="text" 
                       name="name" 
-                      placeholder="e.g. Rentopus HQ" 
+                      placeholder="e.g. Rent360 HQ" 
                       value={formData.name} 
                       onChange={handleChange} 
                       required 
                     />
                   </div>
+                  <div className="form-field">
+                    <label>Store Username (Login ID)</label>
+                    <input 
+                      type="text" 
+                      name="username" 
+                      placeholder="e.g. rent360_hq" 
+                      value={formData.username} 
+                      onChange={handleChange} 
+                      autoComplete="off"
+                    />
+                  </div>
+                </div>
+
+                {/* Row 2: Owner Name & Mobile */}
+                <div className="form-row-2">
                   <div className="form-field">
                     <label>Owner Full Name *</label>
                     <input 
@@ -407,10 +424,6 @@ const StoresList = () => {
                       required 
                     />
                   </div>
-                </div>
-
-                {/* Row 2: Mobile & Email */}
-                <div className="form-row-2">
                   <div className="form-field">
                     <label>Contact Mobile * (Used for Login)</label>
                     <input 
@@ -422,6 +435,10 @@ const StoresList = () => {
                       required 
                     />
                   </div>
+                </div>
+
+                {/* Row 3: Email & Store Address */}
+                <div className="form-row-2">
                   <div className="form-field">
                     <label>Email Address</label>
                     <input 
@@ -432,10 +449,6 @@ const StoresList = () => {
                       onChange={handleChange} 
                     />
                   </div>
-                </div>
-
-                {/* Row 3: Address & City */}
-                <div className="form-row-2">
                   <div className="form-field">
                     <label>Store Address</label>
                     <input 
@@ -446,6 +459,9 @@ const StoresList = () => {
                       onChange={handleChange} 
                     />
                   </div>
+                </div>
+                {/* Row 4: City & State */}
+                <div className="form-row-2">
                   <div className="form-field">
                     <label>City</label>
                     <input 
@@ -456,10 +472,6 @@ const StoresList = () => {
                       onChange={handleChange} 
                     />
                   </div>
-                </div>
-
-                {/* Row 4: State & Pincode */}
-                <div className="form-row-2">
                   <div className="form-field">
                     <label>State</label>
                     <input 
@@ -470,6 +482,10 @@ const StoresList = () => {
                       onChange={handleChange} 
                     />
                   </div>
+                </div>
+
+                {/* Row 5: Pincode & GST Number */}
+                <div className="form-row-2">
                   <div className="form-field">
                     <label>Pincode</label>
                     <input 
@@ -480,10 +496,6 @@ const StoresList = () => {
                       onChange={handleChange} 
                     />
                   </div>
-                </div>
-
-                {/* Row 5: GST Number & Password */}
-                <div className="form-row-2">
                   <div className="form-field">
                     <label>GST Number</label>
                     <input 
@@ -494,6 +506,10 @@ const StoresList = () => {
                       onChange={handleChange} 
                     />
                   </div>
+                </div>
+
+                {/* Row 6: Password */}
+                <div className="form-row">
                   <div className="form-field password-integrated-field">
                     <label>
                       {editingStoreId 

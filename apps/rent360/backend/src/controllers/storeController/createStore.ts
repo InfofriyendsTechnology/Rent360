@@ -15,6 +15,7 @@ export const createStore = async (req: Request, res: Response) => {
   try {
     const { 
       name, 
+      username,
       owner_name, 
       mobile, 
       email, 
@@ -42,6 +43,28 @@ export const createStore = async (req: Request, res: Response) => {
     });
     if (existingStore) {
       return responseHandler.badRequest(res, `A store with mobile ${mobile} already exists.`);
+    }
+
+    // Check if username is provided or generate slug, and check uniqueness
+    const rawUsername = username?.trim();
+    const finalUsername = rawUsername 
+      ? rawUsername.toLowerCase().replace(/[^a-z0-9_]/g, '_')
+      : name.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+
+    if (finalUsername) {
+      const existingStoreByUsername = await prisma.store.findFirst({
+        where: { username: { equals: finalUsername, mode: "insensitive" } }
+      });
+      if (existingStoreByUsername) {
+        return responseHandler.badRequest(res, `Username '${finalUsername}' is already taken.`);
+      }
+
+      const existingUserByUsername = await prisma.user.findFirst({
+        where: { username: { equals: finalUsername, mode: "insensitive" } }
+      });
+      if (existingUserByUsername) {
+        return responseHandler.badRequest(res, `Username '${finalUsername}' is already taken.`);
+      }
     }
 
     // 2. Determine or generate password
@@ -85,6 +108,7 @@ export const createStore = async (req: Request, res: Response) => {
       const store = await tx.store.create({
         data: {
           name,
+          username: finalUsername || null,
           owner_name,
           mobile,
           email: email || null,
@@ -135,6 +159,7 @@ export const createStore = async (req: Request, res: Response) => {
           storeId: store.id,
           roleId: role.id,
           name: owner_name,
+          username: finalUsername || null,
           mobile,
           password: hashedPassword,
           status: 'ACTIVE'
@@ -182,6 +207,7 @@ export const createStore = async (req: Request, res: Response) => {
         adminCredentials: {
           storeId: store.id,
           storeName: store.name,
+          username: store.username,
           ownerName: store.owner_name,
           loginMobile: store.mobile,
           password: plainPassword,

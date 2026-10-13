@@ -1,8 +1,8 @@
 {
   "date": "12-10-2026",
   "dayNumber": 18,
-  "title": "Super Admin Security Fix, Member Scorecard & Weekend Automation",
-  "titleGu": "સુપર એડમિન સિક્યોરિટી ફિક્સ, મેમ્બર સ્કોરકાર્ડ મોડ્યુલ અને વીકેન્ડ ઓટોમેશન",
+  "title": "Super Admin Security Fix, Store Auto-Provisioning, Username Auth & Member Scorecard",
+  "titleGu": "સુપર એડમિન સિક્યોરિટી ફિક્સ, સ્ટોર ઓટો-પ્રોવિઝનિંગ, યુઝરનેમ ઑથેન્ટિકેશન અને મેમ્બર સ્કોરકાર્ડ મોડ્યુલ",
   "members": [
     "000",
     "001"
@@ -10,58 +10,61 @@
   "tasksEn": [
     {
       "member": "001",
-      "text": "Conducted codebase quality audit and detected Super Admin routing corruption (ERR-001) where Bucket Storage was accidentally deleted and Store Admin's roles/team leaked into Super Admin navigation."
+      "text": "Audited Super Admin navigation corruption and designed the Member Score & Mistakes Leaderboard system."
     },
     {
       "member": "001",
-      "text": "Proposed and designed the core idea and rules for the Member Score & Mistakes Leaderboard system (+1 point per completed task, -3 points penalty per mistake) to enforce team accountability and code quality."
+      "text": "Implemented Username and Password login support across Super Admin and Store Owner accounts."
+    },
+    {
+      "member": "001",
+      "text": "Isolated Store Admin from team staff (excluded from staff table/roles, added Store Username field, and disabled form autofill)."
+    },
+    {
+      "member": "001",
+      "text": "Fixed 'Login as Store' 404 error with self-healing auto-provisioning and built dedicated Store Dashboard with live KPIs."
     },
     {
       "member": "000",
-      "text": "Patched Super Admin security in Rent360 frontend by cleaning leaked Store Admin routes (staff, roles) from App.jsx and restoring Bucket Storage in Super Admin Sidebar."
+      "text": "Restored Bucket Storage in Super Admin sidebar and cleaned leaked store routes from App.jsx."
     },
     {
       "member": "000",
-      "text": "Engineered the complete Member Scorecard & Mistakes module in Rentopus Pulse (MistakesLeaderboard.jsx) with KPI summary metrics, expandable mistake audits, and integrated it under Extras in the main navigation."
-    },
-    {
-      "member": "000",
-      "text": "Architected and implemented automated Sunday and weekend break classification across Rentopus Pulse so official off-days are recognized as scheduled breaks instead of negative unlogged days."
-    },
-    {
-      "member": "000",
-      "text": "Updated DailyLogList UI and Analytics velocity charts to display friendly weekend badges and exclude scheduled off-days from team member performance calculations."
+      "text": "Built MistakesLeaderboard module and automated weekend break classification in Rent360 Pulse."
     }
   ],
   "tasksGu": [
     {
       "member": "001",
-      "text": "કોડબેઝ ક્વોલિટી ઑડિટ કરીને સુપર એડમિનની મોટી ભૂલ (ERR-001) શોધી કાઢી, જેમાં બકેટ સ્ટોરેજ ડિલીટ થઈ ગયું હતું અને સ્ટોર એડમિનના રૂટ્સ સુપર એડમિનમાં લીક થયા હતા."
+      "text": "સુપર એડમિન સાઈડબાર બગ્સ ઓડિટ કર્યા અને મેમ્બર સ્કોર તથા મિસ્ટેક્સ લીડરબોર્ડ સિસ્ટમ ડિઝાઇન કરી."
     },
     {
       "member": "001",
-      "text": "ટીમ મેમ્બર્સની જવાબદારી અને ક્વોલિટી જળવાય તે માટે 'Score & Mistakes Leaderboard' સિસ્ટમનો કોન્સેપ્ટ અને નિયમો આપ્યા (દરેક ટાસ્ક માટે +૧ પોઈન્ટ અને દરેક ભૂલ માટે -૩ પોઈન્ટ્સ પેનલ્ટી કપાત)."
+      "text": "સુપર એડમિન અને સ્ટોર ઓનર બંને માટે યુઝરનેમ અને પાસવર્ડથી લોગિન કરવાની સુવિધા ઉમેરી."
+    },
+    {
+      "member": "001",
+      "text": "સ્ટોર એડમિનને સ્ટાફ લિસ્ટ અને રોલ્સમાંથી અલગ કર્યો, સ્ટોર યુઝરનેમ ફિલ્ડ ઉમેર્યું અને ફોર્મ ઓટોફિલ બંધ કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "'Login as Store' ની 404 એરર ઓટો-પ્રોવિઝનિંગથી સોલ્વ કરી અને સ્ટોર એડમિન માટે લાઈવ આંકડા સાથે અલગ સ્ટોર ડેશબોર્ડ બનાવ્યું."
     },
     {
       "member": "000",
-      "text": "Rent360 ફ્રન્ટએન્ડમાં સુપર એડમિન સિક્યોરિટી ફિક્સ કરી; App.jsx માંથી લીક થયેલા સ્ટોર રોલ્સ અને સ્ટાફ રૂટ્સ હટાવ્યા તથા સાઈડબારમાં Bucket Storage પુનઃસ્થાપિત કર્યું."
+      "text": "સુપર એડમિન સાઈડબારમાં Bucket Storage રીસ્ટોર કર્યું અને App.jsx માંથી લીક થયેલા રૂટ્સ હટાવ્યા."
     },
     {
       "member": "000",
-      "text": "Rentopus Pulse માં નવું 'Score & Mistakes' મોડ્યુલ (MistakesLeaderboard.jsx) ડેવલપ કર્યું, જેમાં KPI કાર્ડ્સ, વિગતવાર ભૂલ ઑડિટ અને માસ્ટર મિસ્ટેક્સ રજિસ્ટર બનાવીને નેવિગેશનમાં Extras હેઠળ કનેક્ટ કર્યું."
-    },
-    {
-      "member": "000",
-      "text": "રેન્ટોપસ પલ્સમાં રવિવાર (Sunday) માટે ઓટોમેટેડ વીકેન્ડ બ્રેક સિસ્ટમ બનાવી જેથી સત્તાવાર રજાના દિવસોને 'કામ નથી કર્યું' એવું નેગેટિવ ન ગણવામાં આવે."
-    },
-    {
-      "member": "000",
-      "text": "DailyLogList UI અને એનાલિટિક્સ ચાર્ટમાં રવિવાર માટે ખાસ વીકેન્ડ બેજ સેટ કર્યું અને રજાના દિવસોને મેમ્બર એનાલિટિક્સ પેનલ્ટીમાંથી બાકાત રાખ્યા."
+      "text": "Rent360 Pulse માં MistakesLeaderboard મોડ્યુલ અને ઓટોમેટેડ વીકેન્ડ બ્રેક સિસ્ટમ ડેવલપ કરી."
     }
   ],
   "deliverables": [
     "Super Admin Route Leak Patch & Bucket Storage Restore",
-    "Rentopus Pulse Member Scorecard & Mistakes Register",
+    "Rent360 Pulse Member Scorecard & Mistakes Register",
+    "Username & Mobile Multi-Identifier Authentication System",
+    "Store Admin Auto-Provisioning & Dedicated Store Dashboard",
+    "Store Admin vs Team Staff Role Isolation & Store Username Field",
     "Automated Sunday / Weekend Break Detection"
   ]
 }

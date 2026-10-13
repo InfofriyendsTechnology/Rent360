@@ -13,11 +13,9 @@ export const registerSchema = Joi.object({
 });
 
 export const loginSchema = Joi.object({
-  mobile: Joi.string()
-    .required()
-    .pattern(/^[0-9]{10}$/)
-    .messages({
-      "string.pattern.base": "Mobile number must be exactly 10 digits",
-    }),
+  mobile: Joi.string().optional(),
+  username: Joi.string().optional(),
+  identifier: Joi.string().optional(),
   password: Joi.string().required(),
-});
+}).or("mobile", "username", "identifier");
+

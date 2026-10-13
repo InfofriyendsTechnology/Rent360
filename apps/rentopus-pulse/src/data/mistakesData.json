@@ -20,8 +20,8 @@
     "date": "12-10-2026",
     "member": "002",
     "memberName": "Shridhar Savaliya",
-    "auditedBy": "000",
-    "auditedByName": "InfoFriyends Technology",
+    "auditedBy": "001",
+    "auditedByName": "Yash Babariya",
     "title": "Sticky Direct Login Session & Team Member 500 Crash",
     "titleGu": "સુપર એડમિન સ્ટીકી સેશન અને ટીમ મેમ્બરમાં 500 સર્વર ક્રેશ એરર",
     "description": "Direct store login token remained active after logout causing persistent Return to Super Admin button, and unhandled duplicate mobile check in user creation threw a 500 internal server error instead of validation response.",
@@ -32,4 +32,3 @@
     "statusGu": "સોલ્વ થઈ ગયું"
   }
 ]
-

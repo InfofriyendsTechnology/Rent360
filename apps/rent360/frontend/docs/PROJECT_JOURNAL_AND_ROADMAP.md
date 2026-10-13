@@ -6,7 +6,7 @@
 > • **Shridhar Savaliya:** Professional Accountant & IT Full Stack Developer (Finance, Ledgers & Core Engineering)  
 > **Anchor Proving Ground:** Virasat - The Fashion Studio, Gujarat (100% Lifetime Free Gift)  
 > **Target Market:** Luxury Wedding Attire & Men's Ethnic Rental Boutiques across Gujarat & India  
-> **Subscription Pricing:** ₹9,999/Year (Disrupting Rentopus at ₹15,999/yr)  
+> **Subscription Pricing:** ₹9,999/Year (Disrupting Rent360 at ₹15,999/yr)  
 > **Tech Stack:** React 18 + Vite + TypeScript + Tailwind CSS + Supabase (PostgreSQL)
 
 ---
@@ -25,7 +25,7 @@ Traditional software companies build rental tools by guessing what boutique owne
 
 ### 🗓️ 25 September 2026 — The Spark & Industry Realization
 - **The Event:** Harsh Savaliya was evaluating an existing rental software demo at *Virasat - The Fashion Studio*.
-- **The Insight:** Harsh and Yash evaluated competitor *Rentopus*. Combining Yash's women's wear retail & full stack engineering expertise, Harsh's direct on-ground studio experience at *Virasat*, and Shridhar's accounting mastery, they realized:
+- **The Insight:** Harsh and Yash evaluated competitor *Rent360*. Combining Yash's women's wear retail & full stack engineering expertise, Harsh's direct on-ground studio experience at *Virasat*, and Shridhar's accounting mastery, they realized:
   1. Off-the-shelf software is slow, bloated, overpriced (₹16,000+), and built by people who have never operated a garment shop counter.
   2. Double-booking errors, messy security deposit calculations, and lack of tailor coordination cost studios real money and reputation.
 - **The Decision:**
@@ -40,7 +40,7 @@ Traditional software companies build rental tools by guessing what boutique owne
 - **Deliverables:**
   - Crawled all **54 routes** of the competitor app (`shop.whitecoretechnology.com`).
   - Captured 54 full-page desktop screenshots (`page_001.png` to `page_054.png`).
-  - Extracted JSON structural metadata (`rentopus_admin_data.json`) covering 52+ functional menus, form inputs, billing workflows, and buttons.
+  - Extracted JSON structural metadata (`Rent360_admin_data.json`) covering 52+ functional menus, form inputs, billing workflows, and buttons.
   - Pinpointed all critical failures: missing atomic date-locks, confusing security deposit refund ledgers, and clunky tailoring communication.
 
 ---

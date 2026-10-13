@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../store/authSlice';
 import axios from 'axios';
-import { FiSun, FiMoon, FiEye, FiEyeOff, FiLock, FiPhone } from 'react-icons/fi';
+import { FiSun, FiMoon, FiEye, FiEyeOff, FiLock, FiUser } from 'react-icons/fi';
 import './Login.scss';
 
 const Login = () => {
-  const [mobile, setMobile] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -36,7 +36,9 @@ const Login = () => {
 
     try {
       const response = await axios.post('http://localhost:61026/api/auth/login', {
-        mobile,
+        identifier: identifier.trim(),
+        mobile: identifier.trim(),
+        username: identifier.trim(),
         password
       });
 
@@ -76,14 +78,14 @@ const Login = () => {
 
         <form onSubmit={handleLogin} className="login-form">
           <div className="form-group">
-            <label>Mobile Number</label>
+            <label>Username or Mobile Number</label>
             <div className="input-wrapper">
-              <FiPhone className="input-icon" />
+              <FiUser className="input-icon" />
               <input 
-                type="tel" 
-                placeholder="10-digit mobile number" 
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
+                type="text" 
+                placeholder="Enter username or mobile number" 
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
                 required
               />
             </div>

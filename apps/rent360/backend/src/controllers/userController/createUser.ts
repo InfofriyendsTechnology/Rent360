@@ -45,6 +45,12 @@ export const createUser = async (req: Request | any, res: Response) => {
     };
 
     if (rest.roleId && rest.roleId.trim()) {
+      const assignedRole = await prisma.role.findUnique({
+        where: { id: rest.roleId.trim() }
+      });
+      if (assignedRole && (assignedRole.name === 'STORE_ADMIN' || assignedRole.name === 'SUPER_ADMIN')) {
+        return responseHandler.badRequest(res, "Store Admin role cannot be assigned to team members.");
+      }
       userData.roleId = rest.roleId.trim();
     }
 

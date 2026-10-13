@@ -12,7 +12,7 @@ cloudinary.config({
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.id;
+    const userId = req.params.id as string;
     const currentUserId = (req as any).user?.id;
     const storeId = (req as any).user?.storeId;
 
@@ -20,7 +20,7 @@ export const deleteUser = async (req: Request, res: Response) => {
       return responseHandler.badRequest(res, "You cannot delete your own account");
     }
 
-    const existing = await prisma.user.findFirst({ 
+    const existing: any = await prisma.user.findFirst({ 
       where: { id: userId, storeId },
       include: { role: true } 
     });
@@ -29,14 +29,14 @@ export const deleteUser = async (req: Request, res: Response) => {
       return responseHandler.notFound(res, "User not found");
     }
 
-    if (existing.role?.name === "SUPER_ADMIN") {
-      return responseHandler.unauthorized(res, "You cannot delete the primary store owner");
+    if (existing.role?.name === "SUPER_ADMIN" || existing.role?.name === "STORE_ADMIN") {
+      return responseHandler.unauthorized(res, "You cannot delete the store owner");
     }
 
     if (existing.profile_pic) {
       try {
-        const urlParts = existing.profile_pic.split('/');
-        const uploadIndex = urlParts.findIndex(p => p === 'upload');
+        const urlParts = (existing.profile_pic as string).split('/');
+        const uploadIndex = urlParts.findIndex((p: string) => p === 'upload');
         if (uploadIndex !== -1 && urlParts.length > uploadIndex + 2) {
           const publicIdWithExt = urlParts.slice(uploadIndex + 2).join('/');
           const oldPublicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));

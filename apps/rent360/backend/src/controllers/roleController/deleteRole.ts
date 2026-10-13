@@ -4,7 +4,7 @@ import responseHandler from "../../utils/responseHandler";
 
 export const deleteRole = async (req: Request, res: Response) => {
   try {
-    const roleId = req.params.id;
+    const roleId = req.params.id as string;
     const storeId = (req as any).user?.storeId;
 
     const existing = await prisma.role.findFirst({ where: { id: roleId, storeId } });

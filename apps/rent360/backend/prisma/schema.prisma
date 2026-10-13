@@ -12,6 +12,7 @@ model Store {
   id                  String   @id @default(uuid())
   name                String
   owner_name          String
+  username            String?  @unique
   mobile              String   @unique
   email               String?
   address             String?
@@ -77,6 +78,7 @@ model User {
   roleId    String?
   role      Role?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
   name        String
+  username    String?  @unique
   mobile      String   @unique
   password    String
   profile_pic String?

@@ -38,8 +38,13 @@ const RolesList = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:61026/api/roles', { headers: { Authorization: `Bearer ${token}` } });
-      setRoles(res.data.data || []);
+      const res = await axios.get('http://localhost:61026/api/roles', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const staffRoles = (res.data.data || []).filter(
+        r => r.name !== 'STORE_ADMIN' && r.name !== 'SUPER_ADMIN'
+      );
+      setRoles(staffRoles);
     } catch (error) {
       toast.error('Failed to load roles');
     } finally {

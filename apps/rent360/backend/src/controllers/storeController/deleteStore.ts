@@ -14,12 +14,13 @@ import { deleteStoreCloudinaryFolders } from "../../utils/cloudinaryHelper";
 
 export const deleteStore = async (req: Request, res: Response) => {
   try {
-    const store = await prisma.store.findUnique({ where: { id: req.params.id } });
+    const id = req.params.id as string;
+    const store = await prisma.store.findUnique({ where: { id } });
     if (store) {
       await deleteStoreCloudinaryFolders(store.name);
     }
 
-    await (prisma as any).store.delete({ where: { id: req.params.id } });
+    await (prisma as any).store.delete({ where: { id } });
     return responseHandler.success(res, "Deleted successfully");
   } catch (error) {
     return responseHandler.internalServerError(res, error);

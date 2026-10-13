@@ -53,8 +53,11 @@ const UsersList = () => {
         axios.get('http://localhost:61026/api/users', { headers: { Authorization: `Bearer ${token}` } }),
         axios.get('http://localhost:61026/api/roles', { headers: { Authorization: `Bearer ${token}` } })
       ]);
+      const staffRoles = (rolesRes.data.data || []).filter(
+        r => r.name !== 'STORE_ADMIN' && r.name !== 'SUPER_ADMIN'
+      );
       setUsers(usersRes.data.data || []);
-      setRoles(rolesRes.data.data || []);
+      setRoles(staffRoles);
     } catch (error) {
       toast.error('Failed to load data');
     } finally {
@@ -74,7 +77,8 @@ const UsersList = () => {
       });
     } else {
       setEditingUserId(null);
-      setUserForm({ name: '', mobile: '', password: '', roleId: roles.length > 0 ? roles[0].id : '' });
+      const defaultRole = roles.find(r => r.name !== 'STORE_ADMIN' && r.name !== 'SUPER_ADMIN');
+      setUserForm({ name: '', mobile: '', password: '', roleId: defaultRole ? defaultRole.id : '' });
     }
     setIsUserModalOpen(true);
   };
@@ -337,7 +341,7 @@ const UsersList = () => {
                       }}
                     >
                       <option value="" disabled>Select a role...</option>
-                      {roles.map(r => (
+                      {roles.filter(r => r.name !== 'STORE_ADMIN' && r.name !== 'SUPER_ADMIN').map(r => (
                         <option key={r.id} value={r.id}>{r.name}</option>
                       ))}
                       <option value="__create_new__" style={{ fontWeight: 600, color: '#0B60B0' }}>

@@ -33,7 +33,7 @@ export default function TeamSection({ lang }) {
           {lang === 'gu' ? (
             <>
               <p>
-                આ શરૂઆત 25 સપ્ટેમ્બર 2026 ના રોજ થઈ હતી. અમારા મિત્ર હર્ષ, જેઓ 'વિરાસત ધ ફેશન સ્ટુડિયો' ના પાર્ટનર છે, તેઓ Rentopus નામના એક રેન્ટલ સોફ્ટવેરનો ડેમો ટેસ્ટ કરી રહ્યા હતા. 
+                આ શરૂઆત 25 સપ્ટેમ્બર 2026 ના રોજ થઈ હતી. અમારા મિત્ર હર્ષ, જેઓ 'વિરાસત ધ ફેશન સ્ટુડિયો' ના પાર્ટનર છે, તેઓ એક જૂના રેન્ટલ સોફ્ટવેરનો ડેમો ટેસ્ટ કરી રહ્યા હતા. 
               </p>
               <p>
                 અમે માત્ર IT સોફ્ટવેર ડેવલપર્સ નથી. અમે ગ્રાઉન્ડ લેવલના બિઝનેસને સમજીએ છીએ—યશ પાસે પોતાની બહેનના વેસ્ટર્ન વેર બુટિકનું મેનેજમેન્ટ કરવાનો લાઈવ અનુભવ છે, અને શ્રીધર એક પ્રોફેશનલ એકાઉન્ટન્ટ છે. જ્યારે અમે એ સોફ્ટવેર જોયું, ત્યારે અમને માત્ર ખરાબ કોડ નહીં, પણ ખરાબ <span className="bg-[#0B60B0] text-white px-2 py-0.5 font-bold mx-1">બિઝનેસ લોજિક</span> દેખાયું. જે લોકોએ ક્યારેય ગ્રાહકો સાથે સીધી ડીલ નથી કરી, તેઓ રિટેલર્સ માટે ટૂલ્સ બનાવી રહ્યા હતા.
@@ -48,7 +48,7 @@ export default function TeamSection({ lang }) {
           ) : (
             <>
               <p>
-                It all started on September 25, 2026. Harsh, a close friend and partner at Virasat The Fashion Studio, was testing a demo of a legacy rental software called Rentopus.
+                It all started on September 25, 2026. Harsh, a close friend and partner at Virasat The Fashion Studio, was testing a demo of a legacy rental software.
               </p>
               <p>
                 As IT professionals who also happen to have deep roots in real-world commerce—Yash having live experience managing his sister's Western wear boutique, and Shridhar practicing as a professional accountant—we immediately saw the structural flaws. We didn't just see bad code; we saw bad <span className="bg-[#0B60B0] text-white px-2 py-0.5 font-bold mx-1">business logic</span>. Software developers without on-the-ground retail experience were building tools they never had to use.

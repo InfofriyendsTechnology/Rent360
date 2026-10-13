@@ -15,6 +15,7 @@ export const updateStore = async (req: Request, res: Response) => {
   try {
     const { 
       name, 
+      username,
       owner_name, 
       mobile, 
       email, 
@@ -29,10 +30,38 @@ export const updateStore = async (req: Request, res: Response) => {
       admin_password
     } = req.body;
 
-    
-    const existingStore = await prisma.store.findUnique({ where: { id: req.params.id } });
+    const storeId = req.params.id as string;
+    const existingStore = await prisma.store.findUnique({ where: { id: storeId } });
     if (!existingStore) {
       return responseHandler.notFound(res, "Store not found");
+    }
+
+    let finalUsername: string | null | undefined = undefined;
+    if (username !== undefined) {
+      if (username && username.trim()) {
+        const cleanUsername = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '_');
+        const conflictStore = await prisma.store.findFirst({
+          where: {
+            username: { equals: cleanUsername, mode: "insensitive" },
+            id: { not: storeId }
+          }
+        });
+        if (conflictStore) {
+          return responseHandler.badRequest(res, `Username '${cleanUsername}' is already taken.`);
+        }
+        const conflictUser = await prisma.user.findFirst({
+          where: {
+            username: { equals: cleanUsername, mode: "insensitive" },
+            storeId: { not: storeId }
+          }
+        });
+        if (conflictUser) {
+          return responseHandler.badRequest(res, `Username '${cleanUsername}' is already taken.`);
+        }
+        finalUsername = cleanUsername;
+      } else {
+        finalUsername = null;
+      }
     }
 
     const storeName = name || existingStore.name;
@@ -61,9 +90,10 @@ export const updateStore = async (req: Request, res: Response) => {
     }
 
     const data = await prisma.store.update({
-      where: { id: req.params.id },
+      where: { id: storeId },
       data: {
         ...(name !== undefined && { name }),
+        ...(finalUsername !== undefined && { username: finalUsername }),
         ...(owner_name !== undefined && { owner_name }),
         ...(mobile !== undefined && { mobile }),
         ...(email !== undefined && { email }),
@@ -77,13 +107,29 @@ export const updateStore = async (req: Request, res: Response) => {
       },
     });
 
+    // Also sync admin user username if username was updated
+    if (finalUsername !== undefined) {
+      const adminUser = await prisma.user.findFirst({
+        where: {
+          storeId,
+          role: { name: 'STORE_ADMIN' }
+        }
+      });
+      if (adminUser) {
+        await prisma.user.update({
+          where: { id: adminUser.id },
+          data: { username: finalUsername }
+        });
+      }
+    }
+
     // If password is provided in edit form, update store admin password & log
     const newPassword = password || admin_password;
     if (newPassword && newPassword.trim().length >= 6) {
       const plainPassword = newPassword.trim();
       const hashedPassword = await bcrypt.hash(plainPassword, 10);
       let adminUser = await prisma.user.findFirst({
-        where: { storeId: req.params.id },
+        where: { storeId },
         orderBy: { createdAt: 'asc' }
       });
 
@@ -94,12 +140,12 @@ export const updateStore = async (req: Request, res: Response) => {
         });
       } else {
         let role = await prisma.role.findFirst({
-          where: { storeId: req.params.id, name: 'STORE_ADMIN' }
+          where: { storeId, name: 'STORE_ADMIN' }
         });
         if (!role) {
           role = await prisma.role.create({
             data: {
-              storeId: req.params.id,
+              storeId,
               name: 'STORE_ADMIN',
               permissions: ['ALL']
             }
@@ -107,7 +153,7 @@ export const updateStore = async (req: Request, res: Response) => {
         }
         adminUser = await prisma.user.create({
           data: {
-            storeId: req.params.id,
+            storeId,
             roleId: role.id,
             name: owner_name || data.owner_name || data.name,
             mobile: mobile || data.mobile,
@@ -119,7 +165,7 @@ export const updateStore = async (req: Request, res: Response) => {
 
       await prisma.auditLog.create({
         data: {
-          storeId: req.params.id,
+          storeId,
           userId: adminUser.id,
           action_type: 'PASSWORD_SET',
           table_name: 'users',

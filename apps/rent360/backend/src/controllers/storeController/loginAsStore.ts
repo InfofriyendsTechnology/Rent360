@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import prisma from "../../utils/prisma";
 import responseHandler from "../../utils/responseHandler";
 
@@ -7,16 +8,59 @@ export const loginAsStore = async (req: Request, res: Response) => {
   try {
     const storeId = req.params.id as string;
     
-    // Find the admin user for this store (the first user created)
+    // Find the store first
+    const store = await prisma.store.findUnique({
+      where: { id: storeId }
+    });
+
+    if (!store) {
+      return responseHandler.notFound(res, "Store not found");
+    }
+
+    // Find the store admin user for this store
     let user: any = await prisma.user.findFirst({
-      where: { storeId },
+      where: { storeId, role: { name: 'STORE_ADMIN' } },
       orderBy: { createdAt: 'asc' },
       include: { role: true, store: true },
     });
 
+    if (!user) {
+      user = await prisma.user.findFirst({
+        where: { storeId },
+        orderBy: { createdAt: 'asc' },
+        include: { role: true, store: true },
+      });
+    }
 
     if (!user) {
-      return responseHandler.notFound(res, "Admin user not found for this store");
+      // Auto-provision STORE_ADMIN role and user if missing
+      let storeAdminRole = await prisma.role.findFirst({
+        where: { storeId, name: 'STORE_ADMIN' }
+      });
+      if (!storeAdminRole) {
+        storeAdminRole = await prisma.role.create({
+          data: {
+            storeId,
+            name: 'STORE_ADMIN',
+            permissions: ['ALL']
+          }
+        });
+      }
+
+      const defaultPassword = `${store.name.replace(/\s+/g, '')}@123`;
+      const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+      user = await prisma.user.create({
+        data: {
+          storeId: store.id,
+          roleId: storeAdminRole.id,
+          name: store.owner_name || store.name,
+          username: store.username || null,
+          mobile: store.mobile,
+          password: hashedPassword,
+          status: 'ACTIVE'
+        },
+        include: { role: true, store: true }
+      });
     }
 
     // If user has no role, ensure STORE_ADMIN role exists and assign it
