@@ -1,11 +1,12 @@
 {
   "date": "12-10-2026",
   "dayNumber": 18,
-  "title": "Super Admin Security Fix, Store Auto-Provisioning, Username Auth & Member Scorecard",
-  "titleGu": "સુપર એડમિન સિક્યોરિટી ફિક્સ, સ્ટોર ઓટો-પ્રોવિઝનિંગ, યુઝરનેમ ઑથેન્ટિકેશન અને મેમ્બર સ્કોરકાર્ડ મોડ્યુલ",
+  "title": "Super Admin Security Fix, Username Auth, Collection Terminology & Member Scorecard",
+  "titleGu": "સુપર એડમિન સિક્યોરિટી ફિક્સ, યુઝરનેમ ઑથેન્ટિકેશન, કલેક્શન ટર્મિનોલોજી અને મેમ્બર સ્કોરકાર્ડ",
   "members": [
     "000",
-    "001"
+    "001",
+    "002"
   ],
   "tasksEn": [
     {
@@ -21,8 +22,12 @@
       "text": "Isolated Store Admin from team staff (excluded from staff table/roles, added Store Username field, and disabled form autofill)."
     },
     {
-      "member": "001",
-      "text": "Fixed 'Login as Store' 404 error with self-healing auto-provisioning and built dedicated Store Dashboard with live KPIs."
+      "member": "002",
+      "text": "Updated platform terminology from Inventory to Collection across routes, sidebar, headers, plan licensing features, and permission labels."
+    },
+    {
+      "member": "002",
+      "text": "Configured root package.json workspace script shortcuts (dev, dev:frontend, dev:backend) and enhanced authorization middleware."
     },
     {
       "member": "000",
@@ -47,8 +52,12 @@
       "text": "સ્ટોર એડમિનને સ્ટાફ લિસ્ટ અને રોલ્સમાંથી અલગ કર્યો, સ્ટોર યુઝરનેમ ફિલ્ડ ઉમેર્યું અને ફોર્મ ઓટોફિલ બંધ કર્યું."
     },
     {
-      "member": "001",
-      "text": "'Login as Store' ની 404 એરર ઓટો-પ્રોવિઝનિંગથી સોલ્વ કરી અને સ્ટોર એડમિન માટે લાઈવ આંકડા સાથે અલગ સ્ટોર ડેશબોર્ડ બનાવ્યું."
+      "member": "002",
+      "text": "પ્લેટફોર્મ પર 'Inventory' નું નામ બદલીને 'Collection' કર્યું (રાઉટ્સ, સાઇડબાર, હેડર્સ, પ્લાન ફીચર્સ અને પરમિશન્સમાં)."
+    },
+    {
+      "member": "002",
+      "text": "રૂટ package.json માં મોનોરેપો ડેવલપમેન્ટ સ્ક્રિપ્ટ્સ (dev, dev:frontend, dev:backend) સેટ કરી અને authorize middleware અપડેટ કર્યું."
     },
     {
       "member": "000",
@@ -63,8 +72,8 @@
     "Super Admin Route Leak Patch & Bucket Storage Restore",
     "Rent360 Pulse Member Scorecard & Mistakes Register",
     "Username & Mobile Multi-Identifier Authentication System",
-    "Store Admin Auto-Provisioning & Dedicated Store Dashboard",
     "Store Admin vs Team Staff Role Isolation & Store Username Field",
+    "Collection Terminology Refactoring & Monorepo NPM Scripts",
     "Automated Sunday / Weekend Break Detection"
   ]
 }
