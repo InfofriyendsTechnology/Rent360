@@ -106,11 +106,51 @@
   .table-responsive {
     width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+
+    /* Prominent visible scrollbar at the bottom of the table */
+    &::-webkit-scrollbar {
+      height: 9px !important;
+      display: block !important;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05) !important;
+      border-radius: 9999px;
+      margin: 0 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.28) !important;
+      border-radius: 9999px;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.45) !important;
+      }
+    }
+  }
+
+  .dark & .table-responsive,
+  body.dark .table-responsive {
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.35) !important;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.55) !important;
+      }
+    }
   }
 
   /* Bond CRM Minimalist Table */
   .bond-table {
     width: 100%;
+    min-width: 720px;
     border-collapse: collapse;
     font-size: 0.9rem;
 

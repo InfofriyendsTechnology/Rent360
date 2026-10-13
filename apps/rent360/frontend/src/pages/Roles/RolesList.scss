@@ -1,13 +1,30 @@
 @import '../../styles/variables';
 
+.permissions-row-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
 .perm-pill {
+  display: inline-flex;
+  align-items: center;
   background: var(--bg-card-alt);
   color: var(--text-main);
-  padding: 4px 8px;
+  padding: 5px 10px;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
   border: 1px solid var(--border-main);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.roles-table {
+  min-width: 840px !important;
 }
 
 .perm-checkbox-label {

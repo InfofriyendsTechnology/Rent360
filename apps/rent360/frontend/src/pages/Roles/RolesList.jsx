@@ -143,12 +143,12 @@ const RolesList = () => {
 
       <div className="bond-card-container">
         <div className="table-responsive">
-          <table className="bond-table">
+          <table className="bond-table roles-table">
             <thead>
               <tr>
-                <th style={{ width: '25%' }}>Role Name</th>
-                <th style={{ width: '60%' }}>Permissions Granted</th>
-                <th className="text-right">Actions</th>
+                <th style={{ minWidth: '180px', width: '22%' }}>Role Name</th>
+                <th style={{ minWidth: '550px', width: '66%' }}>Permissions Granted</th>
+                <th className="text-right" style={{ minWidth: '110px', width: '12%' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -163,7 +163,7 @@ const RolesList = () => {
                       <span className="store-name">{r.name}</span>
                     </td>
                     <td>
-                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                      <div className="permissions-row-wrap">
                         {r.permissions && r.permissions.length > 0 ? (
                           r.permissions.map(p => (
                             <span key={p} className="perm-pill">
