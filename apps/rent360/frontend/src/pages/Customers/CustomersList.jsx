@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss'; // Reuse store styles for consistency
 import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import { API_BASE_URL } from '../../config/api';
 
 const CustomersList = () => {
   const { token } = useSelector((state) => state.auth);
@@ -36,7 +37,7 @@ const CustomersList = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:61026/api/customers', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${API_BASE_URL}/api/customers`, { headers: { Authorization: `Bearer ${token}` } });
       setCustomers(res.data.data || []);
     } catch (error) {
       toast.error('Failed to load customers');
@@ -95,10 +96,10 @@ const CustomersList = () => {
     
     try {
       if (editingCustomerId) {
-        await axios.put(`http://localhost:61026/api/customers/${editingCustomerId}`, customerForm, { headers: { Authorization: `Bearer ${token}` } });
+        await axios.put(`${API_BASE_URL}/api/customers/${editingCustomerId}`, customerForm, { headers: { Authorization: `Bearer ${token}` } });
         toast.success('Customer updated successfully');
       } else {
-        await axios.post('http://localhost:61026/api/customers', customerForm, { headers: { Authorization: `Bearer ${token}` } });
+        await axios.post(`${API_BASE_URL}/api/customers`, customerForm, { headers: { Authorization: `Bearer ${token}` } });
         toast.success('Customer added successfully');
       }
       closeCustomerModal();
@@ -112,7 +113,7 @@ const CustomersList = () => {
     if (!customerToDelete) return;
     try {
       setIsDeletingCustomer(true);
-      await axios.delete(`http://localhost:61026/api/customers/${customerToDelete.id}`, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.delete(`${API_BASE_URL}/api/customers/${customerToDelete.id}`, { headers: { Authorization: `Bearer ${token}` } });
       toast.success('Customer deleted successfully');
       fetchData();
     } catch (error) {

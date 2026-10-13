@@ -8,6 +8,7 @@ import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import './SubscriptionsList.scss';
 import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import { API_BASE_URL } from '../../config/api';
 
 const SubscriptionsList = () => {
   const { token } = useSelector((state) => state.auth);
@@ -39,9 +40,9 @@ const SubscriptionsList = () => {
     try {
       setLoading(true);
       const [subsRes, storesRes, plansRes] = await Promise.all([
-        axios.get('http://localhost:61026/api/storeSubscriptions', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:61026/api/stores', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:61026/api/plans', { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(`${API_BASE_URL}/api/storeSubscriptions`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API_BASE_URL}/api/stores`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API_BASE_URL}/api/plans`, { headers: { Authorization: `Bearer ${token}` } })
       ]);
       setSubscriptions(subsRes.data?.data || []);
       setStores(storesRes.data?.data || []);
@@ -126,7 +127,7 @@ const SubscriptionsList = () => {
     setSaving(true);
     try {
       await axios.post(
-        'http://localhost:61026/api/storeSubscriptions',
+        `${API_BASE_URL}/api/storeSubscriptions`,
         {
           storeId: formData.storeId,
           planId: formData.planId,

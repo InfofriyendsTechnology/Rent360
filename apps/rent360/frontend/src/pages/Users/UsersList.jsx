@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss'; // Reuse store styles for consistency
 import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import { API_BASE_URL } from '../../config/api';
 
 const UsersList = () => {
   const { token } = useSelector((state) => state.auth);
@@ -50,8 +51,8 @@ const UsersList = () => {
     setLoading(true);
     try {
       const [usersRes, rolesRes] = await Promise.all([
-        axios.get('http://localhost:61026/api/users', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:61026/api/roles', { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(`${API_BASE_URL}/api/users`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API_BASE_URL}/api/roles`, { headers: { Authorization: `Bearer ${token}` } })
       ]);
       const staffRoles = (rolesRes.data.data || []).filter(
         r => r.name !== 'STORE_ADMIN' && r.name !== 'SUPER_ADMIN'
@@ -95,12 +96,12 @@ const UsersList = () => {
       }
       
       if (editingUserId) {
-        await axios.put(`http://localhost:61026/api/users/${editingUserId}`, payload, {
+        await axios.put(`${API_BASE_URL}/api/users/${editingUserId}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success('Member updated');
       } else {
-        await axios.post('http://localhost:61026/api/users', payload, {
+        await axios.post(`${API_BASE_URL}/api/users`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success('Member added');
@@ -128,7 +129,7 @@ const UsersList = () => {
     }
     try {
       setIsSavingQuickRole(true);
-      const res = await axios.post('http://localhost:61026/api/roles', {
+      const res = await axios.post(`${API_BASE_URL}/api/roles`, {
         name: quickRoleName.trim(),
         permissions: quickRolePermissions
       }, {
@@ -160,7 +161,7 @@ const UsersList = () => {
     if (!userToDelete) return;
     try {
       setIsDeletingUser(true);
-      await axios.delete(`http://localhost:61026/api/users/${userToDelete.id}`, {
+      await axios.delete(`${API_BASE_URL}/api/users/${userToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Member removed successfully');

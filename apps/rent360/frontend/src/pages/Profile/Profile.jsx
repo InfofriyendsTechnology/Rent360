@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { updateUser } from '../../store/authSlice';
 import ProfileUploadModal from '../../components/ProfileUploadModal/ProfileUploadModal';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import { API_BASE_URL } from '../../config/api';
 import './Profile.scss';
 
 const Profile = () => {
@@ -37,7 +38,7 @@ const Profile = () => {
 
   const handleUploadCroppedImage = async (base64Image) => {
     try {
-      const response = await axios.put(`http://localhost:61026/api/users/${user.id}`, 
+      const response = await axios.put(`${API_BASE_URL}/api/users/${user.id}`, 
         { profile_pic: base64Image },
         { headers: { Authorization: `Bearer ${token}` }}
       );
@@ -53,7 +54,7 @@ const Profile = () => {
   const executeRemoveProfilePic = async () => {
     setIsDeleting(true);
     try {
-      await axios.put(`http://localhost:61026/api/users/${user.id}`, 
+      await axios.put(`${API_BASE_URL}/api/users/${user.id}`, 
         { profile_pic: null },
         { headers: { Authorization: `Bearer ${token}` }}
       );

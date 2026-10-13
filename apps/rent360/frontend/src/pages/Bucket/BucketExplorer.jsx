@@ -11,6 +11,7 @@ import './BucketExplorer.scss';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { FolderGridSkeleton, Skeleton } from '../../components/ui/Skeleton/Skeleton';
+import { API_BASE_URL } from '../../config/api';
 
 const BucketExplorer = () => {
   const { token } = useSelector((state) => state.auth);
@@ -34,7 +35,7 @@ const BucketExplorer = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get(`http://localhost:61026/api/bucket/stats?_t=${Date.now()}`, {
+      const res = await axios.get(`${API_BASE_URL}/api/bucket/stats?_t=${Date.now()}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStats(res.data.data);
@@ -47,10 +48,10 @@ const BucketExplorer = () => {
     setLoading(true);
     try {
       const [folderRes, filesRes] = await Promise.all([
-        axios.get(`http://localhost:61026/api/bucket/folders?path=${path}&_t=${Date.now()}`, {
+        axios.get(`${API_BASE_URL}/api/bucket/folders?path=${path}&_t=${Date.now()}`, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get(`http://localhost:61026/api/bucket/files?path=${path || 'rent360'}&_t=${Date.now()}`, {
+        axios.get(`${API_BASE_URL}/api/bucket/files?path=${path || 'rent360'}&_t=${Date.now()}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);
@@ -82,7 +83,7 @@ const BucketExplorer = () => {
     setIsDeleting(true);
     
     try {
-      await axios.delete('http://localhost:61026/api/bucket/files', {
+      await axios.delete(`${API_BASE_URL}/api/bucket/files`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { public_id: fileToDelete }
       });
@@ -102,7 +103,7 @@ const BucketExplorer = () => {
     setIsDeleting(true);
 
     try {
-      await axios.delete('http://localhost:61026/api/bucket/folders', {
+      await axios.delete(`${API_BASE_URL}/api/bucket/folders`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { path: folderToDelete }
       });

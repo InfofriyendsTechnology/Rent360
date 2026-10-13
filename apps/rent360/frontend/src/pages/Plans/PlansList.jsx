@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import './PlansList.scss';
 import { CardSkeleton } from '../../components/ui/Skeleton/Skeleton';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import { API_BASE_URL } from '../../config/api';
 
 // Exact feature lists matching the reference standard
 const DEFAULT_PLANS_FALLBACK = [
@@ -117,7 +118,7 @@ const PlansList = () => {
   const fetchPlans = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:61026/api/plans', {
+      const res = await axios.get(`${API_BASE_URL}/api/plans`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data?.data && res.data.data.length > 0) {
@@ -135,7 +136,7 @@ const PlansList = () => {
 
   const fetchSubscriptions = async () => {
     try {
-      const res = await axios.get('http://localhost:61026/api/storeSubscriptions', {
+      const res = await axios.get(`${API_BASE_URL}/api/storeSubscriptions`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSubscriptions(res.data.data || []);
@@ -204,7 +205,7 @@ const PlansList = () => {
   const handleToggleStatus = async (plan) => {
     try {
       const updatedStatus = !plan.is_active;
-      await axios.put(`http://localhost:61026/api/plans/${plan.id}`, {
+      await axios.put(`${API_BASE_URL}/api/plans/${plan.id}`, {
         is_active: updatedStatus
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -230,7 +231,7 @@ const PlansList = () => {
     if (!planToDelete) return;
     try {
       setIsDeletingPlan(true);
-      await axios.delete(`http://localhost:61026/api/plans/${planToDelete.id}`, {
+      await axios.delete(`${API_BASE_URL}/api/plans/${planToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Plan deleted successfully');
@@ -280,13 +281,13 @@ const PlansList = () => {
       };
 
       if (editingPlanId) {
-        const res = await axios.put(`http://localhost:61026/api/plans/${editingPlanId}`, payload, {
+        const res = await axios.put(`${API_BASE_URL}/api/plans/${editingPlanId}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success('Plan updated successfully');
         setPlans(prev => prev.map(p => p.id === editingPlanId ? { ...res.data.data, _count: p._count } : p));
       } else {
-        const res = await axios.post('http://localhost:61026/api/plans', payload, {
+        const res = await axios.post(`${API_BASE_URL}/api/plans`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success('New plan created successfully');

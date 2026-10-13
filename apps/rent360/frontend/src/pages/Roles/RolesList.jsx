@@ -7,6 +7,7 @@ import '../Stores/StoresList.scss';
 import './RolesList.scss';
 import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import { API_BASE_URL } from '../../config/api';
 
 const ALL_PERMISSIONS = [
   'DASHBOARD_VIEW',
@@ -38,7 +39,7 @@ const RolesList = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:61026/api/roles', {
+      const res = await axios.get(`${API_BASE_URL}/api/roles`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const staffRoles = (res.data.data || []).filter(
@@ -72,12 +73,12 @@ const RolesList = () => {
     try {
       setIsSavingRole(true);
       if (editingRoleId) {
-        await axios.put(`http://localhost:61026/api/roles/${editingRoleId}`, roleForm, {
+        await axios.put(`${API_BASE_URL}/api/roles/${editingRoleId}`, roleForm, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success('Role updated successfully');
       } else {
-        await axios.post('http://localhost:61026/api/roles', roleForm, {
+        await axios.post(`${API_BASE_URL}/api/roles`, roleForm, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success('Role created successfully');
@@ -96,7 +97,7 @@ const RolesList = () => {
     if (!roleToDelete) return;
     try {
       setIsDeletingRole(true);
-      await axios.delete(`http://localhost:61026/api/roles/${roleToDelete.id}`, {
+      await axios.delete(`${API_BASE_URL}/api/roles/${roleToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Role deleted successfully');

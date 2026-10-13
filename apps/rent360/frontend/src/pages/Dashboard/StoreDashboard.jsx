@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Skeleton } from '../../components/ui/Skeleton/Skeleton';
+import { API_BASE_URL } from '../../config/api';
 import './DashboardHome.scss';
 
 const StoreDashboard = () => {
@@ -28,7 +29,7 @@ const StoreDashboard = () => {
   const fetchStats = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:61026/api/analytics/dashboard', {
+      const res = await axios.get(`${API_BASE_URL}/api/analytics/dashboard`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStats(res.data.data);

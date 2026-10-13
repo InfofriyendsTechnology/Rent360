@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../store/authSlice';
 import axios from 'axios';
 import { FiSun, FiMoon, FiEye, FiEyeOff, FiLock, FiUser } from 'react-icons/fi';
+import { API_BASE_URL } from '../config/api';
 import './Login.scss';
 
 const Login = () => {
@@ -35,7 +36,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:61026/api/auth/login', {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         identifier: identifier.trim(),
         mobile: identifier.trim(),
         username: identifier.trim(),

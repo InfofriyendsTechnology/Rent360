@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import ImageAdjustModal from '../../components/ProfileUploadModal/ProfileUploadModal';
 import { DataTable, AvatarCell, StatusPill, RowActions } from '../../components/ui';
+import { API_BASE_URL } from '../../config/api';
 import './StoresList.scss';
 
 const DEFAULT_PLANS_FALLBACK = [
@@ -66,7 +67,7 @@ const StoresList = () => {
     if (loggingInStoreId) return;
     try {
       setLoggingInStoreId(storeId);
-      const res = await axios.post(`http://localhost:61026/api/stores/${storeId}/login-as`, {}, {
+      const res = await axios.post(`${API_BASE_URL}/api/stores/${storeId}/login-as`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Save Super Admin session before switching
@@ -87,7 +88,7 @@ const StoresList = () => {
   const fetchStores = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:61026/api/stores', {
+      const res = await axios.get(`${API_BASE_URL}/api/stores`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStores(res.data.data || []);
@@ -101,7 +102,7 @@ const StoresList = () => {
 
   const fetchPlans = async () => {
     try {
-      const res = await axios.get('http://localhost:61026/api/plans', {
+      const res = await axios.get(`${API_BASE_URL}/api/plans`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPlans(res.data.data || DEFAULT_PLANS_FALLBACK);
@@ -172,7 +173,7 @@ const StoresList = () => {
     if (!storeToDelete) return;
     try {
       setIsDeletingStore(true);
-      await axios.delete(`http://localhost:61026/api/stores/${storeToDelete}`, {
+      await axios.delete(`${API_BASE_URL}/api/stores/${storeToDelete}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Company deleted successfully');
@@ -190,7 +191,7 @@ const StoresList = () => {
     try {
       setIsRemovingLogo(true);
       if (editingStoreId && formData.logo_url && !formData.logo_url.startsWith('data:image')) {
-        await axios.put(`http://localhost:61026/api/stores/${editingStoreId}`, {
+        await axios.put(`${API_BASE_URL}/api/stores/${editingStoreId}`, {
           logo_url: null
         }, {
           headers: { Authorization: `Bearer ${token}` }
@@ -222,12 +223,12 @@ const StoresList = () => {
         if (!payload.password) {
           delete payload.password;
         }
-        await axios.put(`http://localhost:61026/api/stores/${editingStoreId}`, payload, {
+        await axios.put(`${API_BASE_URL}/api/stores/${editingStoreId}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success('Company updated successfully!');
       } else {
-        await axios.post('http://localhost:61026/api/stores', formData, {
+        await axios.post(`${API_BASE_URL}/api/stores`, formData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success('Company registered successfully!');
