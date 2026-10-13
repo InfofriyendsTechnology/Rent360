@@ -30,7 +30,7 @@ const Header = () => {
     if (location.pathname === '/') return 'Overview';
     if (location.pathname.startsWith('/stores')) return 'Stores Management';
     if (location.pathname.startsWith('/subscriptions')) return 'Subscriptions';
-    if (location.pathname.startsWith('/inventory')) return 'Inventory';
+    if (location.pathname.startsWith('/collection') || location.pathname.startsWith('/inventory')) return 'Collection';
     if (location.pathname.startsWith('/customers')) return 'Customers';
     if (location.pathname.startsWith('/roles')) return 'Roles & Staff';
     if (location.pathname.startsWith('/settings')) return 'Global Settings';

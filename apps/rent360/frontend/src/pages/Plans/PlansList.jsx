@@ -20,7 +20,7 @@ const DEFAULT_PLANS_FALLBACK = [
     price_per_year: 7999,
     savings: 1589,
     features: [
-      'Up to 100 Inventory',
+      'Up to 100 Collection Items',
       '2 Salesman Accounts',
       'Multi device login',
       'All Features Included',
@@ -37,7 +37,7 @@ const DEFAULT_PLANS_FALLBACK = [
     price_per_year: 9999, // In competitor this was 14,999/yr, user specified: "and 15,000 year ma chhe tya apde 9999 chhe"
     savings: 1989,
     features: [
-      'Unlimited Inventory',
+      'Unlimited Collection',
       '10 Salesman Accounts',
       'Multi device login',
       'All Features Included',
@@ -53,7 +53,7 @@ const DEFAULT_PLANS_FALLBACK = [
     price_per_year: 14999, // Custom / Pro 15k plan
     savings: 2989,
     features: [
-      'Unlimited Inventory',
+      'Unlimited Collection',
       'Unlimited Salesman',
       'Multi device login',
       'Priority Support & Training',
@@ -65,8 +65,8 @@ const DEFAULT_PLANS_FALLBACK = [
 ];
 
 const SUGGESTED_FEATURES = [
-  'Up to 100 Inventory',
-  'Unlimited Inventory',
+  'Up to 100 Collection Items',
+  'Unlimited Collection',
   '2 Salesman Accounts',
   '10 Salesman Accounts',
   'Unlimited Salesman',
@@ -755,7 +755,7 @@ const PlansList = () => {
                 <div className="feature-input-row">
                   <input 
                     type="text" 
-                    placeholder="Add a feature (e.g. Up to 100 Inventory)..."
+                    placeholder="Add a feature (e.g. Up to 100 Collection Items)..."
                     value={featureInput}
                     onChange={(e) => setFeatureInput(e.target.value)}
                     onKeyDown={(e) => {

@@ -407,7 +407,7 @@ const UsersList = () => {
                           checked={quickRolePermissions.includes(perm)}
                           onChange={() => toggleQuickPermission(perm)}
                         />
-                        <span>{perm.replace('_', ' ')}</span>
+                        <span>{perm === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : perm.replace('_', ' ')}</span>
                       </label>
                     ))}
                   </div>
