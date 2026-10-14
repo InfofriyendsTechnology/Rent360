@@ -1,10 +1,11 @@
 {
   "date": "14-10-2026",
   "dayNumber": 20,
-  "title": "Frontend Vercel Deploy & Collection Inventory System",
-  "titleGu": "વર્સેલ ડિપ્લોયમેન્ટ અને કલેક્શન ઇન્વેન્ટરી સિસ્ટમ",
+  "title": "Vercel Deploy & WebP Collection Inventory",
+  "titleGu": "વર્સેલ ડિપ્લોય અને WebP કલેક્શન ઇન્વેન્ટરી",
   "members": [
-    "001"
+    "001",
+    "002"
   ],
   "tasksEn": [
     {
@@ -17,11 +18,11 @@
     },
     {
       "member": "001",
-      "text": "Implemented multi-image Cloudinary upload engine supporting drag-and-drop, base64 encoding, thumbnail management, and high-resolution photo gallery lightbox."
+      "text": "Built client-side and cloud WebP conversion engine: automatically compresses heavy 8MB raw photos down to ~150KB WebP in-browser with 95%+ bandwidth and storage savings."
     },
     {
-      "member": "001",
-      "text": "Built real-time physical inventory status manager (Available, Booked, In Laundry, Damaged) with subscription plan item limits enforcement and capacity progress tracking."
+      "member": "002",
+      "text": "Implemented real-time physical inventory status lifecycle manager (Available, Booked, Picked Up, In Laundry, Damaged) with subscription plan item limits enforcement and capacity progress tracking."
     }
   ],
   "tasksGu": [
@@ -35,18 +36,18 @@
     },
     {
       "member": "001",
-      "text": "મલ્ટિ-ઇમેજ ક્લાઉડિનરી અપલોડ એન્જિન અને હાઇ-રિઝોલ્યુશન ફોટો ગેલેરી લાઇટબોક્સ તૈયાર કર્યું."
+      "text": "ક્લાયન્ટ-સાઇડ અને ક્લાઉડ WebP કન્વર્ઝન એન્જિન તૈયાર કર્યું: 8 MB ના ભારે ફોટોઝને બ્રાઉઝરમાં જ 150 KB WebP માં કન્વર્ટ કરી 95%+ ડેટા બચાવે છે."
     },
     {
-      "member": "001",
-      "text": "રિયલ-ટાઇમ સ્ટોક સ્ટેટસ મેનેજર (Available, Booked, Laundry, Damaged) અને પ્લાન લિમિટ્સ કેપેસિટી મોનિટરિંગ ઇન્ટિગ્રેટ કર્યું."
+      "member": "002",
+      "text": "રિયલ-ટાઇમ સ્ટોક સ્ટેટસ લાઇફસાઇકલ મેનેજર (Available, Booked, Picked Up, Laundry, Damaged) અને પ્લાન લિમિટ્સ કેપેસિટી મોનિટરિંગ ઇન્ટિગ્રેટ કર્યું."
     }
   ],
   "deliverables": [
     "Live Production Frontend: https://dev-rent360.vercel.app",
+    "Live Production Backend: https://rent36-backend.vercel.app",
     "Complete Collection & Inventory Management System (/collection)",
-    "Record-wise Designs & Item-wise Physical Stock Management",
-    "Cloudinary Multi-Image Upload & Lightbox Gallery",
-    "Real-time Stock Status Changer & Plan Limit Enforcement"
+    "Automatic Client-Side & Cloud WebP Image Optimization Engine",
+    "Real-time Stock Status Lifecycle & Plan Capacity Tracking"
   ]
 }
