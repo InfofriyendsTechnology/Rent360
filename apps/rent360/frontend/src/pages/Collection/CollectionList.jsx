@@ -20,8 +20,9 @@ const CollectionList = () => {
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
 
   // Stores (for Super Admin selector)
+  const userStoreId = user?.store?.id || user?.storeId || '';
   const [stores, setStores] = useState([]);
-  const [selectedStoreId, setSelectedStoreId] = useState(user?.storeId || '');
+  const [selectedStoreId, setSelectedStoreId] = useState(userStoreId);
 
   // Main Data
   const [products, setProducts] = useState([]);
@@ -62,15 +63,19 @@ const CollectionList = () => {
         .then((res) => {
           const list = res.data.data || [];
           setStores(list);
-          if (!selectedStoreId && list.length > 0) {
-            setSelectedStoreId(list[0].id);
+          if (list.length > 0) {
+            const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
+            if (!hasExisting) {
+              const matched = userStoreId && list.some((s) => s.id === userStoreId);
+              setSelectedStoreId(matched ? userStoreId : list[0].id);
+            }
           }
         })
         .catch(() => {});
-    } else if (user?.storeId) {
-      setSelectedStoreId(user.storeId);
+    } else if (userStoreId) {
+      setSelectedStoreId(userStoreId);
     }
-  }, [isSuperAdmin, user, token]);
+  }, [isSuperAdmin, userStoreId, token]);
 
   // Fetch products, categories, and limits
   useEffect(() => {
@@ -277,6 +282,15 @@ const CollectionList = () => {
             </button>
           );
         })}
+        <button
+          type="button"
+          className="cat-pill new-cat-pill"
+          onClick={() => setIsCategoryModalOpen(true)}
+          title="Create New Category"
+        >
+          <FiPlus className="plus-icon" />
+          <span>New Category</span>
+        </button>
       </div>
 
       {/* Search, Status & View Controls Bar */}
@@ -426,7 +440,16 @@ const CollectionList = () => {
 
                   <div className="media-overlay-bottom">
                     {prod.category && (
-                      <span className="category-tag">{prod.category.name}</span>
+                      <span
+                        className="category-tag clickable"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedCategory(prod.categoryId);
+                        }}
+                        title={`Filter by ${prod.category.name}`}
+                      >
+                        {prod.category.name}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -557,7 +580,13 @@ const CollectionList = () => {
                         </div>
                       </td>
                       <td>
-                        <span className="category-pill">{prod.category?.name || 'Standard'}</span>
+                        <span
+                          className="category-pill clickable"
+                          onClick={() => prod.categoryId && setSelectedCategory(prod.categoryId)}
+                          title={`Filter by ${prod.category?.name}`}
+                        >
+                          {prod.category?.name || 'Standard'}
+                        </span>
                       </td>
                       <td>
                         <span className="table-price">INR {prod.base_rent_price?.toLocaleString('en-IN')}</span>
@@ -629,10 +658,15 @@ const CollectionList = () => {
         product={selectedProductForEdit}
         categories={categories}
         onProductSaved={fetchData}
+        onCategoryCreated={(newCat) => {
+          setCategories((prev) => {
+            if (prev.some((c) => c.id === newCat.id)) return prev;
+            return [...prev, { ...newCat, _count: { products: 0 } }];
+          });
+        }}
         token={token}
         storeId={selectedStoreId}
         onOpenCategoryModal={() => {
-          setIsProductModalOpen(false);
           setIsCategoryModalOpen(true);
         }}
       />
