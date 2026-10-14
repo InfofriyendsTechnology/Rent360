@@ -1,6 +1,52 @@
 @import '../../styles/variables';
 
 .categories-page-view {
+  width: 100%;
+  margin: 0 auto;
+
+  /* View Mode Switcher Toggle */
+  .view-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    background-color: $bg-card;
+    border: 1px solid $border-main;
+    border-radius: $border-radius-pill;
+    padding: 3px;
+    height: 42px;
+    box-shadow: $shadow-sm;
+
+    .view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 16px;
+      height: 100%;
+      border-radius: $border-radius-pill;
+      border: none;
+      background: transparent;
+      color: $text-muted;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+      .icon {
+        font-size: 0.95rem;
+      }
+
+      &:hover:not(.active) {
+        color: $text-main;
+      }
+
+      &.active {
+        background-color: $bg-pill-dark;
+        color: $text-inverse;
+        box-shadow: $shadow-sm;
+      }
+    }
+  }
+
+  /* Store Selector Pill */
   .store-selector-pill {
     display: inline-flex;
     align-items: center;
@@ -34,6 +80,7 @@
     }
   }
 
+  /* Metrics Summary Bar */
   .category-metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -60,7 +107,7 @@
         width: 48px;
         height: 48px;
         border-radius: 12px;
-        background-color: rgba(11, 96, 176, 0.1);
+        background-color: rgba(11, 96, 176, 0.12);
         color: $accent;
         display: flex;
         align-items: center;
@@ -69,12 +116,12 @@
         flex-shrink: 0;
 
         &.accent {
-          background-color: rgba(139, 92, 246, 0.1);
+          background-color: rgba(139, 92, 246, 0.12);
           color: #8B5CF6;
         }
 
         &.success {
-          background-color: rgba(16, 185, 129, 0.1);
+          background-color: rgba(16, 185, 129, 0.12);
           color: #10B981;
         }
       }
@@ -85,8 +132,8 @@
         overflow: hidden;
 
         .metric-label {
-          font-size: 0.75rem;
-          font-weight: 600;
+          font-size: 0.74rem;
+          font-weight: 700;
           color: $text-muted;
           text-transform: uppercase;
           letter-spacing: 0.05em;
@@ -111,21 +158,21 @@
     }
   }
 
-  .categories-toolbar {
+  /* Search Bar */
+  .cat-search-bar-wrap {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid $border-main;
+    margin-bottom: 20px;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 12px;
 
     .search-pill-wrapper {
       position: relative;
       display: flex;
       align-items: center;
       width: 100%;
-      max-width: 380px;
+      max-width: 360px;
 
       .search-icon {
         position: absolute;
@@ -137,20 +184,20 @@
 
       input {
         width: 100%;
-        height: 40px;
+        height: 42px;
         padding: 0 36px 0 38px;
-        background-color: $bg-card-alt;
+        background-color: $bg-card;
         border: 1px solid $border-main;
         border-radius: $border-radius-pill;
         font-size: 0.88rem;
         color: $text-main;
         outline: none;
+        box-shadow: $shadow-sm;
         transition: all 0.2s ease;
 
         &:focus {
           border-color: $accent;
-          background-color: $bg-card;
-          box-shadow: 0 0 0 3px rgba(11, 96, 176, 0.1);
+          box-shadow: 0 0 0 3px rgba(11, 96, 176, 0.12);
         }
 
         &::placeholder {
@@ -180,132 +227,333 @@
     }
   }
 
-  .cat-code-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 10px;
-    background-color: $bg-card-alt;
-    border: 1px solid $border-main;
-    border-radius: 8px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: $text-main;
-    letter-spacing: 0.05em;
-    font-family: monospace;
-  }
+  /* ─────────────────────────────────────────────────────────────
+     CARDS VIEW: CRM Pipeline Cards
+  ───────────────────────────────────────────────────────────── */
+  .category-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
 
-  .cat-primary-info {
-    .cat-name-text {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: $text-main;
-    }
-  }
-
-  .cat-desc-text {
-    font-size: 0.86rem;
-    color: $text-muted;
-    max-width: 420px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-
-    .text-muted-italics {
-      font-style: italic;
-      opacity: 0.6;
-    }
-  }
-
-  .cat-designs-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    background-color: rgba(11, 96, 176, 0.08);
-    color: $accent;
-    border: 1px solid rgba(11, 96, 176, 0.2);
-    border-radius: $border-radius-pill;
-    font-size: 0.82rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s ease;
-
-    &:hover {
-      background-color: $accent;
-      color: #fff;
-      transform: translateY(-1px);
-    }
-  }
-
-  .actions-cell-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-
-    .btn-icon-action {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      background: $bg-card-alt;
+    .cat-pipeline-card {
+      background-color: $bg-card;
       border: 1px solid $border-main;
-      color: $text-main;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: all 0.15s ease;
-
-      &:hover {
-        background-color: $accent;
-        color: #fff;
-        border-color: $accent;
-      }
-
-      &.danger:hover {
-        background-color: $danger;
-        color: #fff;
-        border-color: $danger;
-      }
-    }
-  }
-
-  .empty-state-cell {
-    padding: 60px 20px !important;
-    text-align: center;
-
-    .empty-message-wrap {
+      border-radius: 18px;
+      padding: 22px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      max-width: 360px;
-      margin: 0 auto;
+      justify-content: space-between;
+      min-height: 200px;
+      box-shadow: $shadow-sm;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: $shadow-md;
+        border-color: rgba(11, 96, 176, 0.35);
+
+        .pipeline-card-footer .open-collection-link .arrow-icon {
+          transform: translate(2px, -2px);
+        }
+      }
+
+      .pipeline-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        .pipeline-id-tag {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          .pipeline-index {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: $text-muted;
+            font-family: monospace;
+          }
+
+          .pipeline-code-pill {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            border: 1px solid transparent;
+            font-family: monospace;
+          }
+        }
+
+        .pipeline-actions {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .card-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid $border-main;
+            background: $bg-card-alt;
+            color: $text-muted;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.15s ease;
+
+            &:hover {
+              background-color: $accent;
+              color: #fff;
+              border-color: $accent;
+            }
+
+            &.danger:hover {
+              background-color: $danger;
+              color: #fff;
+              border-color: $danger;
+            }
+          }
+        }
+      }
+
+      .pipeline-card-body {
+        flex: 1;
+        margin-bottom: 18px;
+
+        .pipeline-name {
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: $text-main;
+          margin-bottom: 6px;
+          letter-spacing: -0.015em;
+        }
+
+        .pipeline-desc {
+          font-size: 0.86rem;
+          color: $text-muted;
+          line-height: 1.45;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      }
+
+      .pipeline-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 14px;
+        border-top: 1px solid $border-main;
+
+        .designs-count-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 10px;
+          background-color: $bg-card-alt;
+          border: 1px solid $border-main;
+          border-radius: 20px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          color: $text-main;
+
+          .badge-icon {
+            color: $accent;
+            font-size: 0.85rem;
+          }
+        }
+
+        .open-collection-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          background: none;
+          border: none;
+          color: $accent;
+          font-size: 0.84rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.15s ease;
+
+          .arrow-icon {
+            font-size: 0.9rem;
+            transition: transform 0.2s ease;
+          }
+
+          &:hover {
+            color: $accent-hover;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .empty-pipeline-card {
+      grid-column: 1 / -1;
+      padding: 60px 20px;
+      text-align: center;
+      background-color: $bg-card;
+      border: 1px dashed $border-main;
+      border-radius: 20px;
 
       .empty-icon {
-        font-size: 2.8rem;
+        font-size: 3rem;
         color: $text-muted;
         opacity: 0.4;
         margin-bottom: 12px;
       }
 
-      h4 {
-        font-size: 1.1rem;
-        font-weight: 700;
+      h3 {
+        font-size: 1.15rem;
+        font-weight: 800;
         color: $text-main;
         margin-bottom: 6px;
       }
 
       p {
-        font-size: 0.88rem;
+        font-size: 0.9rem;
         color: $text-muted;
-        line-height: 1.4;
+        max-width: 380px;
+        margin: 0 auto;
+      }
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     TABLE VIEW: Bond CRM Table
+  ───────────────────────────────────────────────────────────── */
+  .cat-bond-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      background-color: $bg-card-alt !important;
+      padding: 14px 22px !important;
+      font-size: 0.78rem !important;
+      font-weight: 700 !important;
+      color: $text-muted !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+      border-bottom: 1px solid $border-main !important;
+    }
+
+    td {
+      padding: 16px 22px !important;
+      border-bottom: 1px solid $border-main !important;
+      color: $text-main !important;
+      vertical-align: middle !important;
+    }
+
+    tr:hover {
+      background-color: $bg-card-hover !important;
+    }
+
+    .row-index-text {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: $text-muted;
+      font-family: monospace;
+    }
+
+    .table-cat-code {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      border: 1px solid transparent;
+      font-family: monospace;
+    }
+
+    .table-cat-title-cell {
+      .table-cat-name {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: $text-main;
+      }
+    }
+
+    .table-cat-desc {
+      font-size: 0.86rem;
+      color: $text-muted;
+      max-width: 440px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+
+      .muted-italic {
+        font-style: italic;
+        opacity: 0.6;
+      }
+    }
+
+    .table-designs-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background-color: rgba(11, 96, 176, 0.08);
+      color: $accent;
+      border: 1px solid rgba(11, 96, 176, 0.2);
+      border-radius: $border-radius-pill;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background-color: $accent;
+        color: #fff;
+        transform: translateY(-1px);
+      }
+    }
+
+    .table-actions-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      .tbl-btn-action {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: $bg-card-alt;
+        border: 1px solid $border-main;
+        color: $text-muted;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background-color: $accent;
+          color: #fff;
+          border-color: $accent;
+        }
+
+        &.danger:hover {
+          background-color: $danger;
+          color: #fff;
+          border-color: $danger;
+        }
       }
     }
   }
 }
 
-/* Edit / Create Modal Card */
+/* Category Edit / Create Modal Card */
 .category-edit-modal-card {
   background-color: $bg-card;
   border: 1px solid $border-main;
@@ -399,7 +647,7 @@
         &:focus {
           border-color: $accent;
           background-color: $bg-card;
-          box-shadow: 0 0 0 3px rgba(11, 96, 176, 0.1);
+          box-shadow: 0 0 0 3px rgba(11, 96, 176, 0.12);
         }
       }
 
