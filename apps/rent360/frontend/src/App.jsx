@@ -13,10 +13,11 @@ import RolesList from './pages/Roles/RolesList';
 import UsersList from './pages/Users/UsersList';
 import CustomersList from './pages/Customers/CustomersList';
 import Profile from './pages/Profile/Profile';
+import CollectionList from './pages/Collection/CollectionList';
 
 // Temporary placeholder components for remaining routes
 const SettingsPage = () => <div style={{ padding: 20 }}><h1>Settings</h1></div>;
-const CollectionPage = () => <div style={{ padding: 20 }}><h1>Collection Management</h1></div>;
+
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -52,6 +53,8 @@ const App = () => {
           {(user?.role === 'SUPER_ADMIN' || !user?.role) && (
             <>
               <Route path="stores" element={<StoresList />} />
+              <Route path="collection" element={<CollectionList />} />
+              <Route path="inventory" element={<Navigate to="/collection" replace />} />
               <Route path="bucket" element={<BucketExplorer />} />
               <Route path="plans" element={<PlansList />} />
               <Route path="subscriptions" element={<SubscriptionsList />} />
@@ -61,7 +64,7 @@ const App = () => {
           {/* Store Admin Routes */}
           {(user?.role !== 'SUPER_ADMIN' && user?.role) && (
             <>
-              <Route path="collection" element={<CollectionPage />} />
+              <Route path="collection" element={<CollectionList />} />
               <Route path="inventory" element={<Navigate to="/collection" replace />} />
               <Route path="customers" element={<CustomersList />} />
               <Route path="staff" element={<UsersList />} />

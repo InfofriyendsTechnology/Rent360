@@ -1,42 +1,52 @@
 {
   "date": "14-10-2026",
   "dayNumber": 20,
-  "title": "Frontend Live Vercel Deployment & Cloud Sync",
-  "titleGu": "ફ્રન્ટએન્ડ લાઈવ વર્સેલ ડિપ્લોયમેન્ટ અને ક્લાઉડ સિન્ક",
+  "title": "Frontend Vercel Deploy & Collection Inventory System",
+  "titleGu": "વર્સેલ ડિપ્લોયમેન્ટ અને કલેક્શન ઇન્વેન્ટરી સિસ્ટમ",
   "members": [
     "001"
   ],
   "tasksEn": [
     {
       "member": "001",
-      "text": "Successfully deployed Rent360 frontend to Vercel production under live domain https://dev-rent360.vercel.app."
+      "text": "Deployed Rent360 frontend to Vercel production under live domain https://dev-rent360.vercel.app connected with production backend https://rent36-backend.vercel.app."
     },
     {
       "member": "001",
-      "text": "Connected live frontend with production Vercel backend (https://rent36-backend.vercel.app) via dynamic VITE_API_URL environment configuration."
+      "text": "Engineered full-stack Collection & Inventory Architecture with two-tier hierarchy: record-wise designs (Sherwani, Jodhpuri, Indo-Western) and item-wise physical stock units (sizes, colors, custom SKUs)."
     },
     {
       "member": "001",
-      "text": "Verified production cloud deployment: live routing, PWA service worker registration, web app manifest, and seamless API communication."
+      "text": "Implemented multi-image Cloudinary upload engine supporting drag-and-drop, base64 encoding, thumbnail management, and high-resolution photo gallery lightbox."
+    },
+    {
+      "member": "001",
+      "text": "Built real-time physical inventory status manager (Available, Booked, In Laundry, Damaged) with subscription plan item limits enforcement and capacity progress tracking."
     }
   ],
   "tasksGu": [
     {
       "member": "001",
-      "text": "Rent360 ફ્રન્ટએન્ડને Vercel પ્રોડક્શન પર લાઈવ ડોમેન https://dev-rent360.vercel.app સાથે સફળતાપૂર્વક ડિપ્લોય કર્યું."
+      "text": "Rent360 ફ્રન્ટએન્ડને Vercel પ્રોડક્શન પર લાઈવ ડોમેન https://dev-rent360.vercel.app સાથે પ્રોડક્શન બેકએન્ડ સાથે કનેક્ટ કરી ડિપ્લોય કર્યું."
     },
     {
       "member": "001",
-      "text": "ફ્રન્ટએન્ડને પ્રોડક્શન Vercel બેકએન્ડ (https://rent36-backend.vercel.app) સાથે dynamic VITE_API_URL એન્વાયરમેન્ટ વેરિયેબલ દ્વારા સીધું કનેક્ટ કર્યું."
+      "text": "સંપૂર્ણ કલેક્શન અને ઇન્વેન્ટરી આર્કિટેક્ચર ડેવલપ કર્યું: ડિઝાઇન લેવલ (શેરવાની, જોધપુરી, ઇન્ડો-વેસ્ટર્ન) અને પીસ લેવલ ફિઝિકલ સ્ટોક (સાઇઝ, કલર, SKU)."
     },
     {
       "member": "001",
-      "text": "લાઈવ ક્લાઉડ પ્રોડક્શન ડિપ્લોયમેન્ટનું વેરિફિકેશન કર્યું: લાઈવ રૂટ્સ, PWA સર્વિસ વર્કર રજિસ્ટ્રેશન, મેનિફેસ્ટ ડિલિવરી અને ક્લાઉડ API કમ્યુનિકેશન."
+      "text": "મલ્ટિ-ઇમેજ ક્લાઉડિનરી અપલોડ એન્જિન અને હાઇ-રિઝોલ્યુશન ફોટો ગેલેરી લાઇટબોક્સ તૈયાર કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "રિયલ-ટાઇમ સ્ટોક સ્ટેટસ મેનેજર (Available, Booked, Laundry, Damaged) અને પ્લાન લિમિટ્સ કેપેસિટી મોનિટરિંગ ઇન્ટિગ્રેટ કર્યું."
     }
   ],
   "deliverables": [
     "Live Production Frontend: https://dev-rent360.vercel.app",
-    "Full-Stack Cloud Integration with Vercel Serverless Backend",
-    "Production PWA Deployment & Cloud Domain Verification"
+    "Complete Collection & Inventory Management System (/collection)",
+    "Record-wise Designs & Item-wise Physical Stock Management",
+    "Cloudinary Multi-Image Upload & Lightbox Gallery",
+    "Real-time Stock Status Changer & Plan Limit Enforcement"
   ]
 }
