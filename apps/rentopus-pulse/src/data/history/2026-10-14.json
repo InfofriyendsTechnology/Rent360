@@ -4,8 +4,7 @@
   "title": "Vercel Deploy & WebP Collection Inventory",
   "titleGu": "વર્સેલ ડિપ્લોય અને WebP કલેક્શન ઇન્વેન્ટરી",
   "members": [
-    "001",
-    "002"
+    "001"
   ],
   "tasksEn": [
     {
@@ -21,7 +20,7 @@
       "text": "Built client-side and cloud WebP conversion engine: automatically compresses heavy 8MB raw photos down to ~150KB WebP in-browser with 95%+ bandwidth and storage savings."
     },
     {
-      "member": "002",
+      "member": "001",
       "text": "Implemented real-time physical inventory status lifecycle manager (Available, Booked, Picked Up, In Laundry, Damaged) with subscription plan item limits enforcement and capacity progress tracking."
     }
   ],
@@ -39,7 +38,7 @@
       "text": "ક્લાયન્ટ-સાઇડ અને ક્લાઉડ WebP કન્વર્ઝન એન્જિન તૈયાર કર્યું: 8 MB ના ભારે ફોટોઝને બ્રાઉઝરમાં જ 150 KB WebP માં કન્વર્ટ કરી 95%+ ડેટા બચાવે છે."
     },
     {
-      "member": "002",
+      "member": "001",
       "text": "રિયલ-ટાઇમ સ્ટોક સ્ટેટસ લાઇફસાઇકલ મેનેજર (Available, Booked, Picked Up, Laundry, Damaged) અને પ્લાન લિમિટ્સ કેપેસિટી મોનિટરિંગ ઇન્ટિગ્રેટ કર્યું."
     }
   ],
