@@ -966,6 +966,12 @@
   100% { background-position: -200% 0; }
 }
 
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
 /* ==============================================================
    COLLECTION MODALS COMMON STYLES
    ============================================================== */
@@ -1259,13 +1265,51 @@
         color: $text-muted;
       }
 
-      &:hover {
+      &.optimizing {
+        border-color: $accent;
+        background-color: $accent-light;
+        cursor: wait;
+        opacity: 0.85;
+
+        .upload-icon.spin {
+          animation: spin 1s linear infinite;
+        }
+      }
+
+      &:hover:not(.optimizing) {
         border-color: $accent;
         background-color: $accent-light;
       }
 
       .hidden-file-input {
         display: none;
+      }
+    }
+  }
+
+  .webp-savings-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background-color: $success-light;
+    border: 1px solid rgba(21, 128, 61, 0.2);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: $success;
+
+    .savings-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: $success;
+      flex-shrink: 0;
+    }
+
+    .savings-text {
+      line-height: 1.4;
+      strong {
+        font-weight: 700;
       }
     }
   }

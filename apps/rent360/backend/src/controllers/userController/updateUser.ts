@@ -127,6 +127,8 @@ export const updateUser = async (req: Request, res: Response) => {
 
       const uploadResponse = await cloudinary.uploader.upload(updateData.profile_pic, {
         public_id: fullPublicId,
+        format: "webp",
+        transformation: [{ quality: "auto:good", fetch_format: "webp" }],
         overwrite: true,
         invalidate: true,
         resource_type: "image",

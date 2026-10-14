@@ -99,6 +99,8 @@ export const createStore = async (req: Request, res: Response) => {
           folder: logoFolder,
           asset_folder: logoFolder,
           public_id: `${storeSlug}_logo`,
+          format: "webp",
+          transformation: [{ quality: "auto:good", fetch_format: "webp" }],
           overwrite: true,
           invalidate: true
         });

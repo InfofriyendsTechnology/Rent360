@@ -166,6 +166,10 @@ export const uploadProductImages = async (
           folder: productFolder,
           asset_folder: productFolder,
           public_id: publicId,
+          format: "webp",
+          transformation: [
+            { quality: "auto:good", fetch_format: "webp" }
+          ],
           overwrite: true,
           invalidate: true,
         });

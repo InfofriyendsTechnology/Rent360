@@ -3,8 +3,10 @@ import { FiX, FiPlus, FiTrash2, FiUploadCloud, FiImage, FiLayers, FiDollarSign, 
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
+import { batchConvertToWebP, convertToWebP, formatBytes } from '../../utils/imageOptimizer';
 
 const POPULAR_SIZES = ['36 (S)', '38 (M)', '40 (L)', '42 (XL)', '44 (XXL)', '46 (3XL)', 'Free Size'];
+
 
 const ProductModal = ({
   isOpen,
@@ -35,6 +37,8 @@ const ProductModal = ({
   const [customImageUrl, setCustomImageUrl] = useState('');
   const [formErrors, setFormErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [optimizing, setOptimizing] = useState(false);
+  const [optimizationSummary, setOptimizationSummary] = useState(null);
 
   useEffect(() => {
     if (product) {
@@ -63,6 +67,7 @@ const ProductModal = ({
     }
     setFormErrors({});
     setCustomImageUrl('');
+    setOptimizationSummary(null);
   }, [product, categories, isOpen]);
 
   if (!isOpen) return null;
@@ -86,36 +91,80 @@ const ProductModal = ({
     }
   };
 
-  const handleFileSelect = (e) => {
+  const handleFileSelect = async (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
 
-    files.forEach((file) => {
-      if (file.size > 8 * 1024 * 1024) {
-        toast.error(`File "${file.name}" exceeds 8MB limit`);
-        return;
+    setOptimizing(true);
+    const toastId = toast.loading(`Converting ${files.length} image(s) to WebP...`);
+
+    try {
+      const results = await batchConvertToWebP(files, {
+        maxWidth: 1600,
+        maxHeight: 1600,
+        quality: 0.82
+      });
+
+      const successful = results.filter((r) => r.success);
+      const newImages = successful.map((r) => r.dataUrl);
+
+      if (newImages.length > 0) {
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, ...newImages]
+        }));
+
+        const totalOriginal = successful.reduce((acc, r) => acc + (r.originalSizeBytes || 0), 0);
+        const totalCompressed = successful.reduce((acc, r) => acc + (r.compressedSizeBytes || 0), 0);
+        const savedPercent = totalOriginal > 0 ? Math.round(((totalOriginal - totalCompressed) / totalOriginal) * 100) : 0;
+
+        setOptimizationSummary({
+          count: successful.length,
+          original: formatBytes(totalOriginal),
+          compressed: formatBytes(totalCompressed),
+          savedPercent
+        });
+
+        toast.success(
+          `Converted ${successful.length} image(s) to WebP (${formatBytes(totalOriginal)} -> ${formatBytes(totalCompressed)}, ${savedPercent}% saved)`,
+          { id: toastId }
+        );
+      } else {
+        toast.error('Failed to convert selected images', { id: toastId });
       }
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          setFormData((prev) => ({
-            ...prev,
-            images: [...prev.images, reader.result]
-          }));
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-    // Reset file input
-    e.target.value = '';
+    } catch (err) {
+      toast.error('Error optimizing images: ' + err.message, { id: toastId });
+    } finally {
+      setOptimizing(false);
+      e.target.value = '';
+    }
   };
 
-  const handleAddImageUrl = () => {
+  const handleAddImageUrl = async () => {
     if (!customImageUrl.trim()) return;
-    setFormData((prev) => ({
-      ...prev,
-      images: [...prev.images, customImageUrl.trim()]
-    }));
+    const url = customImageUrl.trim();
+
+    // If it's a raw base64 Data URL that is not WebP, optimize it to WebP!
+    if (url.startsWith('data:image/') && !url.startsWith('data:image/webp')) {
+      try {
+        const opt = await convertToWebP(url, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 });
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, opt.dataUrl]
+        }));
+        toast.success(`Converted pasted image to WebP (${opt.originalSizeFormatted} -> ${opt.compressedSizeFormatted})`);
+      } catch (e) {
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, url]
+        }));
+      }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, url]
+      }));
+    }
     setCustomImageUrl('');
   };
 
@@ -125,6 +174,7 @@ const ProductModal = ({
       images: prev.images.filter((_, idx) => idx !== indexToRemove)
     }));
   };
+
 
   // Initial Item variant helpers
   const handleAddItemVariant = () => {
@@ -340,19 +390,34 @@ const ProductModal = ({
               </div>
 
               <div className="photo-uploader-box">
-                <label className="dropzone-label">
-                  <FiUploadCloud className="upload-icon" />
-                  <span className="upload-main-text">Click to choose image files</span>
-                  <span className="upload-sub-text">PNG, JPG, WebP up to 8MB</span>
+                <label className={`dropzone-label ${optimizing ? 'optimizing' : ''}`}>
+                  <FiUploadCloud className={`upload-icon ${optimizing ? 'spin' : ''}`} />
+                  <span className="upload-main-text">
+                    {optimizing ? 'Optimizing & Converting to WebP...' : 'Click to choose image files'}
+                  </span>
+                  <span className="upload-sub-text">
+                    Automatic WebP conversion (max 1600px, 82% quality, 95% bandwidth reduction)
+                  </span>
                   <input
                     type="file"
                     accept="image/*"
                     multiple
+                    disabled={optimizing}
                     onChange={handleFileSelect}
                     className="hidden-file-input"
                   />
                 </label>
               </div>
+
+              {/* WebP Optimization summary banner */}
+              {optimizationSummary && (
+                <div className="webp-savings-banner">
+                  <span className="savings-dot" />
+                  <span className="savings-text">
+                    Auto-converted {optimizationSummary.count} photo(s) to WebP: <strong>{optimizationSummary.original}</strong> compressed to <strong>{optimizationSummary.compressed}</strong> ({optimizationSummary.savedPercent}% saved)
+                  </span>
+                </div>
+              )}
 
               {/* Paste URL option */}
               <div className="url-input-row">
@@ -392,7 +457,7 @@ const ProductModal = ({
                       >
                         <FiTrash2 />
                       </button>
-                      <span className="preview-badge">#{idx + 1}</span>
+                      <span className="preview-badge">WEBP #{idx + 1}</span>
                     </div>
                   ))}
                 </div>

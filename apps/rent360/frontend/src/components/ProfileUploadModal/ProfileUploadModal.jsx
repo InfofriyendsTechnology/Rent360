@@ -49,7 +49,10 @@ const ProfileUploadModal = ({
         400
       );
 
-      const base64Image = canvas.toDataURL('image/jpeg', 0.9);
+      let base64Image = canvas.toDataURL('image/webp', 0.85);
+      if (!base64Image.startsWith('data:image/webp')) {
+        base64Image = canvas.toDataURL('image/jpeg', 0.85);
+      }
       await onUpload(base64Image);
       setIsUploading(false);
       onClose();
