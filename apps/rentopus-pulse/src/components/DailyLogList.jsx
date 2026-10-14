@@ -154,30 +154,30 @@ export default function DailyLogList({ lang }) {
               {/* Day Button */}
               <button
                 onClick={() => toggleDay(day.date)}
-                className={`w-[calc(100%-1rem)] sm:w-[calc(100%-1.5rem)] text-left ml-4 sm:ml-6 px-4 py-3 sm:px-5 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-2 transition-all font-bold uppercase tracking-wide text-xs sm:text-sm ${
+                className={`w-[calc(100%-1rem)] sm:w-[calc(100%-1.5rem)] text-left ml-4 sm:ml-6 px-3.5 py-3 sm:px-5 sm:py-3.5 flex items-center justify-between gap-3 border-2 transition-all font-bold uppercase tracking-wide text-xs sm:text-sm overflow-hidden ${
                   isOpen
                     ? 'bg-main text-main border-main shadow-accent-md'
                     : 'bg-card text-muted border-main hover:border-muted hover:text-main shadow-sm-brutal'
                 }`}
               >
-                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                  <span className="font-mono text-[10px] sm:text-xs opacity-60 bg-main px-1.5 py-0.5 border border-main text-main">D{day.dayNumber}</span>
-                  <span className="font-mono text-[10px] sm:text-xs opacity-60">{day.date}</span>
-                  <span className="truncate w-full sm:w-auto mt-1 sm:mt-0">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 overflow-hidden">
+                  <span className="font-mono text-[10px] sm:text-xs opacity-60 bg-main px-1.5 py-0.5 border border-main text-main flex-shrink-0">D{day.dayNumber}</span>
+                  <span className="font-mono text-[10px] sm:text-xs opacity-60 flex-shrink-0">{day.date}</span>
+                  <span className="truncate text-ellipsis overflow-hidden whitespace-nowrap font-bold" title={lang === 'gu' ? day.titleGu : day.title}>
                     {lang === 'gu' ? day.titleGu : day.title}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 self-end sm:self-auto flex-shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-2">
                   {day.isWeekend ? (
-                    <span className="text-[9px] sm:text-[10px] px-2 py-1 font-bold border-2 bg-[#FACC15] text-black border-black font-mono shadow-sm-brutal">
+                    <span className="text-[9px] sm:text-[10px] px-2 py-1 font-bold border-2 bg-[#FACC15] text-black border-black font-mono shadow-sm-brutal flex-shrink-0 whitespace-nowrap">
                       {lang === 'gu' ? 'રવિવાર (રજા)' : 'SUNDAY BREAK'}
                     </span>
                   ) : !day.isNoWorkDay && tasks && (
-                    <span className="text-[9px] sm:text-[10px] px-2 py-1 font-bold border-2 bg-card-alt text-muted border-main">
+                    <span className="text-[9px] sm:text-[10px] px-2 py-1 font-bold border-2 bg-card-alt text-muted border-main flex-shrink-0 whitespace-nowrap">
                       {tasks.length} TASKS
                     </span>
                   )}
-                  {isOpen ? <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" /> : <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />}
+                  {isOpen ? <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" /> : <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />}
                 </div>
               </button>
 

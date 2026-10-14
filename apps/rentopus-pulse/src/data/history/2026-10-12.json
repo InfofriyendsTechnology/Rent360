@@ -1,8 +1,8 @@
 {
   "date": "12-10-2026",
   "dayNumber": 18,
-  "title": "Super Admin Security Fix, Username Auth, Collection Terminology & Member Scorecard",
-  "titleGu": "સુપર એડમિન સિક્યોરિટી ફિક્સ, યુઝરનેમ ઑથેન્ટિકેશન, કલેક્શન ટર્મિનોલોજી અને મેમ્બર સ્કોરકાર્ડ",
+  "title": "Super Admin Security Fix, Username Auth & Scorecard",
+  "titleGu": "સુપર એડમિન સિક્યોરિટી ફિક્સ, યુઝરનેમ ઑથેન્ટિકેશન અને સ્કોરકાર્ડ",
   "members": [
     "000",
     "001",
