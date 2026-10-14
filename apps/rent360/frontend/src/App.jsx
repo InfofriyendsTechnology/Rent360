@@ -14,9 +14,8 @@ import UsersList from './pages/Users/UsersList';
 import CustomersList from './pages/Customers/CustomersList';
 import Profile from './pages/Profile/Profile';
 import CollectionList from './pages/Collection/CollectionList';
-
-// Temporary placeholder components for remaining routes
-const SettingsPage = () => <div style={{ padding: 20 }}><h1>Settings</h1></div>;
+import CategoriesList from './pages/Categories/CategoriesList';
+import SettingsPage from './pages/Settings/SettingsPage';
 
 
 const App = () => {
@@ -73,7 +72,9 @@ const App = () => {
           )}
 
           {/* Shared Routes */}
+          <Route path="categories" element={<CategoriesList />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="settings/categories" element={<Navigate to="/categories" replace />} />
           <Route path="profile" element={<Profile />} />
         </Route>
         

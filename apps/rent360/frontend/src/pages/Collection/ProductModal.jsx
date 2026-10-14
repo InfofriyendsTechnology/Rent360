@@ -14,14 +14,11 @@ const ProductModal = ({
   product = null,
   categories = [],
   onProductSaved,
-  onCategoryCreated,
   token,
-  storeId,
-  onOpenCategoryModal
+  storeId
 }) => {
   const isEditing = Boolean(product?.id);
 
-  const [availableCategories, setAvailableCategories] = useState(categories);
   const [formData, setFormData] = useState({
     categoryId: '',
     name: '',
@@ -30,13 +27,6 @@ const ProductModal = ({
     base_security_deposit: '',
     images: []
   });
-
-  // Inline Quick Category State
-  const [isQuickAddCatOpen, setIsQuickAddCatOpen] = useState(false);
-  const [quickCatName, setQuickCatName] = useState('');
-  const [quickCatCode, setQuickCatCode] = useState('');
-  const [quickCatDesc, setQuickCatDesc] = useState('');
-  const [savingQuickCat, setSavingQuickCat] = useState(false);
 
   // Initial physical variants for new design
   const [initialItems, setInitialItems] = useState([
@@ -48,10 +38,6 @@ const ProductModal = ({
   const [submitting, setSubmitting] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
   const [optimizationSummary, setOptimizationSummary] = useState(null);
-
-  useEffect(() => {
-    setAvailableCategories(categories);
-  }, [categories]);
 
   useEffect(() => {
     if (product) {
@@ -81,57 +67,7 @@ const ProductModal = ({
     setFormErrors({});
     setCustomImageUrl('');
     setOptimizationSummary(null);
-    setIsQuickAddCatOpen(false);
-    setQuickCatName('');
-    setQuickCatCode('');
-    setQuickCatDesc('');
   }, [product, categories, isOpen]);
-
-  const handleQuickCatNameChange = (e) => {
-    const val = e.target.value;
-    setQuickCatName(val);
-    const suggested = val
-      .toUpperCase()
-      .replace(/[^A-Z0-9\s]/g, '')
-      .trim()
-      .replace(/\s+/g, '_')
-      .slice(0, 20);
-    setQuickCatCode(suggested);
-  };
-
-  const handleSaveQuickCategory = async (e) => {
-    e?.preventDefault();
-    if (!quickCatName.trim()) {
-      toast.error('Category name is required');
-      return;
-    }
-    setSavingQuickCat(true);
-    try {
-      const code = (quickCatCode.trim() || quickCatName.toUpperCase().replace(/[^A-Z0-9]/g, '_').slice(0, 20)).toUpperCase();
-      const res = await axios.post(`${API_BASE_URL}/api/categories`, {
-        name: quickCatName.trim(),
-        category_code: code,
-        description: quickCatDesc.trim() || undefined,
-        storeId: storeId || undefined
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      const newCat = res.data.data;
-      toast.success(`Category "${newCat.name}" created and selected`);
-      setAvailableCategories((prev) => [...prev, newCat]);
-      setFormData((prev) => ({ ...prev, categoryId: newCat.id }));
-      setIsQuickAddCatOpen(false);
-      setQuickCatName('');
-      setQuickCatCode('');
-      setQuickCatDesc('');
-      onCategoryCreated?.(newCat);
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to create category');
-    } finally {
-      setSavingQuickCat(false);
-    }
-  };
 
   if (!isOpen) return null;
 
@@ -357,61 +293,13 @@ const ProductModal = ({
             {/* Category and Product Code */}
             <div className="form-grid-2">
               <div className="form-field">
-                <div className="label-with-action">
-                  <label>Category *</label>
-                  <button
-                    type="button"
-                    className="link-inline-btn"
-                    onClick={() => setIsQuickAddCatOpen(!isQuickAddCatOpen)}
-                  >
-                    {isQuickAddCatOpen ? 'Close' : '+ Quick Add Category'}
-                  </button>
-                </div>
-
-                {/* Inline Quick Category Creator */}
-                {isQuickAddCatOpen && (
-                  <div className="quick-cat-inline-card">
-                    <div className="quick-cat-header">
-                      <span className="quick-cat-title">+ Create & Link Category</span>
-                      <button
-                        type="button"
-                        className="quick-cat-close-btn"
-                        onClick={() => setIsQuickAddCatOpen(false)}
-                      >
-                        <FiX />
-                      </button>
-                    </div>
-                    <div className="quick-cat-inputs">
-                      <input
-                        type="text"
-                        placeholder="Category Name (e.g. Jodhpuri Suits)"
-                        value={quickCatName}
-                        onChange={handleQuickCatNameChange}
-                      />
-                      <input
-                        type="text"
-                        placeholder="Code (e.g. JODHPURI)"
-                        value={quickCatCode}
-                        onChange={(e) => setQuickCatCode(e.target.value.toUpperCase())}
-                      />
-                      <button
-                        type="button"
-                        className="quick-save-btn"
-                        onClick={handleSaveQuickCategory}
-                        disabled={savingQuickCat}
-                      >
-                        {savingQuickCat ? 'Saving...' : 'Save & Select'}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
+                <label>Category *</label>
                 <select
                   value={formData.categoryId}
                   onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
                 >
                   <option value="">-- Select Category --</option>
-                  {availableCategories.map((cat) => (
+                  {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name} ({cat.category_code})
                     </option>

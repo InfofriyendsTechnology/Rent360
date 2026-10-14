@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   FiHome, FiBox, FiUsers, FiSettings, FiLogOut, FiTrash2, 
-  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive, FiCornerUpLeft, FiX
+  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive, FiCornerUpLeft, FiX, FiTag
 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, updateUser, loginSuccess } from '../../store/authSlice';
@@ -209,6 +209,14 @@ const Sidebar = ({ isOpen, onClose }) => {
           <div className="menu-group">
             <span className="group-title">SETTINGS</span>
             <nav>
+              <NavLink 
+                to="/categories" 
+                className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                onClick={onClose}
+              >
+                <span className="icon"><FiTag /></span>
+                <span className="text">Categories</span>
+              </NavLink>
               <NavLink 
                 to="/settings" 
                 className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}

@@ -282,15 +282,6 @@ const CollectionList = () => {
             </button>
           );
         })}
-        <button
-          type="button"
-          className="cat-pill new-cat-pill"
-          onClick={() => setIsCategoryModalOpen(true)}
-          title="Create New Category"
-        >
-          <FiPlus className="plus-icon" />
-          <span>New Category</span>
-        </button>
       </div>
 
       {/* Search, Status & View Controls Bar */}
@@ -658,17 +649,8 @@ const CollectionList = () => {
         product={selectedProductForEdit}
         categories={categories}
         onProductSaved={fetchData}
-        onCategoryCreated={(newCat) => {
-          setCategories((prev) => {
-            if (prev.some((c) => c.id === newCat.id)) return prev;
-            return [...prev, { ...newCat, _count: { products: 0 } }];
-          });
-        }}
         token={token}
         storeId={selectedStoreId}
-        onOpenCategoryModal={() => {
-          setIsCategoryModalOpen(true);
-        }}
       />
 
       <StockModal
