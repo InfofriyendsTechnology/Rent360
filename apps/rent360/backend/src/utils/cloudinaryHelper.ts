@@ -137,3 +137,45 @@ export const deleteStoreCloudinaryFolders = async (
     console.error("Error deleting store Cloudinary folders:", base, err);
   }
 };
+
+export const uploadProductImages = async (
+  storeName: string,
+  productCode: string,
+  images: string | string[]
+): Promise<string[]> => {
+  if (!images) return [];
+  const imageList = Array.isArray(images) ? images : [images];
+  const uploadedUrls: string[] = [];
+  const productFolder = getStoreAssetFolder(storeName, "products");
+
+  for (let i = 0; i < imageList.length; i++) {
+    const img = imageList[i];
+    if (!img) continue;
+
+    // If it's already an http/https URL, preserve it
+    if (img.startsWith("http://") || img.startsWith("https://")) {
+      uploadedUrls.push(img);
+      continue;
+    }
+
+    // If it's a base64 data URL, upload to Cloudinary
+    if (img.startsWith("data:image")) {
+      try {
+        const publicId = `${productCode.toLowerCase().replace(/[^a-z0-9]+/g, "_")}_${Date.now()}_${i + 1}`;
+        const uploadRes = await cloudinary.uploader.upload(img, {
+          folder: productFolder,
+          asset_folder: productFolder,
+          public_id: publicId,
+          overwrite: true,
+          invalidate: true,
+        });
+        uploadedUrls.push(uploadRes.secure_url);
+      } catch (err) {
+        console.error(`Failed to upload product image ${i + 1}:`, err);
+      }
+    }
+  }
+
+  return uploadedUrls;
+};
+

@@ -340,12 +340,11 @@ flowchart LR
 
 ## 8. સિસ્ટમ આર્કિટેક્ચર & ડેટાબેઝ
 
-- **Frontend:** Next.js 14 (App Router) + TypeScript + Tailwind CSS + shadcn/ui.
-- **Backend:** Node.js (NestJS / Express) + TypeScript.
-- **Database:** PostgreSQL (AWS RDS / Supabase) + Prisma ORM.
-- **Image Storage:** Cloudinary / AWS S3 (કપડાં અને ડેમેજના ફોટો માટે).
-- **WhatsApp Gateway:** Meta WhatsApp Cloud API.
-- **ડેટાબેઝ સ્કીમા ફાઈલ:** સંપૂર્ણ ટેબલ્સ અને સ્કીમા [`DATABASE_SCHEMA.md`](file:///c:/Users/SIS/OneDrive/Desktop/My%20Projects/Rent360/DATABASE_SCHEMA.md) માં ઉપલબ્ધ છે.
+- **Frontend:** React 18 + Vite + SCSS + Redux Toolkit + PWA.
+- **Backend:** Node.js + Express 5 + TypeScript (Vercel Serverless Architecture).
+- **Database:** PostgreSQL (Neon Cloud) + Prisma ORM.
+- **Image Storage:** Cloudinary Multi-Asset Storage (સૂટ, શેરવાની અને જોધપુરીના ફોટા માટે).
+- **કલેક્શન આર્કિટેક્ચર & API ગાઇડ:** રેકોર્ડ-વાઇઝ (ડિઝાઇન) vs આઇટમ-વાઇઝ (બારકોડ/સાઇઝ) અને પ્લાન લિમિટ્સનું વિગતવાર દસ્તાવેજ [`COLLECTION_API.md`](file:///c:/Users/SIS/OneDrive/Desktop/My%20Projects/Rentopus/apps/rent360/backend/COLLECTION_API.md) માં ઉપલબ્ધ છે.
 
 ---
 
