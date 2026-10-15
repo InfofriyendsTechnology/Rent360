@@ -32,8 +32,8 @@ const Header = ({ onToggleSidebar }) => {
     if (location.pathname.startsWith('/subscriptions')) return 'Subscriptions';
     if (location.pathname.startsWith('/collection') || location.pathname.startsWith('/inventory')) return 'Collection';
     if (location.pathname.startsWith('/customers')) return 'Customers';
-    if (location.pathname.startsWith('/roles')) return 'Roles & Staff';
-    if (location.pathname.startsWith('/settings')) return 'Global Settings';
+    if (location.pathname.startsWith('/roles') || location.pathname.startsWith('/staff')) return 'Roles & Staff';
+    if (location.pathname.startsWith('/settings') || location.pathname.startsWith('/categories')) return 'System Setup';
     return 'Dashboard';
   };
 

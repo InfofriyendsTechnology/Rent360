@@ -72,9 +72,9 @@ const App = () => {
           )}
 
           {/* Shared Routes */}
-          <Route path="categories" element={<CategoriesList />} />
+          <Route path="categories" element={<Navigate to="/settings?tab=categories" replace />} />
           <Route path="settings" element={<SettingsPage />} />
-          <Route path="settings/categories" element={<Navigate to="/categories" replace />} />
+          <Route path="setup" element={<Navigate to="/settings" replace />} />
           <Route path="profile" element={<Profile />} />
         </Route>
         

@@ -210,20 +210,12 @@ const Sidebar = ({ isOpen, onClose }) => {
             <span className="group-title">SETTINGS</span>
             <nav>
               <NavLink 
-                to="/categories" 
-                className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
-                onClick={onClose}
-              >
-                <span className="icon"><FiTag /></span>
-                <span className="text">Categories</span>
-              </NavLink>
-              <NavLink 
                 to="/settings" 
                 className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
                 onClick={onClose}
               >
                 <span className="icon"><FiSettings /></span>
-                <span className="text">Settings</span>
+                <span className="text">System Setup</span>
               </NavLink>
             </nav>
           </div>
