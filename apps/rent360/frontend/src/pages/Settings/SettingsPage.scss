@@ -4,6 +4,85 @@
   width: 100%;
   margin: 0 auto;
 
+  /* Pill Switcher Toggle matching CategoriesList */
+  .view-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    background-color: $bg-card;
+    border: 1px solid $border-main;
+    border-radius: $border-radius-pill;
+    padding: 3px;
+    height: 42px;
+    box-shadow: $shadow-sm;
+    box-sizing: border-box;
+
+    .view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 18px;
+      height: 100%;
+      border-radius: $border-radius-pill;
+      border: none;
+      background: transparent;
+      color: $text-muted;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      outline: none;
+
+      .icon {
+        font-size: 1rem;
+      }
+
+      &:hover:not(.active) {
+        color: $text-main;
+      }
+
+      &.active {
+        background-color: $bg-pill-dark;
+        color: $text-inverse;
+        box-shadow: $shadow-sm;
+      }
+    }
+  }
+
+  /* Store Selector Pill */
+  .store-selector-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    background-color: $bg-card;
+    border: 1px solid $border-main;
+    padding: 0 16px;
+    border-radius: $border-radius-pill;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: $text-main;
+    box-shadow: $shadow-sm;
+    box-sizing: border-box;
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    select {
+      background: transparent;
+      border: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: $text-main;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+
   /* Controls & Search */
   .setup-controls-bar {
     display: flex;
