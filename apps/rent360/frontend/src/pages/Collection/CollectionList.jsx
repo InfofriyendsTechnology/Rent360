@@ -10,7 +10,6 @@ import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import ProductModal from './ProductModal';
 import StockModal from './StockModal';
-import CategoryModal from './CategoryModal';
 import ImageGalleryModal from './ImageGalleryModal';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import './CollectionList.scss';
@@ -42,8 +41,6 @@ const CollectionList = () => {
 
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [selectedProductForStock, setSelectedProductForStock] = useState(null);
-
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   const [galleryState, setGalleryState] = useState({
     isOpen: false,
@@ -238,15 +235,6 @@ const CollectionList = () => {
               </select>
             </div>
           )}
-
-          <button
-            type="button"
-            className="btn-pill-outline"
-            onClick={() => setIsCategoryModalOpen(true)}
-          >
-            <FiLayers />
-            <span>Categories</span>
-          </button>
 
           <button
             type="button"
@@ -661,15 +649,6 @@ const CollectionList = () => {
         token={token}
         storeId={selectedStoreId}
         limits={limits}
-      />
-
-      <CategoryModal
-        isOpen={isCategoryModalOpen}
-        onClose={() => setIsCategoryModalOpen(false)}
-        categories={categories}
-        onCategoryUpdated={fetchData}
-        token={token}
-        storeId={selectedStoreId}
       />
 
       <ImageGalleryModal
