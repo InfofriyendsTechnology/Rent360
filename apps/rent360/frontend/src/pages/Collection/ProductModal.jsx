@@ -4,7 +4,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import { batchConvertToWebP, convertToWebP, formatBytes } from '../../utils/imageOptimizer';
-import { getStoreSizes } from '../Settings/SettingsPage';
+import { getStoreSizes } from '../../constants/sizes';
 
 
 const ProductModal = ({

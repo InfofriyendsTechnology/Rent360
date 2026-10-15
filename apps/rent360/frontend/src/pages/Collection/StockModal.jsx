@@ -3,7 +3,7 @@ import { FiX, FiPlus, FiTrash2, FiBox, FiCheckCircle, FiClock, FiAlertTriangle, 
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
-import { getStoreSizes } from '../Settings/SettingsPage';
+import { getStoreSizes } from '../../constants/sizes';
 
 const STATUS_OPTIONS = [
   { value: 'AVAILABLE', label: 'Available', colorClass: 'status-available' },
