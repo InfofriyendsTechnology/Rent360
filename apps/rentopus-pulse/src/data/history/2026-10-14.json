@@ -1,8 +1,8 @@
 {
   "date": "14-10-2026",
   "dayNumber": 20,
-  "title": "Vercel Deploy, WebP Engine & Category Pipeline Architecture",
-  "titleGu": "વર્સેલ ડિપ્લોય, WebP એન્જિન અને કેટેગરી પાઇપલાઇન આર્કિટેક્ચર",
+  "title": "Vercel Deploy, WebP Engine & Category Pipeline [EXTRA WORK / OVERTIME]",
+  "titleGu": "વર્સેલ ડિપ્લોય, WebP એન્જિન અને કેટેગરી પાઇપલાઇન [એક્સ્ટ્રા કામ / ઓવરટાઇમ]",
   "members": [
     "001"
   ],
@@ -25,15 +25,15 @@
     },
     {
       "member": "001",
-      "text": "Engineered dedicated Category Pipeline Architecture (/categories) placed under SETTINGS in sidebar: cleanly decoupled taxonomy management from product creation to maintain modular CRM architecture."
+      "text": "[EXTRA WORK] Engineered dedicated Category Pipeline Architecture (/categories) placed under SETTINGS in sidebar: cleanly decoupled taxonomy management from product creation to maintain modular CRM architecture."
     },
     {
       "member": "001",
-      "text": "Built dual-view layout for Category Pipeline: interactive CRM Pipeline Cards with stage indexing (#01, #02), SKU badges, design counters, and direct Collection launcher, alongside a styled Bond CRM Table view."
+      "text": "[EXTRA WORK] Built dual-view layout for Category Pipeline: interactive CRM Pipeline Cards with stage indexing (#01, #02), SKU badges, design counters, and direct Collection launcher, alongside a styled Bond CRM Table view."
     },
     {
       "member": "001",
-      "text": "Created central Settings Hub (/settings) and cleaned up Collection modals, ensuring streamlined product creation with simple category dropdown selection."
+      "text": "[EXTRA WORK] Created central Settings Hub (/settings) and cleaned up Collection modals, ensuring streamlined product creation with simple category dropdown selection."
     }
   ],
   "tasksGu": [
@@ -55,15 +55,15 @@
     },
     {
       "member": "001",
-      "text": "સાઇડબારમાં SETTINGS હેડિંગ હેઠળ ડેડિકેટેડ કેટેગરી પાઇપલાઇન આર્કિટેક્ચર (/categories) તૈયાર કર્યું: CRM સિસ્ટમની જેમ ટેક્સોનોમી અને પ્રોડક્ટ ક્રિએશનને સંપૂર્ણ અલગ અને મોડ્યુલર રાખ્યું."
+      "text": "[એક્સ્ટ્રા કામ - ઓવરટાઇમ] સાઇડબારમાં SETTINGS હેડિંગ હેઠળ ડેડિકેટેડ કેટેગરી પાઇપલાઇન આર્કિટેક્ચર (/categories) તૈયાર કર્યું: CRM સિસ્ટમની જેમ ટેક્સોનોમી અને પ્રોડક્ટ ક્રિએશનને સંપૂર્ણ અલગ અને મોડ્યુલર રાખ્યું."
     },
     {
       "member": "001",
-      "text": "કેટેગરી પાઇપલાઇન માટે ડ્યુઅલ-વ્યુ ડિઝાઇન બનાવી: સ્ટેજ ઇન્ડેક્સ (#01, #02), કલર SKU બેજ, ડિઝાઇન કાઉન્ટર અને કલેક્શન લિંક સાથેના CRM પાઇપલાઇન કાર્ડ્સ તેમજ બોન્ડ ટેબલ વ્યુ."
+      "text": "[એક્સ્ટ્રા કામ - ઓવરટાઇમ] કેટેગરી પાઇપલાઇન માટે ડ્યુઅલ-વ્યુ ડિઝાઇન બનાવી: સ્ટેજ ઇન્ડેક્સ (#01, #02), કલર SKU બેજ, ડિઝાઇન કાઉન્ટર અને કલેક્શન લિંક સાથેના CRM પાઇપલાઇન કાર્ડ્સ તેમજ બોન્ડ ટેબલ વ્યુ."
     },
     {
       "member": "001",
-      "text": "સેન્ટ્રલ સેટિંગ્સ હબ (/settings) ડેવલપ કર્યું અને કલેક્શન પ્રોડક્ટ મોડલને એકદમ ક્લીન બનાવી ડ્રોપડાઉન સિલેક્શન સાથે ઇન્ટિગ્રેટ કર્યું."
+      "text": "[એક્સ્ટ્રા કામ - ઓવરટાઇમ] સેન્ટ્રલ સેટિંગ્સ હબ (/settings) ડેવલપ કર્યું અને કલેક્શન પ્રોડક્ટ મોડલને એકદમ ક્લીન બનાવી ડ્રોપડાઉન સિલેક્શન સાથે ઇન્ટિગ્રેટ કર્યું."
     }
   ],
   "deliverables": [
@@ -72,8 +72,8 @@
     "Complete Collection & Inventory Management System (/collection)",
     "Automatic Client-Side & Cloud WebP Image Optimization Engine",
     "Real-time Stock Status Lifecycle & Plan Capacity Tracking",
-    "Dedicated Category Pipeline Architecture (/categories) under Settings",
-    "CRM Pipeline Cards & Bond Table Dual-View Layout",
-    "Central Settings & Configuration Hub (/settings)"
+    "[EXTRA WORK] Dedicated Category Pipeline Architecture (/categories) under Settings",
+    "[EXTRA WORK] CRM Pipeline Cards & Bond Table Dual-View Layout",
+    "[EXTRA WORK] Central Settings & Configuration Hub (/settings)"
   ]
 }
