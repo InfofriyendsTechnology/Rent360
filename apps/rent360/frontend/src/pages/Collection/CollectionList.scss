@@ -1,57 +1,29 @@
 @import '../../styles/variables';
+@import '../Stores/StoresList.scss';
 
 .collection-page-view {
   width: 100%;
-  max-width: 1400px;
   margin: 0 auto;
-  padding: 4px;
 
-  /* ----------------- TOP BAR ----------------- */
-  .collection-top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 24px;
-    gap: 16px;
-    flex-wrap: wrap;
-
-    .title-area {
+  /* Top Bar matching Bond CRM Header */
+  .stores-top-bar {
+    .title-section {
       .title-row {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 12px;
         flex-wrap: wrap;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
 
-        .main-heading {
-          font-size: 2.1rem;
-          font-weight: 800;
-          color: $text-main;
-          letter-spacing: -0.03em;
-          line-height: 1.15;
-          margin: 0;
+        .main-title {
+          margin-bottom: 0;
         }
 
-        .plan-usage-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
+        .pill-filter {
           height: 32px;
           padding: 0 14px;
-          background-color: $bg-card;
-          border: 1px solid $border-main;
-          border-radius: $border-radius-pill;
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 600;
-          color: $text-main;
-          box-shadow: $shadow-sm;
-
-          .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background-color: $accent;
-          }
 
           .plan-tag {
             background-color: $accent-light;
@@ -64,15 +36,9 @@
           }
         }
       }
-
-      .sub-heading {
-        color: $text-muted;
-        font-size: 0.92rem;
-        margin: 0;
-      }
     }
 
-    .top-actions-wrap {
+    .top-actions {
       display: flex;
       align-items: center;
       gap: 12px;
@@ -85,13 +51,16 @@
         height: 42px;
         background-color: $bg-card;
         border: 1px solid $border-main;
+        padding: 0 16px;
         border-radius: $border-radius-pill;
-        padding: 0 14px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: $text-main;
         box-shadow: $shadow-sm;
 
         label {
-          font-size: 0.8rem;
-          font-weight: 600;
+          font-size: 0.78rem;
+          font-weight: 700;
           color: $text-muted;
           text-transform: uppercase;
           letter-spacing: 0.04em;
@@ -100,65 +69,52 @@
         select {
           background: transparent;
           border: none;
-          outline: none;
           font-size: 0.88rem;
           font-weight: 600;
           color: $text-main;
+          outline: none;
           cursor: pointer;
         }
       }
 
-      .btn-pill-outline {
+      .view-mode-toggle {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        height: 42px;
-        padding: 0 18px;
         background-color: $bg-card;
-        color: $text-main;
         border: 1px solid $border-main;
         border-radius: $border-radius-pill;
-        font-size: 0.88rem;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: $shadow-sm;
-        transition: all 0.2s ease;
-
-        &:hover {
-          background-color: $bg-card-hover;
-          border-color: $accent-border;
-          color: $accent;
-        }
-      }
-
-      .btn-pill-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+        padding: 3px;
         height: 42px;
-        padding: 0 22px;
-        background-color: $bg-pill-dark;
-        color: $text-inverse;
-        border: 1px solid transparent;
-        border-radius: $border-radius-pill;
-        font-size: 0.88rem;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: $shadow-pill;
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: $shadow-sm;
 
-        .plus-icon {
-          font-size: 1.1rem;
-        }
+        .view-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 0 16px;
+          height: 100%;
+          border-radius: $border-radius-pill;
+          border: none;
+          background: transparent;
+          color: $text-muted;
+          font-size: 0.84rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
-        &:hover {
-          transform: translateY(-1px);
-          filter: brightness(1.15);
-          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-        }
+          .icon {
+            font-size: 0.95rem;
+          }
 
-        &:active {
-          transform: translateY(0);
+          &:hover:not(.active) {
+            color: $text-main;
+          }
+
+          &.active {
+            background-color: $bg-pill-dark;
+            color: $text-inverse;
+            box-shadow: $shadow-sm;
+          }
         }
       }
     }
@@ -239,7 +195,7 @@
     }
   }
 
-  /* ----------------- CONTROLS & FILTER BAR ----------------- */
+  /* Search Controls Bar */
   .collection-controls-bar {
     display: flex;
     justify-content: space-between;
@@ -248,34 +204,38 @@
     flex-wrap: wrap;
     margin-bottom: 24px;
 
-    .search-field-pill {
+    .search-pill-wrapper {
       position: relative;
       display: flex;
       align-items: center;
-      flex: 1;
+      width: 100%;
       max-width: 440px;
-      min-width: 260px;
-      height: 42px;
-      background-color: $bg-card;
-      border: 1px solid $border-main;
-      border-radius: $border-radius-pill;
-      padding: 0 16px;
-      box-shadow: $shadow-sm;
 
       .search-icon {
+        position: absolute;
+        left: 14px;
         color: $text-muted;
         font-size: 1rem;
-        margin-right: 10px;
-        flex-shrink: 0;
+        pointer-events: none;
       }
 
       input {
-        flex: 1;
-        border: none;
-        outline: none;
-        background: transparent;
+        width: 100%;
+        height: 42px;
+        padding: 0 36px 0 38px;
+        background-color: $bg-card;
+        border: 1px solid $border-main;
+        border-radius: $border-radius-pill;
         font-size: 0.88rem;
         color: $text-main;
+        outline: none;
+        box-shadow: $shadow-sm;
+        transition: all 0.2s ease;
+
+        &:focus {
+          border-color: $accent;
+          box-shadow: 0 0 0 3px rgba(11, 96, 176, 0.12);
+        }
 
         &::placeholder {
           color: $text-muted;
@@ -283,83 +243,59 @@
       }
 
       .clear-search-btn {
+        position: absolute;
+        right: 12px;
         background: none;
         border: none;
         color: $text-muted;
-        font-size: 1.2rem;
         cursor: pointer;
-        padding: 0 4px;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         &:hover {
           color: $text-main;
         }
       }
     }
 
-    .controls-right-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .toolbar-count {
+      font-size: 0.88rem;
+      color: $text-muted;
 
-      .status-filter-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        height: 42px;
-        background-color: $bg-card;
-        border: 1px solid $border-main;
-        border-radius: $border-radius-pill;
-        padding: 0 16px;
-        box-shadow: $shadow-sm;
-
-        .filter-icon {
-          color: $text-muted;
-          font-size: 0.95rem;
-        }
-
-        select {
-          border: none;
-          background: transparent;
-          outline: none;
-          font-size: 0.86rem;
-          font-weight: 500;
-          color: $text-main;
-          cursor: pointer;
-        }
+      strong {
+        color: $text-main;
+        font-weight: 700;
       }
+    }
+  }
 
-      .view-mode-toggle {
-        display: flex;
-        align-items: center;
-        background-color: $bg-card;
-        border: 1px solid $border-main;
-        border-radius: $border-radius-pill;
-        padding: 3px;
-        box-shadow: $shadow-sm;
+  /* Product Fallback Image Placeholder Box */
+  .product-fallback-box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $bg-card-alt;
+    color: $text-muted;
+    user-select: none;
 
-        .view-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 36px;
-          height: 34px;
-          border-radius: $border-radius-pill;
-          border: none;
-          background: transparent;
-          color: $text-muted;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: all 0.2s ease;
+    .fallback-icon {
+      font-size: 2.2rem;
+      stroke-width: 1.5;
+      margin-bottom: 4px;
+      opacity: 0.65;
+    }
 
-          &:hover {
-            color: $text-main;
-          }
-
-          &.active {
-            background-color: $bg-pill-dark;
-            color: $text-inverse;
-          }
-        }
-      }
+    .fallback-code {
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.75;
     }
   }
 
@@ -658,236 +594,188 @@
         .quick-action-btns {
           display: flex;
           align-items: center;
-          gap: 6px;
-
-          button {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 1px solid transparent;
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            color: $text-muted;
-            cursor: pointer;
-            transition: all 0.15s ease;
-
-            &:hover {
-              background-color: $bg-card-alt;
-              color: $text-main;
-            }
-
-            &.icon-btn-delete:hover {
-              background-color: $danger-light;
-              color: $danger;
-            }
-          }
         }
       }
     }
   }
 
-  /* ----------------- TABLE VIEW ----------------- */
-  .collection-table-card {
-    background-color: $bg-card;
-    border-radius: $border-radius-card;
-    border: 1px solid $border-main;
-    box-shadow: $shadow-sm;
-    overflow: hidden;
+  /* ----------------- TABLE VIEW (Bond CRM DataTable) ----------------- */
+  .table-product-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 
-    .collection-main-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
+    .table-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: $bg-card-alt;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-      th {
-        padding: 14px 18px;
-        background-color: $bg-card-alt;
-        font-size: 0.76rem;
+      .thumb-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .product-fallback-box {
+        .fallback-icon {
+          font-size: 1.3rem;
+          margin-bottom: 0;
+        }
+        .fallback-code {
+          display: none;
+        }
+      }
+    }
+
+    .table-name-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+
+      .table-product-code {
+        font-size: 0.72rem;
         font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
         color: $text-muted;
-        border-bottom: 1px solid $border-main;
-
-        &.th-actions {
-          text-align: right;
-        }
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
       }
 
-      td {
-        padding: 14px 18px;
-        border-bottom: 1px solid $border-main;
-        font-size: 0.88rem;
+      .table-product-name {
+        font-weight: 600;
         color: $text-main;
-        vertical-align: middle;
-
-        &.td-actions {
-          text-align: right;
-        }
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 240px;
       }
+    }
+  }
 
-      tr:hover td {
-        background-color: $bg-card-hover;
-      }
+  .category-pill-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    background-color: $bg-card-alt;
+    border: 1px solid $border-main;
+    color: $text-main;
+    border-radius: $border-radius-pill;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: all 0.15s ease;
 
-      .table-product-cell {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-
-        .table-thumb {
-          width: 48px;
-          height: 48px;
-          border-radius: 8px;
-          overflow: hidden;
-          background-color: $bg-card-alt;
-          flex-shrink: 0;
-          cursor: pointer;
-
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-
-          .thumb-none {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: $text-muted;
-          }
-        }
-
-        .table-name-wrap {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-
-          .table-product-code {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: $text-muted;
-            letter-spacing: 0.04em;
-          }
-
-          .table-product-name {
-            font-weight: 600;
-            color: $text-main;
-          }
-        }
-      }
-
-      .category-pill {
-        display: inline-block;
-        padding: 4px 10px;
+    &.clickable {
+      cursor: pointer;
+      &:hover {
+        border-color: $accent-border;
         background-color: $accent-light;
         color: $accent;
-        border-radius: $border-radius-pill;
-        font-size: 0.78rem;
-        font-weight: 600;
       }
+    }
+  }
 
-      .table-price {
-        font-weight: 700;
+  .table-price {
+    font-weight: 700;
+    color: $text-main;
+
+    .per-day-muted {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: $text-muted;
+    }
+  }
+
+  .table-price-muted {
+    color: $text-muted;
+    font-weight: 600;
+  }
+
+  .table-stock-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: $bg-card-alt;
+    border: 1px solid $border-main;
+    border-radius: $border-radius-pill;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    .stock-icon {
+      font-size: 0.9rem;
+      color: $text-muted;
+    }
+
+    .stock-count {
+      color: $text-main;
+    }
+
+    .stock-avail {
+      color: $success;
+      font-weight: 700;
+    }
+
+    &:hover {
+      border-color: $accent-border;
+      background-color: $accent-light;
+      color: $accent;
+
+      .stock-icon {
+        color: $accent;
       }
+    }
+  }
 
-      .table-price-muted {
+  .table-sizes-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+
+    .size-chip-mini {
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+
+      &.status-avail {
+        background-color: $success-light;
+        color: $success;
+      }
+      &.status-booked {
+        background-color: rgba(245, 158, 11, 0.15);
+        color: #B45309;
+      }
+      &.status-laundry {
+        background-color: rgba(139, 92, 246, 0.15);
+        color: #6D28D9;
+      }
+      &.status-damaged {
+        background-color: $danger-light;
+        color: $danger;
+      }
+      &.status-other {
+        background-color: $bg-card-alt;
         color: $text-muted;
       }
+    }
 
-      .table-stock-pill-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background-color: $bg-card-alt;
-        border: 1px solid $border-main;
-        border-radius: $border-radius-pill;
-        padding: 5px 12px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
+    .size-more-mini {
+      font-size: 0.72rem;
+      color: $text-muted;
+      font-weight: 600;
+    }
 
-        .stock-count {
-          color: $text-main;
-        }
-
-        .stock-avail {
-          color: $success;
-          font-weight: 700;
-        }
-
-        &:hover {
-          border-color: $accent-border;
-          background-color: $accent-light;
-        }
-      }
-
-      .table-sizes-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-
-        .size-chip-mini {
-          padding: 2px 6px;
-          border-radius: 4px;
-          font-size: 0.7rem;
-          font-weight: 600;
-
-          &.status-avail {
-            background-color: $success-light;
-            color: $success;
-          }
-          &.status-booked {
-            background-color: rgba(245, 158, 11, 0.15);
-            color: #B45309;
-          }
-          &.status-laundry {
-            background-color: rgba(139, 92, 246, 0.15);
-            color: #6D28D9;
-          }
-          &.status-damaged {
-            background-color: $danger-light;
-            color: $danger;
-          }
-        }
-      }
-
-      .row-actions-group {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-
-        .btn-table-action {
-          width: 32px;
-          height: 32px;
-          border-radius: 8px;
-          border: 1px solid $border-main;
-          background-color: $bg-card;
-          color: $text-muted;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.15s ease;
-
-          &:hover {
-            color: $text-main;
-            border-color: $accent-border;
-          }
-
-          &.delete:hover {
-            background-color: $danger-light;
-            color: $danger;
-            border-color: transparent;
-          }
-        }
-      }
+    .muted-text {
+      font-size: 0.76rem;
+      color: $text-muted;
     }
   }
 
@@ -926,6 +814,12 @@
       margin: 0 auto 24px;
       font-size: 0.92rem;
       line-height: 1.5;
+    }
+
+    .empty-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
     }
   }
 
