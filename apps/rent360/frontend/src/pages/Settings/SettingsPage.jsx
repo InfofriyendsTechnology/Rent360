@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { 
-  FiLayers, FiMaximize2, FiPlus, FiEdit2, FiTrash2, FiX
+  FiLayers, FiMaximize2, FiPlus, FiEdit2, FiTrash2, FiX, FiSearch
 } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import { DataTable, RowActions } from '../../components/ui';
 
 import '../Stores/StoresList.scss';
 import './SettingsPage.scss';
@@ -36,8 +37,8 @@ const SettingsPage = () => {
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
   const userStoreId = user?.store?.id || user?.storeId || '';
 
-  // Active Tab: only the two essential priorities
-  const activeTab = searchParams.get('tab') || 'categories';
+  // Active Tab: strictly Categories or Sizes
+  const activeTab = searchParams.get('tab') === 'sizes' ? 'sizes' : 'categories';
 
   // Super Admin store selector
   const [stores, setStores] = useState([]);
@@ -47,6 +48,7 @@ const SettingsPage = () => {
   const [categories, setCategories] = useState([]);
   const [sizes, setSizes] = useState(getStoreSizes);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,12 +61,6 @@ const SettingsPage = () => {
   const [formName, setFormName] = useState('');
   const [formCode, setFormCode] = useState('');
   const [formDesc, setFormDesc] = useState('');
-
-  // 2 Priority Tabs matching CRM Setup Screenshot
-  const setupTabs = [
-    { id: 'categories', label: 'Categories', icon: <FiLayers /> },
-    { id: 'sizes', label: 'Sizes', icon: <FiMaximize2 /> }
-  ];
 
   // Fetch stores if Super Admin
   useEffect(() => {
@@ -98,23 +94,25 @@ const SettingsPage = () => {
       });
       setCategories(res.data.data || []);
     } catch (err) {
-      // Fallback
+      toast.error('Failed to load categories');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCategories();
-  }, [selectedStoreId, token]);
+    if (activeTab === 'categories') {
+      fetchCategories();
+    }
+  }, [activeTab, selectedStoreId, token]);
 
+  // Tab switcher
   const handleSelectTab = (tabId) => {
     setSearchParams({ tab: tabId });
+    setSearchQuery('');
   };
 
-  const currentTab = setupTabs.find((t) => t.id === activeTab) || setupTabs[0];
-
-  // Open Add Modal
+  // Open Create Modal
   const handleOpenCreateModal = () => {
     setEditingItem(null);
     setFormName('');
@@ -132,17 +130,20 @@ const SettingsPage = () => {
     setIsModalOpen(true);
   };
 
-  // Save (Create or Update)
+  // Save Item (Create or Edit)
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!formName.trim() || isSaving) return;
+    if (!formName.trim()) {
+      toast.error('Please enter a name');
+      return;
+    }
 
     setIsSaving(true);
     try {
       if (activeTab === 'categories') {
         const payload = {
           name: formName.trim(),
-          category_code: (formCode.trim() || formName.toUpperCase().replace(/[^A-Z0-9]/g, '_').slice(0, 15)).toUpperCase(),
+          category_code: formCode.trim() || undefined,
           description: formDesc.trim() || undefined,
           storeId: selectedStoreId || undefined
         };
@@ -205,169 +206,233 @@ const SettingsPage = () => {
     }
   };
 
-  const activeItems = activeTab === 'categories' ? categories : sizes;
+  // Filtered Items
+  const filteredCategories = categories.filter((cat) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      (cat.name || '').toLowerCase().includes(q) ||
+      (cat.category_code || '').toLowerCase().includes(q) ||
+      (cat.description || '').toLowerCase().includes(q)
+    );
+  });
+
+  const filteredSizes = sizes.filter((sz) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      (sz.name || '').toLowerCase().includes(q) ||
+      (sz.code || '').toLowerCase().includes(q)
+    );
+  });
 
   return (
-    <div className="system-setup-page">
-      {/* Header matching Screenshot */}
-      <div className="setup-page-header">
-        <div className="header-info">
-          <h1 className="header-title">System Setup</h1>
-          <p className="header-subtitle">
-            Manage your catalog setup preferences and settings.
+    <div className="stores-view settings-page-view">
+      {/* Top Bar matching Rent360 Common Design */}
+      <div className="stores-top-bar">
+        <div className="title-section">
+          <h1 className="main-title">System Setup</h1>
+          <p className="subtitle">
+            Configure catalog attire categories and rental garment sizes master
           </p>
         </div>
 
-        {isSuperAdmin && stores.length > 0 && (
-          <div className="setup-store-pill">
-            <label>Store:</label>
-            <select
-              value={selectedStoreId}
-              onChange={(e) => setSelectedStoreId(e.target.value)}
-            >
-              {stores.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.store_name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-      </div>
-
-      {/* 2-Column Layout matching Screenshot */}
-      <div className="setup-layout-grid">
-        {/* Left Column: Vertical Menu Card */}
-        <aside className="setup-sidebar-card">
-          <nav className="setup-tabs-nav">
-            {setupTabs.map((tab) => {
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  className={`setup-tab-item ${isActive ? 'active' : ''}`}
-                  onClick={() => handleSelectTab(tab.id)}
-                >
-                  <span className="tab-icon">{tab.icon}</span>
-                  <span className="tab-label">{tab.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </aside>
-
-        {/* Right Column: Table Card matching Screenshot */}
-        <main className="setup-content-card">
-          {/* Header with Title and Green Plus Button */}
-          <div className="content-card-header">
-            <h2 className="section-title">{currentTab.label}</h2>
+        <div className="top-actions">
+          {/* Top Pill Tabs Switcher */}
+          <div className="view-mode-toggle">
             <button
               type="button"
-              className="add-item-green-btn"
-              onClick={handleOpenCreateModal}
-              title={`Add New ${currentTab.label}`}
+              className={`view-btn ${activeTab === 'categories' ? 'active' : ''}`}
+              onClick={() => handleSelectTab('categories')}
             >
-              <FiPlus />
+              <FiLayers className="icon" />
+              <span>Categories ({categories.length})</span>
+            </button>
+            <button
+              type="button"
+              className={`view-btn ${activeTab === 'sizes' ? 'active' : ''}`}
+              onClick={() => handleSelectTab('sizes')}
+            >
+              <FiMaximize2 className="icon" />
+              <span>Sizes ({sizes.length})</span>
             </button>
           </div>
 
-          {/* Table matching Screenshot: Name | Action */}
-          <div className="setup-table-wrapper">
-            <table className="setup-crm-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th style={{ width: '120px', textAlign: 'right' }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading && activeTab === 'categories' ? (
-                  Array.from({ length: 3 }).map((_, i) => (
-                    <tr key={i}>
-                      <td colSpan="2" style={{ padding: '16px 24px' }}>Loading...</td>
-                    </tr>
-                  ))
-                ) : activeItems.length === 0 ? (
-                  <tr>
-                    <td colSpan="2" className="empty-table-cell">
-                      No {currentTab.label.toLowerCase()} added yet. Click the + button above to add one.
-                    </td>
-                  </tr>
-                ) : (
-                  activeItems.map((item) => {
-                    const code = item.category_code || item.code;
-                    return (
-                      <tr key={item.id} className="setup-row">
-                        <td>
-                          <div className="item-name-cell">
-                            <span className="item-title">{item.name}</span>
-                            {code && (
-                              <span className="item-code-badge">{code}</span>
-                            )}
-                            {item._count?.products !== undefined && (
-                              <span className="item-count-tag">
-                                {item._count.products} designs
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                          <div className="row-actions-cell">
-                            <button
-                              type="button"
-                              className="action-icon-btn edit-btn"
-                              title="Edit item"
-                              onClick={() => handleOpenEditModal(item)}
-                            >
-                              <FiEdit2 />
-                            </button>
-                            <button
-                              type="button"
-                              className="action-icon-btn delete-btn"
-                              title="Delete item"
-                              onClick={() => setItemToDelete(item)}
-                            >
-                              <FiTrash2 />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
-        </main>
+          {/* Super Admin Store Selector Pill */}
+          {isSuperAdmin && stores.length > 0 && (
+            <div className="store-selector-pill">
+              <label>Store:</label>
+              <select
+                value={selectedStoreId}
+                onChange={(e) => setSelectedStoreId(e.target.value)}
+              >
+                {stores.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.store_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Primary Pill Button */}
+          <button
+            type="button"
+            className="pill-btn-primary"
+            onClick={handleOpenCreateModal}
+          >
+            <FiPlus className="plus-icon" />
+            <span>Add {activeTab === 'categories' ? 'Category' : 'Size'}</span>
+          </button>
+        </div>
       </div>
 
-      {/* Add / Edit Modal */}
+      {/* Search Bar */}
+      <div className="setup-controls-bar">
+        <div className="search-pill-wrapper">
+          <FiSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder={activeTab === 'categories' ? 'Search categories by name or code...' : 'Search sizes...'}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              className="clear-search-btn"
+              onClick={() => setSearchQuery('')}
+            >
+              <FiX />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Main Full-Width Common DataTable */}
+      <div className="bond-card-container">
+        {activeTab === 'categories' ? (
+          <DataTable 
+            columns={[
+              { label: 'Category Name' },
+              { label: 'Code (Prefix)' },
+              { label: 'Total Designs' },
+              { label: 'Description' },
+              { label: 'Actions', align: 'right' }
+            ]}
+            data={filteredCategories}
+            loading={loading}
+            emptyMessage={searchQuery ? 'No categories matched your search.' : 'No categories added yet. Click "+ Add Category" to create one.'}
+            keyExtractor={(cat) => cat.id}
+            renderRow={(cat) => (
+              <>
+                <td>
+                  <div className="category-title-cell">
+                    <span className="cat-icon-badge"><FiLayers /></span>
+                    <span className="cat-name-text">{cat.name}</span>
+                  </div>
+                </td>
+                <td>
+                  <span className="sku-badge">{cat.category_code || '—'}</span>
+                </td>
+                <td>
+                  <span className="count-pill">{cat._count?.products || 0} designs</span>
+                </td>
+                <td>
+                  <span className="desc-text">{cat.description || '—'}</span>
+                </td>
+                <td className="text-right">
+                  <RowActions 
+                    actions={[
+                      { 
+                        icon: FiEdit2, 
+                        variant: 'edit', 
+                        title: 'Edit Category', 
+                        onClick: () => handleOpenEditModal(cat) 
+                      },
+                      { 
+                        icon: FiTrash2, 
+                        variant: 'delete', 
+                        title: 'Delete Category', 
+                        onClick: () => setItemToDelete(cat) 
+                      }
+                    ]}
+                  />
+                </td>
+              </>
+            )}
+          />
+        ) : (
+          <DataTable 
+            columns={[
+              { label: 'Size Label' },
+              { label: 'Short Code' },
+              { label: 'Sample Unit SKU' },
+              { label: 'Actions', align: 'right' }
+            ]}
+            data={filteredSizes}
+            loading={false}
+            emptyMessage={searchQuery ? 'No sizes matched your search.' : 'No sizes added yet. Click "+ Add Size" to create one.'}
+            keyExtractor={(sz) => sz.id}
+            renderRow={(sz) => (
+              <>
+                <td>
+                  <div className="category-title-cell">
+                    <span className="cat-icon-badge"><FiMaximize2 /></span>
+                    <span className="cat-name-text">{sz.name}</span>
+                  </div>
+                </td>
+                <td>
+                  <span className="sku-badge">{sz.code || sz.name.replace(/[^0-9A-Z]/gi, '').slice(0, 4)}</span>
+                </td>
+                <td>
+                  <span className="sample-sku-mono">{`ITEM-${sz.code || sz.name.replace(/[^0-9A-Z]/gi, '').slice(0, 3) || 'STD'}-01`}</span>
+                </td>
+                <td className="text-right">
+                  <RowActions 
+                    actions={[
+                      { 
+                        icon: FiEdit2, 
+                        variant: 'edit', 
+                        title: 'Edit Size', 
+                        onClick: () => handleOpenEditModal(sz) 
+                      },
+                      { 
+                        icon: FiTrash2, 
+                        variant: 'delete', 
+                        title: 'Delete Size', 
+                        onClick: () => setItemToDelete(sz) 
+                      }
+                    ]}
+                  />
+                </td>
+              </>
+            )}
+          />
+        )}
+      </div>
+
+      {/* CREATE / EDIT MODAL using standard Bond Modal */}
       {isModalOpen && (
-        <div className="confirm-modal-overlay" onClick={() => setIsModalOpen(false)}>
-          <div className="setup-modal-card" onClick={(e) => e.stopPropagation()}>
+        <div className="bond-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="bond-modal-card setup-modal-compact" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <div className="modal-header-info">
-                <span className="modal-badge">{currentTab.label}</span>
-                <h3 className="modal-title">
-                  {editingItem ? `Edit ${currentTab.label}` : `Add New ${currentTab.label}`}
-                </h3>
+              <div>
+                <h2>{editingItem ? `Edit ${activeTab === 'categories' ? 'Category' : 'Size'}` : `Add New ${activeTab === 'categories' ? 'Category' : 'Size'}`}</h2>
+                <p>Configure {activeTab === 'categories' ? 'catalog attire category' : 'rental garment size label'}</p>
               </div>
-              <button 
-                type="button" 
-                className="modal-close-btn" 
-                onClick={() => setIsModalOpen(false)}
-              >
+              <button className="modal-close" onClick={() => setIsModalOpen(false)}>
                 <FiX />
               </button>
             </div>
 
-            <form onSubmit={handleSave}>
+            <form onSubmit={handleSave} autoComplete="off">
               <div className="modal-body">
-                <div className="form-field">
+                <div className="form-group">
                   <label>{activeTab === 'categories' ? 'Category Name *' : 'Size Label *'}</label>
                   <input
                     type="text"
+                    className="form-input"
                     placeholder={activeTab === 'categories' ? 'e.g. Royal Sherwani, Jodhpuri' : 'e.g. 38 (M), 40 (L), Free Size'}
                     value={formName}
                     onChange={(e) => {
@@ -382,24 +447,26 @@ const SettingsPage = () => {
                   />
                 </div>
 
-                <div className="form-field">
+                <div className="form-group">
                   <label>{activeTab === 'categories' ? 'Category Code (SKU Prefix)' : 'Size Short Code'}</label>
                   <input
                     type="text"
+                    className="form-input"
                     placeholder={activeTab === 'categories' ? 'e.g. SHERWANI, JODHPURI' : 'e.g. 38, 40, FS'}
                     value={formCode}
                     onChange={(e) => setFormCode(e.target.value.toUpperCase())}
                   />
-                  <span className="field-hint">
-                    Used to automatically generate size-wise unit codes (e.g. SKU-38-01)
-                  </span>
+                  <small className="help-text">
+                    Used to automatically generate size-wise unit SKUs (e.g. ITEM-38-01)
+                  </small>
                 </div>
 
                 {activeTab === 'categories' && (
-                  <div className="form-field">
+                  <div className="form-group">
                     <label>Description (Optional)</label>
                     <textarea
                       rows={3}
+                      className="form-input"
                       placeholder="Brief description of this collection category..."
                       value={formDesc}
                       onChange={(e) => setFormDesc(e.target.value)}
@@ -411,7 +478,7 @@ const SettingsPage = () => {
               <div className="modal-footer">
                 <button
                   type="button"
-                  className="cancel-btn"
+                  className="pill-btn-secondary"
                   onClick={() => setIsModalOpen(false)}
                   disabled={isSaving}
                 >
@@ -419,7 +486,7 @@ const SettingsPage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="confirm-btn primary"
+                  className="pill-btn-primary"
                   disabled={isSaving}
                 >
                   {isSaving ? 'Saving...' : editingItem ? 'Update' : 'Create'}
@@ -433,7 +500,7 @@ const SettingsPage = () => {
       {/* Delete Confirmation Modal */}
       <ConfirmModal
         isOpen={Boolean(itemToDelete)}
-        title={`Delete ${currentTab.label}`}
+        title={`Delete ${activeTab === 'categories' ? 'Category' : 'Size'}`}
         message={`Are you sure you want to delete "${itemToDelete?.name}"?`}
         confirmText={isDeleting ? 'Deleting...' : 'Delete'}
         cancelText="Cancel"
