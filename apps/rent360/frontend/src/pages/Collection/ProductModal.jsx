@@ -4,8 +4,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import { batchConvertToWebP, convertToWebP, formatBytes } from '../../utils/imageOptimizer';
-
-const POPULAR_SIZES = ['36 (S)', '38 (M)', '40 (L)', '42 (XL)', '44 (XXL)', '46 (3XL)', 'Free Size'];
+import { getStoreSizes } from '../Settings/SettingsPage';
 
 
 const ProductModal = ({
@@ -28,9 +27,12 @@ const ProductModal = ({
     images: []
   });
 
+  const masterSizes = getStoreSizes();
+  const defaultSize = masterSizes[0]?.name || '38 (S)';
+
   // Initial physical variants for new design
   const [initialItems, setInitialItems] = useState([
-    { size: '38 (M)', color: 'Maroon & Gold', condition_notes: 'Showroom display' }
+    { size: defaultSize, color: 'Maroon & Gold', condition_notes: 'Showroom display' }
   ]);
 
   const [customImageUrl, setCustomImageUrl] = useState('');
@@ -61,7 +63,7 @@ const ProductModal = ({
         images: []
       });
       setInitialItems([
-        { size: '38 (M)', color: '', condition_notes: 'Fresh stock' }
+        { size: defaultSize, color: '', condition_notes: 'Fresh stock' }
       ]);
     }
     setFormErrors({});
@@ -479,12 +481,23 @@ const ProductModal = ({
                           value={item.size}
                           onChange={(e) => handleItemVariantChange(idx, 'size', e.target.value)}
                         >
-                          {POPULAR_SIZES.map((sz) => (
-                            <option key={sz} value={sz}>
-                              {sz}
+                          {masterSizes.map((sz) => (
+                            <option key={sz.id || sz.name} value={sz.name}>
+                              {sz.name}
                             </option>
                           ))}
                         </select>
+                      </div>
+
+                      <div className="variant-field sku-field">
+                        <label>Size Unit SKU</label>
+                        <input
+                          type="text"
+                          readOnly
+                          value={formData.product_code.trim() ? `${formData.product_code.trim().toUpperCase()}-${(item.size || '').replace(/[^0-9A-Z]/gi, '').slice(0, 3) || 'STD'}-${idx + 1}` : 'AUTO'}
+                          style={{ backgroundColor: 'var(--bg-card-alt)', fontWeight: 700, fontFamily: 'monospace', letterSpacing: '0.04em' }}
+                          title="Unique barcode for this physical size unit"
+                        />
                       </div>
 
                       <div className="variant-field color-field">

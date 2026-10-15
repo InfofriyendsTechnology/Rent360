@@ -3,8 +3,7 @@ import { FiX, FiPlus, FiTrash2, FiBox, FiCheckCircle, FiClock, FiAlertTriangle, 
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
-
-const POPULAR_SIZES = ['36 (S)', '38 (M)', '40 (L)', '42 (XL)', '44 (XXL)', '46 (3XL)', 'Free Size'];
+import { getStoreSizes } from '../Settings/SettingsPage';
 
 const STATUS_OPTIONS = [
   { value: 'AVAILABLE', label: 'Available', colorClass: 'status-available' },
@@ -23,11 +22,15 @@ const StockModal = ({
   storeId,
   limits
 }) => {
+  const masterSizes = getStoreSizes();
+  const availableSizes = masterSizes.length > 0 ? masterSizes.map((s) => s.name) : ['36 (S)', '38 (M)', '40 (L)', '42 (XL)', '44 (XXL)', 'Free Size'];
+  const defaultSize = availableSizes[0] || '38 (M)';
+
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [addingItem, setAddingItem] = useState(false);
   const [newItem, setNewItem] = useState({
-    size: '38 (M)',
+    size: defaultSize,
     color: '',
     sku_code: '',
     condition_notes: ''
@@ -36,7 +39,7 @@ const StockModal = ({
   useEffect(() => {
     if (product?.id && isOpen) {
       fetchItems();
-      generateDefaultSku('38 (M)', '');
+      generateDefaultSku(defaultSize, '');
     }
   }, [product, isOpen]);
 
@@ -274,7 +277,7 @@ const StockModal = ({
                       generateDefaultSku(sz, newItem.color);
                     }}
                   >
-                    {POPULAR_SIZES.map((sz) => (
+                    {availableSizes.map((sz) => (
                       <option key={sz} value={sz}>
                         {sz}
                       </option>
