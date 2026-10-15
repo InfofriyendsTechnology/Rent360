@@ -226,18 +226,7 @@ const CollectionList = () => {
       {/* Top Header Bar matching Bond CRM Header */}
       <div className="stores-top-bar">
         <div className="title-section">
-          <div className="title-row">
-            <h1 className="main-title">Collection & Inventory</h1>
-            {limits && (
-              <div className="pill-filter">
-                <span className="dot" />
-                <span>
-                  {limits.currentItems} / {limits.maxItems} Items Used
-                </span>
-                <span className="plan-tag">{limits.planName}</span>
-              </div>
-            )}
-          </div>
+          <h1 className="main-title">Collection & Inventory</h1>
           <p className="subtitle">
             Manage ethnic apparel designs, rental prices, security deposits, and individual physical size SKUs
           </p>
