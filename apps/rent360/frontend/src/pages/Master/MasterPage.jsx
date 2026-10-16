@@ -497,19 +497,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
         <div className="top-actions">
           {/* Store Selector Pill for Super Admin */}
           {isSuperAdmin && stores.length > 0 && (
-            <div 
-              className="store-selector-pill"
-              onClick={(e) => {
-                const sel = e.currentTarget.querySelector('select');
-                if (sel && e.target !== sel) {
-                  if (typeof sel.showPicker === 'function') {
-                    sel.showPicker();
-                  } else {
-                    sel.focus();
-                  }
-                }
-              }}
-            >
+            <div className="store-selector-pill">
               <FiShoppingBag className="store-pill-icon" />
               <label>Store:</label>
               <select
@@ -525,12 +513,6 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
               <FiChevronDown className="chevron-icon" />
             </div>
           )}
-
-          {/* Pill Filter for Total Count at the top */}
-          <div className="pill-filter">
-            <span className="dot" />
-            <span>Total {getActiveTabInfo().label} ({filteredItems.length})</span>
-          </div>
 
           {/* Create Button with Standard Sleek Design */}
           <button
@@ -582,6 +564,9 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
               <FiX />
             </button>
           )}
+        </div>
+        <div className="items-count-badge">
+          Total {getActiveTabInfo().label}: {filteredItems.length}
         </div>
       </div>
 

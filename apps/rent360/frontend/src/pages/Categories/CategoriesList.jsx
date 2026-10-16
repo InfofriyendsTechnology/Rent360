@@ -31,9 +31,6 @@ const CategoriesList = () => {
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
   const userStoreId = user?.store?.id || user?.storeId || '';
 
-  // View Mode: 'cards' or 'table'
-  const [viewMode, setViewMode] = useState(localStorage.getItem('rent360_cat_view') || 'cards');
-
   // Stores for super admin
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(userStoreId);
@@ -57,11 +54,6 @@ const CategoriesList = () => {
     description: ''
   });
   const [formErrors, setFormErrors] = useState({});
-
-  const handleToggleViewMode = (mode) => {
-    setViewMode(mode);
-    localStorage.setItem('rent360_cat_view', mode);
-  };
 
   // Fetch stores if Super Admin
   useEffect(() => {
@@ -224,47 +216,15 @@ const CategoriesList = () => {
       {/* Top Header */}
       <div className="stores-top-bar">
         <div className="title-section">
-          <h1 className="main-title">Category Pipelines</h1>
+          <h1 className="main-title">Categories</h1>
           <p className="subtitle">
-            Configure catalog taxonomy, SKU codes, and rental attire pipelines
+            Configure catalog taxonomy, SKU codes, and rental attire categories
           </p>
         </div>
 
         <div className="top-actions">
-          {/* View Mode Toggle: Cards vs Table */}
-          <div className="view-mode-toggle" title="Switch layout">
-            <button 
-              type="button"
-              className={`view-btn ${viewMode === 'cards' ? 'active' : ''}`}
-              onClick={() => handleToggleViewMode('cards')}
-            >
-              <FiGrid className="icon" />
-              <span>Pipelines</span>
-            </button>
-            <button 
-              type="button"
-              className={`view-btn ${viewMode === 'table' ? 'active' : ''}`}
-              onClick={() => handleToggleViewMode('table')}
-            >
-              <FiList className="icon" />
-              <span>Table</span>
-            </button>
-          </div>
-
           {isSuperAdmin && stores.length > 0 && (
-            <div 
-              className="store-selector-pill"
-              onClick={(e) => {
-                const sel = e.currentTarget.querySelector('select');
-                if (sel && e.target !== sel) {
-                  if (typeof sel.showPicker === 'function') {
-                    sel.showPicker();
-                  } else {
-                    sel.focus();
-                  }
-                }
-              }}
-            >
+            <div className="store-selector-pill">
               <FiShoppingBag className="store-pill-icon" />
               <label>Store:</label>
               <select
@@ -281,12 +241,6 @@ const CategoriesList = () => {
             </div>
           )}
 
-          {/* Pill Filter for Total Count at the top */}
-          <div className="pill-filter">
-            <span className="dot" />
-            <span>Total Categories ({totalCategories})</span>
-          </div>
-
           <button
             type="button"
             className="pill-btn-primary"
@@ -297,7 +251,6 @@ const CategoriesList = () => {
           </button>
         </div>
       </div>
-
 
       {/* Search & Filter Toolbar */}
       <div className="cat-search-bar-wrap">
@@ -319,180 +272,71 @@ const CategoriesList = () => {
             </button>
           )}
         </div>
+        <div className="items-count-badge">
+          Total Categories: {filteredCategories.length}
+        </div>
       </div>
 
-      {/* Content: Cards View (CRM Pipeline Cards) */}
-      {viewMode === 'cards' ? (
-        <div className="category-cards-grid">
-          {loading ? (
-            Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="cat-card skeleton-card">
-                <div className="cat-card-header">
-                  <div className="skeleton-line w-30" />
-                  <div className="skeleton-line w-20" />
-                </div>
-                <div className="skeleton-line w-60 h-24" />
-                <div className="skeleton-line w-90" />
-                <div className="skeleton-line w-40" />
-              </div>
-            ))
-          ) : filteredCategories.length === 0 ? (
-            <div className="empty-pipeline-card">
-              <FiTag className="empty-icon" />
-              <h3>No categories found</h3>
-              <p>
-                {searchQuery
-                  ? 'No categories match your search query.'
-                  : 'Get started by creating your first rental category pipeline.'}
-              </p>
-              {!searchQuery && (
-                <button
-                  type="button"
-                  className="pill-btn-primary"
-                  onClick={handleOpenCreateModal}
-                  style={{ marginTop: 14 }}
-                >
-                  <FiPlus />
-                  <span>Create Category</span>
-                </button>
-              )}
-            </div>
-          ) : (
-            filteredCategories.map((cat, idx) => {
-              const colorTheme = CATEGORY_COLORS[idx % CATEGORY_COLORS.length];
-              const productCount = cat._count?.products || 0;
-              const formattedIdx = String(idx + 1).padStart(2, '0');
-
-              return (
-                <div key={cat.id} className="cat-pipeline-card">
-                  {/* Card Header */}
-                  <div className="pipeline-card-top">
-                    <div className="pipeline-id-tag">
-                      <span className="pipeline-index">#{formattedIdx}</span>
-                      <span 
-                        className="pipeline-code-pill"
-                        style={{
-                          backgroundColor: colorTheme.bg,
-                          color: colorTheme.color,
-                          borderColor: colorTheme.border
-                        }}
-                      >
-                        {cat.category_code}
-                      </span>
-                    </div>
-
-                    <div className="pipeline-actions">
-                      <button
-                        type="button"
-                        className="card-action-btn"
-                        title="Edit Category"
-                        onClick={() => handleOpenEditModal(cat)}
-                      >
-                        <FiEdit2 />
-                      </button>
-                      <button
-                        type="button"
-                        className="card-action-btn danger"
-                        title="Delete Category"
-                        onClick={() => setCategoryToDelete(cat)}
-                      >
-                        <FiTrash2 />
-                      </button>
-                    </div>
+      {/* Content: Clean Bond CRM DataTable */}
+      <div className="bond-card-container">
+        <DataTable
+          columns={[
+            { label: '#', width: '70px' },
+            { label: 'Category Code', width: '180px' },
+            { label: 'Category Name', width: '220px' },
+            { label: 'Description' },
+            { label: 'Total Designs', align: 'center', width: '160px' },
+            { label: 'Actions', align: 'right', width: '120px' }
+          ]}
+          data={filteredCategories}
+          loading={loading}
+          emptyMessage="No categories found. Create a category to organize your inventory."
+          keyExtractor={(cat) => cat.id}
+          renderRow={(cat) => {
+            const productCount = cat._count?.products || 0;
+            const formattedIdx = String(filteredCategories.indexOf(cat) + 1).padStart(2, '0');
+            return (
+              <>
+                <td>
+                  <span className="row-index-text">{formattedIdx}</span>
+                </td>
+                <td>
+                  <span className="table-cat-code">
+                    {cat.category_code}
+                  </span>
+                </td>
+                <td>
+                  <div className="table-cat-title-cell">
+                    <span className="table-cat-name">{cat.name}</span>
                   </div>
-
-                  {/* Card Body */}
-                  <div className="pipeline-card-body">
-                    <h3 className="pipeline-name">{cat.name}</h3>
-                    <p className="pipeline-desc">
-                      {cat.description || 'Standard catalog attire pipeline for wedding and rental bookings.'}
-                    </p>
-                  </div>
-
-                  {/* Card Footer / Metrics */}
-                  <div className="pipeline-card-footer">
-                    <div className="designs-count-badge">
-                      <FiLayers className="badge-icon" />
-                      <span>{productCount} {productCount === 1 ? 'Design' : 'Designs'}</span>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="open-collection-link"
-                      onClick={() => navigate('/collection')}
-                      title="Browse designs in Collection"
-                    >
-                      <span>Collection</span>
-                      <FiArrowUpRight className="arrow-icon" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-      ) : (
-        /* Content: Table View (Bond CRM Table) */
-        <div className="bond-card-container">
-          <DataTable
-            columns={[
-              { label: '#', width: '70px' },
-              { label: 'Category Code', width: '180px' },
-              { label: 'Category Name', width: '220px' },
-              { label: 'Description' },
-              { label: 'Total Designs', align: 'center', width: '160px' },
-              { label: 'Actions', align: 'right', width: '120px' }
-            ]}
-            data={filteredCategories}
-            loading={loading}
-            emptyMessage="No categories found. Create a category to organize your inventory."
-            keyExtractor={(cat) => cat.id}
-            renderRow={(cat) => {
-              const productCount = cat._count?.products || 0;
-              const formattedIdx = String(filteredCategories.indexOf(cat) + 1).padStart(2, '0');
-              return (
-                <>
-                  <td>
-                    <span className="row-index-text">{formattedIdx}</span>
-                  </td>
-                  <td>
-                    <span className="table-cat-code">
-                      {cat.category_code}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="table-cat-title-cell">
-                      <span className="table-cat-name">{cat.name}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="table-cat-desc">
-                      {cat.description || <span className="muted-italic">No description provided</span>}
-                    </span>
-                  </td>
-                  <td className="text-center">
-                    <button
-                      type="button"
-                      className="table-designs-pill"
-                      onClick={() => navigate('/collection')}
-                      title="View designs in Collection"
-                    >
-                      <FiLayers />
-                      <span>{productCount} designs</span>
-                    </button>
-                  </td>
-                  <td className="text-right">
-                    <RowActions
-                      onEdit={() => handleOpenEditModal(cat)}
-                      onDelete={() => setCategoryToDelete(cat)}
-                    />
-                  </td>
-                </>
-              );
-            }}
-          />
-        </div>
-      )}
+                </td>
+                <td>
+                  <span className="table-cat-desc">
+                    {cat.description || <span className="muted-italic">No description provided</span>}
+                  </span>
+                </td>
+                <td className="text-center">
+                  <button
+                    type="button"
+                    className="table-designs-pill"
+                    onClick={() => navigate('/collection')}
+                    title="View designs in Collection"
+                  >
+                    <FiLayers />
+                    <span>{productCount} designs</span>
+                  </button>
+                </td>
+                <td className="text-right">
+                  <RowActions
+                    onEdit={() => handleOpenEditModal(cat)}
+                    onDelete={() => setCategoryToDelete(cat)}
+                  />
+                </td>
+              </>
+            );
+          }}
+        />
+      </div>
 
       {/* Add / Edit Category Modal */}
       {isModalOpen && (

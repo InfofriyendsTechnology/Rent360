@@ -187,9 +187,15 @@
       }
     }
 
-    .toolbar-count {
-      font-size: 0.85rem;
+    .toolbar-count,
+    .items-count-badge {
+      font-size: 0.82rem;
+      font-weight: 600;
       color: $text-muted;
+      background-color: $bg-card;
+      border: 1px solid $border-main;
+      padding: 6px 14px;
+      border-radius: $border-radius-pill;
       strong { color: $text-main; }
     }
   }

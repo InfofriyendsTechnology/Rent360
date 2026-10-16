@@ -252,11 +252,6 @@ const CollectionList = () => {
             </div>
           )}
 
-          {/* Pill Filter for Total Count at the top */}
-          <div className="pill-filter">
-            <span className="dot" />
-            <span>Total Designs ({products.length})</span>
-          </div>
 
           {/* View Mode Toggle: Cards vs Table */}
           <div className="view-mode-toggle" title="Switch layout">
