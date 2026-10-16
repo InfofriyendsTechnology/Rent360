@@ -408,20 +408,22 @@
 
     th {
       background-color: $bg-card-alt !important;
-      padding: 14px 22px !important;
-      font-size: 0.78rem !important;
+      padding: 9px 18px !important;
+      font-size: 0.74rem !important;
       font-weight: 700 !important;
       color: $text-muted !important;
       text-transform: uppercase !important;
       letter-spacing: 0.05em !important;
       border-bottom: 1px solid $border-main !important;
+      white-space: nowrap !important;
     }
 
     td {
-      padding: 16px 22px !important;
+      padding: 9px 18px !important;
       border-bottom: 1px solid $border-main !important;
       color: $text-main !important;
       vertical-align: middle !important;
+      font-size: 0.86rem !important;
     }
 
     tr:hover {
@@ -429,7 +431,7 @@
     }
 
     .row-index-text {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       color: $text-muted;
       font-family: monospace;
@@ -438,9 +440,9 @@
     .table-cat-code {
       display: inline-flex;
       align-items: center;
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
       font-weight: 800;
       letter-spacing: 0.04em;
       background-color: rgba(59, 130, 246, 0.12);

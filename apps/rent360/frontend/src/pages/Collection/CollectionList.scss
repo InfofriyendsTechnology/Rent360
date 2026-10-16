@@ -549,9 +549,9 @@
     gap: 12px;
 
     .table-thumb {
-      width: 44px;
-      height: 44px;
-      border-radius: 8px;
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
       overflow: hidden;
       background-color: $bg-card-alt;
       flex-shrink: 0;
@@ -567,7 +567,7 @@
 
       .product-fallback-box {
         .fallback-icon {
-          font-size: 1.3rem;
+          font-size: 1.1rem;
           margin-bottom: 0;
         }
         .fallback-code {

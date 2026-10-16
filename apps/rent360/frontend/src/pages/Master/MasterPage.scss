@@ -129,6 +129,21 @@
     }
   }
 
+  /* Bond Table Compact Row Height */
+  .bond-table {
+    th {
+      padding: 9px 18px !important;
+      font-size: 0.74rem !important;
+      white-space: nowrap !important;
+    }
+
+    td {
+      padding: 9px 18px !important;
+      font-size: 0.86rem !important;
+      vertical-align: middle !important;
+    }
+  }
+
   /* Cell Elements */
   .size-badge-cell {
     display: flex;
@@ -136,64 +151,32 @@
 
     .size-pill {
       display: inline-block;
-      padding: 4px 12px;
+      padding: 2px 8px;
       background-color: rgba(37, 99, 235, 0.1);
       color: #2563eb;
       font-weight: 700;
-      font-size: 0.85rem;
-      border-radius: 8px;
+      font-size: 0.8rem;
+      border-radius: 6px;
       border: 1px solid rgba(37, 99, 235, 0.2);
     }
   }
 
-  .color-preview-cell {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    .color-dot {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 1px solid rgba(0, 0, 0, 0.15);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .color-name {
-      font-weight: 600;
-      color: $text-main;
-      font-size: 0.9rem;
-    }
-  }
-
-  .hex-pill {
-    display: inline-block;
-    padding: 3px 10px;
-    background-color: $bg-card-alt;
-    border: 1px solid $border-main;
-    border-radius: 6px;
-    font-family: monospace;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: $text-muted;
-  }
-
   .slot-badge {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 2px 8px;
     background-color: rgba(16, 185, 129, 0.08);
     border: 1px solid rgba(16, 185, 129, 0.2);
     border-radius: 6px;
     color: #059669;
     font-weight: 600;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
 
   .type-badge {
     display: inline-block;
-    padding: 3px 10px;
+    padding: 2px 8px;
     border-radius: 6px;
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -213,9 +196,9 @@
 
   .status-pill {
     display: inline-block;
-    padding: 3px 10px;
+    padding: 2px 8px;
     border-radius: 6px;
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 700;
     text-transform: uppercase;
 
