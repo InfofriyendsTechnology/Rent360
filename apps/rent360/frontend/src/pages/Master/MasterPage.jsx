@@ -551,6 +551,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
         columns={getColumns()}
         data={filteredItems}
         loading={loading}
+        keyExtractor={(item) => item.id}
         emptyTitle={`No ${getActiveTabInfo().label.toLowerCase()} found`}
         emptyDescription={`Get started by clicking the "Add ${getActiveTabInfo().label.replace(/s$/, '')}" button above.`}
       />
