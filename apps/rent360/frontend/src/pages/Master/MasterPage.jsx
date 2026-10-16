@@ -57,7 +57,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
     name: '',
     code: '',
     sort_order: 0,
-    hex_code: '#2563EB',
+    hex_code: '',
     start_time: '',
     end_time: '',
     title: '',
@@ -151,7 +151,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       name: '',
       code: '',
       sort_order: items.length + 1,
-      hex_code: '#2563EB',
+      hex_code: '',
       start_time: '10:00 AM',
       end_time: '01:00 PM',
       title: '',
@@ -173,7 +173,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       name: item.name || '',
       code: item.code || '',
       sort_order: item.sort_order || 0,
-      hex_code: item.hex_code || '#2563EB',
+      hex_code: item.hex_code || '',
       start_time: item.start_time || '',
       end_time: item.end_time || '',
       title: item.title || '',
@@ -298,24 +298,8 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Color Name',
             accessor: 'name',
-            width: '45%',
-            cell: (row) => (
-              <div className="color-preview-cell">
-                <span 
-                  className="color-dot" 
-                  style={{ backgroundColor: row.hex_code || '#cbd5e1' }} 
-                />
-                <span className="color-name">{row.name}</span>
-              </div>
-            )
-          },
-          {
-            header: 'Hex Code',
-            accessor: 'hex_code',
-            width: '35%',
-            cell: (row) => (
-              <span className="hex-pill">{row.hex_code || 'N/A'}</span>
-            )
+            width: '80%',
+            cell: (row) => <span className="cell-strong">{row.name}</span>
           },
           {
             header: 'Actions',
@@ -640,36 +624,16 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
 
                 {/* Color Form */}
                 {currentTab === 'colors' && (
-                  <>
-                    <div className="form-group">
-                      <label>Color Name *</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Royal Blue, Wine, Maroon"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Color Preview & Hex Code</label>
-                      <div className="color-picker-row">
-                        <input
-                          type="color"
-                          className="color-swatch-input"
-                          value={formData.hex_code || '#2563EB'}
-                          onChange={(e) => setFormData({ ...formData, hex_code: e.target.value })}
-                        />
-                        <input
-                          type="text"
-                          className="color-hex-input"
-                          placeholder="#2563EB"
-                          value={formData.hex_code}
-                          onChange={(e) => setFormData({ ...formData, hex_code: e.target.value })}
-                        />
-                      </div>
-                    </div>
-                  </>
+                  <div className="form-group">
+                    <label>Color Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Royal Blue, Wine, Maroon, Red"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                  </div>
                 )}
 
                 {/* Time Slot Form */}
