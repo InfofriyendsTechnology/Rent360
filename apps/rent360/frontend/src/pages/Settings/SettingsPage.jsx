@@ -1,50 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { 
-  FiLayers, FiMaximize2, FiPlus, FiEdit2, FiTrash2, FiX, FiSearch
+  FiSettings, FiSliders, FiSun, FiMoon, FiGlobe, 
+  FiMapPin, FiMail, FiPhone, FiUser, FiCheck, FiArrowRight,
+  FiLayers, FiMaximize2, FiDroplet, FiClock, FiShield
 } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
-import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
-import { DataTable, RowActions } from '../../components/ui';
 
 import '../Stores/StoresList.scss';
 import './SettingsPage.scss';
 
-import { DEFAULT_RENTAL_SIZES, getStoreSizes } from '../../constants/sizes';
-
 const SettingsPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
   const userStoreId = user?.store?.id || user?.storeId || '';
-
-  // Active Tab: strictly Categories or Sizes
-  const activeTab = searchParams.get('tab') === 'sizes' ? 'sizes' : 'categories';
 
   // Super Admin store selector
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(userStoreId);
 
-  // Data
-  const [categories, setCategories] = useState([]);
-  const [sizes, setSizes] = useState(getStoreSizes);
+  // Store profile form state
+  const [storeData, setStoreData] = useState({
+    name: '',
+    owner_name: '',
+    mobile: '',
+    email: '',
+    address: '',
+    city: '',
+    gst_number: ''
+  });
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Modal State
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
-  const [itemToDelete, setItemToDelete] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Form State
-  const [formName, setFormName] = useState('');
-  const [formCode, setFormCode] = useState('');
-  const [formDesc, setFormDesc] = useState('');
+  // Theme preference
+  const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('theme') || 'light');
 
   // Fetch stores if Super Admin
   useEffect(() => {
@@ -66,183 +59,96 @@ const SettingsPage = () => {
     }
   }, [isSuperAdmin, userStoreId, token]);
 
-  // Fetch Categories from API
-  const fetchCategories = async () => {
+  // Fetch active store details
+  const fetchStoreDetails = async () => {
+    if (!selectedStoreId || !token) return;
     setLoading(true);
     try {
-      const url = selectedStoreId 
-        ? `${API_BASE_URL}/api/categories?storeId=${selectedStoreId}`
-        : `${API_BASE_URL}/api/categories`;
-      const res = await axios.get(url, {
+      const res = await axios.get(`${API_BASE_URL}/api/stores/${selectedStoreId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setCategories(res.data.data || []);
+      const st = res.data.data;
+      if (st) {
+        setStoreData({
+          name: st.name || '',
+          owner_name: st.owner_name || '',
+          mobile: st.mobile || '',
+          email: st.email || '',
+          address: st.address || '',
+          city: st.city || '',
+          gst_number: st.gst_number || ''
+        });
+      }
     } catch (err) {
-      toast.error('Failed to load categories');
+      // Fallback from user store object
+      if (user?.store) {
+        setStoreData({
+          name: user.store.name || '',
+          owner_name: user.store.owner_name || user.name || '',
+          mobile: user.store.mobile || user.mobile || '',
+          email: user.store.email || '',
+          address: user.store.address || '',
+          city: user.store.city || '',
+          gst_number: user.store.gst_number || ''
+        });
+      }
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (activeTab === 'categories') {
-      fetchCategories();
+    fetchStoreDetails();
+  }, [selectedStoreId, token]);
+
+  // Handle Theme Toggle
+  const handleThemeToggle = (theme) => {
+    setCurrentTheme(theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'dark') {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
     }
-  }, [activeTab, selectedStoreId, token]);
-
-  // Tab switcher
-  const handleSelectTab = (tabId) => {
-    setSearchParams({ tab: tabId });
-    setSearchQuery('');
+    window.dispatchEvent(new Event('themeChanged'));
+    toast.success(`Theme switched to ${theme} mode`);
   };
 
-  // Open Create Modal
-  const handleOpenCreateModal = () => {
-    setEditingItem(null);
-    setFormName('');
-    setFormCode('');
-    setFormDesc('');
-    setIsModalOpen(true);
-  };
-
-  // Open Edit Modal
-  const handleOpenEditModal = (item) => {
-    setEditingItem(item);
-    setFormName(item.name || '');
-    setFormCode(item.category_code || item.code || '');
-    setFormDesc(item.description || '');
-    setIsModalOpen(true);
-  };
-
-  // Save Item (Create or Edit)
-  const handleSave = async (e) => {
+  // Save Store Details
+  const handleSaveStore = async (e) => {
     e.preventDefault();
-    if (!formName.trim()) {
-      toast.error('Please enter a name');
-      return;
-    }
+    if (!selectedStoreId) return;
 
     setIsSaving(true);
     try {
-      if (activeTab === 'categories') {
-        const payload = {
-          name: formName.trim(),
-          category_code: formCode.trim() || undefined,
-          description: formDesc.trim() || undefined,
-          storeId: selectedStoreId || undefined
-        };
-
-        if (editingItem) {
-          await axios.put(`${API_BASE_URL}/api/categories/${editingItem.id}`, payload, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          toast.success(`Category "${payload.name}" updated`);
-        } else {
-          await axios.post(`${API_BASE_URL}/api/categories`, payload, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          toast.success(`Category "${payload.name}" created`);
+      await axios.put(
+        `${API_BASE_URL}/api/stores/${selectedStoreId}`,
+        storeData,
+        {
+          headers: { Authorization: `Bearer ${token}` }
         }
-        fetchCategories();
-      } else if (activeTab === 'sizes') {
-        let updated;
-        const code = (formCode.trim() || formName.replace(/[^0-9A-Z]/gi, '').slice(0, 4)).toUpperCase();
-        if (editingItem) {
-          updated = sizes.map((s) => (s.id === editingItem.id ? { ...s, name: formName.trim(), code } : s));
-        } else {
-          updated = [...sizes, { id: `size-${Date.now()}`, name: formName.trim(), code }];
-        }
-        setSizes(updated);
-        localStorage.setItem('rent360_master_sizes', JSON.stringify(updated));
-        toast.success(`Size "${formName}" saved`);
-      }
-
-      setIsModalOpen(false);
+      );
+      toast.success('Store settings saved successfully');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to save item');
+      toast.error(err.response?.data?.message || 'Failed to save settings');
     } finally {
       setIsSaving(false);
     }
   };
 
-  // Delete
-  const handleConfirmDelete = async () => {
-    if (!itemToDelete || isDeleting) return;
-    setIsDeleting(true);
-    try {
-      if (activeTab === 'categories') {
-        await axios.delete(`${API_BASE_URL}/api/categories/${itemToDelete.id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        toast.success(`Category "${itemToDelete.name}" deleted`);
-        fetchCategories();
-      } else if (activeTab === 'sizes') {
-        const updated = sizes.filter((s) => s.id !== itemToDelete.id);
-        setSizes(updated);
-        localStorage.setItem('rent360_master_sizes', JSON.stringify(updated));
-        toast.success(`Size "${itemToDelete.name}" deleted`);
-      }
-      setItemToDelete(null);
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Cannot delete item with associated records');
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  // Filtered Items
-  const filteredCategories = categories.filter((cat) => {
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      (cat.name || '').toLowerCase().includes(q) ||
-      (cat.category_code || '').toLowerCase().includes(q) ||
-      (cat.description || '').toLowerCase().includes(q)
-    );
-  });
-
-  const filteredSizes = sizes.filter((sz) => {
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      (sz.name || '').toLowerCase().includes(q) ||
-      (sz.code || '').toLowerCase().includes(q)
-    );
-  });
-
   return (
-    <div className="stores-view settings-page-view">
-      {/* Top Bar matching Rent360 Common Design */}
+    <div className="stores-view simple-settings-view">
+      {/* Top Bar matching Rent360 Design */}
       <div className="stores-top-bar">
         <div className="title-section">
-          <h1 className="main-title">System Setup</h1>
+          <h1 className="main-title">System Settings</h1>
           <p className="subtitle">
-            Configure catalog attire categories and rental garment sizes master
+            Manage your store business profile, contact details, and appearance preferences
           </p>
         </div>
 
         <div className="top-actions">
-          {/* Top Pill Tabs Switcher */}
-          <div className="view-mode-toggle">
-            <button
-              type="button"
-              className={`view-btn ${activeTab === 'categories' ? 'active' : ''}`}
-              onClick={() => handleSelectTab('categories')}
-            >
-              <FiLayers className="icon" />
-              <span>Categories ({categories.length})</span>
-            </button>
-            <button
-              type="button"
-              className={`view-btn ${activeTab === 'sizes' ? 'active' : ''}`}
-              onClick={() => handleSelectTab('sizes')}
-            >
-              <FiMaximize2 className="icon" />
-              <span>Sizes ({sizes.length})</span>
-            </button>
-          </div>
-
-          {/* Super Admin Store Selector Pill */}
+          {/* Store Selector Pill for Super Admin */}
           {isSuperAdmin && stores.length > 0 && (
             <div className="store-selector-pill">
               <label>Store:</label>
@@ -250,249 +156,226 @@ const SettingsPage = () => {
                 value={selectedStoreId}
                 onChange={(e) => setSelectedStoreId(e.target.value)}
               >
-                {stores.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.store_name}
+                {stores.map((st) => (
+                  <option key={st.id} value={st.id}>
+                    {st.name}
                   </option>
                 ))}
               </select>
             </div>
           )}
-
-          {/* Primary Pill Button */}
-          <button
-            type="button"
-            className="pill-btn-primary"
-            onClick={handleOpenCreateModal}
-          >
-            <FiPlus className="plus-icon" />
-            <span>Add {activeTab === 'categories' ? 'Category' : 'Size'}</span>
-          </button>
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="setup-controls-bar">
-        <div className="search-pill-wrapper">
-          <FiSearch className="search-icon" />
-          <input
-            type="text"
-            placeholder={activeTab === 'categories' ? 'Search categories by name or code...' : 'Search sizes...'}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              className="clear-search-btn"
-              onClick={() => setSearchQuery('')}
-            >
-              <FiX />
-            </button>
-          )}
-        </div>
-      </div>
+      <div className="settings-grid-layout">
+        {/* Left Column: Business Profile */}
+        <div className="settings-card business-card">
+          <div className="card-header">
+            <div className="icon-wrap">
+              <FiSettings />
+            </div>
+            <div>
+              <h3>Store Information</h3>
+              <p>Primary business identity and store contact info</p>
+            </div>
+          </div>
 
-      {/* Main Full-Width Common DataTable */}
-      <div className="bond-card-container">
-        {activeTab === 'categories' ? (
-          <DataTable 
-            columns={[
-              { label: 'Category Name' },
-              { label: 'Code (Prefix)' },
-              { label: 'Total Designs' },
-              { label: 'Description' },
-              { label: 'Actions', align: 'right' }
-            ]}
-            data={filteredCategories}
-            loading={loading}
-            emptyMessage={searchQuery ? 'No categories matched your search.' : 'No categories added yet. Click "+ Add Category" to create one.'}
-            keyExtractor={(cat) => cat.id}
-            renderRow={(cat) => (
-              <>
-                <td>
-                  <div className="category-title-cell">
-                    <span className="cat-icon-badge"><FiLayers /></span>
-                    <span className="cat-name-text">{cat.name}</span>
-                  </div>
-                </td>
-                <td>
-                  <span className="sku-badge">{cat.category_code || '—'}</span>
-                </td>
-                <td>
-                  <span className="count-pill">{cat._count?.products || 0} designs</span>
-                </td>
-                <td>
-                  <span className="desc-text">{cat.description || '—'}</span>
-                </td>
-                <td className="text-right">
-                  <RowActions 
-                    actions={[
-                      { 
-                        icon: FiEdit2, 
-                        variant: 'edit', 
-                        title: 'Edit Category', 
-                        onClick: () => handleOpenEditModal(cat) 
-                      },
-                      { 
-                        icon: FiTrash2, 
-                        variant: 'delete', 
-                        title: 'Delete Category', 
-                        onClick: () => setItemToDelete(cat) 
-                      }
-                    ]}
-                  />
-                </td>
-              </>
-            )}
-          />
-        ) : (
-          <DataTable 
-            columns={[
-              { label: 'Size Label' },
-              { label: 'Short Code' },
-              { label: 'Sample Unit SKU' },
-              { label: 'Actions', align: 'right' }
-            ]}
-            data={filteredSizes}
-            loading={false}
-            emptyMessage={searchQuery ? 'No sizes matched your search.' : 'No sizes added yet. Click "+ Add Size" to create one.'}
-            keyExtractor={(sz) => sz.id}
-            renderRow={(sz) => (
-              <>
-                <td>
-                  <div className="category-title-cell">
-                    <span className="cat-icon-badge"><FiMaximize2 /></span>
-                    <span className="cat-name-text">{sz.name}</span>
-                  </div>
-                </td>
-                <td>
-                  <span className="sku-badge">{sz.code || sz.name.replace(/[^0-9A-Z]/gi, '').slice(0, 4)}</span>
-                </td>
-                <td>
-                  <span className="sample-sku-mono">{`ITEM-${sz.code || sz.name.replace(/[^0-9A-Z]/gi, '').slice(0, 3) || 'STD'}-01`}</span>
-                </td>
-                <td className="text-right">
-                  <RowActions 
-                    actions={[
-                      { 
-                        icon: FiEdit2, 
-                        variant: 'edit', 
-                        title: 'Edit Size', 
-                        onClick: () => handleOpenEditModal(sz) 
-                      },
-                      { 
-                        icon: FiTrash2, 
-                        variant: 'delete', 
-                        title: 'Delete Size', 
-                        onClick: () => setItemToDelete(sz) 
-                      }
-                    ]}
-                  />
-                </td>
-              </>
-            )}
-          />
-        )}
-      </div>
-
-      {/* CREATE / EDIT MODAL using standard Bond Modal */}
-      {isModalOpen && (
-        <div className="bond-modal-overlay" onClick={() => setIsModalOpen(false)}>
-          <div className="bond-modal-card setup-modal-compact" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <div>
-                <h2>{editingItem ? `Edit ${activeTab === 'categories' ? 'Category' : 'Size'}` : `Add New ${activeTab === 'categories' ? 'Category' : 'Size'}`}</h2>
-                <p>Configure {activeTab === 'categories' ? 'catalog attire category' : 'rental garment size label'}</p>
+          <form onSubmit={handleSaveStore} className="card-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label>Store / Brand Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Royal Wedding Collection"
+                  value={storeData.name}
+                  onChange={(e) => setStoreData({ ...storeData, name: e.target.value })}
+                />
               </div>
-              <button className="modal-close" onClick={() => setIsModalOpen(false)}>
-                <FiX />
-              </button>
+              <div className="form-group">
+                <label>Owner / Manager Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Rajesh Kumar"
+                  value={storeData.owner_name}
+                  onChange={(e) => setStoreData({ ...storeData, owner_name: e.target.value })}
+                />
+              </div>
             </div>
 
-            <form onSubmit={handleSave} autoComplete="off">
-              <div className="modal-body">
-                <div className="form-group">
-                  <label>{activeTab === 'categories' ? 'Category Name *' : 'Size Label *'}</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder={activeTab === 'categories' ? 'e.g. Royal Sherwani, Jodhpuri' : 'e.g. 38 (M), 40 (L), Free Size'}
-                    value={formName}
-                    onChange={(e) => {
-                      setFormName(e.target.value);
-                      if (!editingItem) {
-                        const suggested = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '_').slice(0, 15);
-                        setFormCode(suggested);
-                      }
-                    }}
-                    autoFocus
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>{activeTab === 'categories' ? 'Category Code (SKU Prefix)' : 'Size Short Code'}</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder={activeTab === 'categories' ? 'e.g. SHERWANI, JODHPURI' : 'e.g. 38, 40, FS'}
-                    value={formCode}
-                    onChange={(e) => setFormCode(e.target.value.toUpperCase())}
-                  />
-                  <small className="help-text">
-                    Used to automatically generate size-wise unit SKUs (e.g. ITEM-38-01)
-                  </small>
-                </div>
-
-                {activeTab === 'categories' && (
-                  <div className="form-group">
-                    <label>Description (Optional)</label>
-                    <textarea
-                      rows={3}
-                      className="form-input"
-                      placeholder="Brief description of this collection category..."
-                      value={formDesc}
-                      onChange={(e) => setFormDesc(e.target.value)}
-                    />
-                  </div>
-                )}
+            <div className="form-row">
+              <div className="form-group">
+                <label>Contact Mobile *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 9876543210"
+                  value={storeData.mobile}
+                  onChange={(e) => setStoreData({ ...storeData, mobile: e.target.value })}
+                />
               </div>
+              <div className="form-group">
+                <label>Business Email</label>
+                <input
+                  type="email"
+                  placeholder="contact@store.com"
+                  value={storeData.email}
+                  onChange={(e) => setStoreData({ ...storeData, email: e.target.value })}
+                />
+              </div>
+            </div>
 
-              <div className="modal-footer">
+            <div className="form-row">
+              <div className="form-group">
+                <label>City</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Ahmedabad"
+                  value={storeData.city}
+                  onChange={(e) => setStoreData({ ...storeData, city: e.target.value })}
+                />
+              </div>
+              <div className="form-group">
+                <label>GST Number (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 24AAAAA0000A1Z5"
+                  value={storeData.gst_number}
+                  onChange={(e) => setStoreData({ ...storeData, gst_number: e.target.value.toUpperCase() })}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Store Address</label>
+              <textarea
+                rows={2}
+                placeholder="Full store street address..."
+                value={storeData.address}
+                onChange={(e) => setStoreData({ ...storeData, address: e.target.value })}
+              />
+            </div>
+
+            <div className="form-actions">
+              <button
+                type="submit"
+                className="save-btn"
+                disabled={isSaving || loading}
+              >
+                <FiCheck />
+                <span>{isSaving ? 'Saving...' : 'Save Store Details'}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Right Column: Preferences & Store Setup Shortcut */}
+        <div className="settings-side-column">
+          {/* Appearance & Preferences */}
+          <div className="settings-card appearance-card">
+            <div className="card-header">
+              <div className="icon-wrap">
+                <FiSun />
+              </div>
+              <div>
+                <h3>Appearance & Regional</h3>
+                <p>Theme display and regional currency</p>
+              </div>
+            </div>
+
+            <div className="preference-item">
+              <div className="pref-info">
+                <span className="pref-title">Theme Mode</span>
+                <span className="pref-desc">Switch between light warm oat and dark mode</span>
+              </div>
+              <div className="theme-toggle-group">
                 <button
                   type="button"
-                  className="pill-btn-secondary"
-                  onClick={() => setIsModalOpen(false)}
-                  disabled={isSaving}
+                  className={`theme-pill ${currentTheme === 'light' ? 'active' : ''}`}
+                  onClick={() => handleThemeToggle('light')}
                 >
-                  Cancel
+                  <FiSun />
+                  <span>Light</span>
                 </button>
                 <button
-                  type="submit"
-                  className="pill-btn-primary"
-                  disabled={isSaving}
+                  type="button"
+                  className={`theme-pill ${currentTheme === 'dark' ? 'active' : ''}`}
+                  onClick={() => handleThemeToggle('dark')}
                 >
-                  {isSaving ? 'Saving...' : editingItem ? 'Update' : 'Create'}
+                  <FiMoon />
+                  <span>Dark</span>
                 </button>
               </div>
-            </form>
+            </div>
+
+            <div className="preference-item">
+              <div className="pref-info">
+                <span className="pref-title">Operating Currency</span>
+                <span className="pref-desc">Indian Rupee (INR ₹)</span>
+              </div>
+              <span className="static-badge">₹ INR</span>
+            </div>
+
+            <div className="preference-item">
+              <div className="pref-info">
+                <span className="pref-title">Timezone</span>
+                <span className="pref-desc">India Standard Time (IST)</span>
+              </div>
+              <span className="static-badge">UTC+05:30</span>
+            </div>
+          </div>
+
+          {/* Quick Setup Shortcuts Card */}
+          <div className="settings-card shortcut-setup-card">
+            <div className="card-header">
+              <div className="icon-wrap accent">
+                <FiSliders />
+              </div>
+              <div>
+                <h3>Store Setup Master</h3>
+                <p>Manage sizes, colors, categories, slots, and accounts</p>
+              </div>
+            </div>
+
+            <p className="shortcut-note">
+              Garment sizes, colors, time slots, reminder alerts, and financial accounts are managed directly inside the <strong>Store Setup</strong> menu.
+            </p>
+
+            <div className="shortcut-pills-list">
+              <button type="button" onClick={() => navigate('/sizes')} className="setup-link-pill">
+                <FiMaximize2 />
+                <span>Sizes</span>
+                <FiArrowRight className="arrow" />
+              </button>
+
+              <button type="button" onClick={() => navigate('/colors')} className="setup-link-pill">
+                <FiDroplet />
+                <span>Colors</span>
+                <FiArrowRight className="arrow" />
+              </button>
+
+              <button type="button" onClick={() => navigate('/categories')} className="setup-link-pill">
+                <FiLayers />
+                <span>Categories</span>
+                <FiArrowRight className="arrow" />
+              </button>
+
+              <button type="button" onClick={() => navigate('/time-slots')} className="setup-link-pill">
+                <FiClock />
+                <span>Time Slots</span>
+                <FiArrowRight className="arrow" />
+              </button>
+
+              <button type="button" onClick={() => navigate('/accounts')} className="setup-link-pill">
+                <FiShield />
+                <span>Accounts</span>
+                <FiArrowRight className="arrow" />
+              </button>
+            </div>
           </div>
         </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      <ConfirmModal
-        isOpen={Boolean(itemToDelete)}
-        title={`Delete ${activeTab === 'categories' ? 'Category' : 'Size'}`}
-        message={`Are you sure you want to delete "${itemToDelete?.name}"?`}
-        confirmText={isDeleting ? 'Deleting...' : 'Delete'}
-        cancelText="Cancel"
-        onConfirm={handleConfirmDelete}
-        onCancel={() => setItemToDelete(null)}
-        isDestructive={true}
-        isLoading={isDeleting}
-      />
+      </div>
     </div>
   );
 };

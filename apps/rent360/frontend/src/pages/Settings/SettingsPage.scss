@@ -1,276 +1,283 @@
 @import '../../styles/variables';
 
-.settings-page-view {
+.simple-settings-view {
   width: 100%;
   margin: 0 auto;
 
-  /* Pill Switcher Toggle matching CategoriesList */
-  .view-mode-toggle {
-    display: inline-flex;
-    align-items: center;
-    background-color: $bg-card;
-    border: 1px solid $border-main;
-    border-radius: $border-radius-pill;
-    padding: 3px;
-    height: 42px;
-    box-shadow: $shadow-sm;
-    box-sizing: border-box;
+  .settings-grid-layout {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 20px;
+    align-items: start;
 
-    .view-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 18px;
-      height: 100%;
-      border-radius: $border-radius-pill;
-      border: none;
-      background: transparent;
-      color: $text-muted;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      outline: none;
-
-      .icon {
-        font-size: 1rem;
-      }
-
-      &:hover:not(.active) {
-        color: $text-main;
-      }
-
-      &.active {
-        background-color: $bg-pill-dark;
-        color: $text-inverse;
-        box-shadow: $shadow-sm;
-      }
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
     }
   }
 
-  /* Store Selector Pill */
-  .store-selector-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 42px;
-    background-color: $bg-card;
-    border: 1px solid $border-main;
-    padding: 0 16px;
-    border-radius: $border-radius-pill;
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: $text-main;
-    box-shadow: $shadow-sm;
-    box-sizing: border-box;
-
-    label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: $text-muted;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    select {
-      background: transparent;
-      border: none;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: $text-main;
-      outline: none;
-      cursor: pointer;
-    }
-  }
-
-  /* Controls & Search */
-  .setup-controls-bar {
+  .settings-side-column {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    gap: 12px;
+    flex-direction: column;
+    gap: 20px;
+  }
 
-    .search-pill-wrapper {
-      position: relative;
+  /* Settings Card Base */
+  .settings-card {
+    background-color: $bg-card;
+    border: 1px solid $border-main;
+    border-radius: $border-radius-card;
+    padding: 24px;
+    box-shadow: $shadow-sm;
+
+    .card-header {
       display: flex;
       align-items: center;
-      width: 100%;
-      max-width: 380px;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid $border-main;
 
-      .search-icon {
-        position: absolute;
-        left: 14px;
-        color: $text-muted;
-        font-size: 1rem;
-        pointer-events: none;
-      }
-
-      input {
-        width: 100%;
-        height: 42px;
-        padding: 0 36px 0 38px;
-        background-color: $bg-card;
-        border: 1px solid $border-main;
-        border-radius: $border-radius-pill;
-        font-size: 0.88rem;
-        color: $text-main;
-        outline: none;
-        box-shadow: $shadow-sm;
-        box-sizing: border-box;
-        transition: all 0.2s ease;
-
-        &:focus {
-          border-color: $accent;
-          box-shadow: 0 0 0 3px rgba(11, 96, 176, 0.12);
-        }
-
-        &::placeholder {
-          color: $text-muted;
-        }
-      }
-
-      .clear-search-btn {
-        position: absolute;
-        right: 12px;
-        background: none;
-        border: none;
-        color: $text-muted;
-        cursor: pointer;
-        font-size: 0.95rem;
+      .icon-wrap {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background-color: $bg-card-alt;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 4px;
+        font-size: 1.15rem;
+        color: $text-main;
+        flex-shrink: 0;
 
-        &:hover {
-          color: $text-main;
+        &.accent {
+          background-color: rgba(37, 99, 235, 0.1);
+          color: #2563eb;
         }
       }
-    }
-  }
 
-  /* Table Cells */
-  .category-title-cell {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .cat-icon-badge {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background-color: $bg-card-alt;
-      color: $text-main;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.05rem;
-      flex-shrink: 0;
-      border: 1px solid $border-main;
-    }
-
-    .cat-name-text {
-      font-weight: 700;
-      color: $text-main;
-      font-size: 0.95rem;
-      letter-spacing: -0.01em;
-    }
-  }
-
-  .sku-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-size: 0.78rem;
-    font-weight: 800;
-    background-color: $bg-card-alt;
-    border: 1px solid $border-main;
-    font-family: monospace;
-    color: $text-main;
-    letter-spacing: 0.04em;
-  }
-
-  .count-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    background-color: rgba(11, 96, 176, 0.09);
-    color: $accent;
-  }
-
-  .sample-sku-mono {
-    display: inline-flex;
-    align-items: center;
-    font-family: monospace;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: $text-muted;
-    background-color: $bg-card-alt;
-    padding: 4px 10px;
-    border-radius: 8px;
-    border: 1px solid $border-main;
-    letter-spacing: 0.04em;
-  }
-
-  .desc-text {
-    color: $text-muted;
-    font-size: 0.88rem;
-    max-width: 360px;
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  /* Compact Modal Override */
-  .setup-modal-compact {
-    max-width: 520px;
-
-    .form-group {
-      margin-bottom: 18px;
-
-      label {
-        display: block;
-        font-size: 0.85rem;
+      h3 {
+        font-size: 1.05rem;
         font-weight: 700;
         color: $text-main;
-        margin-bottom: 6px;
+        margin: 0 0 2px 0;
       }
 
-      .form-input {
+      p {
+        font-size: 0.8rem;
+        color: $text-muted;
+        margin: 0;
+      }
+    }
+  }
+
+  /* Form Styling */
+  .card-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      textarea {
         width: 100%;
-        padding: 11px 14px;
+        padding: 10px 14px;
         background-color: $bg-card-alt;
         border: 1px solid $border-main;
         border-radius: 10px;
-        font-size: 0.92rem;
+        font-size: 0.9rem;
         color: $text-main;
         outline: none;
+        transition: border-color 0.2s;
         box-sizing: border-box;
-        transition: all 0.2s ease;
 
         &:focus {
           border-color: $accent;
-          background-color: $bg-card;
-          box-shadow: 0 0 0 3px rgba(11, 96, 176, 0.12);
         }
 
         &::placeholder {
           color: $text-muted;
-          opacity: 0.6;
         }
       }
+    }
 
-      .help-text {
-        display: block;
-        font-size: 0.76rem;
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 10px;
+
+      .save-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 22px;
+        background-color: $bg-pill-dark;
+        color: $text-inverse;
+        border: none;
+        border-radius: $border-radius-pill;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+
+        &:hover {
+          opacity: 0.9;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  /* Preference Items */
+  .preference-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid $border-main;
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .pref-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .pref-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-main;
+      }
+
+      .pref-desc {
+        font-size: 0.78rem;
         color: $text-muted;
-        margin-top: 4px;
+      }
+    }
+
+    .static-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: $text-muted;
+      background-color: $bg-card-alt;
+      border: 1px solid $border-main;
+      padding: 4px 12px;
+      border-radius: $border-radius-pill;
+    }
+
+    .theme-toggle-group {
+      display: inline-flex;
+      align-items: center;
+      background-color: $bg-card-alt;
+      border: 1px solid $border-main;
+      border-radius: $border-radius-pill;
+      padding: 3px;
+
+      .theme-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: $border-radius-pill;
+        border: none;
+        background: transparent;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: $text-muted;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &.active {
+          background-color: $bg-pill-dark;
+          color: $text-inverse;
+          box-shadow: $shadow-sm;
+        }
+      }
+    }
+  }
+
+  /* Shortcut Setup Card */
+  .shortcut-setup-card {
+    .shortcut-note {
+      font-size: 0.84rem;
+      color: $text-muted;
+      line-height: 1.5;
+      margin: 0 0 16px 0;
+
+      strong {
+        color: $text-main;
+      }
+    }
+
+    .shortcut-pills-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+      }
+
+      .setup-link-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background-color: $bg-card-alt;
+        border: 1px solid $border-main;
+        border-radius: 10px;
+        color: $text-main;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s ease;
+
+        .arrow {
+          margin-left: auto;
+          color: $text-muted;
+          font-size: 0.85rem;
+          transition: transform 0.18s ease;
+        }
+
+        &:hover {
+          background-color: rgba(37, 99, 235, 0.08);
+          border-color: rgba(37, 99, 235, 0.2);
+          color: #2563eb;
+
+          .arrow {
+            transform: translateX(3px);
+            color: #2563eb;
+          }
+        }
       }
     }
   }

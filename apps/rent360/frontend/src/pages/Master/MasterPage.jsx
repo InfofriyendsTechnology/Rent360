@@ -465,9 +465,9 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       {/* Top Bar matching Rent360 Design */}
       <div className="stores-top-bar">
         <div className="title-section">
-          <h1 className="main-title">Master Data</h1>
+          <h1 className="main-title">Store Setup</h1>
           <p className="subtitle">
-            Manage system-wide configuration, sizes, colors, time slots, and financial accounts
+            Configure your store catalog, sizes, colors, timing slots, and financial accounts
           </p>
         </div>
 

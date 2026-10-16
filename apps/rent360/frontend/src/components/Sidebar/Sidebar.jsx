@@ -3,7 +3,7 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { 
   FiHome, FiBox, FiUsers, FiSettings, FiLogOut, 
   FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiHardDrive, 
-  FiCornerUpLeft, FiX, FiDatabase, FiChevronDown, FiChevronRight,
+  FiCornerUpLeft, FiX, FiSliders, FiDatabase, FiChevronDown, FiChevronRight,
   FiMaximize2, FiDroplet, FiClock, FiBookOpen
 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -203,17 +203,17 @@ const Sidebar = ({ isOpen, onClose }) => {
             </nav>
           </div>
 
-          {/* Collapsible Master Accordion Section */}
+          {/* Collapsible Store Setup Accordion Section */}
           <div className="menu-group master-menu-group">
-            <span className="group-title">CONFIGURATION</span>
+            <span className="group-title">STORE SETUP</span>
             <div className="accordion-group">
               <button
                 type="button"
                 className={`menu-pill accordion-trigger ${isMasterOpen ? 'open' : ''} ${isMasterRouteActive ? 'active-group' : ''}`}
                 onClick={() => setIsMasterOpen(!isMasterOpen)}
               >
-                <span className="icon"><FiDatabase /></span>
-                <span className="text">Master</span>
+                <span className="icon"><FiSliders /></span>
+                <span className="text">Store Setup</span>
                 <span className="accordion-chevron">
                   {isMasterOpen ? <FiChevronDown /> : <FiChevronRight />}
                 </span>
@@ -298,7 +298,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </div>
 
           <div className="menu-group">
-            <span className="group-title">SETTINGS</span>
+            <span className="group-title">PREFERENCES</span>
             <nav>
               <NavLink 
                 to="/settings" 
@@ -306,7 +306,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 onClick={onClose}
               >
                 <span className="icon"><FiSettings /></span>
-                <span className="text">System Setup</span>
+                <span className="text">System Settings</span>
               </NavLink>
             </nav>
           </div>
