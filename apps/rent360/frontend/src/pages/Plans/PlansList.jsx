@@ -378,6 +378,12 @@ const PlansList = () => {
             </button>
           </div>
 
+          {/* Pill Filter for Total Count at the top */}
+          <div className="pill-filter">
+            <span className="dot" />
+            <span>Total Plans ({plans.length})</span>
+          </div>
+
           <button className="pill-btn-primary" onClick={openAddModal}>
             <FiPlus className="plus-icon" />
             <span>Create Plan</span>
@@ -563,10 +569,6 @@ const PlansList = () => {
                   <FiX />
                 </button>
               )}
-            </div>
-
-            <div className="table-count-badge">
-              <span>{filteredPlans.length} plans configured</span>
             </div>
           </div>
 

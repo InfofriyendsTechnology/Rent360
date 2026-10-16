@@ -60,6 +60,74 @@
         }
       }
 
+      .store-selector-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 42px;
+        background-color: $bg-card;
+        border: 1px solid $border-main;
+        padding: 0 16px;
+        border-radius: $border-radius-pill;
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: $text-main;
+        box-shadow: $shadow-sm;
+        box-sizing: border-box;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+        &:hover, &:focus-within {
+          border-color: $accent;
+        }
+
+        .store-pill-icon {
+          color: $accent;
+          font-size: 1rem;
+          flex-shrink: 0;
+        }
+
+        label {
+          color: $text-muted;
+          font-size: 0.78rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          white-space: nowrap;
+          cursor: pointer;
+        }
+
+        select {
+          background: transparent;
+          border: none;
+          outline: none;
+          color: $text-main;
+          font-size: 0.88rem;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: inherit;
+          padding-right: 20px;
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+
+          option {
+            background-color: $bg-card-alt;
+            color: $text-main;
+            padding: 8px;
+          }
+        }
+
+        .chevron-icon {
+          position: absolute;
+          right: 12px;
+          pointer-events: none;
+          color: $text-muted;
+          font-size: 0.85rem;
+        }
+      }
+
       .pill-btn-primary {
         display: inline-flex;
         align-items: center;

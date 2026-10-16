@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { 
   FiBox, FiPlus, FiSearch, FiGrid, FiList, 
-  FiEdit2, FiTrash2, FiImage, FiX 
+  FiEdit2, FiTrash2, FiImage, FiX, FiChevronDown, FiShoppingBag 
 } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -236,6 +236,7 @@ const CollectionList = () => {
           {/* Super Admin Store Selector */}
           {isSuperAdmin && stores.length > 0 && (
             <div className="store-selector-pill">
+              <FiShoppingBag className="store-pill-icon" />
               <label>Store:</label>
               <select
                 value={selectedStoreId}
@@ -247,8 +248,15 @@ const CollectionList = () => {
                   </option>
                 ))}
               </select>
+              <FiChevronDown className="chevron-icon" />
             </div>
           )}
+
+          {/* Pill Filter for Total Count at the top */}
+          <div className="pill-filter">
+            <span className="dot" />
+            <span>Total Designs ({products.length})</span>
+          </div>
 
           {/* View Mode Toggle: Cards vs Table */}
           <div className="view-mode-toggle" title="Switch layout">
@@ -326,10 +334,6 @@ const CollectionList = () => {
               <FiX />
             </button>
           )}
-        </div>
-
-        <div className="toolbar-count">
-          Showing <strong>{filteredProducts.length}</strong> of {products.length} designs
         </div>
       </div>
 

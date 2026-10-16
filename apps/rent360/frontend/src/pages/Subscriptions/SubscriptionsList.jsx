@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import './SubscriptionsList.scss';
+import '../Stores/StoresList.scss';
 import { DataTable, AvatarCell, StatusPill, RowActions } from '../../components/ui';
 import { API_BASE_URL } from '../../config/api';
 
@@ -173,18 +174,26 @@ const SubscriptionsList = () => {
   }, [stores, plans]);
 
   return (
-    <div className="subscriptions-view">
+    <div className="stores-view subscriptions-view">
 
       {/* Top Bar */}
-      <div className="subs-top-bar">
+      <div className="stores-top-bar">
         <div className="title-section">
           <h1 className="main-title">Subscriptions</h1>
-          <p className="subtitle">Active company SaaS licenses · {subscriptions.length} total</p>
+          <p className="subtitle">Active company SaaS licenses · Plan management and expiry tracking</p>
         </div>
-        <button className="pill-btn-primary" onClick={() => openModal()}>
-          <FiPlus />
-          <span>Assign Subscription</span>
-        </button>
+
+        <div className="top-actions">
+          <div className="pill-filter">
+            <span className="dot" />
+            <span>Total Subscriptions ({subscriptions.length})</span>
+          </div>
+
+          <button className="pill-btn-primary" onClick={() => openModal()}>
+            <FiPlus className="plus-icon" />
+            <span>Assign Subscription</span>
+          </button>
+        </div>
       </div>
 
       {/* Search + Refresh */}

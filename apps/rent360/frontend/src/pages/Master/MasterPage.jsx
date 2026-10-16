@@ -3,7 +3,8 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { 
   FiMaximize2, FiDroplet, FiClock, FiBell, FiBookOpen, FiShield, 
-  FiPlus, FiEdit2, FiTrash2, FiSearch, FiLayers, FiUsers, FiX, FiCheck
+  FiPlus, FiEdit2, FiTrash2, FiSearch, FiLayers, FiUsers, FiX, FiCheck,
+  FiChevronDown, FiShoppingBag
 } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -475,6 +476,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {/* Store Selector Pill for Super Admin */}
           {isSuperAdmin && stores.length > 0 && (
             <div className="store-selector-pill">
+              <FiShoppingBag className="store-pill-icon" />
               <label>Store:</label>
               <select
                 value={selectedStoreId}
@@ -486,16 +488,23 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
                   </option>
                 ))}
               </select>
+              <FiChevronDown className="chevron-icon" />
             </div>
           )}
 
-          {/* Create Button */}
+          {/* Pill Filter for Total Count at the top */}
+          <div className="pill-filter">
+            <span className="dot" />
+            <span>Total {getActiveTabInfo().label} ({filteredItems.length})</span>
+          </div>
+
+          {/* Create Button with Standard Sleek Design */}
           <button
             type="button"
-            className="create-btn"
+            className="pill-btn-primary"
             onClick={handleOpenCreateModal}
           >
-            <FiPlus />
+            <FiPlus className="plus-icon" />
             <span>Add {getActiveTabInfo().label.replace(/s$/, '')}</span>
           </button>
         </div>
@@ -520,7 +529,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
         })}
       </div>
 
-      {/* Search & Stats Bar */}
+      {/* Search Bar */}
       <div className="setup-controls-bar">
         <div className="search-pill-wrapper">
           <FiSearch className="search-icon" />
@@ -539,10 +548,6 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
               <FiX />
             </button>
           )}
-        </div>
-
-        <div className="items-count-badge">
-          <span>{filteredItems.length} items</span>
         </div>
       </div>
 
