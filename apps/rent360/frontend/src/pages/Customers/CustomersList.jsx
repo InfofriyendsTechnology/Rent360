@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss'; // Reuse store styles for consistency
-import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import { DataTable, AvatarCell, RowActions } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
@@ -157,71 +157,55 @@ const CustomersList = () => {
       </div>
 
       <div className="bond-card-container">
-        <div className="table-responsive">
-          <table className="bond-table">
-            <thead>
-              <tr>
-                <th>Customer Name</th>
-                <th>Mobile Number</th>
-                <th>City & Address</th>
-                <th className="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <TableRowSkeleton rows={5} columns={4} />
-              ) : customers.length === 0 ? (
-                <tr><td colSpan="4" className="text-center state-message">No customers found</td></tr>
-              ) : (
-                customers.map(c => (
-                  <tr key={c.id}>
-                    <td>
-                      <div className="store-identity">
-                        <div className="avatar-initials">
-                          {getInitials(c.full_name)}
-                        </div>
-                        <div className="store-text">
-                          <span className="store-name">{c.full_name}</span>
-                          {c.reference_by && (
-                            <span style={{fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block'}}>
-                              Ref: {c.reference_by}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="store-text">
-                        <span className="phone-text">{c.mobile}</span>
-                        {c.alternate_mobile && (
-                          <span style={{fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block'}}>
-                            Alt: {c.alternate_mobile}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="store-text">
-                        <span className="store-name">{c.city || 'N/A'}</span>
-                        {c.address && (
-                          <span style={{fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block'}}>
-                            {c.address} {c.pincode ? `- ${c.pincode}` : ''}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="text-right">
-                      <div className="row-action-btns">
-                        <button className="icon-action-btn edit" onClick={() => openCustomerModal(c)}><FiEdit2 /></button>
-                        <button className="icon-action-btn delete" onClick={() => setCustomerToDelete(c)}><FiTrash2 /></button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columns={[
+            { label: 'Customer Name' },
+            { label: 'Mobile Number' },
+            { label: 'City & Address' },
+            { label: 'Actions', align: 'right' }
+          ]}
+          data={customers}
+          loading={loading}
+          emptyMessage="No customers found. Click + Add Customer to register one."
+          keyExtractor={(c) => c.id}
+          renderRow={(c) => (
+            <>
+              <td>
+                <AvatarCell
+                  title={c.full_name}
+                  subtitle={c.reference_by ? `Ref: ${c.reference_by}` : null}
+                  fallbackChars={getInitials(c.full_name)}
+                />
+              </td>
+              <td>
+                <div className="store-text">
+                  <span className="phone-text">{c.mobile}</span>
+                  {c.alternate_mobile && (
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block' }}>
+                      Alt: {c.alternate_mobile}
+                    </span>
+                  )}
+                </div>
+              </td>
+              <td>
+                <div className="store-text">
+                  <span className="store-name">{c.city || '—'}</span>
+                  {c.address && (
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block' }}>
+                      {c.address} {c.pincode ? `- ${c.pincode}` : ''}
+                    </span>
+                  )}
+                </div>
+              </td>
+              <td className="text-right">
+                <RowActions
+                  onEdit={() => openCustomerModal(c)}
+                  onDelete={() => setCustomerToDelete(c)}
+                />
+              </td>
+            </>
+          )}
+        />
       </div>
 
       {isCustomerModalOpen && (

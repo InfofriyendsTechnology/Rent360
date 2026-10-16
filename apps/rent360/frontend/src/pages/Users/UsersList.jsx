@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss'; // Reuse store styles for consistency
-import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import { DataTable, AvatarCell, StatusPill, RowActions } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
@@ -207,59 +207,42 @@ const UsersList = () => {
       </div>
 
       <div className="bond-card-container">
-        <div className="table-responsive">
-          <table className="bond-table">
-            <thead>
-              <tr>
-                <th>Team Member</th>
-                <th>Mobile Number</th>
-                <th>Assigned Role</th>
-                <th>Status</th>
-                <th className="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <TableRowSkeleton rows={5} columns={5} />
-              ) : users.length === 0 ? (
-                <tr><td colSpan="5" className="text-center state-message">No team members found</td></tr>
-              ) : (
-                users.map(u => (
-                  <tr key={u.id}>
-                    <td>
-                      <div className="store-identity">
-                        <div className="avatar-initials">
-                          {getInitials(u.name)}
-                        </div>
-                        <div className="store-text">
-                          <span className="store-name">{u.name}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td><span className="phone-text">{u.mobile}</span></td>
-                    <td>
-                      <span className="bond-status-pill" style={{ background: 'var(--bg-card-alt)', color: 'var(--text-main)', border: '1px solid var(--border-main)' }}>
-                        {u.role?.name || 'No Role'}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`bond-status-pill ${(u.status || 'ACTIVE').toLowerCase()}`}>
-                        <span className="status-indicator" />
-                        {u.status || 'ACTIVE'}
-                      </span>
-                    </td>
-                    <td className="text-right">
-                      <div className="row-action-btns">
-                        <button className="icon-action-btn edit" onClick={() => openUserModal(u)}><FiEdit2 /></button>
-                        <button className="icon-action-btn delete" onClick={() => setUserToDelete(u)}><FiTrash2 /></button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columns={[
+            { label: 'Team Member' },
+            { label: 'Mobile Number' },
+            { label: 'Assigned Role' },
+            { label: 'Status' },
+            { label: 'Actions', align: 'right' }
+          ]}
+          data={users}
+          loading={loading}
+          emptyMessage="No team members found. Click + Add Member to invite staff."
+          keyExtractor={(u) => u.id}
+          renderRow={(u) => (
+            <>
+              <td>
+                <AvatarCell
+                  title={u.name}
+                  fallbackChars={getInitials(u.name)}
+                />
+              </td>
+              <td><span className="phone-text">{u.mobile}</span></td>
+              <td>
+                <span className="bond-status-pill" style={{ background: 'var(--bg-card-alt)', color: 'var(--text-main)', border: '1px solid var(--border-main)' }}>
+                  {u.role?.name || 'No Role'}
+                </span>
+              </td>
+              <td><StatusPill status={u.status || 'ACTIVE'} /></td>
+              <td className="text-right">
+                <RowActions
+                  onEdit={() => openUserModal(u)}
+                  onDelete={() => setUserToDelete(u)}
+                />
+              </td>
+            </>
+          )}
+        />
       </div>
 
       {isUserModalOpen && (

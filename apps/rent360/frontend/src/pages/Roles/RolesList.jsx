@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss';
 import './RolesList.scss';
-import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import { DataTable, RowActions } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
@@ -143,51 +143,43 @@ const RolesList = () => {
       </div>
 
       <div className="bond-card-container">
-        <div className="table-responsive">
-          <table className="bond-table roles-table">
-            <thead>
-              <tr>
-                <th style={{ minWidth: '180px', width: '22%' }}>Role Name</th>
-                <th style={{ minWidth: '550px', width: '66%' }}>Permissions Granted</th>
-                <th className="text-right" style={{ minWidth: '110px', width: '12%' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <TableRowSkeleton rows={5} columns={3} />
-              ) : roles.length === 0 ? (
-                <tr><td colSpan="3" className="text-center state-message">No roles found</td></tr>
-              ) : (
-                roles.map(r => (
-                  <tr key={r.id}>
-                    <td>
-                      <span className="store-name">{r.name}</span>
-                    </td>
-                    <td>
-                      <div className="permissions-row-wrap">
-                        {r.permissions && r.permissions.length > 0 ? (
-                          r.permissions.map(p => (
-                            <span key={p} className="perm-pill">
-                              {p === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : p.replace('_', ' ')}
-                            </span>
-                          ))
-                        ) : (
-                          <span className="text-muted">No permissions</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="text-right">
-                      <div className="row-action-btns">
-                        <button className="icon-action-btn edit" onClick={() => openRoleModal(r)}><FiEdit2 /></button>
-                        <button className="icon-action-btn delete" onClick={() => setRoleToDelete(r)}><FiTrash2 /></button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columns={[
+            { label: 'Role Name', width: '22%' },
+            { label: 'Permissions Granted', width: '66%' },
+            { label: 'Actions', align: 'right', width: '12%' }
+          ]}
+          data={roles}
+          loading={loading}
+          emptyMessage="No roles found. Click + Create Role to define permissions."
+          keyExtractor={(r) => r.id}
+          renderRow={(r) => (
+            <>
+              <td>
+                <span className="store-name" style={{ fontWeight: 600 }}>{r.name}</span>
+              </td>
+              <td>
+                <div className="permissions-row-wrap">
+                  {r.permissions && r.permissions.length > 0 ? (
+                    r.permissions.map(p => (
+                      <span key={p} className="perm-pill">
+                        {p === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : p.replace(/_/g, ' ')}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-muted">No permissions</span>
+                  )}
+                </div>
+              </td>
+              <td className="text-right">
+                <RowActions
+                  onEdit={() => openRoleModal(r)}
+                  onDelete={() => setRoleToDelete(r)}
+                />
+              </td>
+            </>
+          )}
+        />
       </div>
 
       {isRoleModalOpen && (

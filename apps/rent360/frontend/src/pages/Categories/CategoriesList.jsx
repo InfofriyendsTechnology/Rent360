@@ -10,7 +10,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
-import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import { DataTable, RowActions } from '../../components/ui';
 
 import '../Stores/StoresList.scss';
 import './CategoriesList.scss';
@@ -278,40 +278,6 @@ const CategoriesList = () => {
         </div>
       </div>
 
-      {/* Metrics Bar */}
-      <div className="category-metrics-grid">
-        <div className="metric-pill-card">
-          <div className="metric-icon-wrap">
-            <FiTag />
-          </div>
-          <div className="metric-info">
-            <span className="metric-label">Total Categories</span>
-            <span className="metric-value">{totalCategories}</span>
-          </div>
-        </div>
-
-        <div className="metric-pill-card">
-          <div className="metric-icon-wrap accent">
-            <FiLayers />
-          </div>
-          <div className="metric-info">
-            <span className="metric-label">Mapped Designs</span>
-            <span className="metric-value">{totalDesigns}</span>
-          </div>
-        </div>
-
-        <div className="metric-pill-card">
-          <div className="metric-icon-wrap success">
-            <FiTrendingUp />
-          </div>
-          <div className="metric-info">
-            <span className="metric-label">Top Pipeline</span>
-            <span className="metric-value text-ellipsis">
-              {topCategory ? `${topCategory.name} (${topCategory._count?.products || 0})` : 'None'}
-            </span>
-          </div>
-        </div>
-      </div>
 
       {/* Search & Filter Toolbar */}
       <div className="cat-search-bar-wrap">
@@ -451,100 +417,63 @@ const CategoriesList = () => {
       ) : (
         /* Content: Table View (Bond CRM Table) */
         <div className="bond-card-container">
-          <div className="table-responsive">
-            <table className="bond-table cat-bond-table">
-              <thead>
-                <tr>
-                  <th style={{ width: '80px' }}>#</th>
-                  <th style={{ width: '180px' }}>Category Code</th>
-                  <th style={{ width: '220px' }}>Category Name</th>
-                  <th>Description</th>
-                  <th style={{ width: '160px', textAlign: 'center' }}>Total Designs</th>
-                  <th style={{ width: '120px', textAlign: 'right' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <TableRowSkeleton key={i} columns={6} />
-                  ))
-                ) : filteredCategories.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" className="state-message">
-                      No categories found. Create a category pipeline to organize your inventory.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredCategories.map((cat, idx) => {
-                    const colorTheme = CATEGORY_COLORS[idx % CATEGORY_COLORS.length];
-                    const productCount = cat._count?.products || 0;
-                    const formattedIdx = String(idx + 1).padStart(2, '0');
-
-                    return (
-                      <tr key={cat.id} className="cat-table-row">
-                        <td>
-                          <span className="row-index-text">{formattedIdx}</span>
-                        </td>
-                        <td>
-                          <span 
-                            className="table-cat-code"
-                            style={{
-                              backgroundColor: colorTheme.bg,
-                              color: colorTheme.color,
-                              borderColor: colorTheme.border
-                            }}
-                          >
-                            {cat.category_code}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="table-cat-title-cell">
-                            <span className="table-cat-name">{cat.name}</span>
-                          </div>
-                        </td>
-                        <td>
-                          <span className="table-cat-desc">
-                            {cat.description || <span className="muted-italic">No description provided</span>}
-                          </span>
-                        </td>
-                        <td style={{ textAlign: 'center' }}>
-                          <button
-                            type="button"
-                            className="table-designs-pill"
-                            onClick={() => navigate('/collection')}
-                            title="View designs in Collection"
-                          >
-                            <FiLayers />
-                            <span>{productCount} designs</span>
-                          </button>
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                          <div className="table-actions-cell">
-                            <button
-                              type="button"
-                              className="tbl-btn-action"
-                              title="Edit Category"
-                              onClick={() => handleOpenEditModal(cat)}
-                            >
-                              <FiEdit2 />
-                            </button>
-                            <button
-                              type="button"
-                              className="tbl-btn-action danger"
-                              title="Delete Category"
-                              onClick={() => setCategoryToDelete(cat)}
-                            >
-                              <FiTrash2 />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            columns={[
+              { label: '#', width: '70px' },
+              { label: 'Category Code', width: '180px' },
+              { label: 'Category Name', width: '220px' },
+              { label: 'Description' },
+              { label: 'Total Designs', align: 'center', width: '160px' },
+              { label: 'Actions', align: 'right', width: '120px' }
+            ]}
+            data={filteredCategories}
+            loading={loading}
+            emptyMessage="No categories found. Create a category to organize your inventory."
+            keyExtractor={(cat) => cat.id}
+            renderRow={(cat) => {
+              const productCount = cat._count?.products || 0;
+              const formattedIdx = String(filteredCategories.indexOf(cat) + 1).padStart(2, '0');
+              return (
+                <>
+                  <td>
+                    <span className="row-index-text">{formattedIdx}</span>
+                  </td>
+                  <td>
+                    <span className="table-cat-code">
+                      {cat.category_code}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="table-cat-title-cell">
+                      <span className="table-cat-name">{cat.name}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="table-cat-desc">
+                      {cat.description || <span className="muted-italic">No description provided</span>}
+                    </span>
+                  </td>
+                  <td className="text-center">
+                    <button
+                      type="button"
+                      className="table-designs-pill"
+                      onClick={() => navigate('/collection')}
+                      title="View designs in Collection"
+                    >
+                      <FiLayers />
+                      <span>{productCount} designs</span>
+                    </button>
+                  </td>
+                  <td className="text-right">
+                    <RowActions
+                      onEdit={() => handleOpenEditModal(cat)}
+                      onDelete={() => setCategoryToDelete(cat)}
+                    />
+                  </td>
+                </>
+              );
+            }}
+          />
         </div>
       )}
 

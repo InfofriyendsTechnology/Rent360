@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import './SubscriptionsList.scss';
-import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import { DataTable, AvatarCell, StatusPill, RowActions } from '../../components/ui';
 import { API_BASE_URL } from '../../config/api';
 
 const SubscriptionsList = () => {
@@ -205,85 +205,65 @@ const SubscriptionsList = () => {
 
       {/* Table */}
       <div className="bond-card-container">
-        <div className="table-responsive">
-          <table className="bond-table">
-            <thead>
-              <tr>
-                <th>Company / Store</th>
-                <th>Plan</th>
-                <th>Billing</th>
-                <th>Amount Paid</th>
-                <th>Expiry</th>
-                <th>Status</th>
-                <th className="text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <TableRowSkeleton rows={5} columns={7} />
-              ) : filtered.length === 0 ? (
-                <tr><td colSpan="7" className="state-message text-center">No subscriptions yet. Click <strong>Assign Subscription</strong> to add one.</td></tr>
-              ) : (
-                filtered.map(sub => {
-                  const isYearly = (sub.last_paid_amount || 0) >= 3000;
-                  const daysLeft = getDaysLeft(sub.end_date);
-                  const planName = sub.plan?.name || '—';
-                  return (
-                    <tr key={sub.id}>
-                      <td>
-                        <div className="store-identity">
-                          <div className="avatar-initials">
-                            {(sub.store?.name || 'ST').slice(0, 2).toUpperCase()}
-                          </div>
-                          <div className="store-text">
-                            <span className="store-name">{sub.store?.name || '—'}</span>
-                            <span className="store-sub">{sub.store?.owner_name || ''}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <span className={`plan-badge ${planName.toLowerCase()}`}>{planName}</span>
-                      </td>
-                      <td>
-                        <span className={`cycle-pill ${isYearly ? 'yearly' : 'monthly'}`}>
-                          {isYearly ? 'Yearly' : 'Monthly'}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="amount-val">₹{(sub.last_paid_amount || 0).toLocaleString('en-IN')}</span>
-                      </td>
-                      <td>
-                        <div className="date-cell">
-                          <span className="date-range">
-                            {sub.end_date ? new Date(sub.end_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
-                          </span>
-                          <span className={`days-pill ${daysLeft < 30 ? 'expiring' : 'safe'}`}>
-                            {daysLeft > 0 ? `${daysLeft}d left` : 'Expired'}
-                          </span>
-                        </div>
-                      </td>
-                      <td>
-                        <span className={`status-pill ${(sub.status || 'ACTIVE').toLowerCase()}`}>
-                          <span className="dot" />
-                          {sub.status || 'ACTIVE'}
-                        </span>
-                      </td>
-                      <td className="text-right">
-                        <button
-                          className="icon-action-btn"
-                          title="Reassign Plan"
-                          onClick={() => openModal(sub.storeId)}
-                        >
-                          <FiEdit2 />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columns={[
+            { label: 'Company / Store' },
+            { label: 'Plan' },
+            { label: 'Billing' },
+            { label: 'Amount Paid' },
+            { label: 'Expiry' },
+            { label: 'Status' },
+            { label: 'Action', align: 'right' }
+          ]}
+          data={filtered}
+          loading={loading}
+          emptyMessage="No subscriptions yet. Click Assign Subscription to add one."
+          keyExtractor={(sub) => sub.id}
+          renderRow={(sub) => {
+            const isYearly = (sub.last_paid_amount || 0) >= 3000;
+            const daysLeft = getDaysLeft(sub.end_date);
+            const planName = sub.plan?.name || '—';
+            return (
+              <>
+                <td>
+                  <AvatarCell
+                    title={sub.store?.name || '—'}
+                    subtitle={sub.store?.owner_name || ''}
+                    fallbackChars={(sub.store?.name || 'ST').slice(0, 2).toUpperCase()}
+                  />
+                </td>
+                <td>
+                  <span className={`plan-badge ${planName.toLowerCase()}`}>{planName}</span>
+                </td>
+                <td>
+                  <span className={`cycle-pill ${isYearly ? 'yearly' : 'monthly'}`}>
+                    {isYearly ? 'Yearly' : 'Monthly'}
+                  </span>
+                </td>
+                <td>
+                  <span className="amount-val">₹{(sub.last_paid_amount || 0).toLocaleString('en-IN')}</span>
+                </td>
+                <td>
+                  <div className="date-cell">
+                    <span className="date-range">
+                      {sub.end_date ? new Date(sub.end_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                    </span>
+                    <span className={`days-pill ${daysLeft < 30 ? 'expiring' : 'safe'}`}>
+                      {daysLeft > 0 ? `${daysLeft}d left` : 'Expired'}
+                    </span>
+                  </div>
+                </td>
+                <td><StatusPill status={sub.status || 'ACTIVE'} /></td>
+                <td className="text-right">
+                  <RowActions
+                    onEdit={() => openModal(sub.storeId)}
+                    editTitle="Reassign Plan"
+                  />
+                </td>
+              </>
+            );
+          }}
+        />
       </div>
 
       {/* SIMPLE ASSIGN MODAL */}

@@ -20,7 +20,14 @@ export const DataTable = ({
         <thead>
           <tr>
             {columns.map((col, idx) => (
-              <th key={idx} className={col.align === 'right' ? 'text-right' : ''}>
+              <th 
+                key={idx} 
+                className={col.align === 'right' ? 'text-right' : (col.align === 'center' ? 'text-center' : '')}
+                style={{
+                  ...(col.width ? { width: col.width } : {}),
+                  ...(col.style || {})
+                }}
+              >
                 {col.header || col.label}
               </th>
             ))}
