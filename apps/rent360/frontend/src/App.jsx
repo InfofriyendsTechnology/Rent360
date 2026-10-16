@@ -16,7 +16,7 @@ import Profile from './pages/Profile/Profile';
 import CollectionList from './pages/Collection/CollectionList';
 import CategoriesList from './pages/Categories/CategoriesList';
 import SettingsPage from './pages/Settings/SettingsPage';
-
+import MasterPage from './pages/Master/MasterPage';
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -66,13 +66,23 @@ const App = () => {
               <Route path="collection" element={<CollectionList />} />
               <Route path="inventory" element={<Navigate to="/collection" replace />} />
               <Route path="customers" element={<CustomersList />} />
-              <Route path="staff" element={<UsersList />} />
               <Route path="roles" element={<RolesList />} />
             </>
           )}
 
-          {/* Shared Routes */}
-          <Route path="categories" element={<Navigate to="/settings?tab=categories" replace />} />
+          {/* Master & Setup Routes (Available to Admin/Authorized) */}
+          <Route path="users" element={<UsersList />} />
+          <Route path="staff" element={<UsersList />} />
+          <Route path="categories" element={<CategoriesList />} />
+          <Route path="master" element={<MasterPage />} />
+          <Route path="sizes" element={<MasterPage defaultTab="sizes" />} />
+          <Route path="colors" element={<MasterPage defaultTab="colors" />} />
+          <Route path="time-slots" element={<MasterPage defaultTab="time-slots" />} />
+          <Route path="reminders" element={<MasterPage defaultTab="reminders" />} />
+          <Route path="accounts" element={<MasterPage defaultTab="accounts" />} />
+          <Route path="security-accounts" element={<MasterPage defaultTab="security-accounts" />} />
+
+          {/* Shared Settings & Profile */}
           <Route path="settings" element={<SettingsPage />} />
           <Route path="setup" element={<Navigate to="/settings" replace />} />
           <Route path="profile" element={<Profile />} />

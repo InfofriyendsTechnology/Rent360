@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  FiHome, FiBox, FiUsers, FiSettings, FiLogOut, FiTrash2, 
-  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive, FiCornerUpLeft, FiX, FiTag
+  FiHome, FiBox, FiUsers, FiSettings, FiLogOut, 
+  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiHardDrive, 
+  FiCornerUpLeft, FiX, FiDatabase, FiChevronDown, FiChevronRight,
+  FiMaximize2, FiDroplet, FiClock, FiBookOpen
 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout, updateUser, loginSuccess } from '../../store/authSlice';
-import axios from 'axios';
+import { logout, loginSuccess } from '../../store/authSlice';
 import toast from 'react-hot-toast';
 
 import './Sidebar.scss';
@@ -14,12 +15,20 @@ import './Sidebar.scss';
 const Sidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, token } = useSelector((state) => state.auth);
+  const location = useLocation();
+  const { user } = useSelector((state) => state.auth);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
   const superAdminToken = localStorage.getItem('superAdminToken');
   const canReturnToSuperAdmin = !isSuperAdmin && Boolean(superAdminToken);
+
+  const isMasterRouteActive = [
+    '/master', '/users', '/categories', '/sizes', '/colors', 
+    '/time-slots', '/reminders', '/accounts', '/security-accounts'
+  ].some((p) => location.pathname.startsWith(p));
+
+  const [isMasterOpen, setIsMasterOpen] = useState(true);
 
   useEffect(() => {
     if (isSuperAdmin) {
@@ -181,29 +190,111 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <span className="icon"><FiUsers /></span>
                     <span className="text">Customers</span>
                   </NavLink>
-                  {(user?.role === 'STORE_ADMIN' || (user?.permissions || []).includes('ALL') || (user?.permissions || []).includes('SETTINGS_MANAGE')) && (
-                    <>
-                      <NavLink 
-                        to="/staff" 
-                        className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
-                        onClick={onClose}
-                      >
-                        <span className="icon"><FiUsers /></span>
-                        <span className="text">Team Members</span>
-                      </NavLink>
-                      <NavLink 
-                        to="/roles" 
-                        className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
-                        onClick={onClose}
-                      >
-                        <span className="icon"><FiShield /></span>
-                        <span className="text">Roles</span>
-                      </NavLink>
-                    </>
-                  )}
+                  <NavLink 
+                    to="/roles" 
+                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                    onClick={onClose}
+                  >
+                    <span className="icon"><FiShield /></span>
+                    <span className="text">Roles</span>
+                  </NavLink>
                 </>
               )}
             </nav>
+          </div>
+
+          {/* Collapsible Master Accordion Section */}
+          <div className="menu-group master-menu-group">
+            <span className="group-title">CONFIGURATION</span>
+            <div className="accordion-group">
+              <button
+                type="button"
+                className={`menu-pill accordion-trigger ${isMasterOpen ? 'open' : ''} ${isMasterRouteActive ? 'active-group' : ''}`}
+                onClick={() => setIsMasterOpen(!isMasterOpen)}
+              >
+                <span className="icon"><FiDatabase /></span>
+                <span className="text">Master</span>
+                <span className="accordion-chevron">
+                  {isMasterOpen ? <FiChevronDown /> : <FiChevronRight />}
+                </span>
+              </button>
+
+              {isMasterOpen && (
+                <div className="accordion-submenu">
+                  <NavLink 
+                    to="/users" 
+                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                    onClick={onClose}
+                  >
+                    <span className="sub-icon"><FiUsers /></span>
+                    <span className="text">Users</span>
+                  </NavLink>
+
+                  <NavLink 
+                    to="/categories" 
+                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                    onClick={onClose}
+                  >
+                    <span className="sub-icon"><FiLayers /></span>
+                    <span className="text">Categories</span>
+                  </NavLink>
+
+                  <NavLink 
+                    to="/sizes" 
+                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                    onClick={onClose}
+                  >
+                    <span className="sub-icon"><FiMaximize2 /></span>
+                    <span className="text">Size</span>
+                  </NavLink>
+
+                  <NavLink 
+                    to="/colors" 
+                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                    onClick={onClose}
+                  >
+                    <span className="sub-icon"><FiDroplet /></span>
+                    <span className="text">Colors</span>
+                  </NavLink>
+
+                  <NavLink 
+                    to="/time-slots" 
+                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                    onClick={onClose}
+                  >
+                    <span className="sub-icon"><FiClock /></span>
+                    <span className="text">Time Slots</span>
+                  </NavLink>
+
+                  <NavLink 
+                    to="/reminders" 
+                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                    onClick={onClose}
+                  >
+                    <span className="sub-icon"><FiBell /></span>
+                    <span className="text">Reminder</span>
+                  </NavLink>
+
+                  <NavLink 
+                    to="/accounts" 
+                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                    onClick={onClose}
+                  >
+                    <span className="sub-icon"><FiBookOpen /></span>
+                    <span className="text">Accounts</span>
+                  </NavLink>
+
+                  <NavLink 
+                    to="/security-accounts" 
+                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                    onClick={onClose}
+                  >
+                    <span className="sub-icon"><FiShield /></span>
+                    <span className="text">Security Accounts</span>
+                  </NavLink>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="menu-group">
@@ -257,12 +348,3 @@ const Sidebar = ({ isOpen, onClose }) => {
 };
 
 export default Sidebar;
-
-
-
-
-
-
-
-
-

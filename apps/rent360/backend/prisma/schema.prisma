@@ -57,6 +57,8 @@ model Store {
   purchaseInvoices      PurchaseInvoice[]
   retailSales           RetailSale[]
   subscriptions         StoreSubscription[]
+  colors                StoreColor[]
+  sizes                 StoreSize[]
 }
 
 // 2. ROLES
@@ -591,4 +593,27 @@ model StoreSubscription {
   status           String           @default("ACTIVE")
   last_paid_amount Float
   createdAt        DateTime         @default(now())
+}
+
+// 35. STORE_COLORS
+model StoreColor {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name      String
+  hex_code  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 36. STORE_SIZES
+model StoreSize {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name      String
+  code      String
+  sort_order Int     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
