@@ -483,37 +483,56 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
     }
   };
 
+  const getTabMetadata = () => {
+    switch (currentTab) {
+      case 'sizes':
+        return {
+          title: 'Sizes',
+          subtitle: 'Configure apparel and garment sizing options for inventory'
+        };
+      case 'colors':
+        return {
+          title: 'Colors',
+          subtitle: 'Manage color swatches and codes for inventory attire'
+        };
+      case 'time-slots':
+        return {
+          title: 'Time Slots',
+          subtitle: 'Configure rental booking time slots and business hours'
+        };
+      case 'reminders':
+        return {
+          title: 'Reminders',
+          subtitle: 'Manage automated alerts and rental notifications'
+        };
+      case 'accounts':
+        return {
+          title: 'Accounts',
+          subtitle: 'Manage income and expense transaction categories'
+        };
+      case 'security-accounts':
+        return {
+          title: 'Security Accounts',
+          subtitle: 'Configure security deposit bank accounts and IFSC codes'
+        };
+      default:
+        return {
+          title: getActiveTabInfo().label,
+          subtitle: `Manage ${getActiveTabInfo().label.toLowerCase()} configurations`
+        };
+    }
+  };
+
   return (
     <div className="stores-view master-page-view">
       {/* Top Bar matching Rent360 Design */}
       <div className="stores-top-bar">
         <div className="title-section">
-          <h1 className="main-title">Store Setup</h1>
-          <p className="subtitle">
-            Configure your store catalog, sizes, colors, timing slots, and financial accounts
-          </p>
+          <h1 className="main-title">{getTabMetadata().title}</h1>
+          <p className="subtitle">{getTabMetadata().subtitle}</p>
         </div>
 
         <div className="top-actions">
-          {/* Store Selector Pill for Super Admin */}
-          {isSuperAdmin && stores.length > 0 && (
-            <div className="store-selector-pill">
-              <FiShoppingBag className="store-pill-icon" />
-              <label>Store:</label>
-              <select
-                value={selectedStoreId}
-                onChange={(e) => setSelectedStoreId(e.target.value)}
-              >
-                {stores.map((st) => (
-                  <option key={st.id} value={st.id}>
-                    {st.name || st.store_name || 'Store'}
-                  </option>
-                ))}
-              </select>
-              <FiChevronDown className="chevron-icon" />
-            </div>
-          )}
-
           {/* Create Button with Standard Sleek Design */}
           <button
             type="button"
@@ -524,25 +543,6 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
             <span>Add {getActiveTabInfo().label.replace(/s$/, '')}</span>
           </button>
         </div>
-      </div>
-
-      {/* Top Pill Navigation Tabs */}
-      <div className="master-tabs-bar">
-        {MASTER_TABS.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = currentTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              className={`master-tab-btn ${isActive ? 'active' : ''}`}
-              onClick={() => handleTabChange(tab.id)}
-            >
-              <Icon className="tab-icon" />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
       </div>
 
       {/* Search Bar */}

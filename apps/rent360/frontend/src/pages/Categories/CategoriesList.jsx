@@ -223,24 +223,6 @@ const CategoriesList = () => {
         </div>
 
         <div className="top-actions">
-          {isSuperAdmin && stores.length > 0 && (
-            <div className="store-selector-pill">
-              <FiShoppingBag className="store-pill-icon" />
-              <label>Store:</label>
-              <select
-                value={selectedStoreId}
-                onChange={(e) => setSelectedStoreId(e.target.value)}
-              >
-                {stores.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name || s.store_name || 'Store'}
-                  </option>
-                ))}
-              </select>
-              <FiChevronDown className="chevron-icon" />
-            </div>
-          )}
-
           <button
             type="button"
             className="pill-btn-primary"
