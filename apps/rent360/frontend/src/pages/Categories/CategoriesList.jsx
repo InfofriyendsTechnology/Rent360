@@ -252,7 +252,19 @@ const CategoriesList = () => {
           </div>
 
           {isSuperAdmin && stores.length > 0 && (
-            <div className="store-selector-pill">
+            <div 
+              className="store-selector-pill"
+              onClick={(e) => {
+                const sel = e.currentTarget.querySelector('select');
+                if (sel && e.target !== sel) {
+                  if (typeof sel.showPicker === 'function') {
+                    sel.showPicker();
+                  } else {
+                    sel.focus();
+                  }
+                }
+              }}
+            >
               <FiShoppingBag className="store-pill-icon" />
               <label>Store:</label>
               <select
@@ -261,7 +273,7 @@ const CategoriesList = () => {
               >
                 {stores.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.store_name}
+                    {s.name || s.store_name || 'Store'}
                   </option>
                 ))}
               </select>

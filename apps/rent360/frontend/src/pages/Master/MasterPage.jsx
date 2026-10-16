@@ -259,6 +259,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Size Name',
             accessor: 'name',
+            width: '32%',
             cell: (row) => (
               <div className="size-badge-cell">
                 <span className="size-pill">{row.name}</span>
@@ -268,17 +269,20 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Code / Tag',
             accessor: 'code',
+            width: '28%',
             cell: (row) => <span className="cell-code">{row.code}</span>
           },
           {
             header: 'Sort Order',
             accessor: 'sort_order',
+            width: '24%',
             cell: (row) => <span className="cell-text">{row.sort_order ?? 0}</span>
           },
           {
             header: 'Actions',
             accessor: 'actions',
             align: 'right',
+            width: '16%',
             cell: (row) => (
               <RowActions
                 onEdit={() => handleOpenEditModal(row)}
@@ -294,6 +298,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Color Name',
             accessor: 'name',
+            width: '45%',
             cell: (row) => (
               <div className="color-preview-cell">
                 <span 
@@ -307,6 +312,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Hex Code',
             accessor: 'hex_code',
+            width: '35%',
             cell: (row) => (
               <span className="hex-pill">{row.hex_code || 'N/A'}</span>
             )
@@ -315,6 +321,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
             header: 'Actions',
             accessor: 'actions',
             align: 'right',
+            width: '20%',
             cell: (row) => (
               <RowActions
                 onEdit={() => handleOpenEditModal(row)}
@@ -330,22 +337,26 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Slot Name',
             accessor: 'name',
+            width: '36%',
             cell: (row) => <span className="cell-strong">{row.name}</span>
           },
           {
             header: 'Start Time',
             accessor: 'start_time',
+            width: '24%',
             cell: (row) => <span className="slot-badge">{row.start_time}</span>
           },
           {
             header: 'End Time',
             accessor: 'end_time',
+            width: '24%',
             cell: (row) => <span className="slot-badge">{row.end_time}</span>
           },
           {
             header: 'Actions',
             accessor: 'actions',
             align: 'right',
+            width: '16%',
             cell: (row) => (
               <RowActions
                 onEdit={() => handleOpenEditModal(row)}
@@ -361,11 +372,13 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Title',
             accessor: 'title',
+            width: '42%',
             cell: (row) => <span className="cell-strong">{row.title}</span>
           },
           {
             header: 'Date',
             accessor: 'reminder_date',
+            width: '24%',
             cell: (row) => (
               <span className="cell-text">
                 {row.reminder_date ? new Date(row.reminder_date).toLocaleDateString() : 'N/A'}
@@ -375,6 +388,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Status',
             accessor: 'status',
+            width: '18%',
             cell: (row) => (
               <span className={`status-pill ${row.status?.toLowerCase() || 'pending'}`}>
                 {row.status || 'PENDING'}
@@ -385,6 +399,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
             header: 'Actions',
             accessor: 'actions',
             align: 'right',
+            width: '16%',
             cell: (row) => (
               <RowActions
                 onEdit={() => handleOpenEditModal(row)}
@@ -400,11 +415,13 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Account / Category Name',
             accessor: 'name',
+            width: '50%',
             cell: (row) => <span className="cell-strong">{row.name}</span>
           },
           {
             header: 'Type',
             accessor: 'category_type',
+            width: '32%',
             cell: (row) => (
               <span className={`type-badge ${row.category_type === 'INCOME' ? 'income' : 'expense'}`}>
                 {row.category_type || 'INCOME'}
@@ -415,6 +432,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
             header: 'Actions',
             accessor: 'actions',
             align: 'right',
+            width: '18%',
             cell: (row) => (
               <RowActions
                 onEdit={() => handleOpenEditModal(row)}
@@ -430,22 +448,26 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Account Name',
             accessor: 'account_name',
+            width: '36%',
             cell: (row) => <span className="cell-strong">{row.account_name}</span>
           },
           {
             header: 'Account Number',
             accessor: 'account_number',
+            width: '30%',
             cell: (row) => <span className="cell-code">{row.account_number}</span>
           },
           {
             header: 'IFSC Code',
             accessor: 'ifsc_code',
+            width: '20%',
             cell: (row) => <span className="cell-text">{row.ifsc_code || 'N/A'}</span>
           },
           {
             header: 'Actions',
             accessor: 'actions',
             align: 'right',
+            width: '14%',
             cell: (row) => (
               <RowActions
                 onEdit={() => handleOpenEditModal(row)}
@@ -475,7 +497,19 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
         <div className="top-actions">
           {/* Store Selector Pill for Super Admin */}
           {isSuperAdmin && stores.length > 0 && (
-            <div className="store-selector-pill">
+            <div 
+              className="store-selector-pill"
+              onClick={(e) => {
+                const sel = e.currentTarget.querySelector('select');
+                if (sel && e.target !== sel) {
+                  if (typeof sel.showPicker === 'function') {
+                    sel.showPicker();
+                  } else {
+                    sel.focus();
+                  }
+                }
+              }}
+            >
               <FiShoppingBag className="store-pill-icon" />
               <label>Store:</label>
               <select
@@ -484,7 +518,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
               >
                 {stores.map((st) => (
                   <option key={st.id} value={st.id}>
-                    {st.name}
+                    {st.name || st.store_name || 'Store'}
                   </option>
                 ))}
               </select>
@@ -552,14 +586,16 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       </div>
 
       {/* Bond CRM DataTable */}
-      <DataTable
-        columns={getColumns()}
-        data={filteredItems}
-        loading={loading}
-        keyExtractor={(item) => item.id}
-        emptyTitle={`No ${getActiveTabInfo().label.toLowerCase()} found`}
-        emptyDescription={`Get started by clicking the "Add ${getActiveTabInfo().label.replace(/s$/, '')}" button above.`}
-      />
+      <div className="bond-card-container">
+        <DataTable
+          columns={getColumns()}
+          data={filteredItems}
+          loading={loading}
+          keyExtractor={(item) => item.id}
+          emptyTitle={`No ${getActiveTabInfo().label.toLowerCase()} found`}
+          emptyDescription={`Get started by clicking the "Add ${getActiveTabInfo().label.replace(/s$/, '')}" button above.`}
+        />
+      </div>
 
       {/* Unified Bond Modal Card for Create / Edit */}
       {isModalOpen && (

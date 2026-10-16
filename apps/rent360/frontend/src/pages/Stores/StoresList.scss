@@ -67,14 +67,13 @@
         height: 42px;
         background-color: $bg-card;
         border: 1px solid $border-main;
-        padding: 0 16px;
+        padding: 0 14px;
         border-radius: $border-radius-pill;
         font-size: 0.88rem;
         font-weight: 500;
         color: $text-main;
         box-shadow: $shadow-sm;
         box-sizing: border-box;
-        position: relative;
         cursor: pointer;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -86,16 +85,19 @@
           color: $accent;
           font-size: 1rem;
           flex-shrink: 0;
+          pointer-events: none;
         }
 
         label {
           color: $text-muted;
-          font-size: 0.78rem;
+          font-size: 0.76rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           white-space: nowrap;
           cursor: pointer;
+          flex-shrink: 0;
+          pointer-events: none;
         }
 
         select {
@@ -107,24 +109,29 @@
           font-weight: 600;
           cursor: pointer;
           font-family: inherit;
-          padding-right: 20px;
+          padding: 0;
+          margin: 0;
           appearance: none;
           -webkit-appearance: none;
           -moz-appearance: none;
+          max-width: 175px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
 
           option {
-            background-color: $bg-card-alt;
-            color: $text-main;
-            padding: 8px;
+            background-color: #1a1a22;
+            color: #ffffff;
+            padding: 8px 12px;
           }
         }
 
         .chevron-icon {
-          position: absolute;
-          right: 12px;
           pointer-events: none;
           color: $text-muted;
           font-size: 0.85rem;
+          flex-shrink: 0;
+          margin-left: 2px;
         }
       }
 

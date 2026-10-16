@@ -45,9 +45,9 @@ export const DataTable = ({
                   columns.map((col, cIdx) => (
                     <td 
                       key={cIdx} 
-                      className={col.align === 'right' ? 'text-right' : ''}
+                      className={col.align === 'right' ? 'text-right' : (col.align === 'center' ? 'text-center' : '')}
                     >
-                      {col.cell ? col.cell(item) : (col.accessor ? item[col.accessor] : null)}
+                      {col.cell ? col.cell(item, idx) : (col.accessor ? item[col.accessor] : null)}
                     </td>
                   ))
                 )}

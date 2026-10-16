@@ -46,39 +46,6 @@
     }
   }
 
-  /* Store Selector Pill */
-  .store-selector-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 42px;
-    background-color: $bg-card;
-    border: 1px solid $border-main;
-    padding: 0 16px;
-    border-radius: $border-radius-pill;
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: $text-main;
-    box-shadow: $shadow-sm;
-
-    label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: $text-muted;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    select {
-      background: transparent;
-      border: none;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: $text-main;
-      outline: none;
-      cursor: pointer;
-    }
-  }
 
   /* Metrics Summary Bar */
   .category-metrics-grid {
@@ -429,7 +396,7 @@
   /* ─────────────────────────────────────────────────────────────
      TABLE VIEW: Bond CRM Table
   ───────────────────────────────────────────────────────────── */
-  .cat-bond-table {
+  .bond-table {
     width: 100%;
     border-collapse: collapse;
 
@@ -470,7 +437,9 @@
       font-size: 0.78rem;
       font-weight: 800;
       letter-spacing: 0.04em;
-      border: 1px solid transparent;
+      background-color: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.28);
       font-family: monospace;
     }
 
@@ -502,9 +471,9 @@
       align-items: center;
       gap: 6px;
       padding: 6px 14px;
-      background-color: rgba(11, 96, 176, 0.08);
-      color: $accent;
-      border: 1px solid rgba(11, 96, 176, 0.2);
+      background-color: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.28);
       border-radius: $border-radius-pill;
       font-size: 0.82rem;
       font-weight: 700;
@@ -512,7 +481,7 @@
       transition: all 0.15s ease;
 
       &:hover {
-        background-color: $accent;
+        background-color: #3b82f6;
         color: #fff;
         transform: translateY(-1px);
       }

@@ -19,38 +19,6 @@
       gap: 12px;
       flex-wrap: wrap;
 
-      .store-selector-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        height: 42px;
-        background-color: $bg-card;
-        border: 1px solid $border-main;
-        padding: 0 16px;
-        border-radius: $border-radius-pill;
-        font-size: 0.88rem;
-        font-weight: 500;
-        color: $text-main;
-        box-shadow: $shadow-sm;
-
-        label {
-          font-size: 0.78rem;
-          font-weight: 700;
-          color: $text-muted;
-          text-transform: uppercase;
-          letter-spacing: 0.04em;
-        }
-
-        select {
-          background: transparent;
-          border: none;
-          font-size: 0.88rem;
-          font-weight: 600;
-          color: $text-main;
-          outline: none;
-          cursor: pointer;
-        }
-      }
 
       .view-mode-toggle {
         display: inline-flex;
