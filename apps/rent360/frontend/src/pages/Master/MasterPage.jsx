@@ -584,241 +584,242 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
 
       {/* Unified Bond Modal Card for Create / Edit */}
       {isModalOpen && (
-        <div className="bond-modal-overlay">
-          <div className="bond-modal-backdrop" onClick={() => setIsModalOpen(false)} />
-          <div className="bond-modal-card">
-            <div className="bond-modal-header">
-              <div className="header-info">
-                <h3>
+        <div className="bond-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="bond-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <h2>
                   {editingItem ? 'Edit' : 'Add New'} {getActiveTabInfo().label.replace(/s$/, '')}
-                </h3>
-                <p>Fill in the master specification details below</p>
+                </h2>
+                <p>Configure {getActiveTabInfo().label.toLowerCase()} specification details below</p>
               </div>
               <button
                 type="button"
-                className="close-icon-btn"
+                className="modal-close"
                 onClick={() => setIsModalOpen(false)}
               >
                 <FiX />
               </button>
             </div>
 
-            <form onSubmit={handleSave} className="bond-modal-body">
-              {/* Size Form */}
-              {currentTab === 'sizes' && (
-                <>
-                  <div className="form-group">
-                    <label>Size Name / Display *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. 38, XL, Free Size"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Code / Tag *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. 38, XL, FS"
-                      value={formData.code}
-                      onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Sort Order</label>
-                    <input
-                      type="number"
-                      value={formData.sort_order}
-                      onChange={(e) => setFormData({ ...formData, sort_order: Number(e.target.value) })}
-                    />
-                  </div>
-                </>
-              )}
-
-              {/* Color Form */}
-              {currentTab === 'colors' && (
-                <>
-                  <div className="form-group">
-                    <label>Color Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Royal Blue, Wine, Maroon"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Color Preview & Hex Code</label>
-                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                      <input
-                        type="color"
-                        value={formData.hex_code || '#2563EB'}
-                        onChange={(e) => setFormData({ ...formData, hex_code: e.target.value })}
-                        style={{ width: '48px', height: '40px', padding: '2px', border: '1px solid #cbd5e1', borderRadius: '8px', cursor: 'pointer' }}
-                      />
-                      <input
-                        type="text"
-                        placeholder="#2563EB"
-                        value={formData.hex_code}
-                        onChange={(e) => setFormData({ ...formData, hex_code: e.target.value })}
-                        style={{ flex: 1 }}
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {/* Time Slot Form */}
-              {currentTab === 'time-slots' && (
-                <>
-                  <div className="form-group">
-                    <label>Slot Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Morning Slot, Evening Fitting"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-row" style={{ display: 'flex', gap: '12px' }}>
-                    <div className="form-group" style={{ flex: 1 }}>
-                      <label>Start Time *</label>
+            <form onSubmit={handleSave} autoComplete="off">
+              <div className="modal-body">
+                {/* Size Form */}
+                {currentTab === 'sizes' && (
+                  <>
+                    <div className="form-group">
+                      <label>Size Name / Display *</label>
                       <input
                         type="text"
                         required
-                        placeholder="e.g. 10:00 AM"
-                        value={formData.start_time}
-                        onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
+                        placeholder="e.g. 38, XL, Free Size"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       />
                     </div>
-                    <div className="form-group" style={{ flex: 1 }}>
-                      <label>End Time *</label>
+                    <div className="form-group">
+                      <label>Code / Tag *</label>
                       <input
                         type="text"
                         required
-                        placeholder="e.g. 01:00 PM"
-                        value={formData.end_time}
-                        onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
+                        placeholder="e.g. 38, XL, FS"
+                        value={formData.code}
+                        onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
                       />
                     </div>
-                  </div>
-                </>
-              )}
+                    <div className="form-group">
+                      <label>Sort Order</label>
+                      <input
+                        type="number"
+                        value={formData.sort_order}
+                        onChange={(e) => setFormData({ ...formData, sort_order: Number(e.target.value) })}
+                      />
+                    </div>
+                  </>
+                )}
 
-              {/* Reminders Form */}
-              {currentTab === 'reminders' && (
-                <>
-                  <div className="form-group">
-                    <label>Reminder Title *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Return collection fitting reminder"
-                      value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Date *</label>
-                    <input
-                      type="date"
-                      required
-                      value={formData.reminder_date}
-                      onChange={(e) => setFormData({ ...formData, reminder_date: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Description</label>
-                    <textarea
-                      rows={3}
-                      placeholder="Enter optional description..."
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    />
-                  </div>
-                </>
-              )}
+                {/* Color Form */}
+                {currentTab === 'colors' && (
+                  <>
+                    <div className="form-group">
+                      <label>Color Name *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Royal Blue, Wine, Maroon"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Color Preview & Hex Code</label>
+                      <div className="color-picker-row">
+                        <input
+                          type="color"
+                          className="color-swatch-input"
+                          value={formData.hex_code || '#2563EB'}
+                          onChange={(e) => setFormData({ ...formData, hex_code: e.target.value })}
+                        />
+                        <input
+                          type="text"
+                          className="color-hex-input"
+                          placeholder="#2563EB"
+                          value={formData.hex_code}
+                          onChange={(e) => setFormData({ ...formData, hex_code: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
 
-              {/* Accounts Form */}
-              {currentTab === 'accounts' && (
-                <>
-                  <div className="form-group">
-                    <label>Account / Category Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Rental Revenue, Dry Cleaning Expense"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Category Type *</label>
-                    <select
-                      value={formData.category_type}
-                      onChange={(e) => setFormData({ ...formData, category_type: e.target.value })}
-                    >
-                      <option value="INCOME">Income</option>
-                      <option value="EXPENSE">Expense</option>
-                    </select>
-                  </div>
-                </>
-              )}
+                {/* Time Slot Form */}
+                {currentTab === 'time-slots' && (
+                  <>
+                    <div className="form-group">
+                      <label>Slot Name *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Morning Slot, Evening Fitting"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-row" style={{ display: 'flex', gap: '12px' }}>
+                      <div className="form-group" style={{ flex: 1 }}>
+                        <label>Start Time *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. 10:00 AM"
+                          value={formData.start_time}
+                          onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
+                        />
+                      </div>
+                      <div className="form-group" style={{ flex: 1 }}>
+                        <label>End Time *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. 01:00 PM"
+                          value={formData.end_time}
+                          onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
 
-              {/* Security Accounts Form */}
-              {currentTab === 'security-accounts' && (
-                <>
-                  <div className="form-group">
-                    <label>Account Holder / Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Store Security Deposit A/C"
-                      value={formData.account_name}
-                      onChange={(e) => setFormData({ ...formData, account_name: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Account Number *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. 50100456789123"
-                      value={formData.account_number}
-                      onChange={(e) => setFormData({ ...formData, account_number: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>IFSC Code</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. HDFC0001234"
-                      value={formData.ifsc_code}
-                      onChange={(e) => setFormData({ ...formData, ifsc_code: e.target.value.toUpperCase() })}
-                    />
-                  </div>
-                </>
-              )}
+                {/* Reminders Form */}
+                {currentTab === 'reminders' && (
+                  <>
+                    <div className="form-group">
+                      <label>Reminder Title *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Return collection fitting reminder"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Date *</label>
+                      <input
+                        type="date"
+                        required
+                        value={formData.reminder_date}
+                        onChange={(e) => setFormData({ ...formData, reminder_date: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Description</label>
+                      <textarea
+                        rows={3}
+                        placeholder="Enter optional description..."
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      />
+                    </div>
+                  </>
+                )}
 
-              <div className="bond-modal-footer">
+                {/* Accounts Form */}
+                {currentTab === 'accounts' && (
+                  <>
+                    <div className="form-group">
+                      <label>Account / Category Name *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Rental Revenue, Dry Cleaning Expense"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Category Type *</label>
+                      <select
+                        value={formData.category_type}
+                        onChange={(e) => setFormData({ ...formData, category_type: e.target.value })}
+                      >
+                        <option value="INCOME">Income</option>
+                        <option value="EXPENSE">Expense</option>
+                      </select>
+                    </div>
+                  </>
+                )}
+
+                {/* Security Accounts Form */}
+                {currentTab === 'security-accounts' && (
+                  <>
+                    <div className="form-group">
+                      <label>Account Holder / Name *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Store Security Deposit A/C"
+                        value={formData.account_name}
+                        onChange={(e) => setFormData({ ...formData, account_name: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Account Number *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. 50100456789123"
+                        value={formData.account_number}
+                        onChange={(e) => setFormData({ ...formData, account_number: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>IFSC Code</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. HDFC0001234"
+                        value={formData.ifsc_code}
+                        onChange={(e) => setFormData({ ...formData, ifsc_code: e.target.value.toUpperCase() })}
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className="modal-footer">
                 <button
                   type="button"
-                  className="cancel-btn"
+                  className="pill-btn-secondary"
                   onClick={() => setIsModalOpen(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="submit-btn"
+                  className="pill-btn-primary"
                   disabled={isSaving}
                 >
-                  {isSaving ? 'Saving...' : editingItem ? 'Update Master' : 'Create Master'}
+                  {isSaving ? 'Saving...' : editingItem ? 'Save Changes' : `Add ${getActiveTabInfo().label.replace(/s$/, '')}`}
                 </button>
               </div>
             </form>
@@ -830,10 +831,11 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       <ConfirmModal
         isOpen={Boolean(itemToDelete)}
         title={`Delete ${getActiveTabInfo().label.replace(/s$/, '')}`}
-        message={`Are you sure you want to delete this master record? This action cannot be undone.`}
-        confirmText={isDeleting ? 'Deleting...' : 'Delete Record'}
+        message={`Are you sure you want to delete this ${getActiveTabInfo().label.replace(/s$/, '').toLowerCase()}? This action cannot be undone.`}
+        confirmText={isDeleting ? 'Deleting...' : 'Delete'}
         cancelText="Cancel"
         onConfirm={handleConfirmDelete}
+        onCancel={() => setItemToDelete(null)}
         onClose={() => setItemToDelete(null)}
         isLoading={isDeleting}
       />
