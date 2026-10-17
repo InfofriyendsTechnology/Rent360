@@ -34,20 +34,6 @@ export const getAllColors = async (req: AuthRequest, res: Response) => {
       storeId = user.storeId;
     }
 
-    if (storeId) {
-      // Auto-seed defaults if store has no colors
-      const count = await prisma.storeColor.count({ where: { storeId } });
-      if (count === 0) {
-        await prisma.storeColor.createMany({
-          data: DEFAULT_COLORS.map((c) => ({
-            storeId,
-            name: c.name,
-            hex_code: c.hex_code,
-          })),
-        });
-      }
-    }
-
     const whereClause: any = {};
     if (storeId) {
       whereClause.storeId = storeId;
@@ -57,10 +43,25 @@ export const getAllColors = async (req: AuthRequest, res: Response) => {
       whereClause.name = { contains: search.trim(), mode: "insensitive" };
     }
 
-    const colors = await prisma.storeColor.findMany({
+    let colors = await prisma.storeColor.findMany({
       where: whereClause,
       orderBy: { createdAt: "asc" },
     });
+
+    // Auto-seed defaults only if store has literally 0 colors and not searching
+    if (colors.length === 0 && !search && storeId) {
+      await prisma.storeColor.createMany({
+        data: DEFAULT_COLORS.map((c) => ({
+          storeId,
+          name: c.name,
+          hex_code: c.hex_code,
+        })),
+      });
+      colors = await prisma.storeColor.findMany({
+        where: whereClause,
+        orderBy: { createdAt: "asc" },
+      });
+    }
 
     return responseHandler.success(res, "Colors fetched successfully", colors);
   } catch (error) {
@@ -104,7 +105,7 @@ export const createColor = async (req: AuthRequest, res: Response) => {
 
 export const getColorById = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const color = await prisma.storeColor.findUnique({
       where: { id },
     });
@@ -122,7 +123,7 @@ export const getColorById = async (req: AuthRequest, res: Response) => {
 
 export const updateColor = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { name, hex_code } = req.body;
 
     const existing = await prisma.storeColor.findUnique({ where: { id } });
@@ -147,7 +148,7 @@ export const updateColor = async (req: AuthRequest, res: Response) => {
 
 export const deleteColor = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const existing = await prisma.storeColor.findUnique({ where: { id } });
     if (!existing) {

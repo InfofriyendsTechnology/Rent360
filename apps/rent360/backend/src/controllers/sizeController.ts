@@ -28,21 +28,6 @@ export const getAllSizes = async (req: AuthRequest, res: Response) => {
       storeId = user.storeId;
     }
 
-    if (storeId) {
-      // Auto-seed defaults if store has no sizes
-      const count = await prisma.storeSize.count({ where: { storeId } });
-      if (count === 0) {
-        await prisma.storeSize.createMany({
-          data: DEFAULT_SIZES.map((s) => ({
-            storeId,
-            name: s.name,
-            code: s.code,
-            sort_order: s.sort_order,
-          })),
-        });
-      }
-    }
-
     const whereClause: any = {};
     if (storeId) {
       whereClause.storeId = storeId;
@@ -55,10 +40,26 @@ export const getAllSizes = async (req: AuthRequest, res: Response) => {
       ];
     }
 
-    const sizes = await prisma.storeSize.findMany({
+    let sizes = await prisma.storeSize.findMany({
       where: whereClause,
       orderBy: [{ sort_order: "asc" }, { createdAt: "asc" }],
     });
+
+    // Auto-seed defaults only if store has literally 0 sizes and not searching
+    if (sizes.length === 0 && !search && storeId) {
+      await prisma.storeSize.createMany({
+        data: DEFAULT_SIZES.map((s) => ({
+          storeId,
+          name: s.name,
+          code: s.code,
+          sort_order: s.sort_order,
+        })),
+      });
+      sizes = await prisma.storeSize.findMany({
+        where: whereClause,
+        orderBy: [{ sort_order: "asc" }, { createdAt: "asc" }],
+      });
+    }
 
     return responseHandler.success(res, "Sizes fetched successfully", sizes);
   } catch (error) {
@@ -103,7 +104,7 @@ export const createSize = async (req: AuthRequest, res: Response) => {
 
 export const getSizeById = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const size = await prisma.storeSize.findUnique({
       where: { id },
     });
@@ -121,7 +122,7 @@ export const getSizeById = async (req: AuthRequest, res: Response) => {
 
 export const updateSize = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { name, code, sort_order } = req.body;
 
     const existing = await prisma.storeSize.findUnique({ where: { id } });
@@ -147,7 +148,7 @@ export const updateSize = async (req: AuthRequest, res: Response) => {
 
 export const deleteSize = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const existing = await prisma.storeSize.findUnique({ where: { id } });
     if (!existing) {

@@ -4,14 +4,23 @@ import responseHandler from "../../utils/responseHandler";
 
 export const getAllUsers = async (req: Request | any, res: Response) => {
   try {
-    const storeId = req.user?.storeId;
+    const user = req.user;
+    let storeId = (req.query.storeId as string) || user?.storeId;
+    if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
+      storeId = user.storeId;
+    }
+
+    const where: any = {
+      role: {
+        name: { notIn: ['STORE_ADMIN', 'SUPER_ADMIN'] }
+      }
+    };
+    if (storeId) {
+      where.storeId = storeId;
+    }
+
     const data = await prisma.user.findMany({
-      where: { 
-        storeId,
-        role: {
-          name: { notIn: ['STORE_ADMIN', 'SUPER_ADMIN'] }
-        }
-      },
+      where,
       include: { role: true },
       orderBy: { createdAt: 'desc' }
     });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit2, FiTrash2, FiX } from 'react-icons/fi';
+import { FiPlus, FiEdit2, FiTrash2, FiX, FiShoppingBag, FiChevronDown } from 'react-icons/fi';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
@@ -9,7 +9,15 @@ import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
 const CustomersList = () => {
-  const { token } = useSelector((state) => state.auth);
+  const { user, token } = useSelector((state) => state.auth);
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
+  const userStoreId = user?.store?.id || user?.storeId || '';
+
+  // Stores for super admin
+  const [stores, setStores] = useState([]);
+  const [selectedStoreId, setSelectedStoreId] = useState(() => {
+    return userStoreId || localStorage.getItem('rent360_active_store_id') || '';
+  });
   
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,14 +38,45 @@ const CustomersList = () => {
   });
   const [formErrors, setFormErrors] = useState({});
 
+  // Fetch stores if Super Admin
   useEffect(() => {
+    if (isSuperAdmin && token) {
+      axios
+        .get(`${API_BASE_URL}/api/stores`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        .then((res) => {
+          const list = res.data.data || [];
+          setStores(list);
+          if (list.length > 0) {
+            const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
+            if (!hasExisting) {
+              const matched = userStoreId && list.some((s) => s.id === userStoreId);
+              const targetStoreId = matched ? userStoreId : list[0].id;
+              setSelectedStoreId(targetStoreId);
+              localStorage.setItem('rent360_active_store_id', targetStoreId);
+            }
+          }
+        })
+        .catch(() => {});
+    } else if (userStoreId) {
+      setSelectedStoreId(userStoreId);
+      localStorage.setItem('rent360_active_store_id', userStoreId);
+    }
+  }, [isSuperAdmin, userStoreId, token]);
+
+  useEffect(() => {
+    if (isSuperAdmin && !selectedStoreId) return;
     fetchData();
-  }, []);
+  }, [selectedStoreId, token]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/customers`, { headers: { Authorization: `Bearer ${token}` } });
+      const url = selectedStoreId
+        ? `${API_BASE_URL}/api/customers?storeId=${selectedStoreId}`
+        : `${API_BASE_URL}/api/customers`;
+      const res = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
       setCustomers(res.data.data || []);
     } catch (error) {
       toast.error('Failed to load customers');
@@ -99,7 +138,11 @@ const CustomersList = () => {
         await axios.put(`${API_BASE_URL}/api/customers/${editingCustomerId}`, customerForm, { headers: { Authorization: `Bearer ${token}` } });
         toast.success('Customer updated successfully');
       } else {
-        await axios.post(`${API_BASE_URL}/api/customers`, customerForm, { headers: { Authorization: `Bearer ${token}` } });
+        const payload = { ...customerForm };
+        if (selectedStoreId) {
+          payload.storeId = selectedStoreId;
+        }
+        await axios.post(`${API_BASE_URL}/api/customers`, payload, { headers: { Authorization: `Bearer ${token}` } });
         toast.success('Customer added successfully');
       }
       closeCustomerModal();
@@ -144,6 +187,29 @@ const CustomersList = () => {
         </div>
 
         <div className="top-actions">
+          {/* Super Admin Store Selector */}
+          {isSuperAdmin && stores.length > 0 && (
+            <div className="store-selector-pill">
+              <FiShoppingBag className="store-pill-icon" />
+              <label>Store:</label>
+              <select
+                value={selectedStoreId}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedStoreId(val);
+                  localStorage.setItem('rent360_active_store_id', val);
+                }}
+              >
+                {stores.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name || s.store_name}
+                  </option>
+                ))}
+              </select>
+              <FiChevronDown className="chevron-icon" />
+            </div>
+          )}
+
           <div className="pill-filter">
             <span className="dot" />
             <span>Total Customers ({customers.length})</span>

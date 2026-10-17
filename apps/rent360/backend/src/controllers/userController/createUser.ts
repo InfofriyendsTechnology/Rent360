@@ -5,7 +5,10 @@ import bcrypt from "bcryptjs";
 
 export const createUser = async (req: Request | any, res: Response) => {
   try {
-    const storeId = req.user?.storeId;
+    let storeId = req.user?.storeId;
+    if (req.user?.role === "SUPER_ADMIN") {
+      storeId = req.body?.storeId || req.query?.storeId || req.user?.storeId;
+    }
     if (!storeId) {
       return responseHandler.badRequest(res, "Store ID is required to create a team member.");
     }

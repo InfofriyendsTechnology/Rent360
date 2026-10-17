@@ -35,7 +35,7 @@ export const DataTable = ({
         </thead>
         <tbody>
           {loading ? (
-            <TableRowSkeleton rows={5} columns={columns.length || 4} />
+            <TableRowSkeleton rows={3} columns={columns.length || 4} />
           ) : data && data.length > 0 ? (
             data.map((item, idx) => (
               <tr key={keyExtractor ? keyExtractor(item) : (item?.id || idx)}>
@@ -55,11 +55,11 @@ export const DataTable = ({
             ))
           ) : (
             <tr>
-              <td colSpan={columns.length || 1} className="text-center" style={{ padding: '48px 0', color: 'var(--text-muted)' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)' }}>{displayEmpty}</span>
+              <td colSpan={columns.length || 1} className="text-center" style={{ padding: '28px 0', color: 'var(--text-muted)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-main)' }}>{displayEmpty}</span>
                   {emptyDescription && (
-                    <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{emptyDescription}</span>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{emptyDescription}</span>
                   )}
                 </div>
               </td>

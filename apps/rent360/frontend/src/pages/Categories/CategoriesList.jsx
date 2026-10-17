@@ -33,7 +33,9 @@ const CategoriesList = () => {
 
   // Stores for super admin
   const [stores, setStores] = useState([]);
-  const [selectedStoreId, setSelectedStoreId] = useState(userStoreId);
+  const [selectedStoreId, setSelectedStoreId] = useState(() => {
+    return userStoreId || localStorage.getItem('rent360_active_store_id') || '';
+  });
 
   // Categories & UI state
   const [categories, setCategories] = useState([]);
@@ -69,18 +71,22 @@ const CategoriesList = () => {
             const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
             if (!hasExisting) {
               const matched = userStoreId && list.some((s) => s.id === userStoreId);
-              setSelectedStoreId(matched ? userStoreId : list[0].id);
+              const targetStoreId = matched ? userStoreId : list[0].id;
+              setSelectedStoreId(targetStoreId);
+              localStorage.setItem('rent360_active_store_id', targetStoreId);
             }
           }
         })
         .catch(() => {});
     } else if (userStoreId) {
       setSelectedStoreId(userStoreId);
+      localStorage.setItem('rent360_active_store_id', userStoreId);
     }
   }, [isSuperAdmin, userStoreId, token]);
 
   // Fetch categories when storeId changes
   useEffect(() => {
+    if (isSuperAdmin && !selectedStoreId) return;
     fetchCategories();
   }, [selectedStoreId, token]);
 

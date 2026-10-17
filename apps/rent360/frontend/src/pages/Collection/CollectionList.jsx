@@ -50,7 +50,9 @@ const CollectionList = () => {
   // Stores (for Super Admin selector)
   const userStoreId = user?.store?.id || user?.storeId || '';
   const [stores, setStores] = useState([]);
-  const [selectedStoreId, setSelectedStoreId] = useState(userStoreId);
+  const [selectedStoreId, setSelectedStoreId] = useState(() => {
+    return userStoreId || localStorage.getItem('rent360_active_store_id') || '';
+  });
 
   // Main Data
   const [products, setProducts] = useState([]);
@@ -87,7 +89,7 @@ const CollectionList = () => {
 
   // Fetch stores if Super Admin
   useEffect(() => {
-    if (isSuperAdmin) {
+    if (isSuperAdmin && token) {
       axios
         .get(`${API_BASE_URL}/api/stores`, { headers: { Authorization: `Bearer ${token}` } })
         .then((res) => {
@@ -97,20 +99,24 @@ const CollectionList = () => {
             const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
             if (!hasExisting) {
               const matched = userStoreId && list.some((s) => s.id === userStoreId);
-              setSelectedStoreId(matched ? userStoreId : list[0].id);
+              const targetStoreId = matched ? userStoreId : list[0].id;
+              setSelectedStoreId(targetStoreId);
+              localStorage.setItem('rent360_active_store_id', targetStoreId);
             }
           }
         })
         .catch(() => {});
     } else if (userStoreId) {
       setSelectedStoreId(userStoreId);
+      localStorage.setItem('rent360_active_store_id', userStoreId);
     }
   }, [isSuperAdmin, userStoreId, token]);
 
   // Fetch products, categories, and limits
   useEffect(() => {
+    if (isSuperAdmin && !selectedStoreId) return;
     fetchData();
-  }, [selectedStoreId]);
+  }, [selectedStoreId, token]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -240,7 +246,11 @@ const CollectionList = () => {
               <label>Store:</label>
               <select
                 value={selectedStoreId}
-                onChange={(e) => setSelectedStoreId(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedStoreId(val);
+                  localStorage.setItem('rent360_active_store_id', val);
+                }}
               >
                 {stores.map((s) => (
                   <option key={s.id} value={s.id}>
