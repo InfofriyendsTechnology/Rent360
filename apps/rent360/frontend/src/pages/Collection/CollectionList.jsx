@@ -12,7 +12,6 @@ import ProductModal from './ProductModal';
 import StockModal from './StockModal';
 import ImageGalleryModal from './ImageGalleryModal';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
-import QuickCategoryModal from '../../components/QuickCategoryModal/QuickCategoryModal';
 import '../Stores/StoresList.scss';
 import './CollectionList.scss';
 
@@ -64,7 +63,6 @@ const CollectionList = () => {
   // Filters & Controls
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState(localStorage.getItem('rent360_collection_view') || 'cards');
 
   const handleToggleViewMode = (mode) => {
@@ -320,15 +318,6 @@ const CollectionList = () => {
             </button>
           );
         })}
-        <button
-          type="button"
-          className="cat-pill new-cat-pill"
-          onClick={() => setIsCategoryModalOpen(true)}
-          title="Add New Category"
-        >
-          <FiPlus />
-          <span>Add Category</span>
-        </button>
       </div>
 
       {/* Search Toolbar */}
@@ -698,18 +687,6 @@ const CollectionList = () => {
         onConfirm={handleDeleteProduct}
         onCancel={() => setProductToDelete(null)}
         isDestructive={true}
-      />
-
-      {/* Quick Add Category Modal */}
-      <QuickCategoryModal
-        isOpen={isCategoryModalOpen}
-        onClose={() => setIsCategoryModalOpen(false)}
-        storeId={selectedStoreId}
-        onSuccess={(newCat) => {
-          setCategories((prev) => [newCat, ...prev.filter((c) => c.id !== newCat.id)]);
-          setSelectedCategory(newCat.id);
-          fetchData();
-        }}
       />
     </div>
   );

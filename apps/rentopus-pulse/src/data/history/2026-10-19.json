@@ -33,7 +33,7 @@
     },
     {
       "member": "001",
-      "text": "Implemented inline Quick Category creation: added 'Add New Category' action buttons to category dropdowns and pills strip, with an instant portal modal and auto-selection upon creation, avoiding navigation to the Categories page."
+      "text": "Implemented inline Quick Category creation: added 'Add New Category' option inside the category selection dropdown with an instant portal modal and auto-selection upon creation, avoiding navigation to the Categories page."
     }
   ],
   "tasksGu": [
@@ -63,7 +63,7 @@
     },
     {
       "member": "001",
-      "text": "ઇનલાઇન Quick Category ક્રિએશન સુવિધા ઉમેરી: કેટેગરી સિલેક્ટ ડ્રોપડાઉન અને પિલ્સ સ્ટ્રીપમાં '+ Add New Category' બટન ઉમેર્યું, જેથી પેજ છોડ્યા વિના સીધી નવી કેટેગરી બનાવીને ઓટો-સિલેક્ટ કરી શકાય."
+      "text": "ઇનલાઇન Quick Category ક્રિએશન સુવિધા ઉમેરી: કેટેગરી સિલેક્ટ ડ્રોપડાઉનમાં '+ Add New Category' ઓપ્શન ઉમેર્યો, જેથી પેજ છોડ્યા વિના સીધી નવી કેટેગરી બનાવીને ઓટો-સિલેક્ટ કરી શકાય."
     }
   ],
   "deliverables": [
