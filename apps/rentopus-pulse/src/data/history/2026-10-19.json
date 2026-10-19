@@ -21,7 +21,7 @@
     },
     {
       "member": "001",
-      "text": "Redesigned sidebar footer: removed oversized Return button, integrated sleek Return to Super Admin icon directly inside the fixed bottom user profile card, and added a top Header return capsule pill."
+      "text": "Redesigned sidebar footer: removed oversized Return button and integrated sleek Return to Super Admin icon directly inside the fixed bottom user profile card."
     },
     {
       "member": "001",
@@ -47,7 +47,7 @@
     },
     {
       "member": "001",
-      "text": "સાઇડબાર બોટમ એરિયાનું ક્લીનઅપ કર્યું: મોટું રિટર્ન બટન હટાવી ફિક્સ પ્રોફાઇલ કાર્ડમાં જમણી બાજુ સ્લીક આઇકોન તરીકે ગોઠવ્યું અને ટોપ હેડરમાં [ ↶ Return to Super Admin ] કેપ્સ્યુલ પિલ ઉમેરી."
+      "text": "સાઇડબાર બોટમ એરિયાનું ક્લીનઅપ કર્યું: મોટું રિટર્ન બટન હટાવી ફિક્સ પ્રોફાઇલ કાર્ડમાં જમણી બાજુ સ્લીક આઇકોન તરીકે ગોઠવ્યું."
     },
     {
       "member": "001",
@@ -62,7 +62,7 @@
     "Portal-Based Auto-Flipping Select & DatePicker Components",
     "Custom Luxury Checkbox Component (Dark/Light Native SVGs)",
     "Adaptive Height Unified DataTable & Minimalist Pagination",
-    "Streamlined Sidebar Footer & Header Return to Super Admin Pill",
+    "Streamlined Sidebar Footer With Integrated Return to Super Admin Icon",
     "Ultra-Thin 2.5px Flush-Right Hover-Reveal Scrollbar Without Arrows",
     "Theme-Compliant Table Rows-Per-Page Select Dropdown"
   ]
