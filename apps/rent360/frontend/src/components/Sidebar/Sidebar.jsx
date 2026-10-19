@@ -28,7 +28,13 @@ const Sidebar = ({ isOpen, onClose }) => {
     '/time-slots', '/reminders', '/accounts', '/security-accounts'
   ].some((p) => location.pathname.startsWith(p));
 
-  const [isMasterOpen, setIsMasterOpen] = useState(true);
+  const [isMasterOpen, setIsMasterOpen] = useState(isMasterRouteActive);
+
+  useEffect(() => {
+    if (isMasterRouteActive) {
+      setIsMasterOpen(true);
+    }
+  }, [isMasterRouteActive]);
 
   useEffect(() => {
     if (isSuperAdmin) {
@@ -314,17 +320,6 @@ const Sidebar = ({ isOpen, onClose }) => {
 
         {/* Footer Profile Card */}
         <div className="sidebar-footer">
-          {canReturnToSuperAdmin && (
-            <button 
-              className="return-admin-btn" 
-              onClick={handleReturnToSuperAdmin}
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '10px 14px', marginBottom: '12px', background: '#2563eb', color: '#fff', borderRadius: '12px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: '500' }}
-            >
-              <FiCornerUpLeft />
-              Return to Super Admin
-            </button>
-          )}
-          
           <div className="user-profile-card">
             <div className="profile-avatar" onClick={handleProfileClick} style={{ cursor: 'pointer', overflow: 'hidden', position: 'relative' }} title="Profile Settings">
               {user?.profile_pic ? (
@@ -333,13 +328,32 @@ const Sidebar = ({ isOpen, onClose }) => {
                 user?.name ? user.name.slice(0, 2).toUpperCase() : 'AD'
               )}
             </div>
-            <div className="profile-info">
+            <div className="profile-info" onClick={handleProfileClick} style={{ cursor: 'pointer' }} title="Profile Settings">
               <span className="profile-name">{user?.name || 'Main Admin'}</span>
-              <span className="profile-role">{isSuperAdmin ? 'Super Admin' : 'Store Admin'}</span>
+              <span className="profile-role">{isSuperAdmin ? 'Super Admin' : (canReturnToSuperAdmin ? 'Store (Impersonated)' : 'Store Admin')}</span>
             </div>
-            <button className="logout-icon-btn" onClick={handleLogout} title="Logout">
-              <FiLogOut />
-            </button>
+            <div className="profile-actions">
+              {canReturnToSuperAdmin && (
+                <button 
+                  type="button"
+                  className="return-icon-btn" 
+                  onClick={handleReturnToSuperAdmin} 
+                  title="Return to Super Admin"
+                  aria-label="Return to Super Admin"
+                >
+                  <FiCornerUpLeft />
+                </button>
+              )}
+              <button 
+                type="button"
+                className="logout-icon-btn" 
+                onClick={handleLogout} 
+                title="Logout"
+                aria-label="Logout"
+              >
+                <FiLogOut />
+              </button>
+            </div>
           </div>
         </div>
       </aside>

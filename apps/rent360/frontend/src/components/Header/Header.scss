@@ -76,6 +76,34 @@
     align-items: center;
     gap: 10px;
 
+    /* Return to Super Admin Capsule Pill */
+    .return-superadmin-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 38px;
+      padding: 0 14px;
+      background-color: rgba(37, 99, 235, 0.08);
+      color: #2563eb;
+      border: 1px solid rgba(37, 99, 235, 0.25);
+      border-radius: $border-radius-pill;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+
+      .return-icon {
+        font-size: 0.95rem;
+      }
+
+      &:hover {
+        background-color: #2563eb;
+        color: #ffffff;
+        border-color: #2563eb;
+        box-shadow: $shadow-sm;
+      }
+    }
+
     /* Period Segmented Control */
     .period-segmented {
       display: flex;
@@ -252,6 +280,16 @@
     .header-actions {
       gap: 6px;
 
+      .return-superadmin-pill {
+        height: 34px;
+        padding: 0 10px;
+        font-size: 0.78rem;
+
+        span {
+          display: none;
+        }
+      }
+
       .alerts-pill-btn {
         padding: 0 8px;
         height: 34px;
@@ -290,3 +328,18 @@
     }
   }
 }
+
+body.dark {
+  .dashboard-header-capsule .header-actions .return-superadmin-pill {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border-color: rgba(59, 130, 246, 0.35);
+
+    &:hover {
+      background-color: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+  }
+}
+

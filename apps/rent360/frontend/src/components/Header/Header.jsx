@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { FiBell, FiSun, FiMoon, FiPlus, FiMenu } from 'react-icons/fi';
-import { useSelector } from 'react-redux';
+import { FiBell, FiSun, FiMoon, FiPlus, FiMenu, FiCornerUpLeft } from 'react-icons/fi';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { loginSuccess } from '../../store/authSlice';
+import toast from 'react-hot-toast';
 import './Header.scss';
 
 const Header = ({ onToggleSidebar }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [activePeriod, setActivePeriod] = useState('Quarter');
   const location = useLocation();
   const navigate = useNavigate();
+
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
+  const superAdminToken = localStorage.getItem('superAdminToken');
+  const canReturnToSuperAdmin = !isSuperAdmin && Boolean(superAdminToken);
+
+  const handleReturnToSuperAdmin = () => {
+    const sToken = localStorage.getItem('superAdminToken');
+    const userStr = localStorage.getItem('superAdminUser');
+    if (sToken && userStr) {
+      try {
+        const sUser = JSON.parse(userStr);
+        localStorage.removeItem('superAdminToken');
+        localStorage.removeItem('superAdminUser');
+        dispatch(loginSuccess({ user: sUser, token: sToken }));
+        navigate('/stores');
+        toast.success("Returned to Super Admin");
+      } catch (err) {}
+    }
+  };
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -59,6 +81,18 @@ const Header = ({ onToggleSidebar }) => {
 
       {/* Right: Controls & Actions matching Bond CRM */}
       <div className="header-actions">
+        {canReturnToSuperAdmin && (
+          <button 
+            type="button"
+            className="return-superadmin-pill" 
+            onClick={handleReturnToSuperAdmin}
+            title="Return to Super Admin Dashboard"
+          >
+            <FiCornerUpLeft className="return-icon" />
+            <span>Return to Super Admin</span>
+          </button>
+        )}
+
         {/* Period Selector Tabs */}
         <div className="period-segmented">
           {['Month', 'Quarter', 'Year'].map((period) => (
