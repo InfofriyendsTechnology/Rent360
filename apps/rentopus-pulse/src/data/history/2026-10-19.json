@@ -1,0 +1,69 @@
+{
+  "date": "19-10-2026",
+  "dayNumber": 25,
+  "title": "Unified Table System, Luxury Checkbox, Common Dropdown & Sidebar UX Overhaul",
+  "titleGu": "યુનિફાઇડ ટેબલ સિસ્ટમ, લક્ઝરી ચેકબોક્સ, કોમન ડ્રોપડાઉન અને સાઇડબાર UX ઓવરહોલ",
+  "members": [
+    "001"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Engineered reusable, theme-driven Select and DatePicker components with React Portal and dynamic viewport auto-flipping, preventing clipping in modals and high-density views."
+    },
+    {
+      "member": "001",
+      "text": "Created custom luxury Checkbox component with custom SVG check icons, crisp white border/tick in dark mode, and dark styling in light mode."
+    },
+    {
+      "member": "001",
+      "text": "Overhauled DataTable layout across all modules (Stores, Subscriptions, Categories, Collection, Roles): eliminated 100vh height stretching so cards naturally hug data height, fixed bottom border clipping, and streamlined pagination to minimal chevron controls."
+    },
+    {
+      "member": "001",
+      "text": "Redesigned sidebar footer: removed oversized Return button, integrated sleek Return to Super Admin icon directly inside the fixed bottom user profile card, and added a top Header return capsule pill."
+    },
+    {
+      "member": "001",
+      "text": "Re-engineered sidebar scrollbar matching benchmark UI: eliminated right-side gap (flush-right), removed native Windows triangle arrow buttons, and implemented an ultra-thin 2.5px hairline hover-reveal scrollbar."
+    },
+    {
+      "member": "001",
+      "text": "Integrated custom Select dropdown into table pagination entries selector, replacing raw browser OS dropdowns with dark-mode compliant rounded menus."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "રિએક્ટ પોર્ટલ અને ડાયનેમિક વ્યુપોર્ટ ઓટો-ફ્લિપિંગ સાથે કસ્ટમ Select અને DatePicker કોમ્પોનન્ટ્સ બનાવ્યા, જેથી મોડલ્સ કે કન્ટેનરમાં ડ્રોપડાઉન કપાઈ ન જાય."
+    },
+    {
+      "member": "001",
+      "text": "ડાર્ક મોડમાં વ્હાઇટ બોર્ડર અને વ્હાઇટ ટિક તથા લાઇટ મોડમાં ડાર્ક થીમવાળું પ્રીમિયમ કસ્ટમ Checkbox કોમ્પોનન્ટ તૈયાર કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "તમામ મોડ્યુલ્સમાં DataTable લેઆઉટ એકરૂપ બનાવ્યું: 100vh અનનેસેસરી સ્પેસિંગ હટાવી કાર્ડ્સને ડેટા મુજબ નેચરલ હાઇટ આપી, બોટમ બોર્ડર ક્લિપિંગ સોલ્વ કરી અને પેજીનેશનને મિનિમલ શેવરોન કંટ્રોલ્સમાં સિમ્પલીફાય કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "સાઇડબાર બોટમ એરિયાનું ક્લીનઅપ કર્યું: મોટું રિટર્ન બટન હટાવી ફિક્સ પ્રોફાઇલ કાર્ડમાં જમણી બાજુ સ્લીક આઇકોન તરીકે ગોઠવ્યું અને ટોપ હેડરમાં [ ↶ Return to Super Admin ] કેપ્સ્યુલ પિલ ઉમેરી."
+    },
+    {
+      "member": "001",
+      "text": "રેફરન્સ UI મુજબ સાઇડબાર સ્ક્રોલબાર રી-ડિઝાઇન કર્યો: જમણી બાજુની સ્પેસ હટાવી એજ-ટુ-એજ અલાઈન કર્યો, ત્રિકોણ એરા બટન્સ દૂર કર્યા અને 2.5px અલ્ટ્રા-થિન હોવર-સ્ક્રોલબાર સેટ કર્યો."
+    },
+    {
+      "member": "001",
+      "text": "ટેબલ પેજીનેશનમાં ડિફોલ્ટ બ્રાઉઝર ડ્રોપડાઉનને બદલે કસ્ટમ થીમ બેઝ્ડ Select ડ્રોપડાઉન લાગુ કરી ડાર્ક મોડ UI એકસમાન બનાવી."
+    }
+  ],
+  "deliverables": [
+    "Portal-Based Auto-Flipping Select & DatePicker Components",
+    "Custom Luxury Checkbox Component (Dark/Light Native SVGs)",
+    "Adaptive Height Unified DataTable & Minimalist Pagination",
+    "Streamlined Sidebar Footer & Header Return to Super Admin Pill",
+    "Ultra-Thin 2.5px Flush-Right Hover-Reveal Scrollbar Without Arrows",
+    "Theme-Compliant Table Rows-Per-Page Select Dropdown"
+  ]
+}
