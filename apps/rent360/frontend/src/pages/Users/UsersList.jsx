@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss'; // Reuse store styles for consistency
-import { DataTable, AvatarCell, StatusPill, RowActions } from '../../components/ui';
+import { DataTable, AvatarCell, StatusPill, RowActions, Select } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
@@ -376,9 +376,10 @@ const UsersList = () => {
                         + Create Role
                       </button>
                     </div>
-                    <select 
+                    <Select 
                       required 
                       value={userForm.roleId} 
+                      placeholder="Select a role..."
                       onChange={e => {
                         if (e.target.value === '__create_new__') {
                           setIsQuickRoleModalOpen(true);
@@ -394,7 +395,7 @@ const UsersList = () => {
                       <option value="__create_new__" style={{ fontWeight: 600, color: '#0B60B0' }}>
                         + Create New Custom Role...
                       </option>
-                    </select>
+                    </Select>
                   </div>
                   <div className="form-field">
                     <label>{editingUserId ? 'New Password (Optional)' : 'Password *'}</label>

@@ -10,7 +10,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
-import { DataTable, RowActions } from '../../components/ui';
+import { DataTable, RowActions, Select, DatePicker } from '../../components/ui';
 
 import '../Stores/StoresList.scss';
 import './MasterPage.scss';
@@ -699,8 +699,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
                     </div>
                     <div className="form-group">
                       <label>Date *</label>
-                      <input
-                        type="date"
+                      <DatePicker
                         required
                         value={formData.reminder_date}
                         onChange={(e) => setFormData({ ...formData, reminder_date: e.target.value })}
@@ -733,13 +732,13 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
                     </div>
                     <div className="form-group">
                       <label>Category Type *</label>
-                      <select
+                      <Select
                         value={formData.category_type}
                         onChange={(e) => setFormData({ ...formData, category_type: e.target.value })}
                       >
                         <option value="INCOME">Income</option>
                         <option value="EXPENSE">Expense</option>
-                      </select>
+                      </Select>
                     </div>
                   </>
                 )}

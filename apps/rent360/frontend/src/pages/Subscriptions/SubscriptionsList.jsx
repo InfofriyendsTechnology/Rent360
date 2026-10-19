@@ -8,7 +8,7 @@ import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import './SubscriptionsList.scss';
 import '../Stores/StoresList.scss';
-import { DataTable, AvatarCell, StatusPill, RowActions } from '../../components/ui';
+import { DataTable, AvatarCell, StatusPill, RowActions, Select, DatePicker } from '../../components/ui';
 import { API_BASE_URL } from '../../config/api';
 
 const SubscriptionsList = () => {
@@ -293,8 +293,9 @@ const SubscriptionsList = () => {
                 {/* Store Dropdown */}
                 <div className="form-field">
                   <label>Company / Store *</label>
-                  <select
+                  <Select
                     value={formData.storeId}
+                    placeholder="-- Select Store --"
                     onChange={e => setFormData(prev => ({ ...prev, storeId: e.target.value }))}
                     required
                   >
@@ -304,14 +305,15 @@ const SubscriptionsList = () => {
                         {s.name} — {s.owner_name}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
 
                 {/* Plan Dropdown */}
                 <div className="form-field">
                   <label>Subscription Plan *</label>
-                  <select
+                  <Select
                     value={formData.planId}
+                    placeholder="-- Select Plan --"
                     onChange={e => handlePlanChange(e.target.value)}
                     required
                   >
@@ -321,7 +323,7 @@ const SubscriptionsList = () => {
                         {p.name} — ₹{p.price_per_year}/yr · ₹{p.price_per_month}/mo
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
 
                 {/* Billing Cycle */}
@@ -349,8 +351,7 @@ const SubscriptionsList = () => {
                 <div className="form-row-2">
                   <div className="form-field">
                     <label>Start Date *</label>
-                    <input
-                      type="date"
+                    <DatePicker
                       value={formData.start_date}
                       onChange={e => handleStartDateChange(e.target.value)}
                       required
@@ -358,8 +359,7 @@ const SubscriptionsList = () => {
                   </div>
                   <div className="form-field">
                     <label>End / Expiry Date *</label>
-                    <input
-                      type="date"
+                    <DatePicker
                       value={formData.end_date}
                       onChange={e => setFormData(prev => ({ ...prev, end_date: e.target.value }))}
                       required
@@ -381,14 +381,14 @@ const SubscriptionsList = () => {
                   </div>
                   <div className="form-field">
                     <label>Status</label>
-                    <select
+                    <Select
                       value={formData.status}
                       onChange={e => setFormData(prev => ({ ...prev, status: e.target.value }))}
                     >
                       <option value="ACTIVE">ACTIVE</option>
                       <option value="TRIAL">TRIAL</option>
                       <option value="EXPIRED">EXPIRED</option>
-                    </select>
+                    </Select>
                   </div>
                 </div>
 

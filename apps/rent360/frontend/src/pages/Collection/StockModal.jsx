@@ -4,6 +4,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import { getStoreSizes } from '../../constants/sizes';
+import { Select } from '../../components/ui';
 
 const STATUS_OPTIONS = [
   { value: 'AVAILABLE', label: 'Available', colorClass: 'status-available' },
@@ -270,7 +271,7 @@ const StockModal = ({
               <div className="piece-form-row">
                 <div className="field-size">
                   <label>Size *</label>
-                  <select
+                  <Select
                     value={newItem.size}
                     onChange={(e) => {
                       const sz = e.target.value;
@@ -282,7 +283,7 @@ const StockModal = ({
                         {sz}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
 
                 <div className="field-color">

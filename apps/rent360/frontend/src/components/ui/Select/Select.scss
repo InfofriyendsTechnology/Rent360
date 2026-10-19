@@ -1,0 +1,311 @@
+@import '../../../styles/variables';
+
+.bond-select-container {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+
+  &.is-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  // Trigger Button
+  .bond-select-trigger {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 14px;
+    background-color: var(--bg-card-alt);
+    border: 1px solid var(--border-main);
+    border-radius: 10px;
+    color: var(--text-main);
+    font-size: 0.88rem;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+
+    &:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--border-pill);
+    }
+
+    .trigger-label {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+
+      &.is-placeholder {
+        color: var(--text-muted);
+        opacity: 0.75;
+        font-weight: 400;
+      }
+    }
+
+    .trigger-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 8px;
+      flex-shrink: 0;
+
+      .clear-icon {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        padding: 2px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          color: var(--text-main);
+          background-color: rgba(0, 0, 0, 0.08);
+        }
+      }
+
+      .chevron-icon {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+        &.rotated {
+          transform: rotate(180deg);
+          color: var(--accent);
+        }
+      }
+    }
+  }
+
+  // Open State on Trigger
+  &.is-open .bond-select-trigger {
+    background-color: var(--bg-card);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+
+  // Dropdown Menu Panel
+  .bond-select-menu {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    min-width: 180px;
+    max-height: 280px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-pill);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg), 0 10px 30px rgba(0, 0, 0, 0.18);
+    z-index: 9999;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: selectMenuFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(8px);
+
+    &.align-right {
+      left: auto;
+      right: 0;
+    }
+
+    // Search bar inside dropdown
+    .select-search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-main);
+      background-color: var(--bg-card-alt);
+
+      .search-icon {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        flex-shrink: 0;
+      }
+
+      input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: 0.82rem;
+        color: var(--text-main);
+        font-family: inherit;
+        padding: 2px 0;
+
+        &::placeholder {
+          color: var(--text-muted);
+          opacity: 0.6;
+        }
+      }
+
+      .search-clear {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        padding: 2px;
+        font-size: 0.8rem;
+
+        &:hover {
+          color: var(--text-main);
+        }
+      }
+    }
+
+    // Options list
+    .select-options-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 5px;
+      max-height: 220px;
+
+      &::-webkit-scrollbar {
+        width: 5px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+      }
+
+      .no-options {
+        padding: 14px 12px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.82rem;
+      }
+
+      .select-option-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: var(--text-main);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        user-select: none;
+
+        .option-label {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .option-check-icon {
+          color: var(--accent);
+          font-size: 0.95rem;
+          margin-left: 8px;
+          flex-shrink: 0;
+        }
+
+        &:hover {
+          background-color: var(--bg-card-hover);
+        }
+
+        &.is-selected {
+          background-color: var(--accent-light);
+          color: var(--accent);
+          font-weight: 600;
+        }
+
+        &.is-disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+          background: transparent !important;
+        }
+
+        // Special action styling (e.g. + Create New Custom Role)
+        &.is-action {
+          color: var(--accent);
+          font-weight: 600;
+          border-top: 1px dashed var(--border-main);
+          margin-top: 4px;
+          border-radius: 6px;
+
+          &:hover {
+            background-color: var(--accent-light);
+          }
+        }
+      }
+    }
+  }
+
+  // Size variations
+  &.sm .bond-select-trigger {
+    min-height: 32px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+  }
+
+  &.lg .bond-select-trigger {
+    min-height: 46px;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    border-radius: 12px;
+  }
+}
+
+// Dark Mode Specific overrides
+.dark {
+  .bond-select-menu {
+    background-color: #1a1a20;
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 2px 8px rgba(0, 0, 0, 0.4);
+
+    .select-search-box {
+      background-color: #141418;
+      border-bottom-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .select-options-list {
+      &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .select-option-item {
+        &:hover {
+          background-color: #24242c;
+        }
+
+        &.is-selected {
+          background-color: rgba(59, 130, 246, 0.18);
+          color: #60a5fa;
+        }
+
+        &.is-action {
+          border-top-color: rgba(255, 255, 255, 0.1);
+          color: #60a5fa;
+
+          &:hover {
+            background-color: rgba(59, 130, 246, 0.2);
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes selectMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import { batchConvertToWebP } from '../../utils/imageOptimizer';
 import { getStoreSizes } from '../../constants/sizes';
+import { Select } from '../../components/ui';
 
 const ProductModal = ({
   isOpen,
@@ -206,8 +207,9 @@ const ProductModal = ({
             <div className="form-row-2">
               <div className="form-field">
                 <label>Category *</label>
-                <select
+                <Select
                   value={formData.categoryId}
+                  placeholder="-- Select Category --"
                   onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
                 >
                   <option value="">-- Select Category --</option>
@@ -216,7 +218,7 @@ const ProductModal = ({
                       {cat.name} ({cat.category_code})
                     </option>
                   ))}
-                </select>
+                </Select>
                 {formErrors.categoryId && <span className="field-error">{formErrors.categoryId}</span>}
               </div>
 
