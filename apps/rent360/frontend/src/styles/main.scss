@@ -150,6 +150,16 @@ body.dark input[type="checkbox"]:not(.pill-slider-input):not(.toggle-input) {
   height: 9px;
 }
 
+::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
+
 ::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.04);
   border-radius: 9999px;
@@ -183,8 +193,34 @@ body.dark input[type="checkbox"]:not(.pill-slider-input):not(.toggle-input) {
   scrollbar-color: rgba(0, 0, 0, 0.28) rgba(0, 0, 0, 0.04);
 }
 
-.dark * {
+.dark *, body.dark * {
   scrollbar-color: rgba(255, 255, 255, 0.32) rgba(255, 255, 255, 0.05);
+}
+
+select {
+  font-family: inherit;
+  color: $text-main;
+  background-color: $bg-card-alt;
+  border: 1px solid $border-main;
+  border-radius: 8px;
+  outline: none;
+
+  option {
+    background-color: $bg-card;
+    color: $text-main;
+  }
+}
+
+.dark select,
+body.dark select {
+  background-color: #1a1a20;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f1f5f9;
+
+  option {
+    background-color: #1a1a20;
+    color: #f1f5f9;
+  }
 }
 
 // Toast styling matching Bond CRM

@@ -154,8 +154,24 @@ body.dark .table-responsive {
     .rows-per-page-selector {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       font-size: 0.8rem;
+
+      .rows-select-wrapper {
+        width: 74px;
+        min-width: 68px;
+
+        .bond-select-container.sm {
+          .bond-select-trigger {
+            min-height: 28px;
+            height: 28px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+          }
+        }
+      }
 
       select {
         background-color: $bg-card-alt;

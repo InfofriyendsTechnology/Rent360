@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { TableRowSkeleton } from '../Skeleton/Skeleton';
+import { Select } from '../Select/Select';
 import './Table.scss';
 
 // Main Table Wrapper Component with Full Pagination and Responsive Layout
@@ -109,19 +110,21 @@ export const DataTable = ({
             </span>
             <div className="rows-per-page-selector">
               <span>Show</span>
-              <select
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-              >
-                {pageSizeOptions.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
+              <div className="rows-select-wrapper">
+                <Select
+                  value={String(pageSize)}
+                  onChange={(val) => {
+                    setPageSize(Number(val));
+                    setCurrentPage(1);
+                  }}
+                  options={pageSizeOptions.map((opt) => ({
+                    value: String(opt),
+                    label: String(opt)
+                  }))}
+                  size="sm"
+                  searchable={false}
+                />
+              </div>
               <span>entries</span>
             </div>
           </div>

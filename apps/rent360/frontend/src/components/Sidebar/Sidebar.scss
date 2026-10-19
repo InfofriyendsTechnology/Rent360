@@ -7,7 +7,7 @@
   border: 1px solid $border-main;
   display: flex;
   flex-direction: column;
-  padding: 16px 14px;
+  padding: 16px 0;
   box-shadow: $shadow-sm;
   height: calc(100vh - 32px);
   position: sticky;
@@ -20,7 +20,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 2px 6px 12px 6px;
+    padding: 2px 14px 12px 14px;
 
     .brand-logo-card {
       width: 42px;
@@ -71,7 +71,7 @@
     background-color: $bg-card-alt;
     border-radius: 12px;
     padding: 0 12px;
-    margin-bottom: 12px;
+    margin: 0 14px 12px 14px;
     border: 1px solid transparent;
     transition: all 0.2s ease;
 
@@ -115,22 +115,43 @@
     }
   }
 
-  /* Scrollable Navigation Groups */
+  /* Scrollable Navigation Groups (Flush right, minimalistic hover scrollbar) */
   .sidebar-scroll {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding-right: 0;
+    padding: 0 4px 0 14px;
 
-    /* Seamless clean scroll without track */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    /* Ultra-minimalist overlay scrollbar flush to right edge (matching reference) */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+
     &::-webkit-scrollbar {
-      display: none;
-      width: 0;
-      height: 0;
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent !important;
+    }
+
+    &::-webkit-scrollbar-button {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    &::-webkit-scrollbar-corner {
+      display: none !important;
+      background: transparent !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: transparent;
+      border-radius: 9999px;
+      transition: background 0.25s ease;
     }
 
     .menu-group {
@@ -297,9 +318,22 @@
     }
   }
 
+  /* Reveal sleek scrollbar on hover over sidebar */
+  &:hover .sidebar-scroll {
+    scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.22);
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.48);
+      }
+    }
+  }
+
   /* User Profile Footer with normal height */
   .sidebar-footer {
-    padding-top: 12px;
+    padding: 12px 14px 0 14px;
     border-top: 1px solid $border-main;
     margin-top: auto;
     flex-shrink: 0;
@@ -424,14 +458,14 @@
     transform: translateX(-105%);
     transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     background-color: $bg-card;
-    padding: 18px 14px;
+    padding: 18px 0;
 
     &.mobile-open {
       transform: translateX(0);
     }
 
     .sidebar-brand {
-      padding: 0 4px 16px 4px;
+      padding: 0 14px 16px 14px;
 
       .mobile-sidebar-close {
         display: inline-flex;
@@ -457,11 +491,12 @@
 
     .sidebar-search {
       height: 40px;
-      margin-bottom: 16px;
+      margin: 0 14px 16px 14px;
     }
 
     .sidebar-scroll {
       gap: 16px;
+      padding: 0 4px 0 14px;
 
       .menu-group {
         .menu-pill {
@@ -469,10 +504,28 @@
         }
       }
     }
+
+    .sidebar-footer {
+      padding: 12px 14px 0 14px;
+    }
   }
 }
 
 body.dark {
+  .sidebar {
+    &:hover .sidebar-scroll {
+      scrollbar-color: rgba(255, 255, 255, 0.24) transparent;
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.24);
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.55);
+        }
+      }
+    }
+  }
+
   .sidebar .sidebar-footer .user-profile-card .profile-actions .return-icon-btn {
     background: rgba(59, 130, 246, 0.16);
     border-color: rgba(59, 130, 246, 0.35);
