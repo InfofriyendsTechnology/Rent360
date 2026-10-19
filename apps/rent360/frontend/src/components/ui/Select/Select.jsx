@@ -163,7 +163,9 @@ export const Select = ({
         target: { name, value: opt.value },
         currentTarget: { name, value: opt.value },
         preventDefault: () => {},
-        stopPropagation: () => {}
+        stopPropagation: () => {},
+        valueOf: () => opt.value,
+        toString: () => String(opt.value)
       };
       onChange(syntheticEvent, opt.value);
     }
@@ -180,7 +182,9 @@ export const Select = ({
         target: { name, value: '' },
         currentTarget: { name, value: '' },
         preventDefault: () => {},
-        stopPropagation: () => {}
+        stopPropagation: () => {},
+        valueOf: () => '',
+        toString: () => ''
       };
       onChange(syntheticEvent, '');
     }
@@ -239,7 +243,7 @@ export const Select = ({
         createPortal(
           <div
             ref={menuRef}
-            className={`bond-select-menu ${menuPos.openUpwards ? 'is-upwards' : ''}`}
+            className={`bond-select-menu ${menuPos.openUpwards ? 'is-upwards' : ''} ${size === 'sm' ? 'sm-menu' : ''}`}
             style={{
               position: 'fixed',
               top: menuPos.openUpwards ? 'auto' : `${menuPos.top}px`,

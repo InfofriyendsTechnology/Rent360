@@ -20,25 +20,27 @@ export const DataTable = ({
 }) => {
   const displayEmpty = emptyTitle || emptyMessage || "No data available";
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(initialPageSize);
+  const [pageSize, setPageSize] = useState(Number(initialPageSize) || 10);
+
+  // Safe parsed values guaranteed to never be NaN
+  const safePageSize = Number(pageSize) && Number(pageSize) > 0 ? Number(pageSize) : 10;
+  const totalItems = Number(data?.length) || 0;
+  const totalPages = Math.max(1, Math.ceil(totalItems / safePageSize));
+  const validCurrentPage = Math.max(1, Math.min(Number(currentPage) || 1, totalPages));
 
   // Reset to first page when data length changes (e.g., search/filter applied)
   useEffect(() => {
     setCurrentPage(1);
   }, [data.length]);
 
-  const totalItems = data.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-  const validCurrentPage = Math.min(currentPage, totalPages);
-
   const paginatedData = useMemo(() => {
     if (!pagination) return data;
-    const start = (validCurrentPage - 1) * pageSize;
-    return data.slice(start, start + pageSize);
-  }, [data, pagination, validCurrentPage, pageSize]);
+    const start = (validCurrentPage - 1) * safePageSize;
+    return data.slice(start, start + safePageSize);
+  }, [data, pagination, validCurrentPage, safePageSize]);
 
-  const startItem = totalItems === 0 ? 0 : (validCurrentPage - 1) * pageSize + 1;
-  const endItem = Math.min(validCurrentPage * pageSize, totalItems);
+  const startItem = totalItems === 0 ? 0 : (validCurrentPage - 1) * safePageSize + 1;
+  const endItem = Math.min(validCurrentPage * safePageSize, totalItems);
 
   return (
     <>
@@ -112,10 +114,14 @@ export const DataTable = ({
               <span>Show</span>
               <div className="rows-select-wrapper">
                 <Select
-                  value={String(pageSize)}
-                  onChange={(val) => {
-                    setPageSize(Number(val));
-                    setCurrentPage(1);
+                  value={String(safePageSize)}
+                  onChange={(e, val) => {
+                    const chosen = val !== undefined ? val : (e?.target?.value ?? e);
+                    const parsed = Number(chosen);
+                    if (!isNaN(parsed) && parsed > 0) {
+                      setPageSize(parsed);
+                      setCurrentPage(1);
+                    }
                   }}
                   options={pageSizeOptions.map((opt) => ({
                     value: String(opt),
@@ -123,6 +129,7 @@ export const DataTable = ({
                   }))}
                   size="sm"
                   searchable={false}
+                  isClearable={false}
                 />
               </div>
               <span>entries</span>

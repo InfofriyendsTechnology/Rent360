@@ -127,6 +127,21 @@
     animation: selectMenuFadeInUp 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  &.sm-menu {
+    min-width: 74px;
+    border-radius: 10px;
+
+    .select-options-list {
+      padding: 4px;
+
+      .select-option-item {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+        border-radius: 6px;
+      }
+    }
+  }
+
   // Search bar inside dropdown
   .select-search-box {
     display: flex;
