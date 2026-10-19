@@ -1,11 +1,12 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { FiChevronDown, FiCheck, FiSearch, FiX } from 'react-icons/fi';
 import './Select.scss';
 
 /**
  * Custom Bond CRM Theme Select Dropdown
  * Drop-in replacement for native <select>
- * Supports both `options={[...]}` prop and `<option>` children
+ * Uses React Portal and auto-flipping upwards/downwards so it never gets clipped by modals or containers with overflow: hidden
  */
 export const Select = ({
   options = [],
@@ -20,13 +21,23 @@ export const Select = ({
   style = {},
   searchable,
   size = 'md', // 'sm', 'md', 'lg'
-  isClearable = false,
-  align = 'left' // 'left', 'right'
+  isClearable = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const containerRef = useRef(null);
+  const triggerRef = useRef(null);
+  const menuRef = useRef(null);
   const searchInputRef = useRef(null);
+
+  // Position state for portal
+  const [menuPos, setMenuPos] = useState({
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 0,
+    maxHeight: 280,
+    openUpwards: false
+  });
 
   // Normalize options from either options prop or children
   const parsedOptions = useMemo(() => {
@@ -77,21 +88,62 @@ export const Select = ({
     });
   }, [parsedOptions, searchTerm]);
 
-  // Close dropdown on click outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setIsOpen(false);
-        setSearchTerm('');
-      }
-    };
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+  // Calculate and update menu fixed position
+  const updatePosition = useCallback(() => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    // Flip upwards if space below is less than 240px and space above is larger
+    const openUpwards = spaceBelow < 240 && spaceAbove > spaceBelow;
+    const maxHeight = openUpwards
+      ? Math.max(120, Math.min(280, spaceAbove - 20))
+      : Math.max(120, Math.min(280, spaceBelow - 20));
+
+    let left = rect.left;
+    let width = rect.width;
+    if (left + width > window.innerWidth - 10) {
+      left = Math.max(10, window.innerWidth - width - 10);
     }
+
+    setMenuPos({
+      top: rect.bottom + 5,
+      bottom: window.innerHeight - rect.top + 5,
+      left,
+      width,
+      maxHeight,
+      openUpwards
+    });
+  }, []);
+
+  // Sync position on open, scroll, or resize
+  useEffect(() => {
+    if (!isOpen) return;
+    updatePosition();
+
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+
+    const handleClickOutside = (e) => {
+      if (
+        (triggerRef.current && triggerRef.current.contains(e.target)) ||
+        (menuRef.current && menuRef.current.contains(e.target))
+      ) {
+        return;
+      }
+      setIsOpen(false);
+      setSearchTerm('');
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
     return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, updatePosition]);
 
   // Focus search input when dropdown opens
   useEffect(() => {
@@ -149,16 +201,21 @@ export const Select = ({
 
   return (
     <div
-      ref={containerRef}
       className={`bond-select-container ${size} ${isOpen ? 'is-open' : ''} ${disabled ? 'is-disabled' : ''} ${className}`}
       style={style}
       onKeyDown={handleKeyDown}
     >
       {/* Trigger Box */}
       <button
+        ref={triggerRef}
         type="button"
         className="bond-select-trigger"
-        onClick={() => !disabled && setIsOpen(!isOpen)}
+        onClick={() => {
+          if (!disabled) {
+            if (!isOpen) updatePosition();
+            setIsOpen(!isOpen);
+          }
+        }}
         disabled={disabled}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -177,58 +234,72 @@ export const Select = ({
         </div>
       </button>
 
-      {/* Dropdown Menu Panel */}
-      {isOpen && (
-        <div className={`bond-select-menu align-${align}`}>
-          {isSearchable && (
-            <div className="select-search-box">
-              <FiSearch className="search-icon" />
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onClick={(e) => e.stopPropagation()}
-              />
-              {searchTerm && (
-                <button
-                  type="button"
-                  className="search-clear"
-                  onClick={() => setSearchTerm('')}
-                >
-                  <FiX />
-                </button>
+      {/* Floating Menu via Portal to document.body */}
+      {isOpen &&
+        createPortal(
+          <div
+            ref={menuRef}
+            className={`bond-select-menu ${menuPos.openUpwards ? 'is-upwards' : ''}`}
+            style={{
+              position: 'fixed',
+              top: menuPos.openUpwards ? 'auto' : `${menuPos.top}px`,
+              bottom: menuPos.openUpwards ? `${menuPos.bottom}px` : 'auto',
+              left: `${menuPos.left}px`,
+              width: `${menuPos.width}px`,
+              maxHeight: `${menuPos.maxHeight}px`,
+              zIndex: 999999
+            }}
+          >
+            {isSearchable && (
+              <div className="select-search-box">
+                <FiSearch className="search-icon" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                />
+                {searchTerm && (
+                  <button
+                    type="button"
+                    className="search-clear"
+                    onClick={() => setSearchTerm('')}
+                  >
+                    <FiX />
+                  </button>
+                )}
+              </div>
+            )}
+
+            <div className="select-options-list" role="listbox">
+              {filteredOptions.length === 0 ? (
+                <div className="no-options">No options found</div>
+              ) : (
+                filteredOptions.map((opt) => {
+                  const isSelected = selectedOption && String(selectedOption.value) === String(opt.value);
+                  const isAction = opt.value === '__create_new__' || opt.isAction;
+
+                  return (
+                    <div
+                      key={String(opt.value)}
+                      role="option"
+                      aria-selected={isSelected}
+                      className={`select-option-item ${isSelected ? 'is-selected' : ''} ${opt.disabled ? 'is-disabled' : ''} ${isAction ? 'is-action' : ''} ${opt.className || ''}`}
+                      style={opt.style || {}}
+                      onClick={(e) => handleSelect(opt, e)}
+                    >
+                      <span className="option-label">{opt.label}</span>
+                      {isSelected && !isAction && <FiCheck className="option-check-icon" />}
+                    </div>
+                  );
+                })
               )}
             </div>
-          )}
-
-          <div className="select-options-list" role="listbox">
-            {filteredOptions.length === 0 ? (
-              <div className="no-options">No options found</div>
-            ) : (
-              filteredOptions.map((opt) => {
-                const isSelected = selectedOption && String(selectedOption.value) === String(opt.value);
-                const isAction = opt.value === '__create_new__' || opt.isAction;
-
-                return (
-                  <div
-                    key={String(opt.value)}
-                    role="option"
-                    aria-selected={isSelected}
-                    className={`select-option-item ${isSelected ? 'is-selected' : ''} ${opt.disabled ? 'is-disabled' : ''} ${isAction ? 'is-action' : ''} ${opt.className || ''}`}
-                    style={opt.style || {}}
-                    onClick={(e) => handleSelect(opt, e)}
-                  >
-                    <span className="option-label">{opt.label}</span>
-                    {isSelected && !isAction && <FiCheck className="option-check-icon" />}
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
 
       {/* Hidden input for HTML form validation if required */}
       {required && (

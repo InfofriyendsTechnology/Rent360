@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   FiCalendar, FiChevronLeft, FiChevronRight, 
-  FiX, FiCheck 
+  FiX 
 } from 'react-icons/fi';
 import './DatePicker.scss';
 
@@ -49,11 +50,19 @@ export const DatePicker = ({
   maxDate,
   className = '',
   style = {},
-  isClearable = true,
-  align = 'left'
+  isClearable = true
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef(null);
+  const triggerRef = useRef(null);
+  const popoverRef = useRef(null);
+
+  // Position state for portal
+  const [popoverPos, setPopoverPos] = useState({
+    top: 0,
+    bottom: 0,
+    left: 0,
+    openUpwards: false
+  });
 
   // Parse initial selected date
   const selectedDate = useMemo(() => {
@@ -79,20 +88,56 @@ export const DatePicker = ({
     }
   }, [value]);
 
-  // Close calendar on click outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    };
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+  // Calculate and update popover fixed position
+  const updatePosition = useCallback(() => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const popoverHeight = 330;
+    const popoverWidth = 290;
+
+    const openUpwards = spaceBelow < popoverHeight && spaceAbove > spaceBelow;
+
+    let left = rect.left;
+    if (left + popoverWidth > window.innerWidth - 10) {
+      left = Math.max(10, window.innerWidth - popoverWidth - 10);
     }
+
+    setPopoverPos({
+      top: rect.bottom + 5,
+      bottom: window.innerHeight - rect.top + 5,
+      left,
+      openUpwards
+    });
+  }, []);
+
+  // Sync position on open, scroll, or resize
+  useEffect(() => {
+    if (!isOpen) return;
+    updatePosition();
+
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+
+    const handleClickOutside = (e) => {
+      if (
+        (triggerRef.current && triggerRef.current.contains(e.target)) ||
+        (popoverRef.current && popoverRef.current.contains(e.target))
+      ) {
+        return;
+      }
+      setIsOpen(false);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
     return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, updatePosition]);
 
   const viewYear = viewDate.getFullYear();
   const viewMonth = viewDate.getMonth();
@@ -137,7 +182,7 @@ export const DatePicker = ({
       days.push({ date: d, isCurrentMonth: true });
     }
 
-    // Next month leading days to complete 42 cells (or 35 if fits)
+    // Next month leading days
     const totalSlots = days.length > 35 ? 42 : 35;
     const remaining = totalSlots - days.length;
     for (let i = 1; i <= remaining; i++) {
@@ -218,7 +263,7 @@ export const DatePicker = ({
     setIsOpen(false);
   };
 
-  // Generate Year Options (-10 to +10 years)
+  // Generate Year Options (-15 to +15 years)
   const yearOptions = useMemo(() => {
     const currentYear = new Date().getFullYear();
     const years = [];
@@ -230,15 +275,20 @@ export const DatePicker = ({
 
   return (
     <div
-      ref={containerRef}
       className={`bond-datepicker-container ${isOpen ? 'is-open' : ''} ${disabled ? 'is-disabled' : ''} ${className}`}
       style={style}
     >
       {/* Trigger Box */}
       <button
+        ref={triggerRef}
         type="button"
         className="bond-datepicker-trigger"
-        onClick={() => !disabled && setIsOpen(!isOpen)}
+        onClick={() => {
+          if (!disabled) {
+            if (!isOpen) updatePosition();
+            setIsOpen(!isOpen);
+          }
+        }}
         disabled={disabled}
       >
         <div className="trigger-left">
@@ -257,102 +307,114 @@ export const DatePicker = ({
         </div>
       </button>
 
-      {/* Floating Calendar Popover */}
-      {isOpen && (
-        <div className={`bond-calendar-popover align-${align}`}>
-          {/* Calendar Header */}
-          <div className="calendar-header">
-            <button
-              type="button"
-              className="nav-btn prev-btn"
-              onClick={handlePrevMonth}
-              title="Previous Month"
-            >
-              <FiChevronLeft />
-            </button>
-
-            <div className="month-year-pickers">
-              <select
-                value={viewMonth}
-                onChange={handleMonthChange}
-                className="picker-select month-select"
-              >
-                {MONTH_NAMES.map((m, idx) => (
-                  <option key={m} value={idx}>{m}</option>
-                ))}
-              </select>
-
-              <select
-                value={viewYear}
-                onChange={handleYearChange}
-                className="picker-select year-select"
-              >
-                {yearOptions.map((y) => (
-                  <option key={y} value={y}>{y}</option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              type="button"
-              className="nav-btn next-btn"
-              onClick={handleNextMonth}
-              title="Next Month"
-            >
-              <FiChevronRight />
-            </button>
-          </div>
-
-          {/* Days of Week Row */}
-          <div className="calendar-weekdays">
-            {DAYS_SHORT.map((day) => (
-              <span key={day} className="weekday-col">{day}</span>
-            ))}
-          </div>
-
-          {/* Days Grid */}
-          <div className="calendar-days-grid">
-            {calendarDays.map((item, idx) => {
-              const d = item.date;
-              const disabledDay = isDisabledDate(d);
-              const selected = isSelected(d);
-              const todayDay = isToday(d);
-
-              return (
-                <button
-                  type="button"
-                  key={idx}
-                  disabled={disabledDay}
-                  className={`day-cell ${!item.isCurrentMonth ? 'outside-month' : ''} ${selected ? 'is-selected' : ''} ${todayDay ? 'is-today' : ''} ${disabledDay ? 'is-disabled' : ''}`}
-                  onClick={(e) => handleSelectDay(d, e)}
-                >
-                  <span className="day-number">{d.getDate()}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Calendar Footer Actions */}
-          <div className="calendar-footer">
-            <button
-              type="button"
-              className="footer-btn today-btn"
-              onClick={handleSelectToday}
-            >
-              Today
-            </button>
-            {value && isClearable && (
+      {/* Floating Calendar Popover via Portal to document.body */}
+      {isOpen &&
+        createPortal(
+          <div
+            ref={popoverRef}
+            className={`bond-calendar-popover ${popoverPos.openUpwards ? 'is-upwards' : ''}`}
+            style={{
+              position: 'fixed',
+              top: popoverPos.openUpwards ? 'auto' : `${popoverPos.top}px`,
+              bottom: popoverPos.openUpwards ? `${popoverPos.bottom}px` : 'auto',
+              left: `${popoverPos.left}px`,
+              zIndex: 999999
+            }}
+          >
+            {/* Calendar Header */}
+            <div className="calendar-header">
               <button
                 type="button"
-                className="footer-btn clear-btn"
-                onClick={handleClear}
+                className="nav-btn prev-btn"
+                onClick={handlePrevMonth}
+                title="Previous Month"
               >
-                Clear
+                <FiChevronLeft />
               </button>
-            )}
-          </div>
-        </div>
-      )}
+
+              <div className="month-year-pickers">
+                <select
+                  value={viewMonth}
+                  onChange={handleMonthChange}
+                  className="picker-select month-select"
+                >
+                  {MONTH_NAMES.map((m, idx) => (
+                    <option key={m} value={idx}>{m}</option>
+                  ))}
+                </select>
+
+                <select
+                  value={viewYear}
+                  onChange={handleYearChange}
+                  className="picker-select year-select"
+                >
+                  {yearOptions.map((y) => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                type="button"
+                className="nav-btn next-btn"
+                onClick={handleNextMonth}
+                title="Next Month"
+              >
+                <FiChevronRight />
+              </button>
+            </div>
+
+            {/* Days of Week Row */}
+            <div className="calendar-weekdays">
+              {DAYS_SHORT.map((day) => (
+                <span key={day} className="weekday-col">{day}</span>
+              ))}
+            </div>
+
+            {/* Days Grid */}
+            <div className="calendar-days-grid">
+              {calendarDays.map((item, idx) => {
+                const d = item.date;
+                const disabledDay = isDisabledDate(d);
+                const selected = isSelected(d);
+                const todayDay = isToday(d);
+
+                return (
+                  <button
+                    type="button"
+                    key={idx}
+                    disabled={disabledDay}
+                    className={`day-cell ${!item.isCurrentMonth ? 'outside-month' : ''} ${selected ? 'is-selected' : ''} ${todayDay ? 'is-today' : ''} ${disabledDay ? 'is-disabled' : ''}`}
+                    onClick={(e) => handleSelectDay(d, e)}
+                  >
+                    <span className="day-number">{d.getDate()}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Calendar Footer Actions */}
+            <div className="calendar-footer">
+              <button
+                type="button"
+                className="footer-btn today-btn"
+                onClick={handleSelectToday}
+              >
+                Today
+              </button>
+              {value && isClearable && (
+                <button
+                  type="button"
+                  className="footer-btn clear-btn"
+                  onClick={handleClear}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>,
+          document.body
+        )}
 
       {/* Hidden input for HTML validation if required */}
       {required && (
