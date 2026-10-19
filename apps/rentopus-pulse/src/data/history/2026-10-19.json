@@ -30,6 +30,10 @@
     {
       "member": "001",
       "text": "Integrated custom Select dropdown into table pagination entries selector, replacing raw browser OS dropdowns with dark-mode compliant rounded menus."
+    },
+    {
+      "member": "001",
+      "text": "Implemented inline Quick Category creation: added 'Add New Category' action buttons to category dropdowns and pills strip, with an instant portal modal and auto-selection upon creation, avoiding navigation to the Categories page."
     }
   ],
   "tasksGu": [
@@ -56,6 +60,10 @@
     {
       "member": "001",
       "text": "ટેબલ પેજીનેશનમાં ડિફોલ્ટ બ્રાઉઝર ડ્રોપડાઉનને બદલે કસ્ટમ થીમ બેઝ્ડ Select ડ્રોપડાઉન લાગુ કરી ડાર્ક મોડ UI એકસમાન બનાવી."
+    },
+    {
+      "member": "001",
+      "text": "ઇનલાઇન Quick Category ક્રિએશન સુવિધા ઉમેરી: કેટેગરી સિલેક્ટ ડ્રોપડાઉન અને પિલ્સ સ્ટ્રીપમાં '+ Add New Category' બટન ઉમેર્યું, જેથી પેજ છોડ્યા વિના સીધી નવી કેટેગરી બનાવીને ઓટો-સિલેક્ટ કરી શકાય."
     }
   ],
   "deliverables": [
@@ -64,6 +72,7 @@
     "Adaptive Height Unified DataTable & Minimalist Pagination",
     "Streamlined Sidebar Footer With Integrated Return to Super Admin Icon",
     "Ultra-Thin 2.5px Flush-Right Hover-Reveal Scrollbar Without Arrows",
-    "Theme-Compliant Table Rows-Per-Page Select Dropdown"
+    "Theme-Compliant Table Rows-Per-Page Select Dropdown",
+    "Inline Quick Category Creation Modal & Select Action Footer Integration"
   ]
 }

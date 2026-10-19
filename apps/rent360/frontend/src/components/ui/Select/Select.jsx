@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { FiChevronDown, FiCheck, FiSearch, FiX } from 'react-icons/fi';
+import { FiChevronDown, FiCheck, FiSearch, FiX, FiPlus } from 'react-icons/fi';
 import './Select.scss';
 
 /**
@@ -21,7 +21,8 @@ export const Select = ({
   style = {},
   searchable,
   size = 'md', // 'sm', 'md', 'lg'
-  isClearable = false
+  isClearable = false,
+  actionButton // { label: string, onClick: function, icon?: ReactNode }
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -157,6 +158,13 @@ export const Select = ({
   const handleSelect = (opt, e) => {
     e?.stopPropagation();
     if (opt.disabled) return;
+
+    if (opt.onClick) {
+      setIsOpen(false);
+      setSearchTerm('');
+      opt.onClick(e);
+      return;
+    }
 
     if (onChange) {
       const syntheticEvent = {
@@ -301,6 +309,24 @@ export const Select = ({
                 })
               )}
             </div>
+
+            {actionButton && (
+              <div className="select-action-footer">
+                <button
+                  type="button"
+                  className="select-action-footer-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsOpen(false);
+                    setSearchTerm('');
+                    if (actionButton.onClick) actionButton.onClick(e);
+                  }}
+                >
+                  {actionButton.icon || <FiPlus className="action-btn-icon" />}
+                  <span>{actionButton.label || 'Add New'}</span>
+                </button>
+              </div>
+            )}
           </div>,
           document.body
         )}

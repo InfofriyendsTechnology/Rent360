@@ -269,6 +269,40 @@
       }
     }
   }
+
+  .select-action-footer {
+    padding: 6px 8px;
+    border-top: 1px solid var(--border-main);
+    background-color: var(--bg-card-alt);
+    flex-shrink: 0;
+
+    .select-action-footer-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border: 1px dashed var(--accent-border);
+      border-radius: 8px;
+      background-color: var(--accent-light);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.16s ease;
+
+      .action-btn-icon {
+        font-size: 0.95rem;
+      }
+
+      &:hover {
+        background-color: var(--accent);
+        color: #ffffff;
+        border-color: var(--accent);
+      }
+    }
+  }
 }
 
 // Dark Mode Specific overrides
@@ -313,6 +347,23 @@
           &:hover {
             background-color: rgba(59, 130, 246, 0.2);
           }
+        }
+      }
+    }
+
+    .select-action-footer {
+      background-color: #141418;
+      border-top-color: rgba(255, 255, 255, 0.08);
+
+      .select-action-footer-btn {
+        background-color: rgba(59, 130, 246, 0.12);
+        border-color: rgba(59, 130, 246, 0.35);
+        color: #60a5fa;
+
+        &:hover {
+          background-color: #2563eb;
+          color: #ffffff;
+          border-color: #2563eb;
         }
       }
     }

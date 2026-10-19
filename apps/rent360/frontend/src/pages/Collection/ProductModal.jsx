@@ -1,22 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { FiX, FiUploadCloud } from 'react-icons/fi';
+import { FiX, FiUploadCloud, FiPlus } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import { batchConvertToWebP } from '../../utils/imageOptimizer';
 import { getStoreSizes } from '../../constants/sizes';
 import { Select } from '../../components/ui';
+import QuickCategoryModal from '../../components/QuickCategoryModal/QuickCategoryModal';
 
 const ProductModal = ({
   isOpen,
   onClose,
   product = null,
   categories = [],
+  onCategoryCreated,
   onProductSaved,
   token,
   storeId
 }) => {
   const isEditing = Boolean(product?.id);
+  const [localCategories, setLocalCategories] = useState(categories);
+  const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
+
+  useEffect(() => {
+    if (categories && categories.length > 0) {
+      setLocalCategories(categories);
+    }
+  }, [categories]);
+
+  const handleCategoryCreated = (newCat) => {
+    if (!newCat?.id) return;
+    setLocalCategories((prev) => {
+      if (prev.some((c) => c.id === newCat.id)) return prev;
+      return [newCat, ...prev];
+    });
+    setFormData((prev) => ({ ...prev, categoryId: newCat.id }));
+    setFormErrors((prev) => ({ ...prev, categoryId: '' }));
+    if (onCategoryCreated) {
+      onCategoryCreated(newCat);
+    }
+  };
 
   const [formData, setFormData] = useState({
     categoryId: '',
@@ -206,14 +229,29 @@ const ProductModal = ({
             {/* Row 1: Category & Design Code */}
             <div className="form-row-2">
               <div className="form-field">
-                <label>Category *</label>
+                <div className="label-with-action">
+                  <label>Category *</label>
+                  <button
+                    type="button"
+                    className="link-inline-btn"
+                    onClick={() => setIsAddCategoryOpen(true)}
+                    title="Add New Category"
+                  >
+                    <FiPlus style={{ marginRight: '3px', verticalAlign: '-1px' }} />
+                    Add New Category
+                  </button>
+                </div>
                 <Select
                   value={formData.categoryId}
                   placeholder="-- Select Category --"
                   onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+                  actionButton={{
+                    label: "+ Add New Category",
+                    onClick: () => setIsAddCategoryOpen(true)
+                  }}
                 >
                   <option value="">-- Select Category --</option>
-                  {categories.map((cat) => (
+                  {localCategories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name} ({cat.category_code})
                     </option>
@@ -359,6 +397,14 @@ const ProductModal = ({
           </div>
         </form>
       </div>
+
+      {/* Quick Add Category Modal on top of Product Modal */}
+      <QuickCategoryModal
+        isOpen={isAddCategoryOpen}
+        onClose={() => setIsAddCategoryOpen(false)}
+        storeId={storeId}
+        onSuccess={handleCategoryCreated}
+      />
     </div>
   );
 };
