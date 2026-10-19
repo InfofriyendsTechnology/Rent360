@@ -125,22 +125,25 @@
     gap: 12px;
     padding: 0 4px 0 14px;
 
-    /* Ultra-minimalist overlay scrollbar flush to right edge (matching reference) */
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-
+    /* Ultra-minimalist overlay scrollbar flush to right edge without triangle buttons */
     &::-webkit-scrollbar {
-      width: 4px;
+      width: 2.5px !important;
     }
 
     &::-webkit-scrollbar-track {
       background: transparent !important;
+      border: none !important;
     }
 
-    &::-webkit-scrollbar-button {
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-button:single-button,
+    &::-webkit-scrollbar-button:vertical:decrement,
+    &::-webkit-scrollbar-button:vertical:increment {
       display: none !important;
       width: 0 !important;
       height: 0 !important;
+      background: transparent !important;
+      border: none !important;
     }
 
     &::-webkit-scrollbar-corner {
@@ -150,8 +153,9 @@
 
     &::-webkit-scrollbar-thumb {
       background: transparent;
-      border-radius: 9999px;
-      transition: background 0.25s ease;
+      border-radius: 9999px !important;
+      border: none !important;
+      transition: background 0.2s ease;
     }
 
     .menu-group {
@@ -320,8 +324,6 @@
 
   /* Reveal sleek scrollbar on hover over sidebar */
   &:hover .sidebar-scroll {
-    scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
-
     &::-webkit-scrollbar-thumb {
       background: rgba(0, 0, 0, 0.22);
 
@@ -514,8 +516,6 @@
 body.dark {
   .sidebar {
     &:hover .sidebar-scroll {
-      scrollbar-color: rgba(255, 255, 255, 0.24) transparent;
-
       &::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.24);
 
@@ -536,6 +536,21 @@ body.dark {
       color: #ffffff;
       border-color: #2563eb;
     }
+  }
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .sidebar .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .sidebar:hover .sidebar-scroll {
+    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+  }
+
+  body.dark .sidebar:hover .sidebar-scroll {
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
   }
 }
 
