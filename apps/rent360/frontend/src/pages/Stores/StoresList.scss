@@ -3,9 +3,6 @@
 .stores-view {
   width: 100%;
   margin: 0 auto;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
 
   /* Top Bar matching Bond CRM Header */
   .stores-top-bar {
@@ -177,17 +174,14 @@
     background-color: $bg-card;
     border-radius: $border-radius-card;
     border: 1px solid $border-main;
-    box-shadow: $shadow-md;
+    box-shadow: $shadow-sm;
     overflow: hidden;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 280px;
+    width: 100%;
+    height: auto;
   }
 
   .table-responsive {
     width: 100%;
-    flex: 1;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;

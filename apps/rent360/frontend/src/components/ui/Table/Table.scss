@@ -8,11 +8,14 @@
   background-color: $bg-card;
   border-radius: $border-radius-card;
   border: 1px solid $border-main;
-  box-shadow: $shadow-md;
+  box-shadow: $shadow-sm;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: auto !important;
+  min-height: unset !important;
+  flex: none !important;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -21,12 +24,13 @@
 ───────────────────────────────────────────────────────────── */
 .table-responsive {
   width: 100%;
-  flex: 1;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 0;
   margin-bottom: 0;
+  flex: none !important;
+  height: auto !important;
 
   &::-webkit-scrollbar {
     height: 6px;
@@ -129,7 +133,7 @@ body.dark .table-responsive {
   color: $text-muted;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: auto;
+  margin-top: 0 !important;
   border-radius: 0 0 $border-radius-card $border-radius-card;
 
   .table-footer-left {
@@ -217,47 +221,6 @@ body.dark .table-responsive {
       &:disabled {
         opacity: 0.35;
         cursor: not-allowed;
-      }
-    }
-
-    .pagination-pages-list {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-
-      .pagination-ellipsis {
-        color: $text-muted;
-        font-size: 0.8rem;
-        padding: 0 2px;
-      }
-
-      .page-num-btn {
-        min-width: 28px;
-        height: 28px;
-        padding: 0 6px;
-        border-radius: 6px;
-        border: 1px solid transparent;
-        background: transparent;
-        color: $text-muted;
-        font-size: 0.82rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.15s ease;
-
-        &:hover:not(.active) {
-          background-color: $bg-card-hover;
-          color: $text-main;
-        }
-
-        &.active {
-          background-color: $accent;
-          color: #ffffff;
-          font-weight: 700;
-          box-shadow: 0 2px 6px rgba(11, 96, 176, 0.35);
-        }
       }
     }
   }

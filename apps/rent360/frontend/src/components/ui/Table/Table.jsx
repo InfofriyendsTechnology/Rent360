@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { FiChevronLeft, FiChevronRight, FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { TableRowSkeleton } from '../Skeleton/Skeleton';
 import './Table.scss';
 
@@ -127,17 +127,6 @@ export const DataTable = ({
           </div>
 
           <div className="table-footer-right">
-            {/* First Page << */}
-            <button
-              type="button"
-              className="pagination-nav-btn"
-              disabled={validCurrentPage <= 1 || totalItems === 0}
-              onClick={() => setCurrentPage(1)}
-              title="First page"
-            >
-              <FiChevronsLeft />
-            </button>
-
             {/* Prev Page < */}
             <button
               type="button"
@@ -156,34 +145,6 @@ export const DataTable = ({
               Total <strong>{totalItems}</strong>
             </div>
 
-            {/* Quick page number pills when multiple pages exist */}
-            {totalPages > 1 && (
-              <div className="pagination-pages-list">
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter((pageNum) => {
-                    if (totalPages <= 7) return true;
-                    if (pageNum === 1 || pageNum === totalPages) return true;
-                    return Math.abs(pageNum - validCurrentPage) <= 1;
-                  })
-                  .map((pageNum, idx, arr) => {
-                    const prev = arr[idx - 1];
-                    const showEllipsis = prev && pageNum - prev > 1;
-                    return (
-                      <React.Fragment key={pageNum}>
-                        {showEllipsis && <span className="pagination-ellipsis">...</span>}
-                        <button
-                          type="button"
-                          className={`page-num-btn ${pageNum === validCurrentPage ? 'active' : ''}`}
-                          onClick={() => setCurrentPage(pageNum)}
-                        >
-                          {pageNum}
-                        </button>
-                      </React.Fragment>
-                    );
-                  })}
-              </div>
-            )}
-
             {/* Next Page > */}
             <button
               type="button"
@@ -193,17 +154,6 @@ export const DataTable = ({
               title="Next page"
             >
               <FiChevronRight />
-            </button>
-
-            {/* Last Page >> */}
-            <button
-              type="button"
-              className="pagination-nav-btn"
-              disabled={validCurrentPage >= totalPages || totalItems === 0}
-              onClick={() => setCurrentPage(totalPages)}
-              title="Last page"
-            >
-              <FiChevronsRight />
             </button>
           </div>
         </div>
