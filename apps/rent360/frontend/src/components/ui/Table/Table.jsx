@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { TableRowSkeleton } from '../Skeleton/Skeleton';
+import './Table.scss';
 
-// Main Table Wrapper Component
+// Main Table Wrapper Component with Full Pagination and Responsive Layout
 export const DataTable = ({ 
   columns = [], 
   data = [], 
@@ -10,64 +12,154 @@ export const DataTable = ({
   emptyMessage,
   emptyTitle,
   emptyDescription,
-  loading = false 
+  loading = false,
+  pagination = true,
+  initialPageSize = 10,
+  pageSizeOptions = [10, 20, 50]
 }) => {
   const displayEmpty = emptyTitle || emptyMessage || "No data available";
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(initialPageSize);
+
+  // Reset to first page when data length changes (e.g., search/filter applied)
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data.length]);
+
+  const totalItems = data.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const validCurrentPage = Math.min(currentPage, totalPages);
+
+  const paginatedData = useMemo(() => {
+    if (!pagination) return data;
+    const start = (validCurrentPage - 1) * pageSize;
+    return data.slice(start, start + pageSize);
+  }, [data, pagination, validCurrentPage, pageSize]);
+
+  const startItem = totalItems === 0 ? 0 : (validCurrentPage - 1) * pageSize + 1;
+  const endItem = Math.min(validCurrentPage * pageSize, totalItems);
 
   return (
-    <div className="table-responsive">
-      <table className="bond-table">
-        <thead>
-          <tr>
-            {columns.map((col, idx) => (
-              <th 
-                key={idx} 
-                className={col.align === 'right' ? 'text-right' : (col.align === 'center' ? 'text-center' : '')}
-                style={{
-                  ...(col.width ? { width: col.width } : {}),
-                  ...(col.style || {})
-                }}
-              >
-                {col.header || col.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {loading ? (
-            <TableRowSkeleton rows={3} columns={columns.length || 4} />
-          ) : data && data.length > 0 ? (
-            data.map((item, idx) => (
-              <tr key={keyExtractor ? keyExtractor(item) : (item?.id || idx)}>
-                {typeof renderRow === 'function' ? (
-                  renderRow(item)
-                ) : (
-                  columns.map((col, cIdx) => (
-                    <td 
-                      key={cIdx} 
-                      className={col.align === 'right' ? 'text-right' : (col.align === 'center' ? 'text-center' : '')}
-                    >
-                      {col.cell ? col.cell(item, idx) : (col.accessor ? item[col.accessor] : null)}
-                    </td>
-                  ))
-                )}
-              </tr>
-            ))
-          ) : (
+    <>
+      <div className="table-responsive">
+        <table className="bond-table">
+          <thead>
             <tr>
-              <td colSpan={columns.length || 1} className="text-center" style={{ padding: '28px 0', color: 'var(--text-muted)' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-main)' }}>{displayEmpty}</span>
-                  {emptyDescription && (
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{emptyDescription}</span>
-                  )}
-                </div>
-              </td>
+              {columns.map((col, idx) => (
+                <th 
+                  key={idx} 
+                  className={col.align === 'right' ? 'text-right' : (col.align === 'center' ? 'text-center' : '')}
+                  style={{
+                    ...(col.width ? { width: col.width } : {}),
+                    ...(col.style || {})
+                  }}
+                >
+                  {col.header || col.label}
+                </th>
+              ))}
             </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <TableRowSkeleton rows={3} columns={columns.length || 4} />
+            ) : paginatedData && paginatedData.length > 0 ? (
+              paginatedData.map((item, idx) => (
+                <tr key={keyExtractor ? keyExtractor(item) : (item?.id || idx)}>
+                  {typeof renderRow === 'function' ? (
+                    renderRow(item)
+                  ) : (
+                    columns.map((col, cIdx) => (
+                      <td 
+                        key={cIdx} 
+                        className={col.align === 'right' ? 'text-right' : (col.align === 'center' ? 'text-center' : '')}
+                      >
+                        {col.cell ? col.cell(item, idx) : (col.accessor ? item[col.accessor] : null)}
+                      </td>
+                    ))
+                  )}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={columns.length || 1} className="text-center" style={{ padding: '36px 0', color: 'var(--text-muted)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-main)' }}>{displayEmpty}</span>
+                    {emptyDescription && (
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{emptyDescription}</span>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {pagination && !loading && (
+        <div className="bond-table-footer">
+          <div className="table-footer-left">
+            <span className="pagination-info">
+              Showing <strong>{startItem}</strong> - <strong>{endItem}</strong> of <strong>{totalItems}</strong> entries
+            </span>
+            {totalItems > 10 && (
+              <div className="rows-per-page-selector">
+                <span>Rows per page:</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                >
+                  {pageSizeOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="table-footer-right">
+              <button
+                type="button"
+                className="pagination-nav-btn"
+                disabled={validCurrentPage <= 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                title="Previous page"
+              >
+                <FiChevronLeft />
+              </button>
+
+              <div className="pagination-pages-list">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    type="button"
+                    className={`page-num-btn ${pageNum === validCurrentPage ? 'active' : ''}`}
+                    onClick={() => setCurrentPage(pageNum)}
+                  >
+                    {pageNum}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                className="pagination-nav-btn"
+                disabled={validCurrentPage >= totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                title="Next page"
+              >
+                <FiChevronRight />
+              </button>
+            </div>
           )}
-        </tbody>
-      </table>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 

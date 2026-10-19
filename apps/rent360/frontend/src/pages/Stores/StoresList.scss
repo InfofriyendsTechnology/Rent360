@@ -3,6 +3,9 @@
 .stores-view {
   width: 100%;
   margin: 0 auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 
   /* Top Bar matching Bond CRM Header */
   .stores-top-bar {
@@ -176,33 +179,36 @@
     border: 1px solid $border-main;
     box-shadow: $shadow-md;
     overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 280px;
   }
 
   .table-responsive {
     width: 100%;
+    flex: 1;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 6px;
+    padding-bottom: 0;
+    margin-bottom: 0;
 
-    /* Prominent visible scrollbar at the bottom of the table */
     &::-webkit-scrollbar {
-      height: 9px !important;
-      display: block !important;
+      height: 6px;
     }
 
     &::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.05) !important;
+      background: rgba(0, 0, 0, 0.04);
       border-radius: 9999px;
-      margin: 0 10px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.28) !important;
+      background: rgba(0, 0, 0, 0.25);
       border-radius: 9999px;
 
       &:hover {
-        background: rgba(0, 0, 0, 0.45) !important;
+        background: rgba(0, 0, 0, 0.4);
       }
     }
   }
@@ -210,14 +216,14 @@
   .dark & .table-responsive,
   body.dark .table-responsive {
     &::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.06) !important;
+      background: rgba(255, 255, 255, 0.04);
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.35) !important;
+      background: rgba(255, 255, 255, 0.25);
 
       &:hover {
-        background: rgba(255, 255, 255, 0.55) !important;
+        background: rgba(255, 255, 255, 0.45);
       }
     }
   }
@@ -226,7 +232,8 @@
   .bond-table {
     width: 100%;
     min-width: 720px;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 0.88rem;
 
     th {
@@ -252,10 +259,6 @@
 
     tr {
       transition: background-color 0.15s ease;
-
-      &:last-child td {
-        border-bottom: none;
-      }
 
       &:hover {
         background-color: $bg-card-hover;
