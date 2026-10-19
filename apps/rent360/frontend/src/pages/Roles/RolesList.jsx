@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss';
 import './RolesList.scss';
-import { DataTable, RowActions } from '../../components/ui';
+import { DataTable, RowActions, Checkbox } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
@@ -202,14 +202,12 @@ const RolesList = () => {
                   <label>Select Permissions</label>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '10px' }}>
                     {ALL_PERMISSIONS.map(perm => (
-                      <label key={perm} className="perm-checkbox-label">
-                        <input 
-                          type="checkbox" 
-                          checked={roleForm.permissions.includes(perm)}
-                          onChange={() => togglePermission(perm)}
-                        />
-                        <span>{perm === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : perm.replace('_', ' ')}</span>
-                      </label>
+                      <Checkbox
+                        key={perm}
+                        checked={roleForm.permissions.includes(perm)}
+                        onChange={() => togglePermission(perm)}
+                        label={perm === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : perm.replace('_', ' ')}
+                      />
                     ))}
                   </div>
                 </div>

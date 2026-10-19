@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss'; // Reuse store styles for consistency
-import { DataTable, AvatarCell, StatusPill, RowActions, Select } from '../../components/ui';
+import { DataTable, AvatarCell, StatusPill, RowActions, Select, Checkbox } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
@@ -447,16 +447,14 @@ const UsersList = () => {
                 </div>
                 <div className="form-field" style={{ marginTop: '16px' }}>
                   <label>Permissions</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '10px' }}>
                     {AVAILABLE_PERMISSIONS.map(perm => (
-                      <label key={perm} className="perm-checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
-                        <input 
-                          type="checkbox" 
-                          checked={quickRolePermissions.includes(perm)}
-                          onChange={() => toggleQuickPermission(perm)}
-                        />
-                        <span>{perm === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : perm.replace('_', ' ')}</span>
-                      </label>
+                      <Checkbox
+                        key={perm}
+                        checked={quickRolePermissions.includes(perm)}
+                        onChange={() => toggleQuickPermission(perm)}
+                        label={perm === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : perm.replace('_', ' ')}
+                      />
                     ))}
                   </div>
                 </div>

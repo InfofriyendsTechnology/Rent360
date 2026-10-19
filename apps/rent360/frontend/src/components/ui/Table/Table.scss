@@ -171,6 +171,29 @@ body.dark .table-responsive {
     align-items: center;
     gap: 6px;
 
+    .pagination-page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background-color: $bg-card-alt;
+      border: 1px solid $border-main;
+      font-size: 0.8rem;
+      color: $text-muted;
+      white-space: nowrap;
+
+      strong {
+        color: $text-main;
+        font-weight: 700;
+      }
+
+      .pagination-badge-divider {
+        opacity: 0.35;
+        margin: 0 2px;
+      }
+    }
+
     .pagination-nav-btn {
       width: 28px;
       height: 28px;
@@ -201,6 +224,12 @@ body.dark .table-responsive {
       display: flex;
       align-items: center;
       gap: 4px;
+
+      .pagination-ellipsis {
+        color: $text-muted;
+        font-size: 0.8rem;
+        padding: 0 2px;
+      }
 
       .page-num-btn {
         min-width: 28px;

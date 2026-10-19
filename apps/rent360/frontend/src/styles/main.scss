@@ -90,6 +90,60 @@ input[type="date"] {
   }
 }
 
+/* Custom Minimalist Checkbox (White border and tick in dark, black tick in light) */
+input[type="checkbox"]:not(.pill-slider-input):not(.toggle-input) {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  vertical-align: middle;
+  flex-shrink: 0;
+  border: 1.5px solid #27272a;
+  background-color: transparent;
+  outline: none;
+
+  &:hover {
+    border-color: #000000;
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &:checked {
+    border-color: #18181b;
+    background-color: rgba(0, 0, 0, 0.08);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2318181b' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='20 6 9 17 4 12'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px;
+  }
+}
+
+.dark input[type="checkbox"]:not(.pill-slider-input):not(.toggle-input),
+body.dark input[type="checkbox"]:not(.pill-slider-input):not(.toggle-input) {
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  background-color: rgba(255, 255, 255, 0.04);
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  &:checked {
+    border-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='20 6 9 17 4 12'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px;
+  }
+}
+
+
 /* Modern Minimalist Scrollbar (Clearly visible at bottom and sides) */
 ::-webkit-scrollbar {
   width: 7px;

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
 import { TableRowSkeleton } from '../Skeleton/Skeleton';
 import './Table.scss';
 
@@ -15,7 +15,7 @@ export const DataTable = ({
   loading = false,
   pagination = true,
   initialPageSize = 10,
-  pageSizeOptions = [10, 20, 50]
+  pageSizeOptions = [10, 20, 50, 100]
 }) => {
   const displayEmpty = emptyTitle || emptyMessage || "No data available";
   const [currentPage, setCurrentPage] = useState(1);
@@ -99,64 +99,113 @@ export const DataTable = ({
         <div className="bond-table-footer">
           <div className="table-footer-left">
             <span className="pagination-info">
-              Showing <strong>{startItem}</strong> - <strong>{endItem}</strong> of <strong>{totalItems}</strong> entries
+              {totalItems === 0 ? (
+                'No records found'
+              ) : (
+                <>
+                  Showing <strong>{startItem}</strong> - <strong>{endItem}</strong> of <strong>{totalItems}</strong> entries
+                </>
+              )}
             </span>
-            {totalItems > 10 && (
-              <div className="rows-per-page-selector">
-                <span>Rows per page:</span>
-                <select
-                  value={pageSize}
-                  onChange={(e) => {
-                    setPageSize(Number(e.target.value));
-                    setCurrentPage(1);
-                  }}
-                >
-                  {pageSizeOptions.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+            <div className="rows-per-page-selector">
+              <span>Show</span>
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+              >
+                {pageSizeOptions.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+              <span>entries</span>
+            </div>
           </div>
 
-          {totalPages > 1 && (
-            <div className="table-footer-right">
-              <button
-                type="button"
-                className="pagination-nav-btn"
-                disabled={validCurrentPage <= 1}
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                title="Previous page"
-              >
-                <FiChevronLeft />
-              </button>
+          <div className="table-footer-right">
+            {/* First Page << */}
+            <button
+              type="button"
+              className="pagination-nav-btn"
+              disabled={validCurrentPage <= 1 || totalItems === 0}
+              onClick={() => setCurrentPage(1)}
+              title="First page"
+            >
+              <FiChevronsLeft />
+            </button>
 
-              <div className="pagination-pages-list">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                  <button
-                    key={pageNum}
-                    type="button"
-                    className={`page-num-btn ${pageNum === validCurrentPage ? 'active' : ''}`}
-                    onClick={() => setCurrentPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                ))}
-              </div>
+            {/* Prev Page < */}
+            <button
+              type="button"
+              className="pagination-nav-btn"
+              disabled={validCurrentPage <= 1 || totalItems === 0}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              title="Previous page"
+            >
+              <FiChevronLeft />
+            </button>
 
-              <button
-                type="button"
-                className="pagination-nav-btn"
-                disabled={validCurrentPage >= totalPages}
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                title="Next page"
-              >
-                <FiChevronRight />
-              </button>
+            {/* Page Summary badge: Page X of Y | Total Z */}
+            <div className="pagination-page-badge">
+              Page <strong>{totalItems === 0 ? 0 : validCurrentPage}</strong> of <strong>{totalItems === 0 ? 0 : totalPages}</strong>
+              <span className="pagination-badge-divider">|</span>
+              Total <strong>{totalItems}</strong>
             </div>
-          )}
+
+            {/* Quick page number pills when multiple pages exist */}
+            {totalPages > 1 && (
+              <div className="pagination-pages-list">
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter((pageNum) => {
+                    if (totalPages <= 7) return true;
+                    if (pageNum === 1 || pageNum === totalPages) return true;
+                    return Math.abs(pageNum - validCurrentPage) <= 1;
+                  })
+                  .map((pageNum, idx, arr) => {
+                    const prev = arr[idx - 1];
+                    const showEllipsis = prev && pageNum - prev > 1;
+                    return (
+                      <React.Fragment key={pageNum}>
+                        {showEllipsis && <span className="pagination-ellipsis">...</span>}
+                        <button
+                          type="button"
+                          className={`page-num-btn ${pageNum === validCurrentPage ? 'active' : ''}`}
+                          onClick={() => setCurrentPage(pageNum)}
+                        >
+                          {pageNum}
+                        </button>
+                      </React.Fragment>
+                    );
+                  })}
+              </div>
+            )}
+
+            {/* Next Page > */}
+            <button
+              type="button"
+              className="pagination-nav-btn"
+              disabled={validCurrentPage >= totalPages || totalItems === 0}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              title="Next page"
+            >
+              <FiChevronRight />
+            </button>
+
+            {/* Last Page >> */}
+            <button
+              type="button"
+              className="pagination-nav-btn"
+              disabled={validCurrentPage >= totalPages || totalItems === 0}
+              onClick={() => setCurrentPage(totalPages)}
+              title="Last page"
+            >
+              <FiChevronsRight />
+            </button>
+          </div>
         </div>
       )}
     </>
