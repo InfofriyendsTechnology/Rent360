@@ -34,7 +34,7 @@ const CategoriesList = () => {
   // Stores for super admin
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(() => {
-    return userStoreId || localStorage.getItem('rent360_active_store_id') || '';
+    return userStoreId || '';
   });
 
   // Categories & UI state
@@ -67,26 +67,15 @@ const CategoriesList = () => {
         .then((res) => {
           const list = res.data.data || [];
           setStores(list);
-          if (list.length > 0) {
-            const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
-            if (!hasExisting) {
-              const matched = userStoreId && list.some((s) => s.id === userStoreId);
-              const targetStoreId = matched ? userStoreId : list[0].id;
-              setSelectedStoreId(targetStoreId);
-              localStorage.setItem('rent360_active_store_id', targetStoreId);
-            }
-          }
         })
         .catch(() => {});
     } else if (userStoreId) {
       setSelectedStoreId(userStoreId);
-      localStorage.setItem('rent360_active_store_id', userStoreId);
     }
   }, [isSuperAdmin, userStoreId, token]);
 
   // Fetch categories when storeId changes
   useEffect(() => {
-    if (isSuperAdmin && !selectedStoreId) return;
     fetchCategories();
   }, [selectedStoreId, token]);
 
@@ -229,6 +218,31 @@ const CategoriesList = () => {
         </div>
 
         <div className="top-actions">
+          {isSuperAdmin && stores.length > 0 && (
+            <div className="store-selector-pill">
+              <label>Store:</label>
+              <select
+                value={selectedStoreId}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedStoreId(val);
+                  if (val) {
+                    localStorage.setItem('rent360_active_store_id', val);
+                  } else {
+                    localStorage.removeItem('rent360_active_store_id');
+                  }
+                }}
+              >
+                <option value="">All Stores</option>
+                {stores.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name || s.store_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <button
             type="button"
             className="pill-btn-primary"

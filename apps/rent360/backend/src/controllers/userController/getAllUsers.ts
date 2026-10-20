@@ -21,7 +21,15 @@ export const getAllUsers = async (req: Request | any, res: Response) => {
 
     const data = await prisma.user.findMany({
       where,
-      include: { role: true },
+      include: {
+        role: true,
+        store: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      },
       orderBy: { createdAt: 'desc' }
     });
     // Remove passwords before sending to frontend

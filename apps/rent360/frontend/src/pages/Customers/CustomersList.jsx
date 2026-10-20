@@ -16,7 +16,7 @@ const CustomersList = () => {
   // Stores for super admin
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(() => {
-    return userStoreId || localStorage.getItem('rent360_active_store_id') || '';
+    return userStoreId || '';
   });
   
   const [customers, setCustomers] = useState([]);
@@ -34,7 +34,8 @@ const CustomersList = () => {
     address: '', 
     city: '', 
     pincode: '', 
-    reference_by: '' 
+    reference_by: '',
+    storeId: ''
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -48,25 +49,14 @@ const CustomersList = () => {
         .then((res) => {
           const list = res.data.data || [];
           setStores(list);
-          if (list.length > 0) {
-            const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
-            if (!hasExisting) {
-              const matched = userStoreId && list.some((s) => s.id === userStoreId);
-              const targetStoreId = matched ? userStoreId : list[0].id;
-              setSelectedStoreId(targetStoreId);
-              localStorage.setItem('rent360_active_store_id', targetStoreId);
-            }
-          }
         })
         .catch(() => {});
     } else if (userStoreId) {
       setSelectedStoreId(userStoreId);
-      localStorage.setItem('rent360_active_store_id', userStoreId);
     }
   }, [isSuperAdmin, userStoreId, token]);
 
   useEffect(() => {
-    if (isSuperAdmin && !selectedStoreId) return;
     fetchData();
   }, [selectedStoreId, token]);
 
@@ -96,11 +86,21 @@ const CustomersList = () => {
         address: customerData.address || '',
         city: customerData.city || '',
         pincode: customerData.pincode || '',
-        reference_by: customerData.reference_by || ''
+        reference_by: customerData.reference_by || '',
+        storeId: customerData.storeId || ''
       });
     } else {
       setEditingCustomerId(null);
-      setCustomerForm({ full_name: '', mobile: '', alternate_mobile: '', address: '', city: '', pincode: '', reference_by: '' });
+      setCustomerForm({ 
+        full_name: '', 
+        mobile: '', 
+        alternate_mobile: '', 
+        address: '', 
+        city: '', 
+        pincode: '', 
+        reference_by: '',
+        storeId: selectedStoreId || (stores[0]?.id || '')
+      });
     }
     setIsCustomerModalOpen(true);
   };
@@ -125,6 +125,9 @@ const CustomersList = () => {
     if (customerForm.pincode && !/^[0-9]{6}$/.test(customerForm.pincode)) {
       errs.pincode = 'Pincode must be exactly 6 digits';
     }
+    if (isSuperAdmin && !editingCustomerId && !customerForm.storeId && !selectedStoreId) {
+      errs.storeId = 'Please assign a store for this customer';
+    }
     setFormErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -139,8 +142,9 @@ const CustomersList = () => {
         toast.success('Customer updated successfully');
       } else {
         const payload = { ...customerForm };
-        if (selectedStoreId) {
-          payload.storeId = selectedStoreId;
+        const effectiveStoreId = selectedStoreId || customerForm.storeId || userStoreId;
+        if (effectiveStoreId) {
+          payload.storeId = effectiveStoreId;
         }
         await axios.post(`${API_BASE_URL}/api/customers`, payload, { headers: { Authorization: `Bearer ${token}` } });
         toast.success('Customer added successfully');
@@ -197,9 +201,14 @@ const CustomersList = () => {
                 onChange={(e) => {
                   const val = e.target.value;
                   setSelectedStoreId(val);
-                  localStorage.setItem('rent360_active_store_id', val);
+                  if (val) {
+                    localStorage.setItem('rent360_active_store_id', val);
+                  } else {
+                    localStorage.removeItem('rent360_active_store_id');
+                  }
                 }}
               >
+                <option value="">All Stores</option>
                 {stores.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name || s.store_name}
@@ -226,6 +235,7 @@ const CustomersList = () => {
         <DataTable
           columns={[
             { label: 'Customer Name' },
+            ...(isSuperAdmin ? [{ label: 'Store' }] : []),
             { label: 'Mobile Number' },
             { label: 'City & Address' },
             { label: 'Actions', align: 'right' }
@@ -243,6 +253,24 @@ const CustomersList = () => {
                   fallbackChars={getInitials(c.full_name)}
                 />
               </td>
+              {isSuperAdmin && (
+                <td>
+                  <span
+                    style={{
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      background: 'var(--bg-tertiary, #f1f5f9)',
+                      color: 'var(--primary, #6366f1)',
+                      border: '1px solid var(--border-color, #e2e8f0)',
+                      display: 'inline-block'
+                    }}
+                  >
+                    {c.store?.name || 'Unknown Store'}
+                  </span>
+                </td>
+              )}
               <td>
                 <div className="store-text">
                   <span className="phone-text">{c.mobile}</span>
@@ -286,6 +314,40 @@ const CustomersList = () => {
             </div>
             <form onSubmit={handleCustomerSubmit} autoComplete="off">
               <div className="modal-body">
+                {isSuperAdmin && !editingCustomerId && (
+                  <div className="form-field" style={{ marginBottom: '14px' }}>
+                    <label>Assign to Store *</label>
+                    <select
+                      style={{
+                        width: '100%',
+                        padding: '9px 12px',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '6px',
+                        background: 'var(--bg-primary)',
+                        color: 'var(--text-primary)',
+                        fontSize: '13px'
+                      }}
+                      value={customerForm.storeId || ''}
+                      onChange={(e) => {
+                        setCustomerForm({ ...customerForm, storeId: e.target.value });
+                        if (formErrors.storeId) setFormErrors({ ...formErrors, storeId: null });
+                      }}
+                    >
+                      <option value="">-- Select Store --</option>
+                      {stores.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name || s.store_name}
+                        </option>
+                      ))}
+                    </select>
+                    {formErrors.storeId && (
+                      <span style={{ color: 'var(--danger)', fontSize: '0.75rem', marginTop: '2px', display: 'block' }}>
+                        {formErrors.storeId}
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 <div className="form-row-2">
                   <div className="form-field">
                     <label>Full Name *</label>

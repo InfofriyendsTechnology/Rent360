@@ -39,7 +39,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
   // Stores list for super admin
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(() => {
-    return userStoreId || localStorage.getItem('rent360_active_store_id') || '';
+    return userStoreId || '';
   });
 
   // Data & loading
@@ -82,20 +82,10 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
         .then((res) => {
           const list = res.data.data || [];
           setStores(list);
-          if (list.length > 0) {
-            const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
-            if (!hasExisting) {
-              const matched = userStoreId && list.some((s) => s.id === userStoreId);
-              const targetStoreId = matched ? userStoreId : list[0].id;
-              setSelectedStoreId(targetStoreId);
-              localStorage.setItem('rent360_active_store_id', targetStoreId);
-            }
-          }
         })
         .catch(() => {});
     } else if (userStoreId) {
       setSelectedStoreId(userStoreId);
-      localStorage.setItem('rent360_active_store_id', userStoreId);
     }
   }, [isSuperAdmin, userStoreId, token]);
 
@@ -150,7 +140,6 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
   };
 
   useEffect(() => {
-    if (isSuperAdmin && !selectedStoreId) return;
     fetchItems();
   }, [currentTab, selectedStoreId, token]);
 
@@ -171,7 +160,8 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       category_type: 'INCOME',
       account_name: '',
       account_number: '',
-      ifsc_code: ''
+      ifsc_code: '',
+      storeId: selectedStoreId || (stores[0]?.id || '')
     });
     setIsModalOpen(true);
   };
@@ -193,7 +183,8 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       category_type: item.category_type || 'INCOME',
       account_name: item.account_name || '',
       account_number: item.account_number || '',
-      ifsc_code: item.ifsc_code || ''
+      ifsc_code: item.ifsc_code || '',
+      storeId: item.storeId || ''
     });
     setIsModalOpen(true);
   };
@@ -206,7 +197,8 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
     try {
       const endpoint = getApiEndpoint();
       const payload = { ...formData };
-      if (selectedStoreId) payload.storeId = selectedStoreId;
+      const effectiveStoreId = selectedStoreId || formData.storeId || userStoreId;
+      if (effectiveStoreId) payload.storeId = effectiveStoreId;
 
       if (editingItem) {
         await axios.put(`${endpoint}/${editingItem.id}`, payload, {
@@ -527,6 +519,33 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
         </div>
 
         <div className="top-actions">
+          {isSuperAdmin && stores.length > 0 && (
+            <div className="store-selector-pill">
+              <FiShoppingBag className="store-pill-icon" />
+              <label>Store:</label>
+              <select
+                value={selectedStoreId}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedStoreId(val);
+                  if (val) {
+                    localStorage.setItem('rent360_active_store_id', val);
+                  } else {
+                    localStorage.removeItem('rent360_active_store_id');
+                  }
+                }}
+              >
+                <option value="">All Stores</option>
+                {stores.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name || s.store_name}
+                  </option>
+                ))}
+              </select>
+              <FiChevronDown className="chevron-icon" />
+            </div>
+          )}
+
           {/* Create Button with Standard Sleek Design */}
           <button
             type="button"
@@ -598,6 +617,33 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
 
             <form onSubmit={handleSave} autoComplete="off">
               <div className="modal-body">
+                {isSuperAdmin && !editingItem && (
+                  <div className="form-group" style={{ marginBottom: '14px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '6px', textTransform: 'uppercase' }}>
+                      Assign to Store *
+                    </label>
+                    <select
+                      style={{
+                        width: '100%',
+                        padding: '9px 12px',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '6px',
+                        background: 'var(--bg-primary)',
+                        color: 'var(--text-primary)',
+                        fontSize: '13px'
+                      }}
+                      value={formData.storeId || ''}
+                      onChange={(e) => setFormData({ ...formData, storeId: e.target.value })}
+                    >
+                      <option value="">-- Select Store --</option>
+                      {stores.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name || s.store_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 {/* Size Form */}
                 {currentTab === 'sizes' && (
                   <>

@@ -16,7 +16,7 @@ const UsersList = () => {
   // Stores for super admin
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(() => {
-    return userStoreId || localStorage.getItem('rent360_active_store_id') || '';
+    return userStoreId || '';
   });
   
   const [users, setUsers] = useState([]);
@@ -30,7 +30,7 @@ const UsersList = () => {
   const [isDeletingUser, setIsDeletingUser] = useState(false);
   const [isSavingMember, setIsSavingMember] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
-  const [userForm, setUserForm] = useState({ name: '', mobile: '', password: '', roleId: '' });
+  const [userForm, setUserForm] = useState({ name: '', mobile: '', password: '', roleId: '', storeId: '' });
 
   // Quick Role Creation state
   const [isQuickRoleModalOpen, setIsQuickRoleModalOpen] = useState(false);
@@ -59,27 +59,15 @@ const UsersList = () => {
           headers: { Authorization: `Bearer ${token}` }
         })
         .then((res) => {
-          const list = res.data.data || [];
-          setStores(list);
-          if (list.length > 0) {
-            const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
-            if (!hasExisting) {
-              const matched = userStoreId && list.some((s) => s.id === userStoreId);
-              const targetStoreId = matched ? userStoreId : list[0].id;
-              setSelectedStoreId(targetStoreId);
-              localStorage.setItem('rent360_active_store_id', targetStoreId);
-            }
-          }
+          setStores(res.data.data || []);
         })
         .catch(() => {});
     } else if (userStoreId) {
       setSelectedStoreId(userStoreId);
-      localStorage.setItem('rent360_active_store_id', userStoreId);
     }
   }, [isSuperAdmin, userStoreId, token]);
 
   useEffect(() => {
-    if (isSuperAdmin && !selectedStoreId) return;
     fetchData();
   }, [selectedStoreId, token]);
 
@@ -113,12 +101,19 @@ const UsersList = () => {
         name: userData.name || '', 
         mobile: userData.mobile || '', 
         password: '', 
-        roleId: userData.roleId || '' 
+        roleId: userData.roleId || '',
+        storeId: userData.storeId || ''
       });
     } else {
       setEditingUserId(null);
       const defaultRole = roles.find(r => r.name !== 'STORE_ADMIN' && r.name !== 'SUPER_ADMIN');
-      setUserForm({ name: '', mobile: '', password: '', roleId: defaultRole ? defaultRole.id : '' });
+      setUserForm({ 
+        name: '', 
+        mobile: '', 
+        password: '', 
+        roleId: defaultRole ? defaultRole.id : '',
+        storeId: selectedStoreId || (stores[0]?.id || '')
+      });
     }
     setIsUserModalOpen(true);
   };
@@ -130,8 +125,10 @@ const UsersList = () => {
       setFieldErrors({});
       setIsSavingMember(true);
       const payload = { ...userForm };
-      if (!editingUserId && selectedStoreId) {
-        payload.storeId = selectedStoreId;
+      
+      const effectiveStoreId = selectedStoreId || userForm.storeId || userStoreId;
+      if (!editingUserId && effectiveStoreId) {
+        payload.storeId = effectiveStoreId;
       }
       if (editingUserId && !payload.password) {
         delete payload.password;
@@ -229,12 +226,14 @@ const UsersList = () => {
         <div className="title-section">
           <h1 className="main-title">Team Members</h1>
           <p className="subtitle">
-            Manage your store staff, their access roles, and status
+            {isSuperAdmin
+              ? 'Browse and manage all staff members across tenant stores'
+              : 'Manage your store staff, their access roles, and status'}
           </p>
         </div>
 
         <div className="top-actions">
-          {/* Super Admin Store Selector */}
+          {/* Super Admin Store Selector with All Stores default */}
           {isSuperAdmin && stores.length > 0 && (
             <div className="store-selector-pill">
               <FiShoppingBag className="store-pill-icon" />
@@ -244,9 +243,14 @@ const UsersList = () => {
                 onChange={(e) => {
                   const val = e.target.value;
                   setSelectedStoreId(val);
-                  localStorage.setItem('rent360_active_store_id', val);
+                  if (val) {
+                    localStorage.setItem('rent360_active_store_id', val);
+                  } else {
+                    localStorage.removeItem('rent360_active_store_id');
+                  }
                 }}
               >
+                <option value="">All Stores</option>
                 {stores.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name || s.store_name}
@@ -273,6 +277,7 @@ const UsersList = () => {
         <DataTable
           columns={[
             { label: 'Team Member' },
+            ...(isSuperAdmin ? [{ label: 'Store' }] : []),
             { label: 'Mobile Number' },
             { label: 'Assigned Role' },
             { label: 'Status' },
@@ -290,6 +295,13 @@ const UsersList = () => {
                   fallbackChars={getInitials(u.name)}
                 />
               </td>
+              {isSuperAdmin && (
+                <td>
+                  <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-main)' }}>
+                    {u.store?.name || 'All Platform'}
+                  </span>
+                </td>
+              )}
               <td><span className="phone-text">{u.mobile}</span></td>
               <td>
                 <span className="bond-status-pill" style={{ background: 'var(--bg-card-alt)', color: 'var(--text-main)', border: '1px solid var(--border-main)' }}>
@@ -325,6 +337,21 @@ const UsersList = () => {
                     {fieldErrors.general}
                   </div>
                 )}
+                
+                {isSuperAdmin && !editingUserId && (
+                  <div className="form-group" style={{ marginBottom: '14px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '6px', textTransform: 'uppercase' }}>
+                      Assign to Store *
+                    </label>
+                    <Select
+                      value={userForm.storeId}
+                      placeholder="-- Select Store --"
+                      onChange={(e) => setUserForm({ ...userForm, storeId: e.target.value })}
+                      options={stores.map((s) => ({ value: s.id, label: s.name || s.store_name }))}
+                    />
+                  </div>
+                )}
+
                 <div className="form-row-2">
                   <div className="form-field">
                     <label>Full Name *</label>
@@ -443,7 +470,6 @@ const UsersList = () => {
                     onChange={e => setQuickRoleName(e.target.value)} 
                     autoFocus
                   />
-
                 </div>
                 <div className="form-field" style={{ marginTop: '16px' }}>
                   <label>Permissions</label>
@@ -469,7 +495,6 @@ const UsersList = () => {
           </div>
         </div>
       )}
-
 
       <ConfirmModal 
         isOpen={!!userToDelete}

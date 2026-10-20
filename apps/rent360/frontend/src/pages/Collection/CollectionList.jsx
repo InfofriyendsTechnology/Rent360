@@ -51,7 +51,7 @@ const CollectionList = () => {
   const userStoreId = user?.store?.id || user?.storeId || '';
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(() => {
-    return userStoreId || localStorage.getItem('rent360_active_store_id') || '';
+    return userStoreId || '';
   });
 
   // Main Data
@@ -95,26 +95,15 @@ const CollectionList = () => {
         .then((res) => {
           const list = res.data.data || [];
           setStores(list);
-          if (list.length > 0) {
-            const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
-            if (!hasExisting) {
-              const matched = userStoreId && list.some((s) => s.id === userStoreId);
-              const targetStoreId = matched ? userStoreId : list[0].id;
-              setSelectedStoreId(targetStoreId);
-              localStorage.setItem('rent360_active_store_id', targetStoreId);
-            }
-          }
         })
         .catch(() => {});
     } else if (userStoreId) {
       setSelectedStoreId(userStoreId);
-      localStorage.setItem('rent360_active_store_id', userStoreId);
     }
   }, [isSuperAdmin, userStoreId, token]);
 
   // Fetch products, categories, and limits
   useEffect(() => {
-    if (isSuperAdmin && !selectedStoreId) return;
     fetchData();
   }, [selectedStoreId, token]);
 
@@ -249,9 +238,14 @@ const CollectionList = () => {
                 onChange={(e) => {
                   const val = e.target.value;
                   setSelectedStoreId(val);
-                  localStorage.setItem('rent360_active_store_id', val);
+                  if (val) {
+                    localStorage.setItem('rent360_active_store_id', val);
+                  } else {
+                    localStorage.removeItem('rent360_active_store_id');
+                  }
                 }}
               >
+                <option value="">All Stores</option>
                 {stores.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name || s.store_name}

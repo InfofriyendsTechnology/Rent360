@@ -17,6 +17,14 @@ export const getAllCustomers = async (req: Request | any, res: Response) => {
 
     const data = await (prisma as any).customer.findMany({ 
       where,
+      include: {
+        store: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
       orderBy: { createdAt: 'desc' }
     });
     return responseHandler.success(res, "Fetched successfully", data);

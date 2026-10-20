@@ -209,99 +209,101 @@ const Sidebar = ({ isOpen, onClose }) => {
             </nav>
           </div>
 
-          {/* Collapsible Store Setup Accordion Section */}
-          <div className="menu-group master-menu-group">
-            <span className="group-title">STORE SETUP</span>
-            <div className="accordion-group">
-              <button
-                type="button"
-                className={`menu-pill accordion-trigger ${isMasterOpen ? 'open' : ''} ${isMasterRouteActive ? 'active-group' : ''}`}
-                onClick={() => setIsMasterOpen(!isMasterOpen)}
-              >
-                <span className="icon"><FiSliders /></span>
-                <span className="text">Store Setup</span>
-                <span className="accordion-chevron">
-                  {isMasterOpen ? <FiChevronDown /> : <FiChevronRight />}
-                </span>
-              </button>
+          {/* Collapsible Store Setup Accordion Section (Only for Store Admin / Staff) */}
+          {!isSuperAdmin && (
+            <div className="menu-group master-menu-group">
+              <span className="group-title">STORE SETUP</span>
+              <div className="accordion-group">
+                <button
+                  type="button"
+                  className={`menu-pill accordion-trigger ${isMasterOpen ? 'open' : ''} ${isMasterRouteActive ? 'active-group' : ''}`}
+                  onClick={() => setIsMasterOpen(!isMasterOpen)}
+                >
+                  <span className="icon"><FiSliders /></span>
+                  <span className="text">Store Setup</span>
+                  <span className="accordion-chevron">
+                    {isMasterOpen ? <FiChevronDown /> : <FiChevronRight />}
+                  </span>
+                </button>
 
-              {isMasterOpen && (
-                <div className="accordion-submenu">
-                  <NavLink 
-                    to="/users" 
-                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
-                    onClick={onClose}
-                  >
-                    <span className="sub-icon"><FiUsers /></span>
-                    <span className="text">Users</span>
-                  </NavLink>
+                {isMasterOpen && (
+                  <div className="accordion-submenu">
+                    <NavLink 
+                      to="/users" 
+                      className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiUsers /></span>
+                      <span className="text">Users</span>
+                    </NavLink>
 
-                  <NavLink 
-                    to="/categories" 
-                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
-                    onClick={onClose}
-                  >
-                    <span className="sub-icon"><FiLayers /></span>
-                    <span className="text">Categories</span>
-                  </NavLink>
+                    <NavLink 
+                      to="/categories" 
+                      className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiLayers /></span>
+                      <span className="text">Categories</span>
+                    </NavLink>
 
-                  <NavLink 
-                    to="/sizes" 
-                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
-                    onClick={onClose}
-                  >
-                    <span className="sub-icon"><FiMaximize2 /></span>
-                    <span className="text">Size</span>
-                  </NavLink>
+                    <NavLink 
+                      to="/sizes" 
+                      className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiMaximize2 /></span>
+                      <span className="text">Size</span>
+                    </NavLink>
 
-                  <NavLink 
-                    to="/colors" 
-                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
-                    onClick={onClose}
-                  >
-                    <span className="sub-icon"><FiDroplet /></span>
-                    <span className="text">Colors</span>
-                  </NavLink>
+                    <NavLink 
+                      to="/colors" 
+                      className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiDroplet /></span>
+                      <span className="text">Colors</span>
+                    </NavLink>
 
-                  <NavLink 
-                    to="/time-slots" 
-                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
-                    onClick={onClose}
-                  >
-                    <span className="sub-icon"><FiClock /></span>
-                    <span className="text">Time Slots</span>
-                  </NavLink>
+                    <NavLink 
+                      to="/time-slots" 
+                      className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiClock /></span>
+                      <span className="text">Time Slots</span>
+                    </NavLink>
 
-                  <NavLink 
-                    to="/reminders" 
-                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
-                    onClick={onClose}
-                  >
-                    <span className="sub-icon"><FiBell /></span>
-                    <span className="text">Reminder</span>
-                  </NavLink>
+                    <NavLink 
+                      to="/reminders" 
+                      className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiBell /></span>
+                      <span className="text">Reminder</span>
+                    </NavLink>
 
-                  <NavLink 
-                    to="/accounts" 
-                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
-                    onClick={onClose}
-                  >
-                    <span className="sub-icon"><FiBookOpen /></span>
-                    <span className="text">Accounts</span>
-                  </NavLink>
+                    <NavLink 
+                      to="/accounts" 
+                      className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiBookOpen /></span>
+                      <span className="text">Accounts</span>
+                    </NavLink>
 
-                  <NavLink 
-                    to="/security-accounts" 
-                    className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
-                    onClick={onClose}
-                  >
-                    <span className="sub-icon"><FiShield /></span>
-                    <span className="text">Security Accounts</span>
-                  </NavLink>
-                </div>
-              )}
+                    <NavLink 
+                      to="/security-accounts" 
+                      className={({ isActive }) => isActive ? 'sub-menu-pill active' : 'sub-menu-pill'} 
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiShield /></span>
+                      <span className="text">Security Accounts</span>
+                    </NavLink>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="menu-group">
             <span className="group-title">PREFERENCES</span>

@@ -154,6 +154,47 @@
     }
   }
 
+  /* Super Admin Platform Profile View */
+  .superadmin-profile-view {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .profile-field-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid $border-main;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .field-label {
+        font-size: 0.85rem;
+        color: $text-muted;
+        font-weight: 500;
+      }
+
+      .field-val {
+        font-size: 0.9rem;
+        color: $text-main;
+        font-weight: 600;
+
+        &.role-pill {
+          background-color: rgba(37, 99, 235, 0.1);
+          color: #2563eb;
+          padding: 4px 10px;
+          border-radius: $border-radius-pill;
+          font-size: 0.76rem;
+          font-weight: 700;
+          letter-spacing: 0.02em;
+        }
+      }
+    }
+  }
+
   /* Preference Items */
   .preference-item {
     display: flex;
