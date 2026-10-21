@@ -5,7 +5,7 @@ import { AuthRequest } from "../../middleware/auth";
 
 export const updateTransaction = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const {
       transaction_type,
       amount,

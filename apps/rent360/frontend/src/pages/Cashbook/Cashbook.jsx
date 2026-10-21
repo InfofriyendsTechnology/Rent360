@@ -16,11 +16,11 @@ import './Cashbook.scss';
 const Cashbook = () => {
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
-  const userStoreId = user?.store?.id || user?.storeId || '';
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
 
   // Stores for Super Admin
   const [stores, setStores] = useState([]);
-  const [selectedStoreId, setSelectedStoreId] = useState(userStoreId);
+  const [selectedStoreId, setSelectedStoreId] = useState(() => isSuperAdmin ? '' : (userStoreId || ''));
 
   // Main Data
   const [transactions, setTransactions] = useState([]);

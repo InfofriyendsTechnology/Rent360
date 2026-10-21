@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { 
-<<<<<<< HEAD
-  FiHome, FiBox, FiUsers, FiSettings, FiLogOut, FiTrash2, 
-  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive, FiCornerUpLeft, FiX, FiTag, FiDollarSign
-=======
-  FiHome, FiBox, FiUsers, FiSettings, FiLogOut, 
-  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiHardDrive, 
-  FiCornerUpLeft, FiX, FiSliders, FiDatabase, FiChevronDown, FiChevronRight,
-  FiMaximize2, FiDroplet, FiClock, FiBookOpen
->>>>>>> c62291f55a1667855d881afe6f1a32663a2b844a
+  FiHome, FiBox, FiUsers, FiSettings, FiLogOut, FiTrash2,
+  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive,
+  FiCornerUpLeft, FiX, FiTag, FiDollarSign, FiSliders, FiDatabase,
+  FiChevronDown, FiChevronRight, FiMaximize2, FiDroplet, FiClock, FiBookOpen
 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, loginSuccess } from '../../store/authSlice';

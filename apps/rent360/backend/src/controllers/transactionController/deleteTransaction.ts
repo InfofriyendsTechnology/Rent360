@@ -6,7 +6,7 @@ import { AuthRequest } from "../../middleware/auth";
 export const deleteTransaction = async (req: AuthRequest, res: Response) => {
   try {
     const user = req.user;
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const existing = await prisma.transaction.findUnique({
       where: { id },
