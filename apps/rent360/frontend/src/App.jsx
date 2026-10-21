@@ -16,6 +16,7 @@ import Profile from './pages/Profile/Profile';
 import CollectionList from './pages/Collection/CollectionList';
 import CategoriesList from './pages/Categories/CategoriesList';
 import SettingsPage from './pages/Settings/SettingsPage';
+import Cashbook from './pages/Cashbook/Cashbook';
 
 
 const App = () => {
@@ -72,6 +73,8 @@ const App = () => {
           )}
 
           {/* Shared Routes */}
+          <Route path="cashbook" element={<Cashbook />} />
+          <Route path="transactions" element={<Navigate to="/cashbook" replace />} />
           <Route path="categories" element={<Navigate to="/settings?tab=categories" replace />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="setup" element={<Navigate to="/settings" replace />} />

@@ -76,9 +76,6 @@ export const setupSuperAdmin = async () => {
         updates.mobile = mobile;
         updates.password = await bcrypt.hash(passwordText, 10);
       }
-      if (!existingAdmin.username) {
-        updates.username = 'superadmin';
-      }
       if (Object.keys(updates).length > 0) {
         await prisma.user.update({
           where: { id: existingAdmin.id },
@@ -122,7 +119,6 @@ export const setupSuperAdmin = async () => {
           storeId: store.id,
           roleId: role.id,
           name: 'System Admin',
-          username: 'superadmin',
           mobile,
           password: hashedPassword,
           status: 'ACTIVE'

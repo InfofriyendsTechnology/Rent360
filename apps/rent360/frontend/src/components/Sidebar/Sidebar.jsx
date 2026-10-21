@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   FiHome, FiBox, FiUsers, FiSettings, FiLogOut, FiTrash2, 
-  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive, FiCornerUpLeft, FiX, FiTag
+  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive, FiCornerUpLeft, FiX, FiTag, FiDollarSign
 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, updateUser, loginSuccess } from '../../store/authSlice';
@@ -139,6 +139,14 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <span className="text">Collection</span>
                   </NavLink>
                   <NavLink 
+                    to="/cashbook" 
+                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                    onClick={onClose}
+                  >
+                    <span className="icon"><FiDollarSign /></span>
+                    <span className="text">Cashbook</span>
+                  </NavLink>
+                  <NavLink 
                     to="/plans" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
                     onClick={onClose}
@@ -172,6 +180,14 @@ const Sidebar = ({ isOpen, onClose }) => {
                   >
                     <span className="icon"><FiBox /></span>
                     <span className="text">Collection</span>
+                  </NavLink>
+                  <NavLink 
+                    to="/cashbook" 
+                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                    onClick={onClose}
+                  >
+                    <span className="icon"><FiDollarSign /></span>
+                    <span className="text">Cashbook</span>
                   </NavLink>
                   <NavLink 
                     to="/customers" 

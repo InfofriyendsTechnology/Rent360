@@ -1,12 +1,47 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import prisma from "../../utils/prisma";
 import responseHandler from "../../utils/responseHandler";
+import { AuthRequest } from "../../middleware/auth";
 
-export const getAllStoreBankAccounts = async (req: Request, res: Response) => {
+export const getAllStoreBankAccounts = async (req: AuthRequest, res: Response) => {
   try {
-    const data = await (prisma as any).storeBankAccount.findMany();
-    return responseHandler.success(res, "Fetched successfully", data);
+    const user = req.user;
+    let storeId = req.query.storeId as string;
+
+    if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
+      storeId = user.storeId;
+    }
+
+    const whereClause: any = {};
+    if (storeId) {
+      whereClause.storeId = storeId;
+    }
+
+    let accounts = await prisma.storeBankAccount.findMany({
+      where: whereClause,
+      orderBy: { account_name: "asc" },
+    });
+
+    // Auto-seed default Cash Drawer if empty for this store
+    if (accounts.length === 0 && storeId) {
+      await prisma.storeBankAccount.create({
+        data: {
+          storeId,
+          account_name: "Cash Drawer",
+          account_number: "MAIN-DRAWER",
+          ifsc_code: "",
+        },
+      });
+
+      accounts = await prisma.storeBankAccount.findMany({
+        where: whereClause,
+        orderBy: { account_name: "asc" },
+      });
+    }
+
+    return responseHandler.success(res, "Store bank accounts fetched successfully", accounts);
   } catch (error) {
+    console.error("Error fetching bank accounts:", error);
     return responseHandler.internalServerError(res, error);
   }
 };
