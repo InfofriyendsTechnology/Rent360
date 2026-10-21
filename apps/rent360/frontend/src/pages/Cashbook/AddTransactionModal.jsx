@@ -150,12 +150,12 @@ const AddTransactionModal = ({
         await axios.put(`${API_BASE_URL}/api/transactions/${editTransaction.id}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        toast.success('Transaction updated successfully! ✏️');
+        toast.success('Transaction updated successfully');
       } else {
         await axios.post(`${API_BASE_URL}/api/transactions`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        toast.success(type === 'CREDIT' ? 'Income recorded successfully! 🟢' : 'Expense recorded successfully! 🔴');
+        toast.success(type === 'CREDIT' ? 'Income recorded successfully' : 'Expense recorded successfully');
       }
 
       onSuccess();
@@ -305,7 +305,7 @@ const AddTransactionModal = ({
                   const isCash = (selMode?.name || '').toLowerCase().includes('cash');
                   return (
                     <span className={`mode-target-tag ${isCash ? 'cash' : 'bank'}`}>
-                      {isCash ? '💵 Cash in Hand' : '🏦 Bank / UPI'}
+                      {isCash ? 'Cash in Hand' : 'Bank / UPI'}
                     </span>
                   );
                 })()}
