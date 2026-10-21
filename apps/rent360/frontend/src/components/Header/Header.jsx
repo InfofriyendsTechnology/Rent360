@@ -93,6 +93,7 @@ const Header = ({ onToggleSidebar }) => {
     if (location.pathname.startsWith('/stores')) return 'Stores Management';
     if (location.pathname.startsWith('/subscriptions')) return 'Subscriptions';
     if (location.pathname.startsWith('/collection') || location.pathname.startsWith('/inventory')) return 'Collection';
+    if (location.pathname.startsWith('/cashbook') || location.pathname.startsWith('/transactions')) return 'Cashbook';
     if (location.pathname.startsWith('/customers')) return 'Customers';
     if (location.pathname.startsWith('/roles') || location.pathname.startsWith('/staff')) return 'Roles & Staff';
     if (location.pathname.startsWith('/settings') || location.pathname.startsWith('/categories')) return 'System Setup';

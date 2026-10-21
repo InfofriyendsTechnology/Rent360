@@ -56,6 +56,8 @@ const App = () => {
               <Route path="bucket" element={<BucketExplorer />} />
               <Route path="plans" element={<PlansList />} />
               <Route path="subscriptions" element={<SubscriptionsList />} />
+              <Route path="cashbook" element={<Navigate to="/stores" replace />} />
+              <Route path="transactions" element={<Navigate to="/stores" replace />} />
             </>
           )}
 
@@ -64,6 +66,8 @@ const App = () => {
             <>
               <Route path="collection" element={<CollectionList />} />
               <Route path="inventory" element={<Navigate to="/collection" replace />} />
+              <Route path="cashbook" element={<Cashbook />} />
+              <Route path="transactions" element={<Navigate to="/cashbook" replace />} />
               <Route path="customers" element={<CustomersList />} />
               <Route path="roles" element={<RolesList />} />
               <Route path="users" element={<UsersList />} />
@@ -79,9 +83,6 @@ const App = () => {
             </>
           )}
 
-          {/* Shared Routes */}
-          <Route path="cashbook" element={<Cashbook />} />
-          <Route path="transactions" element={<Navigate to="/cashbook" replace />} />
 
           {/* Shared Settings & Profile */}
           <Route path="settings" element={<SettingsPage />} />

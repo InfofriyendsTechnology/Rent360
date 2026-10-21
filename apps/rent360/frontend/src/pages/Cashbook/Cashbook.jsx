@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { 
   FiDollarSign, FiPlus, FiSearch, FiFilter, FiCalendar, 
@@ -15,12 +16,13 @@ import './Cashbook.scss';
 
 const Cashbook = () => {
   const { user, token } = useSelector((state) => state.auth);
-  const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
-  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
+    const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
+  if (isSuperAdmin) {
+    return <Navigate to="/stores" replace />;
+  }
+  const userStoreId = user?.store?.id || user?.storeId || '';
 
-  // Stores for Super Admin
-  const [stores, setStores] = useState([]);
-  const [selectedStoreId, setSelectedStoreId] = useState(() => isSuperAdmin ? '' : (userStoreId || ''));
+  const selectedStoreId = userStoreId;
 
   // Main Data
   const [transactions, setTransactions] = useState([]);
@@ -60,27 +62,10 @@ const Cashbook = () => {
   const [txToDelete, setTxToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Super Admin: Fetch stores
-  useEffect(() => {
-    if (isSuperAdmin) {
-      axios
-        .get(`${API_BASE_URL}/api/stores`, { headers: { Authorization: `Bearer ${token}` } })
-        .then((res) => {
-          const list = res.data.data || [];
-          setStores(list);
-          if (list.length > 0 && !selectedStoreId) {
-            setSelectedStoreId(list[0].id);
-          }
-        })
-        .catch(() => {});
-    } else if (userStoreId) {
-      setSelectedStoreId(userStoreId);
-    }
-  }, [isSuperAdmin, userStoreId, token]);
 
   // Fetch Master Data (Payment Modes, Categories, Bank Accounts)
   useEffect(() => {
-    if (!selectedStoreId && !isSuperAdmin) return;
+    if (!selectedStoreId) return;
     fetchMasters();
   }, [selectedStoreId]);
 
@@ -301,22 +286,6 @@ const Cashbook = () => {
         </div>
 
         <div className="top-actions-wrap">
-          {/* Super Admin Store Selector */}
-          {isSuperAdmin && stores.length > 0 && (
-            <div className="store-selector-pill">
-              <label>Store:</label>
-              <select
-                value={selectedStoreId}
-                onChange={(e) => setSelectedStoreId(e.target.value)}
-              >
-                {stores.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
 
           <button
             type="button"
