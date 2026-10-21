@@ -11,6 +11,15 @@ export const getProductLimitsSummary = async (req: AuthRequest, res: Response) =
       storeId = user.storeId;
     }
     if (!storeId) {
+      if (user?.role === "SUPER_ADMIN") {
+        return responseHandler.success(res, "Collection limits summary fetched", {
+          unlimited: true,
+          isSuperAdmin: true,
+          currentDesigns: 0,
+          maxDesigns: 999999,
+          hasReachedLimit: false,
+        });
+      }
       return responseHandler.badRequest(res, "Store ID is required");
     }
 

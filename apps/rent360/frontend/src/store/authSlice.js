@@ -28,6 +28,9 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       localStorage.setItem('token', action.payload.token);
       localStorage.setItem('user', JSON.stringify(action.payload.user));
+      if (action.payload.user?.role === 'SUPER_ADMIN') {
+        localStorage.removeItem('rent360_active_store_id');
+      }
     },
     updateUser: (state, action) => {
       if (state.user) {
@@ -43,6 +46,7 @@ const authSlice = createSlice({
       localStorage.removeItem('user');
       localStorage.removeItem('superAdminToken');
       localStorage.removeItem('superAdminUser');
+      localStorage.removeItem('rent360_active_store_id');
     },
   },
 });

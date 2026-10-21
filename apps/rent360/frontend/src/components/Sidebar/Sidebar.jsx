@@ -71,6 +71,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   const handleLogout = () => {
     localStorage.removeItem('superAdminToken');
     localStorage.removeItem('superAdminUser');
+    localStorage.removeItem('rent360_active_store_id');
     onClose?.();
     dispatch(logout());
   };

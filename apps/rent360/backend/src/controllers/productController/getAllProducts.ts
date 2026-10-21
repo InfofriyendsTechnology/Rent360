@@ -47,6 +47,12 @@ export const getAllProducts = async (req: AuthRequest, res: Response) => {
       where: whereClause,
       include: {
         category: true,
+        store: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         productItems: {
           orderBy: {
             size: "asc",

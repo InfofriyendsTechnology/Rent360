@@ -7,7 +7,7 @@ export const createUser = async (req: Request | any, res: Response) => {
   try {
     let storeId = req.user?.storeId;
     if (req.user?.role === "SUPER_ADMIN") {
-      storeId = req.body?.storeId || req.query?.storeId || req.user?.storeId;
+      storeId = req.body?.storeId || req.query?.storeId;
     }
     if (!storeId) {
       return responseHandler.badRequest(res, "Store ID is required to create a team member.");

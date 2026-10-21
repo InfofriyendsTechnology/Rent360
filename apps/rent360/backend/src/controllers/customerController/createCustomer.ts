@@ -7,7 +7,7 @@ export const createCustomer = async (req: Request | any, res: Response) => {
     const user = req.user;
     let storeId = user?.storeId;
     if (user?.role === "SUPER_ADMIN") {
-      storeId = req.body?.storeId || req.query?.storeId || user?.storeId;
+      storeId = req.body?.storeId || req.query?.storeId;
     }
     if (!storeId) {
       return responseHandler.badRequest(res, "Store ID is required to create a customer.");

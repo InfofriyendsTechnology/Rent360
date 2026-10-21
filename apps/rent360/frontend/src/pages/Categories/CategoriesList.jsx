@@ -29,13 +29,14 @@ const CategoriesList = () => {
   const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
-  const userStoreId = user?.store?.id || user?.storeId || '';
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
 
   // Stores for super admin
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(() => {
-    return userStoreId || '';
+    return isSuperAdmin ? '' : (userStoreId || '');
   });
+  const [modalStoreId, setModalStoreId] = useState('');
 
   // Categories & UI state
   const [categories, setCategories] = useState([]);
@@ -100,6 +101,7 @@ const CategoriesList = () => {
   const handleOpenCreateModal = () => {
     setEditingCategory(null);
     setFormData({ name: '', category_code: '', description: '' });
+    setModalStoreId(selectedStoreId || (stores[0]?.id || ''));
     setFormErrors({});
     setIsModalOpen(true);
   };
@@ -111,6 +113,7 @@ const CategoriesList = () => {
       category_code: cat.category_code || '',
       description: cat.description || ''
     });
+    setModalStoreId(cat.storeId || cat.store?.id || '');
     setFormErrors({});
     setIsModalOpen(true);
   };
@@ -133,6 +136,9 @@ const CategoriesList = () => {
 
   const validate = () => {
     const errs = {};
+    if (isSuperAdmin && !editingCategory && !modalStoreId) {
+      errs.storeId = 'Please select a store';
+    }
     if (!formData.name.trim()) errs.name = 'Category name is required';
     if (!formData.category_code.trim()) errs.category_code = 'Category code is required';
     setFormErrors(errs);
@@ -145,11 +151,15 @@ const CategoriesList = () => {
 
     setIsSaving(true);
     try {
+      const effectiveStoreId = isSuperAdmin
+        ? (editingCategory ? (editingCategory.storeId || editingCategory.store?.id) : modalStoreId)
+        : (userStoreId || undefined);
+
       const payload = {
         name: formData.name.trim(),
         category_code: formData.category_code.trim().toUpperCase(),
         description: formData.description.trim() || undefined,
-        storeId: selectedStoreId || undefined
+        storeId: effectiveStoreId || undefined
       };
 
       if (editingCategory) {
@@ -284,6 +294,7 @@ const CategoriesList = () => {
         <DataTable
           columns={[
             { label: '#', width: '70px' },
+            ...(isSuperAdmin ? [{ label: 'Store', width: '160px' }] : []),
             { label: 'Category Code', width: '180px' },
             { label: 'Category Name', width: '220px' },
             { label: 'Description' },
@@ -302,6 +313,24 @@ const CategoriesList = () => {
                 <td>
                   <span className="row-index-text">{formattedIdx}</span>
                 </td>
+                {isSuperAdmin && (
+                  <td>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        padding: '3px 8px',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        borderRadius: '6px',
+                        backgroundColor: 'var(--bg-card-alt)',
+                        border: '1px solid var(--border-main)',
+                        color: 'var(--text-main)'
+                      }}
+                    >
+                      {cat.store?.name || 'Unassigned'}
+                    </span>
+                  </td>
+                )}
                 <td>
                   <span className="table-cat-code">
                     {cat.category_code}
@@ -368,6 +397,39 @@ const CategoriesList = () => {
 
             <form onSubmit={handleSaveCategory}>
               <div className="modal-body">
+                {isSuperAdmin && !editingCategory && (
+                  <div className="form-field" style={{ marginBottom: '16px' }}>
+                    <label>Store *</label>
+                    <select
+                      value={modalStoreId}
+                      onChange={(e) => {
+                        setModalStoreId(e.target.value);
+                        if (formErrors.storeId) {
+                          setFormErrors((prev) => ({ ...prev, storeId: '' }));
+                        }
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        border: '1px solid var(--border-main)',
+                        backgroundColor: 'var(--bg-card-alt)',
+                        color: 'var(--text-main)',
+                        fontSize: '0.9rem',
+                        outline: 'none'
+                      }}
+                    >
+                      <option value="">-- Select Store --</option>
+                      {stores.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name || s.store_name}
+                        </option>
+                      ))}
+                    </select>
+                    {formErrors.storeId && <span className="field-error">{formErrors.storeId}</span>}
+                  </div>
+                )}
+
                 <div className="form-field">
                   <label>Category Name *</label>
                   <input

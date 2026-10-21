@@ -30,6 +30,12 @@ export const getAllCategorys = async (req: AuthRequest, res: Response) => {
     const categories = await prisma.category.findMany({
       where: whereClause,
       include: {
+        store: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         _count: {
           select: {
             products: true,

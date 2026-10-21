@@ -24,10 +24,6 @@ export const getAllSizes = async (req: AuthRequest, res: Response) => {
       storeId = user.storeId;
     }
 
-    if (!storeId && user?.storeId) {
-      storeId = user.storeId;
-    }
-
     const whereClause: any = {};
     if (storeId) {
       whereClause.storeId = storeId;

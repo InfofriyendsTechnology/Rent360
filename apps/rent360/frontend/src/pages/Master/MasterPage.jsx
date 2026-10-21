@@ -31,7 +31,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
   const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
-  const userStoreId = user?.store?.id || user?.storeId || '';
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
 
   // Current tab from URL query or prop
   const currentTab = searchParams.get('tab') || defaultTab;
@@ -39,7 +39,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
   // Stores list for super admin
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(() => {
-    return userStoreId || '';
+    return isSuperAdmin ? '' : (userStoreId || '');
   });
 
   // Data & loading
@@ -197,7 +197,9 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
     try {
       const endpoint = getApiEndpoint();
       const payload = { ...formData };
-      const effectiveStoreId = selectedStoreId || formData.storeId || userStoreId;
+      const effectiveStoreId = isSuperAdmin
+        ? (formData.storeId || selectedStoreId)
+        : (userStoreId || formData.storeId);
       if (effectiveStoreId) payload.storeId = effectiveStoreId;
 
       if (editingItem) {

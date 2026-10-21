@@ -11,12 +11,12 @@ import { API_BASE_URL } from '../../config/api';
 const UsersList = () => {
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
-  const userStoreId = user?.store?.id || user?.storeId || '';
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
 
   // Stores for super admin
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(() => {
-    return userStoreId || '';
+    return isSuperAdmin ? '' : userStoreId;
   });
   
   const [users, setUsers] = useState([]);
@@ -77,9 +77,12 @@ const UsersList = () => {
       const usersUrl = selectedStoreId 
         ? `${API_BASE_URL}/api/users?storeId=${selectedStoreId}`
         : `${API_BASE_URL}/api/users`;
+      const rolesUrl = selectedStoreId 
+        ? `${API_BASE_URL}/api/roles?storeId=${selectedStoreId}`
+        : `${API_BASE_URL}/api/roles`;
       const [usersRes, rolesRes] = await Promise.all([
         axios.get(usersUrl, { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get(`${API_BASE_URL}/api/roles`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(rolesUrl, { headers: { Authorization: `Bearer ${token}` } })
       ]);
       const staffRoles = (rolesRes.data.data || []).filter(
         r => r.name !== 'STORE_ADMIN' && r.name !== 'SUPER_ADMIN'
@@ -126,7 +129,9 @@ const UsersList = () => {
       setIsSavingMember(true);
       const payload = { ...userForm };
       
-      const effectiveStoreId = selectedStoreId || userForm.storeId || userStoreId;
+      const effectiveStoreId = isSuperAdmin
+        ? (userForm.storeId || selectedStoreId)
+        : (userStoreId || userForm.storeId);
       if (!editingUserId && effectiveStoreId) {
         payload.storeId = effectiveStoreId;
       }
@@ -167,9 +172,13 @@ const UsersList = () => {
     }
     try {
       setIsSavingQuickRole(true);
+      const roleStoreId = isSuperAdmin
+        ? (userForm.storeId || selectedStoreId)
+        : (userStoreId || undefined);
       const res = await axios.post(`${API_BASE_URL}/api/roles`, {
         name: quickRoleName.trim(),
-        permissions: quickRolePermissions
+        permissions: quickRolePermissions,
+        storeId: roleStoreId || undefined
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });

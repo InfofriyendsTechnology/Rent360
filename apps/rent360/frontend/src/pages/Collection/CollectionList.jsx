@@ -48,10 +48,10 @@ const CollectionList = () => {
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
 
   // Stores (for Super Admin selector)
-  const userStoreId = user?.store?.id || user?.storeId || '';
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(() => {
-    return userStoreId || '';
+    return isSuperAdmin ? '' : userStoreId;
   });
 
   // Main Data
@@ -392,6 +392,7 @@ const CollectionList = () => {
           <DataTable
             columns={[
               { label: 'Design / Code' },
+              ...(isSuperAdmin ? [{ label: 'Store' }] : []),
               { label: 'Category' },
               { label: 'Rent Rate' },
               { label: 'Security Deposit' },
@@ -433,6 +434,24 @@ const CollectionList = () => {
                       </div>
                     </div>
                   </td>
+                  {isSuperAdmin && (
+                    <td>
+                      <span
+                        style={{
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          background: 'var(--bg-tertiary, #f1f5f9)',
+                          color: 'var(--primary, #6366f1)',
+                          border: '1px solid var(--border-color, #e2e8f0)',
+                          display: 'inline-block'
+                        }}
+                      >
+                        {prod.store?.name || 'Store'}
+                      </span>
+                    </td>
+                  )}
                   <td>
                     <span
                       className="category-pill-tag clickable"
@@ -534,6 +553,11 @@ const CollectionList = () => {
                   {/* Overlays */}
                   <div className="media-overlay-top">
                     <span className="code-badge">{prod.product_code}</span>
+                    {isSuperAdmin && prod.store?.name && (
+                      <span className="code-badge" style={{ background: 'rgba(99, 102, 241, 0.85)', color: '#fff' }}>
+                        {prod.store.name}
+                      </span>
+                    )}
                     {images.length > 1 && (
                       <span className="photo-count-badge">
                         <FiImage /> {images.length} Photos
@@ -652,6 +676,8 @@ const CollectionList = () => {
         onProductSaved={fetchData}
         token={token}
         storeId={selectedStoreId}
+        stores={stores}
+        isSuperAdmin={isSuperAdmin}
       />
 
       <StockModal

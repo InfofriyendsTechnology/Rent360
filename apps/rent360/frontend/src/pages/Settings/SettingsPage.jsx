@@ -18,7 +18,7 @@ const SettingsPage = () => {
   const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
-  const userStoreId = user?.store?.id || user?.storeId || '';
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
 
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(userStoreId);

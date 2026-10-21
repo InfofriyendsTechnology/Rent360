@@ -16,17 +16,33 @@ const ProductModal = ({
   onCategoryCreated,
   onProductSaved,
   token,
-  storeId
+  storeId,
+  stores = [],
+  isSuperAdmin = false
 }) => {
   const isEditing = Boolean(product?.id);
   const [localCategories, setLocalCategories] = useState(categories);
   const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
+  const [productStoreId, setProductStoreId] = useState(storeId || '');
 
   useEffect(() => {
-    if (categories && categories.length > 0) {
+    setProductStoreId(storeId || '');
+  }, [storeId, isOpen]);
+
+  useEffect(() => {
+    if (isSuperAdmin && token && productStoreId) {
+      axios
+        .get(`${API_BASE_URL}/api/categories?storeId=${productStoreId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        .then((res) => {
+          setLocalCategories(res.data.data || []);
+        })
+        .catch(() => {});
+    } else if (!isSuperAdmin && categories && categories.length > 0) {
       setLocalCategories(categories);
     }
-  }, [categories]);
+  }, [productStoreId, isSuperAdmin, token, categories]);
 
   const handleCategoryCreated = (newCat) => {
     if (!newCat?.id) return;
@@ -151,6 +167,9 @@ const ProductModal = ({
 
   const validate = () => {
     const errs = {};
+    if (isSuperAdmin && !isEditing && !productStoreId) {
+      errs.storeId = 'Please select a store';
+    }
     if (!formData.categoryId) errs.categoryId = 'Please select a category';
     if (!formData.name.trim()) errs.name = 'Design name is required';
     if (!formData.product_code.trim()) errs.product_code = 'Product code is required';
@@ -185,8 +204,9 @@ const ProductModal = ({
         });
         toast.success('Design updated successfully');
       } else {
+        const effectiveStoreId = isSuperAdmin ? productStoreId : (storeId || undefined);
         const payload = {
-          storeId: storeId || undefined,
+          storeId: effectiveStoreId || undefined,
           categoryId: formData.categoryId,
           name: formData.name.trim(),
           product_code: formData.product_code.trim().toUpperCase(),
@@ -226,6 +246,33 @@ const ProductModal = ({
 
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="modal-body">
+            {/* Store Selector for Super Admin */}
+            {isSuperAdmin && !isEditing && (
+              <div className="form-field" style={{ marginBottom: '16px' }}>
+                <label>Assign to Store *</label>
+                <Select
+                  value={productStoreId}
+                  placeholder="-- Select Store --"
+                  onChange={(e) => {
+                    const newStoreId = e.target.value;
+                    setProductStoreId(newStoreId);
+                    setFormData((prev) => ({ ...prev, categoryId: '' }));
+                    if (formErrors.storeId) {
+                      setFormErrors((prev) => ({ ...prev, storeId: '' }));
+                    }
+                  }}
+                >
+                  <option value="">-- Select Store --</option>
+                  {stores.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </Select>
+                {formErrors.storeId && <span className="field-error">{formErrors.storeId}</span>}
+              </div>
+            )}
+
             {/* Row 1: Category & Design Code */}
             <div className="form-row-2">
               <div className="form-field">
@@ -402,7 +449,7 @@ const ProductModal = ({
       <QuickCategoryModal
         isOpen={isAddCategoryOpen}
         onClose={() => setIsAddCategoryOpen(false)}
-        storeId={storeId}
+        storeId={isSuperAdmin ? productStoreId : (storeId || '')}
         onSuccess={handleCategoryCreated}
       />
     </div>

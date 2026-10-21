@@ -65,12 +65,12 @@ const App = () => {
             <>
               <Route path="collection" element={<CollectionList />} />
               <Route path="inventory" element={<Navigate to="/collection" replace />} />
-              <Route path="customers" element={<CustomersList />} />
               <Route path="roles" element={<RolesList />} />
             </>
           )}
 
           {/* Master & Setup Routes (Available to Admin/Authorized) */}
+          <Route path="customers" element={<CustomersList />} />
           <Route path="users" element={<UsersList />} />
           <Route path="staff" element={<UsersList />} />
           <Route path="categories" element={<CategoriesList />} />

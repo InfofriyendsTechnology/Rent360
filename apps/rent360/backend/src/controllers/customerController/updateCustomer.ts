@@ -4,8 +4,13 @@ import responseHandler from "../../utils/responseHandler";
 
 export const updateCustomer = async (req: Request, res: Response) => {
   try {
+    const user = (req as any).user;
+    const where: any = { id: req.params.id };
+    if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
+      where.storeId = user.storeId;
+    }
     const data = await (prisma as any).customer.updateMany({
-      where: { id: req.params.id, storeId: (req as any).user.storeId },
+      where,
       data: req.body,
     });
     return responseHandler.success(res, "Updated successfully", data);

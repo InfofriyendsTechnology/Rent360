@@ -23,11 +23,12 @@ export const createProduct = async (req: AuthRequest, res: Response) => {
     // 1. Determine Store ID
     if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
       storeId = user.storeId;
-    } else if (!storeId && user?.storeId) {
-      storeId = user.storeId;
     }
 
     if (!storeId) {
+      if (user?.role === "SUPER_ADMIN") {
+        return responseHandler.badRequest(res, "Please select a store to assign this design.");
+      }
       const firstStore = await prisma.store.findFirst();
       if (!firstStore) {
         return responseHandler.badRequest(res, "No store available to attach product");

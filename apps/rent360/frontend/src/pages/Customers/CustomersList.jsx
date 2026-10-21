@@ -11,12 +11,12 @@ import { API_BASE_URL } from '../../config/api';
 const CustomersList = () => {
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
-  const userStoreId = user?.store?.id || user?.storeId || '';
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
 
   // Stores for super admin
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(() => {
-    return userStoreId || '';
+    return isSuperAdmin ? '' : (userStoreId || '');
   });
   
   const [customers, setCustomers] = useState([]);
@@ -142,7 +142,9 @@ const CustomersList = () => {
         toast.success('Customer updated successfully');
       } else {
         const payload = { ...customerForm };
-        const effectiveStoreId = selectedStoreId || customerForm.storeId || userStoreId;
+        const effectiveStoreId = isSuperAdmin
+          ? (customerForm.storeId || selectedStoreId)
+          : (userStoreId || customerForm.storeId);
         if (effectiveStoreId) {
           payload.storeId = effectiveStoreId;
         }

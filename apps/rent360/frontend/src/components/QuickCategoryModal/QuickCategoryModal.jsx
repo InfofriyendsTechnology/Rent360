@@ -15,7 +15,27 @@ export const QuickCategoryModal = ({
 }) => {
   const { token: reduxToken, user } = useSelector((state) => state.auth);
   const token = reduxToken || localStorage.getItem('token');
-  const activeStoreId = storeId || user?.storeId || localStorage.getItem('rent360_active_store_id');
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
+  
+  const [stores, setStores] = useState([]);
+  const [customStoreId, setCustomStoreId] = useState(storeId || '');
+
+  useEffect(() => {
+    setCustomStoreId(storeId || '');
+  }, [storeId, isOpen]);
+
+  useEffect(() => {
+    if (isSuperAdmin && !storeId && isOpen && token) {
+      axios
+        .get(`${API_BASE_URL}/api/stores`, { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => {
+          setStores(res.data.data || []);
+        })
+        .catch(() => {});
+    }
+  }, [isSuperAdmin, storeId, isOpen, token]);
+
+  const activeStoreId = storeId || customStoreId || (!isSuperAdmin ? user?.storeId : '') || '';
 
   const [formData, setFormData] = useState({
     name: '',
@@ -53,6 +73,9 @@ export const QuickCategoryModal = ({
 
   const validate = () => {
     const errs = {};
+    if (isSuperAdmin && !activeStoreId) {
+      errs.storeId = 'Please select a store';
+    }
     if (!formData.name.trim()) errs.name = 'Category name is required';
     if (!formData.category_code.trim()) errs.category_code = 'Category code is required';
     setFormErrors(errs);
@@ -121,6 +144,39 @@ export const QuickCategoryModal = ({
 
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="quick-modal-body">
+            {isSuperAdmin && !storeId && (
+              <div className="quick-form-group">
+                <label>Store *</label>
+                <select
+                  value={customStoreId}
+                  onChange={(e) => {
+                    setCustomStoreId(e.target.value);
+                    if (formErrors.storeId) {
+                      setFormErrors((prev) => ({ ...prev, storeId: '' }));
+                    }
+                  }}
+                  style={{
+                    width: '100%',
+                    backgroundColor: 'var(--bg-card-alt)',
+                    border: '1px solid var(--border-main)',
+                    borderRadius: '9px',
+                    padding: '9px 12px',
+                    fontSize: '0.88rem',
+                    color: 'var(--text-main)',
+                    outline: 'none'
+                  }}
+                >
+                  <option value="">-- Select Store --</option>
+                  {stores.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+                {formErrors.storeId && <span className="field-error">{formErrors.storeId}</span>}
+              </div>
+            )}
+
             <div className="quick-form-group">
               <label>Category Name *</label>
               <input

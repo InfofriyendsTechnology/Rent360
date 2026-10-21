@@ -5,7 +5,7 @@ import responseHandler from "../../utils/responseHandler";
 export const getAllCustomers = async (req: Request | any, res: Response) => {
   try {
     const user = req.user;
-    let storeId = (req.query.storeId as string) || user?.storeId;
+    let storeId: string | undefined = req.query.storeId as string;
     if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
       storeId = user.storeId;
     }

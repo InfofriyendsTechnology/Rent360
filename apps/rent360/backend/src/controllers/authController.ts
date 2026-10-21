@@ -128,7 +128,6 @@ export const login = async (req: Request, res: Response) => {
       );
     }
 
-
     // Verify Password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -141,7 +140,7 @@ export const login = async (req: Request, res: Response) => {
     // Check Status
     if (
       user.status !== "ACTIVE" ||
-      user.store.subscription_status !== "ACTIVE"
+      user.store?.subscription_status !== "ACTIVE"
     ) {
       return responseHandler.forbidden(res, MESSAGES.AUTH.INACTIVE_ACCOUNT);
     }
@@ -167,13 +166,14 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    // Generate Token
+    const isSuperAdmin = user.role?.name === "SUPER_ADMIN";
+
+    // Generate Token (Super Admin has no store locking)
     const token = jwt.sign(
-      { id: user.id, storeId: user.storeId, role: user.role?.name },
+      { id: user.id, storeId: isSuperAdmin ? null : user.storeId, role: user.role?.name },
       process.env.JWT_SECRET || "Rent360SuperSecretKey2026",
       { expiresIn: "7d" },
     );
-
 
     return responseHandler.success(res, MESSAGES.AUTH.LOGIN_SUCCESS, {
       token,
@@ -183,9 +183,9 @@ export const login = async (req: Request, res: Response) => {
         role: user.role?.name,
         permissions: (user.role?.permissions as unknown as string[]) || [],
         profile_pic: user.profile_pic,
-        store: {
-          id: user.store.id,
-          name: user.store.name,
+        store: isSuperAdmin ? null : {
+          id: user.store?.id,
+          name: user.store?.name,
         },
       },
     });

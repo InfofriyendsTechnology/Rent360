@@ -17,12 +17,12 @@ export const createCategory = async (req: AuthRequest, res: Response) => {
     // Assign storeId
     if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
       storeId = user.storeId;
-    } else if (!storeId && user?.storeId) {
-      storeId = user.storeId;
     }
 
     if (!storeId) {
-      // If still no storeId (e.g. super admin creating without storeId), fallback to first active store
+      if (user?.role === "SUPER_ADMIN") {
+        return responseHandler.badRequest(res, "Please select a store to assign this category.");
+      }
       const firstStore = await prisma.store.findFirst();
       if (!firstStore) {
         return responseHandler.badRequest(res, "No store available to attach category");

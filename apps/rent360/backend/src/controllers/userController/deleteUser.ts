@@ -13,15 +13,22 @@ cloudinary.config({
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id as string;
-    const currentUserId = (req as any).user?.id;
-    const storeId = (req as any).user?.storeId;
+    const reqUser = (req as any).user;
+    const currentUserId = reqUser?.id;
+    const storeId = reqUser?.storeId;
+    const isSuperAdmin = reqUser?.role === "SUPER_ADMIN";
 
     if (userId === currentUserId) {
       return responseHandler.badRequest(res, "You cannot delete your own account");
     }
 
+    const whereClause: any = { id: userId };
+    if (!isSuperAdmin && storeId) {
+      whereClause.storeId = storeId;
+    }
+
     const existing: any = await prisma.user.findFirst({ 
-      where: { id: userId, storeId },
+      where: whereClause,
       include: { role: true } 
     });
     
@@ -51,7 +58,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     }
 
     await prisma.user.delete({ where: { id: userId } });
-    return responseHandler.success(res, "Deleted successfully");
+    return responseHandler.success(res, "User deleted successfully");
   } catch (error) {
     return responseHandler.internalServerError(res, error);
   }
