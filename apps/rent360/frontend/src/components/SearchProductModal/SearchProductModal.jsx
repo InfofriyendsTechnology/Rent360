@@ -119,8 +119,7 @@ export const SearchProductModal = ({ isOpen, onClose }) => {
               <button 
                 type="button" 
                 className="cam-btn" 
-                title="Scan Barcode / Camera"
-                onClick={() => toast('Barcode scanner trigger')}
+                title="Scan Barcode"
               >
                 <FiCamera />
               </button>

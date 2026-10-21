@@ -55,19 +55,12 @@ const Header = ({ onToggleSidebar }) => {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
-    window.dispatchEvent(new Event('rent360_refresh_data'));
-    setTimeout(() => {
-      setIsRefreshing(false);
-      toast.success('Data refreshed');
-    }, 600);
+    window.location.reload();
   };
 
   const handleCartClick = () => {
     if (!isSuperAdmin) {
       navigate('/collection');
-      toast('Active rental booking items (0)');
-    } else {
-      toast('Platform super admin has no active rental cart');
     }
   };
 
