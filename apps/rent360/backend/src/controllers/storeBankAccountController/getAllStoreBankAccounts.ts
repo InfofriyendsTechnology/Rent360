@@ -1,25 +1,55 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import prisma from "../../utils/prisma";
 import responseHandler from "../../utils/responseHandler";
+import { AuthRequest } from "../../middleware/auth";
 
-export const getAllStoreBankAccounts = async (req: Request, res: Response) => {
+export const getAllStoreBankAccounts = async (req: AuthRequest, res: Response) => {
   try {
-    const { storeId, search } = req.query;
-    const where: any = {};
-    if (storeId) where.storeId = storeId as string;
+    const user = req.user;
+    let storeId = req.query.storeId as string;
+    const { search } = req.query;
+
+    if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
+      storeId = user.storeId;
+    }
+
+    const whereClause: any = {};
+    if (storeId) {
+      whereClause.storeId = storeId;
+    }
+
     if (search && typeof search === "string" && search.trim() !== "") {
-      where.OR = [
+      whereClause.OR = [
         { account_name: { contains: search.trim(), mode: "insensitive" } },
         { account_number: { contains: search.trim(), mode: "insensitive" } },
       ];
     }
 
-    const data = await (prisma as any).storeBankAccount.findMany({
-      where,
+    let accounts = await prisma.storeBankAccount.findMany({
+      where: whereClause,
       orderBy: { account_name: "asc" },
     });
-    return responseHandler.success(res, "Fetched successfully", data);
+
+    // Auto-seed default Cash Drawer if empty for this store
+    if (accounts.length === 0 && storeId && !search) {
+      await prisma.storeBankAccount.create({
+        data: {
+          storeId,
+          account_name: "Cash Drawer",
+          account_number: "MAIN-DRAWER",
+          ifsc_code: "",
+        },
+      });
+
+      accounts = await prisma.storeBankAccount.findMany({
+        where: whereClause,
+        orderBy: { account_name: "asc" },
+      });
+    }
+
+    return responseHandler.success(res, "Store bank accounts fetched successfully", accounts);
   } catch (error) {
+    console.error("Error fetching bank accounts:", error);
     return responseHandler.internalServerError(res, error);
   }
 };

@@ -16,7 +16,12 @@ import Profile from './pages/Profile/Profile';
 import CollectionList from './pages/Collection/CollectionList';
 import CategoriesList from './pages/Categories/CategoriesList';
 import SettingsPage from './pages/Settings/SettingsPage';
+<<<<<<< HEAD
+import Cashbook from './pages/Cashbook/Cashbook';
+
+=======
 import MasterPage from './pages/Master/MasterPage';
+>>>>>>> c62291f55a1667855d881afe6f1a32663a2b844a
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -77,6 +82,10 @@ const App = () => {
               <Route path="security-accounts" element={<MasterPage defaultTab="security-accounts" />} />
             </>
           )}
+
+          {/* Shared Routes */}
+          <Route path="cashbook" element={<Cashbook />} />
+          <Route path="transactions" element={<Navigate to="/cashbook" replace />} />
 
           {/* Shared Settings & Profile */}
           <Route path="settings" element={<SettingsPage />} />

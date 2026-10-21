@@ -73,12 +73,11 @@ export const login = async (req: Request, res: Response) => {
       );
     }
 
-    // 1. Find User by mobile, username, or name
+    // 1. Find User by mobile or name
     let user: any = await prisma.user.findFirst({
       where: {
         OR: [
           { mobile: loginId },
-          { username: { equals: loginId, mode: "insensitive" } },
           { name: { equals: loginId, mode: "insensitive" } },
         ],
       },

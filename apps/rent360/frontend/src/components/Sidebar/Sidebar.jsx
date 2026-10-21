@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { 
+<<<<<<< HEAD
+  FiHome, FiBox, FiUsers, FiSettings, FiLogOut, FiTrash2, 
+  FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive, FiCornerUpLeft, FiX, FiTag, FiDollarSign
+=======
   FiHome, FiBox, FiUsers, FiSettings, FiLogOut, 
   FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiHardDrive, 
   FiCornerUpLeft, FiX, FiSliders, FiDatabase, FiChevronDown, FiChevronRight,
   FiMaximize2, FiDroplet, FiClock, FiBookOpen
+>>>>>>> c62291f55a1667855d881afe6f1a32663a2b844a
 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, loginSuccess } from '../../store/authSlice';
@@ -147,6 +152,14 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <span className="text">Stores</span>
                   </NavLink>
                   <NavLink 
+                    to="/cashbook" 
+                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                    onClick={onClose}
+                  >
+                    <span className="icon"><FiDollarSign /></span>
+                    <span className="text">Cashbook</span>
+                  </NavLink>
+                  <NavLink 
                     to="/plans" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
                     onClick={onClose}
@@ -180,6 +193,14 @@ const Sidebar = ({ isOpen, onClose }) => {
                   >
                     <span className="icon"><FiBox /></span>
                     <span className="text">Collection</span>
+                  </NavLink>
+                  <NavLink 
+                    to="/cashbook" 
+                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
+                    onClick={onClose}
+                  >
+                    <span className="icon"><FiDollarSign /></span>
+                    <span className="text">Cashbook</span>
                   </NavLink>
                   <NavLink 
                     to="/customers" 
