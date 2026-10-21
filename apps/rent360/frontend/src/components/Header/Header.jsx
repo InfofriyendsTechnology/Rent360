@@ -7,7 +7,6 @@ import './Header.scss';
 const Header = ({ onToggleSidebar }) => {
   const { user } = useSelector((state) => state.auth);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-  const [activePeriod, setActivePeriod] = useState('Quarter');
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -59,19 +58,6 @@ const Header = ({ onToggleSidebar }) => {
 
       {/* Right: Controls & Actions matching Bond CRM */}
       <div className="header-actions">
-        {/* Period Selector Tabs */}
-        <div className="period-segmented">
-          {['Month', 'Quarter', 'Year'].map((period) => (
-            <button
-              key={period}
-              className={`period-btn ${activePeriod === period ? 'active' : ''}`}
-              onClick={() => setActivePeriod(period)}
-            >
-              {period}
-            </button>
-          ))}
-        </div>
-
         {/* Alerts Pill */}
         <div className="alerts-pill-btn">
           <FiBell className="bell-icon" />
