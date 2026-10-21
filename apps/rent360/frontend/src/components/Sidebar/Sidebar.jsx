@@ -147,14 +147,6 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <span className="text">Stores</span>
                   </NavLink>
                   <NavLink 
-                    to="/collection" 
-                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
-                    onClick={onClose}
-                  >
-                    <span className="icon"><FiLayers /></span>
-                    <span className="text">Collection</span>
-                  </NavLink>
-                  <NavLink 
                     to="/plans" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
                     onClick={onClose}
