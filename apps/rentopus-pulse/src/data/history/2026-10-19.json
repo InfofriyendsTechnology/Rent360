@@ -1,10 +1,11 @@
 {
   "date": "19-10-2026",
   "dayNumber": 25,
-  "title": "Unified Table System, Luxury Checkbox, Common Dropdown & Sidebar UX Overhaul",
-  "titleGu": "યુનિફાઇડ ટેબલ સિસ્ટમ, લક્ઝરી ચેકબોક્સ, કોમન ડ્રોપડાઉન અને સાઇડબાર UX ઓવરહોલ",
+  "title": "Unified Table System, Luxury Checkbox, Common Dropdown, Sidebar UX & Cashbook Engine",
+  "titleGu": "યુનિફાઇડ ટેબલ સિસ્ટમ, લક્ઝરી ચેકબોક્સ, કોમન ડ્રોપડાઉન, સાઇડબાર UX અને કેશબુક એન્જિન",
   "members": [
-    "001"
+    "001",
+    "002"
   ],
   "tasksEn": [
     {
@@ -34,6 +35,14 @@
     {
       "member": "001",
       "text": "Implemented inline Quick Category creation: added 'Add New Category' option inside the category selection dropdown with an instant portal modal and auto-selection upon creation, avoiding navigation to the Categories page."
+    },
+    {
+      "member": "002",
+      "text": "Engineered backend transaction routes and controllers for the Cashbook system: implemented secure transaction recording, categorized date-range retrieval, and updates."
+    },
+    {
+      "member": "002",
+      "text": "Constructed foundational frontend Cashbook interface: created daily cash and bank balance summary ribbons, date range presets, and transaction audit table."
     }
   ],
   "tasksGu": [
@@ -64,6 +73,14 @@
     {
       "member": "001",
       "text": "ઇનલાઇન Quick Category ક્રિએશન સુવિધા ઉમેરી: કેટેગરી સિલેક્ટ ડ્રોપડાઉનમાં '+ Add New Category' ઓપ્શન ઉમેર્યો, જેથી પેજ છોડ્યા વિના સીધી નવી કેટેગરી બનાવીને ઓટો-સિલેક્ટ કરી શકાય."
+    },
+    {
+      "member": "002",
+      "text": "કેશબુક સિસ્ટમ માટે બેકએન્ડ ટ્રાન્ઝેક્શન રૂટ્સ અને કંટ્રોલર્સ તૈયાર કર્યા: સુરક્ષિત ટ્રાન્ઝેક્શન રેકોર્ડિંગ, કેટેગરી-વાઇઝ ડેટ-રેન્જ રિટ્રિવલ અને અપડેટ્સ લાગુ કર્યા."
+    },
+    {
+      "member": "002",
+      "text": "ફ્રન્ટએન્ડ કેશબુક ઇન્ટરફેસનું પાયાનું માળખું તૈયાર કર્યું: દૈનિક કેશ અને બેંક બેલેન્સ સમરી રિબન્સ, ડેટ રેન્જ પ્રિસેટ્સ અને ટ્રાન્ઝેક્શન ઓડિટ ટેબલ બનાવ્યા."
     }
   ],
   "deliverables": [
@@ -73,6 +90,8 @@
     "Streamlined Sidebar Footer With Integrated Return to Super Admin Icon",
     "Ultra-Thin 2.5px Flush-Right Hover-Reveal Scrollbar Without Arrows",
     "Theme-Compliant Table Rows-Per-Page Select Dropdown",
-    "Inline Quick Category Creation Modal & Select Action Footer Integration"
+    "Inline Quick Category Creation Modal & Select Action Footer Integration",
+    "Cashbook Backend Transaction Controller & API Endpoints",
+    "Daily Cashbook UI Foundation & Balance Summary Ribbon"
   ]
 }

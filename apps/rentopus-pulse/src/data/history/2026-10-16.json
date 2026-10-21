@@ -4,7 +4,8 @@
   "title": "Store Setup Modules, Simplified Garment Colors & Compact Data Tables",
   "titleGu": "સ્ટોર સેટઅપ મોડ્યુલ્સ, સરળ ગારમેન્ટ કલર્સ અને કોમ્પેક્ટ ડેટા ટેબલ્સ",
   "members": [
-    "001"
+    "001",
+    "002"
   ],
   "tasksEn": [
     {
@@ -22,6 +23,10 @@
     {
       "member": "001",
       "text": "Implemented unified Create and Edit modals across all store setup entities with clean input fields and intuitive action controls."
+    },
+    {
+      "member": "002",
+      "text": "Initiated research and architecture for the Daily Cashbook module: mapped cash drawer balances, store bank accounts, payment modes, and core credit/debit transaction requirements."
     }
   ],
   "tasksGu": [
@@ -40,12 +45,17 @@
     {
       "member": "001",
       "text": "તમામ સ્ટોર સેટઅપ આઇટમ્સ માટે સ્વચ્છ ઇનપુટ્સ અને સરળ એક્શન કંટ્રોલ્સ સાથે યુનિફાઇડ ક્રિએટ/એડિટ મોડલ્સ સેટ કર્યા."
+    },
+    {
+      "member": "002",
+      "text": "દૈનિક કેશબુક મોડ્યુલ માટે રિસર્ચ અને આર્કિટેક્ચર શરૂ કર્યું: કેશ ડ્રોઅર બેલેન્સ, સ્ટોર બેંક એકાઉન્ટ્સ, પેમેન્ટ મોડ્સ અને ક્રેડિટ/ડેબિટ ટ્રાન્ઝેક્શન જરૂરિયાતોનું મેપિંગ કર્યું."
     }
   ],
   "deliverables": [
     "Dedicated Store Setup Modules (Categories, Sizes, Colors, Slots, Accounts, Users)",
     "Retail-Focused Simplified Garment Color System",
     "Compact High-Density Data Table Layout",
-    "Unified Create & Edit Modal Workflows"
+    "Unified Create & Edit Modal Workflows",
+    "Daily Cashbook Architecture & Transaction Flow Specifications"
   ]
 }
