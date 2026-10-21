@@ -1,69 +1,37 @@
 {
   "date": "20-10-2026",
   "dayNumber": 26,
-  "title": "Super Admin Multi-Tenant Isolation, Store Setup Decoupling & All-Stores View",
-  "titleGu": "સુપર એડમિન મલ્ટી-ટેનન્ટ આઇસોલેશન, સ્ટોર સેટઅપ ડીકપલિંગ અને ઓલ-સ્ટોર્સ ગ્લોબલ વ્યુ",
+  "title": "Super Admin Multi-Tenant Isolation & Store Setup Decoupling",
+  "titleGu": "સુપર એડમિન મલ્ટી-ટેનન્ટ આઇસોલેશન અને સ્ટોર સેટઅપ ડીકપલિંગ",
   "members": [
     "001"
   ],
   "tasksEn": [
     {
       "member": "001",
-      "text": "Resolved critical multi-tenant data leakage where Super Admin was forcibly defaulted to the first store in the database (Virasar Studio) and cached in localStorage."
+      "text": "Fixed Super Admin default store bug: replaced forced 'Virasar Studio' selection with 'All Stores' default view and filter across all listing pages."
     },
     {
       "member": "001",
-      "text": "Refactored UsersList, CollectionList, CategoriesList, CustomersList, and MasterPage to default selectedStoreId to an empty string ('All Stores') for Super Admin, supporting cross-store inspection."
+      "text": "Decoupled Store Setup from Super Admin sidebar navigation and replaced store settings with Platform Admin Profile & management view."
     },
     {
       "member": "001",
-      "text": "Added 'All Stores' option to top-bar store selector pills across all listing modules, ensuring seamless filtering across individual stores or the entire platform."
-    },
-    {
-      "member": "001",
-      "text": "Decoupled Store Setup from Super Admin navigation: hid the entire Store Setup accordion in Sidebar for Super Admin since tenant configuration belongs strictly to individual store owners."
-    },
-    {
-      "member": "001",
-      "text": "Overhauled SettingsPage for Super Admin: replaced store information form with dedicated Platform Administrator Profile and high-level platform management links (/stores, /plans, /subscriptions, /bucket)."
-    },
-    {
-      "member": "001",
-      "text": "Updated backend getAllUsers and getAllCustomers to include associated store details, rendering store badges in tables for clear Super Admin oversight."
-    },
-    {
-      "member": "001",
-      "text": "Integrated store assignment selectors into Add Member, Add Customer, and Master Page modals for Super Admin so newly created records are explicitly mapped to the intended store."
+      "text": "Added Store column to Users and Customers tables and integrated store assignment selectors in creation modals for Super Admin."
     }
   ],
   "tasksGu": [
     {
       "member": "001",
-      "text": "સુપર એડમિન લોગિન સમયે ડેટાબેઝના પહેલા સ્ટોર (વિરાસર સ્ટુડિયો) સાથે ફોર્સફુલી બાઇન્ડ થઈને ડેટા લીક થતો હતો તે ગંભીર મલ્ટી-ટેનન્ટ બગ સંપૂર્ણપણે ફિક્સ કર્યો."
+      "text": "સુપર એડમિનમાં બાય-ડિફોલ્ટ 'વિરાસર સ્ટુડિયો' સિલેક્ટ થઈ જતો બગ ફિક્સ કરી તમામ પેજીસ પર 'All Stores' ડિફોલ્ટ વ્યુ અને ફિલ્ટર આપ્યું."
     },
     {
       "member": "001",
-      "text": "UsersList, CollectionList, CategoriesList, CustomersList અને MasterPage માં સુપર એડમિન માટે ડિફોલ્ટ સ્ટોર આઈડી 'ઓલ સ્ટોર્સ' તરીકે સેટ કરી ગ્લોબલ પ્લેટફોર્મ ડેટા વ્યુ સક્ષમ કર્યો."
+      "text": "સુપર એડમિન સાઈડબારમાંથી Store Setup અને સેટિંગ્સમાંથી Store Information હટાવી પ્લેટફોર્મ એડમિન પ્રોફાઇલ વ્યુ સેટ કર્યો."
     },
     {
       "member": "001",
-      "text": "તમામ લિસ્ટિંગ મોડ્યુલ્સના ટોપ-બાર સ્ટોર સિલેક્ટરમાં 'All Stores' વિકલ્પ ઉમેર્યો, જેથી સુપર એડમિન કોઈપણ ચોક્કસ સ્ટોર અથવા સમગ્ર પ્લેટફોર્મના ડેટાને ફિલ્ટર કરી શકે."
-    },
-    {
-      "member": "001",
-      "text": "સુપર એડમિન સાઈડબારમાંથી 'STORE SETUP' સેક્શન હટાવ્યું; ટેનન્ટ સ્ટોર કન્ફિગરેશન માત્ર સ્ટોર એડમિન પૂરતું સીમિત રાખ્યું."
-    },
-    {
-      "member": "001",
-      "text": "SettingsPage ને સુપર એડમિન માટે રી-ડિઝાઇન કર્યું: સ્ટોર ઇન્ફોર્મેશન ફોર્મ દૂર કરી ડેડિકેટેડ પ્લેટફોર્મ એડમિનિસ્ટ્રેટર પ્રોફાઇલ અને મેનેજમેન્ટ લિંક્સ સેટ કરી."
-    },
-    {
-      "member": "001",
-      "text": "બેકએન્ડ getAllUsers અને getAllCustomers માં સ્ટોરનું નામ શામેલ કર્યું, જેથી સુપર એડમિન ટેબલમાં દરેક યુઝર અને ગ્રાહક કયા સ્ટોરના છે તે સ્પષ્ટ જોઈ શકે."
-    },
-    {
-      "member": "001",
-      "text": "સુપર એડમિન જ્યારે નવો સ્ટાફ મેમ્બર, ગ્રાહક કે માસ્ટર આઇટમ બનાવે ત્યારે તેને યોગ્ય સ્ટોર સોંપવા માટે મોડલ્સમાં સ્ટોર સિલેક્શન ડ્રોપડાઉન ઉમેર્યું."
+      "text": "સુપર એડમિન માટે Users અને Customers લિસ્ટમાં Store નું નામ બતાવ્યું અને Add મોડલ્સમાં સ્ટોર સિલેક્ટ કરવાનું ઓપ્શન આપ્યું."
     }
   ]
 }
