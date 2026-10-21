@@ -6,6 +6,7 @@ import {
   updateProduct,
   deleteProduct,
   getProductLimitsSummary,
+  quickLookupProduct,
 } from "../controllers/productController";
 import { authenticate } from "../middleware/auth";
 import validator from "../utils/validators";
@@ -17,6 +18,7 @@ import {
 const router = Router();
 router.use(authenticate);
 router.get("/limits/summary", getProductLimitsSummary);
+router.get("/quick-lookup", quickLookupProduct);
 router.get("/", getAllProducts);
 router.post("/", validator({ body: createProductSchema }), createProduct);
 router.get("/:id", getProductById);

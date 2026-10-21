@@ -76,77 +76,8 @@
     align-items: center;
     gap: 10px;
 
-    /* Period Segmented Control */
-    .period-segmented {
-      display: flex;
-      align-items: center;
-      background-color: transparent;
-      gap: 2px;
-      margin-right: 6px;
-
-      .period-btn {
-        background: transparent;
-        border: none;
-        color: $text-muted;
-        font-size: 0.82rem;
-        font-weight: 500;
-        padding: 7px 14px;
-        border-radius: $border-radius-pill;
-        cursor: pointer;
-        transition: all 0.15s ease;
-
-        &:hover {
-          color: $text-main;
-        }
-
-        &.active {
-          background-color: $bg-pill-dark;
-          color: $text-inverse;
-          font-weight: 600;
-          box-shadow: $shadow-sm;
-        }
-      }
-    }
-
-    /* Alerts Pill Button */
-    .alerts-pill-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      height: 38px;
-      padding: 0 14px;
-      background-color: $bg-card;
-      border: 1px solid $border-main;
-      border-radius: $border-radius-pill;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: $text-main;
-      cursor: pointer;
-      box-shadow: $shadow-sm;
-      transition: all 0.18s ease;
-
-      .bell-icon {
-        font-size: 0.95rem;
-        color: $text-muted;
-      }
-
-      .count-pill {
-        background-color: $accent-light;
-        color: $accent; /* Blue highlight */
-        padding: 1px 7px;
-        border-radius: $border-radius-pill;
-        font-size: 0.72rem;
-        font-weight: 700;
-      }
-
-      &:hover {
-        background-color: $bg-card-alt;
-        border-color: $border-muted;
-      }
-    }
-
-    /* Theme Toggle */
-    .theme-circle-btn {
+    /* Common circular action icons */
+    .header-action-icon {
       width: 38px;
       height: 38px;
       border-radius: 50%;
@@ -157,60 +88,247 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 1.05rem;
       box-shadow: $shadow-sm;
-      transition: all 0.15s ease;
+      position: relative;
+      transition: all 0.18s ease;
 
       &:hover {
         color: $text-main;
         background-color: $bg-card-alt;
-      }
-    }
-
-    /* Create Pill Button (+ Create) */
-    .create-pill-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      height: 38px;
-      padding: 0 18px;
-      background-color: $bg-pill-dark;
-      color: $text-inverse;
-      border: none;
-      border-radius: $border-radius-pill;
-      font-size: 0.84rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: $shadow-pill;
-      transition: all 0.2s ease;
-
-      &:hover {
-        filter: brightness(1.15);
+        border-color: $border-muted;
         transform: translateY(-1px);
       }
 
       &:active {
         transform: translateY(0);
       }
+
+      /* Green Quick Search Button */
+      &.search-btn {
+        color: #16a34a;
+        background-color: rgba(22, 163, 74, 0.08);
+        border-color: rgba(22, 163, 74, 0.25);
+        font-size: 1.15rem;
+
+        &:hover {
+          background-color: rgba(22, 163, 74, 0.16);
+          border-color: rgba(22, 163, 74, 0.4);
+          color: #15803d;
+        }
+      }
+
+      /* Refresh Button with Spin Effect */
+      &.refresh-btn {
+        &.spinning svg {
+          animation: headerSpin 0.6s linear infinite;
+        }
+      }
+
+      /* Rental Cart Button with Red Counter Badge */
+      &.cart-btn {
+        font-size: 1.05rem;
+
+        .cart-badge {
+          position: absolute;
+          top: -3px;
+          right: -3px;
+          min-width: 17px;
+          height: 17px;
+          border-radius: 9px;
+          background-color: #ef4444;
+          color: #ffffff;
+          font-size: 0.65rem;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 4px;
+          border: 2px solid $bg-card;
+          box-shadow: 0 1px 3px rgba(239, 68, 68, 0.4);
+        }
+      }
     }
 
-    /* Avatar Circle */
-    .avatar-circle {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, $accent 0%, #3B82F6 100%);
-      color: #ffffff;
-      font-size: 0.82rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: $shadow-sm;
-      cursor: pointer;
-      flex-shrink: 0;
+    /* Store & User Profile Capsule */
+    .profile-dropdown-container {
+      position: relative;
+
+      .user-profile-capsule {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 38px;
+        padding: 0 12px 0 4px;
+        background-color: $bg-card;
+        border: 1px solid $border-main;
+        border-radius: 24px;
+        cursor: pointer;
+        box-shadow: $shadow-sm;
+        transition: all 0.18s ease;
+
+        &:hover {
+          background-color: $bg-card-alt;
+          border-color: $border-muted;
+        }
+
+        .profile-avatar {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, $accent 0%, #3b82f6 100%);
+          color: #ffffff;
+          font-size: 0.72rem;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          flex-shrink: 0;
+          border: 2px solid #22c55e; // Green active store ring matching competitor screenshot!
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .profile-display-name {
+          font-size: 0.84rem;
+          font-weight: 600;
+          color: $text-main;
+          max-width: 140px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .chevron-icon {
+          font-size: 0.82rem;
+          color: $text-muted;
+          transition: transform 0.2s ease;
+
+          &.rotated {
+            transform: rotate(180deg);
+          }
+        }
+      }
+
+      /* Dropdown Menu */
+      .profile-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        min-width: 230px;
+        background-color: $bg-card;
+        border: 1px solid $border-main;
+        border-radius: 12px;
+        box-shadow: 0 14px 34px -4px rgba(0, 0, 0, 0.18), 0 2px 10px rgba(0, 0, 0, 0.08);
+        z-index: 1000;
+        padding: 8px 0;
+        animation: dropFadeIn 0.15s ease-out;
+
+        .dropdown-header {
+          padding: 8px 16px 10px;
+
+          .dropdown-user-name {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: $text-main;
+          }
+
+          .dropdown-role-pill {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background-color: $accent-light;
+            color: $accent;
+            letter-spacing: 0.02em;
+          }
+
+          .dropdown-store-sub {
+            font-size: 0.78rem;
+            color: $text-muted;
+            margin-top: 4px;
+          }
+        }
+
+        .dropdown-divider {
+          height: 1px;
+          background-color: $border-main;
+          margin: 6px 0;
+        }
+
+        .dropdown-item {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 9px 16px;
+          background: transparent;
+          border: none;
+          font-size: 0.84rem;
+          font-weight: 500;
+          color: $text-main;
+          cursor: pointer;
+          text-align: left;
+          transition: background 0.15s ease;
+
+          .item-icon {
+            font-size: 1rem;
+            color: $text-muted;
+          }
+
+          &:hover {
+            background-color: $bg-card-alt;
+
+            .item-icon {
+              color: $text-main;
+            }
+          }
+
+          &.return-item {
+            color: #2563eb;
+            font-weight: 600;
+
+            .item-icon {
+              color: #2563eb;
+            }
+
+            &:hover {
+              background-color: rgba(37, 99, 235, 0.08);
+            }
+          }
+
+          &.logout-item {
+            color: #ef4444;
+
+            .item-icon {
+              color: #ef4444;
+            }
+
+            &:hover {
+              background-color: rgba(239, 68, 68, 0.08);
+            }
+          }
+        }
+      }
     }
   }
+}
+
+@keyframes headerSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dropFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 1024px) {
@@ -227,10 +345,6 @@
 
     .header-actions {
       gap: 8px;
-
-      .period-segmented {
-        display: none;
-      }
     }
   }
 }
@@ -252,66 +366,24 @@
     .header-actions {
       gap: 6px;
 
-      .return-superadmin-pill {
-        height: 34px;
-        padding: 0 10px;
-        font-size: 0.78rem;
-
-        span {
-          display: none;
-        }
-      }
-
-      .alerts-pill-btn {
-        padding: 0 8px;
-        height: 34px;
-
-        .label {
-          display: none;
-        }
-
-        .count-pill {
-          padding: 1px 5px;
-          font-size: 0.68rem;
-        }
-      }
-
-      .theme-circle-btn {
+      .header-action-icon {
         width: 34px;
         height: 34px;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
       }
 
-      .create-pill-btn {
+      .user-profile-capsule {
         height: 34px;
-        padding: 0 12px;
-        font-size: 0.78rem;
+        padding: 0 8px 0 3px;
 
-        span {
+        .profile-display-name {
           display: none;
         }
-      }
 
-      .avatar-circle {
-        width: 34px;
-        height: 34px;
-        font-size: 0.76rem;
+        .chevron-icon {
+          display: none;
+        }
       }
     }
   }
 }
-
-body.dark {
-  .dashboard-header-capsule .header-actions .return-superadmin-pill {
-    background-color: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
-    border-color: rgba(59, 130, 246, 0.35);
-
-    &:hover {
-      background-color: #2563eb;
-      color: #ffffff;
-      border-color: #2563eb;
-    }
-  }
-}
-
