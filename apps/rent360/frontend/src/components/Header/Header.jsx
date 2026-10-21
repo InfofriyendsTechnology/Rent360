@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiBell, FiSun, FiMoon, FiPlus, FiMenu } from 'react-icons/fi';
+import { FiBell, FiSun, FiMoon, FiMenu } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Header.scss';
@@ -82,12 +82,6 @@ const Header = ({ onToggleSidebar }) => {
         {/* Theme Toggle Button */}
         <button className="theme-circle-btn" onClick={toggleTheme} title="Toggle Theme">
           {theme === 'light' ? <FiMoon /> : <FiSun />}
-        </button>
-
-        {/* Primary Create Button matching Bond CRM "+ Create" */}
-        <button className="create-pill-btn">
-          <FiPlus />
-          <span>Create</span>
         </button>
 
         {/* Circular User Avatar */}

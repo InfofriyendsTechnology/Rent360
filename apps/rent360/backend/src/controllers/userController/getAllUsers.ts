@@ -4,15 +4,32 @@ import responseHandler from "../../utils/responseHandler";
 
 export const getAllUsers = async (req: Request | any, res: Response) => {
   try {
-    const storeId = req.user?.storeId;
+    const user = req.user;
+    let storeId: string | undefined = req.query.storeId as string;
+    if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
+      storeId = user.storeId;
+    }
+
+    const where: any = {
+      role: {
+        name: { notIn: ['STORE_ADMIN', 'SUPER_ADMIN'] }
+      }
+    };
+    if (storeId) {
+      where.storeId = storeId;
+    }
+
     const data = await prisma.user.findMany({
-      where: { 
-        storeId,
-        role: {
-          name: { notIn: ['STORE_ADMIN', 'SUPER_ADMIN'] }
+      where,
+      include: {
+        role: true,
+        store: {
+          select: {
+            id: true,
+            name: true
+          }
         }
       },
-      include: { role: true },
       orderBy: { createdAt: 'desc' }
     });
     // Remove passwords before sending to frontend

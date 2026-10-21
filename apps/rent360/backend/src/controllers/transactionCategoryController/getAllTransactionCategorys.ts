@@ -10,7 +10,7 @@ export const getAllTransactionCategorys = async (
   try {
     const user = req.user;
     let storeId = req.query.storeId as string;
-    const { category_type } = req.query;
+    const { category_type, search } = req.query;
 
     if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
       storeId = user.storeId;
@@ -23,6 +23,9 @@ export const getAllTransactionCategorys = async (
     if (category_type && typeof category_type === "string") {
       whereClause.category_type = category_type.toUpperCase();
     }
+    if (search && typeof search === "string" && search.trim() !== "") {
+      whereClause.name = { contains: search.trim(), mode: "insensitive" };
+    }
 
     let categories = await prisma.transactionCategory.findMany({
       where: whereClause,
@@ -30,7 +33,7 @@ export const getAllTransactionCategorys = async (
     });
 
     // Auto-seed defaults if empty for this store
-    if (categories.length === 0 && storeId && !category_type) {
+    if (categories.length === 0 && storeId && !category_type && !search) {
       const defaultCategories = [
         // Income
         { name: "Rental Income", category_type: "INCOME" },

@@ -44,10 +44,127 @@ input {
   }
 }
 
+select {
+  font-family: $font-family;
+  outline: none;
+  color-scheme: dark light;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2371717A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 15px;
+  padding-right: 38px !important;
+  cursor: pointer;
+
+  option {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    padding: 10px 14px;
+    font-size: 0.88rem;
+  }
+}
+
+.dark select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  
+  option {
+    background-color: #1a1a20;
+    color: #f4f4f6;
+  }
+}
+
+input[type="date"] {
+  color-scheme: dark light;
+  cursor: pointer;
+
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.65;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+/* Custom Minimalist Checkbox (White border and tick in dark, black tick in light) */
+input[type="checkbox"]:not(.pill-slider-input):not(.toggle-input) {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  vertical-align: middle;
+  flex-shrink: 0;
+  border: 1.5px solid #27272a;
+  background-color: transparent;
+  outline: none;
+
+  &:hover {
+    border-color: #000000;
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &:checked {
+    border-color: #18181b;
+    background-color: rgba(0, 0, 0, 0.08);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2318181b' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='20 6 9 17 4 12'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px;
+  }
+}
+
+.dark input[type="checkbox"]:not(.pill-slider-input):not(.toggle-input),
+body.dark input[type="checkbox"]:not(.pill-slider-input):not(.toggle-input) {
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  background-color: rgba(255, 255, 255, 0.04);
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  &:checked {
+    border-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='20 6 9 17 4 12'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px;
+  }
+}
+
+
 /* Modern Minimalist Scrollbar (Clearly visible at bottom and sides) */
 ::-webkit-scrollbar {
   width: 7px;
   height: 9px;
+}
+
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-button:single-button,
+::-webkit-scrollbar-button:vertical:decrement,
+::-webkit-scrollbar-button:vertical:increment,
+::-webkit-scrollbar-button:horizontal:decrement,
+::-webkit-scrollbar-button:horizontal:increment {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent !important;
 }
 
 ::-webkit-scrollbar-track {
@@ -78,13 +195,41 @@ input {
   }
 }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.28) rgba(0, 0, 0, 0.04);
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+  }
+
+  .dark *, body.dark * {
+    scrollbar-color: rgba(255, 255, 255, 0.32) transparent;
+  }
 }
 
-.dark * {
-  scrollbar-color: rgba(255, 255, 255, 0.32) rgba(255, 255, 255, 0.05);
+select {
+  font-family: inherit;
+  color: $text-main;
+  background-color: $bg-card-alt;
+  border: 1px solid $border-main;
+  border-radius: 8px;
+  outline: none;
+
+  option {
+    background-color: $bg-card;
+    color: $text-main;
+  }
+}
+
+.dark select,
+body.dark select {
+  background-color: #1a1a20;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f1f5f9;
+
+  option {
+    background-color: #1a1a20;
+    color: #f1f5f9;
+  }
 }
 
 // Toast styling matching Bond CRM

@@ -1,28 +1,58 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { 
-  FiBox, FiPlus, FiSearch, FiFilter, FiGrid, FiList, 
-  FiEdit2, FiTrash2, FiLayers, FiImage, FiExternalLink, 
-  FiCheckCircle, FiClock, FiAlertTriangle, FiRefreshCw, FiChevronRight 
+  FiBox, FiPlus, FiSearch, FiGrid, FiList, 
+  FiEdit2, FiTrash2, FiImage, FiX, FiChevronDown, FiShoppingBag 
 } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
+import { DataTable, RowActions } from '../../components/ui';
 import ProductModal from './ProductModal';
 import StockModal from './StockModal';
-import CategoryModal from './CategoryModal';
 import ImageGalleryModal from './ImageGalleryModal';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import '../Stores/StoresList.scss';
 import './CollectionList.scss';
+
+// Safe image fallback component to prevent broken image icons and text overlap
+const ProductImageFallback = ({ src, alt, code, className = '', onClick }) => {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+  }, [src]);
+
+  if (!src || hasError) {
+    return (
+      <div className={`product-fallback-box ${className}`} onClick={onClick}>
+        <FiBox className="fallback-icon" />
+        {code && <span className="fallback-code">{code}</span>}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt || code || 'Design'}
+      className={className}
+      onError={() => setHasError(true)}
+      onClick={onClick}
+    />
+  );
+};
 
 const CollectionList = () => {
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
 
   // Stores (for Super Admin selector)
-  const userStoreId = user?.store?.id || user?.storeId || '';
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
   const [stores, setStores] = useState([]);
-  const [selectedStoreId, setSelectedStoreId] = useState(userStoreId);
+  const [selectedStoreId, setSelectedStoreId] = useState(() => {
+    return isSuperAdmin ? '' : userStoreId;
+  });
 
   // Main Data
   const [products, setProducts] = useState([]);
@@ -33,8 +63,12 @@ const CollectionList = () => {
   // Filters & Controls
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ALL');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
+  const [viewMode, setViewMode] = useState(localStorage.getItem('rent360_collection_view') || 'cards');
+
+  const handleToggleViewMode = (mode) => {
+    setViewMode(mode);
+    localStorage.setItem('rent360_collection_view', mode);
+  };
 
   // Modals
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -42,8 +76,6 @@ const CollectionList = () => {
 
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [selectedProductForStock, setSelectedProductForStock] = useState(null);
-
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   const [galleryState, setGalleryState] = useState({
     isOpen: false,
@@ -57,19 +89,12 @@ const CollectionList = () => {
 
   // Fetch stores if Super Admin
   useEffect(() => {
-    if (isSuperAdmin) {
+    if (isSuperAdmin && token) {
       axios
         .get(`${API_BASE_URL}/api/stores`, { headers: { Authorization: `Bearer ${token}` } })
         .then((res) => {
           const list = res.data.data || [];
           setStores(list);
-          if (list.length > 0) {
-            const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
-            if (!hasExisting) {
-              const matched = userStoreId && list.some((s) => s.id === userStoreId);
-              setSelectedStoreId(matched ? userStoreId : list[0].id);
-            }
-          }
         })
         .catch(() => {});
     } else if (userStoreId) {
@@ -80,7 +105,7 @@ const CollectionList = () => {
   // Fetch products, categories, and limits
   useEffect(() => {
     fetchData();
-  }, [selectedStoreId]);
+  }, [selectedStoreId, token]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -131,17 +156,9 @@ const CollectionList = () => {
         }
       }
 
-      // Status filter
-      if (statusFilter !== 'ALL') {
-        const hasItemWithStatus = prod.productItems?.some(
-          (item) => item.status?.toUpperCase() === statusFilter.toUpperCase()
-        );
-        if (!hasItemWithStatus) return false;
-      }
-
       return true;
     });
-  }, [products, selectedCategory, searchQuery, statusFilter]);
+  }, [products, selectedCategory, searchQuery]);
 
   // Handlers
   const handleOpenAddProduct = () => {
@@ -200,57 +217,69 @@ const CollectionList = () => {
   };
 
   return (
-    <div className="collection-page-view">
-      {/* Top Header Bar */}
-      <div className="collection-top-bar">
-        <div className="title-area">
-          <div className="title-row">
-            <h1 className="main-heading">Collection & Inventory</h1>
-            {limits && (
-              <div className="plan-usage-pill">
-                <span className="dot" />
-                <span className="usage-text">
-                  {limits.currentItems} / {limits.maxItems} Items Used
-                </span>
-                <span className="plan-tag">{limits.planName}</span>
-              </div>
-            )}
-          </div>
-          <p className="sub-heading">
+    <div className="stores-view collection-page-view">
+      {/* Top Header Bar matching Bond CRM Header */}
+      <div className="stores-top-bar">
+        <div className="title-section">
+          <h1 className="main-title">Collection & Inventory</h1>
+          <p className="subtitle">
             Manage ethnic apparel designs, rental prices, security deposits, and individual physical size SKUs
           </p>
         </div>
 
-        <div className="top-actions-wrap">
+        <div className="top-actions">
           {/* Super Admin Store Selector */}
           {isSuperAdmin && stores.length > 0 && (
             <div className="store-selector-pill">
+              <FiShoppingBag className="store-pill-icon" />
               <label>Store:</label>
               <select
                 value={selectedStoreId}
-                onChange={(e) => setSelectedStoreId(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedStoreId(val);
+                  if (val) {
+                    localStorage.setItem('rent360_active_store_id', val);
+                  } else {
+                    localStorage.removeItem('rent360_active_store_id');
+                  }
+                }}
               >
+                <option value="">All Stores</option>
                 {stores.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.name}
+                    {s.name || s.store_name}
                   </option>
                 ))}
               </select>
+              <FiChevronDown className="chevron-icon" />
             </div>
           )}
 
-          <button
-            type="button"
-            className="btn-pill-outline"
-            onClick={() => setIsCategoryModalOpen(true)}
-          >
-            <FiLayers />
-            <span>Categories</span>
-          </button>
+
+          {/* View Mode Toggle: Cards vs Table */}
+          <div className="view-mode-toggle" title="Switch layout">
+            <button
+              type="button"
+              className={`view-btn ${viewMode === 'cards' || viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => handleToggleViewMode('cards')}
+            >
+              <FiGrid className="icon" />
+              <span>Cards</span>
+            </button>
+            <button
+              type="button"
+              className={`view-btn ${viewMode === 'table' ? 'active' : ''}`}
+              onClick={() => handleToggleViewMode('table')}
+            >
+              <FiList className="icon" />
+              <span>Table</span>
+            </button>
+          </div>
 
           <button
             type="button"
-            className="btn-pill-primary"
+            className="pill-btn-primary"
             onClick={handleOpenAddProduct}
           >
             <FiPlus className="plus-icon" />
@@ -266,7 +295,8 @@ const CollectionList = () => {
           className={`cat-pill ${selectedCategory === 'ALL' ? 'active' : ''}`}
           onClick={() => setSelectedCategory('ALL')}
         >
-          All Designs ({products.length})
+          <span>All Designs</span>
+          <span className="pill-count">{products.length}</span>
         </button>
         {categories.map((cat) => {
           const count = cat._count?.products || 0;
@@ -284,9 +314,9 @@ const CollectionList = () => {
         })}
       </div>
 
-      {/* Search, Status & View Controls Bar */}
+      {/* Search Toolbar */}
       <div className="collection-controls-bar">
-        <div className="search-field-pill">
+        <div className="search-pill-wrapper">
           <FiSearch className="search-icon" />
           <input
             type="text"
@@ -300,46 +330,9 @@ const CollectionList = () => {
               className="clear-search-btn"
               onClick={() => setSearchQuery('')}
             >
-              &times;
+              <FiX />
             </button>
           )}
-        </div>
-
-        <div className="controls-right-group">
-          <div className="status-filter-wrapper">
-            <FiFilter className="filter-icon" />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="ALL">All Item Statuses</option>
-              <option value="AVAILABLE">Available Now</option>
-              <option value="BOOKED">Booked Units</option>
-              <option value="LAUNDRY">In Laundry</option>
-              <option value="DAMAGED">Damaged / Repair</option>
-            </select>
-          </div>
-
-          <div className="view-mode-toggle">
-            <button
-              type="button"
-              className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-              onClick={() => setViewMode('grid')}
-              title="Grid View"
-              aria-label="Grid View"
-            >
-              <FiGrid />
-            </button>
-            <button
-              type="button"
-              className={`view-btn ${viewMode === 'table' ? 'active' : ''}`}
-              onClick={() => setViewMode('table')}
-              title="Table View"
-              aria-label="Table View"
-            >
-              <FiList />
-            </button>
-          </div>
         </div>
       </div>
 
@@ -364,37 +357,177 @@ const CollectionList = () => {
           </div>
           <h3 className="empty-title">No Designs Found</h3>
           <p className="empty-desc">
-            {searchQuery || selectedCategory !== 'ALL' || statusFilter !== 'ALL'
+            {searchQuery || selectedCategory !== 'ALL'
               ? 'No collection designs match the selected filters. Try clearing your search.'
               : 'Start your rental catalog by registering your first design (e.g. Sherwani, Jodhpuri suit).'}
           </p>
           <div className="empty-actions">
-            {searchQuery || selectedCategory !== 'ALL' || statusFilter !== 'ALL' ? (
+            {searchQuery || selectedCategory !== 'ALL' ? (
               <button
                 type="button"
-                className="btn-pill-secondary"
+                className="pill-filter"
                 onClick={() => {
                   setSelectedCategory('ALL');
                   setSearchQuery('');
-                  setStatusFilter('ALL');
                 }}
+                style={{ cursor: 'pointer' }}
               >
-                Reset All Filters
+                Reset Filters
               </button>
             ) : (
               <button
                 type="button"
-                className="btn-pill-primary"
+                className="pill-btn-primary"
                 onClick={handleOpenAddProduct}
               >
-                <FiPlus />
+                <FiPlus className="plus-icon" />
                 <span>Add First Design</span>
               </button>
             )}
           </div>
         </div>
-      ) : viewMode === 'grid' ? (
-        /* GRID VIEW */
+      ) : viewMode === 'table' ? (
+        /* TABLE VIEW USING COMMON DataTable COMPONENT */
+        <div className="bond-card-container">
+          <DataTable
+            columns={[
+              { label: 'Design / Code' },
+              ...(isSuperAdmin ? [{ label: 'Store' }] : []),
+              { label: 'Category' },
+              { label: 'Rent Rate' },
+              { label: 'Security Deposit' },
+              { label: 'Stock Units' },
+              { label: 'Sizes & Status' },
+              { label: 'Actions', align: 'right' }
+            ]}
+            data={filteredProducts}
+            loading={loading}
+            emptyMessage="No designs found in collection."
+            keyExtractor={(prod) => prod.id}
+            renderRow={(prod) => {
+              const images = Array.isArray(prod.image_urls) ? prod.image_urls : [];
+              const firstImg = images.length > 0 ? images[0] : null;
+              const items = prod.productItems || [];
+              const availableCount = items.filter((it) => it.status === 'AVAILABLE').length;
+
+              return (
+                <>
+                  <td>
+                    <div className="table-product-cell">
+                      <div
+                        className="table-thumb"
+                        onClick={() => images.length > 0 && handleOpenGallery(prod, 0)}
+                        style={{ cursor: images.length > 0 ? 'pointer' : 'default' }}
+                      >
+                        <ProductImageFallback
+                          src={firstImg}
+                          alt={prod.name}
+                          code={prod.product_code}
+                          className="thumb-image"
+                        />
+                      </div>
+                      <div className="table-name-wrap">
+                        <span className="table-product-code">{prod.product_code}</span>
+                        <strong className="table-product-name" title={prod.name}>
+                          {prod.name}
+                        </strong>
+                      </div>
+                    </div>
+                  </td>
+                  {isSuperAdmin && (
+                    <td>
+                      <span
+                        style={{
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          background: 'var(--bg-tertiary, #f1f5f9)',
+                          color: 'var(--primary, #6366f1)',
+                          border: '1px solid var(--border-color, #e2e8f0)',
+                          display: 'inline-block'
+                        }}
+                      >
+                        {prod.store?.name || 'Store'}
+                      </span>
+                    </td>
+                  )}
+                  <td>
+                    <span
+                      className="category-pill-tag clickable"
+                      onClick={() => prod.categoryId && setSelectedCategory(prod.categoryId)}
+                      title={`Filter by ${prod.category?.name || 'Category'}`}
+                    >
+                      {prod.category?.name || 'Standard'}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="table-price">
+                      INR {prod.base_rent_price?.toLocaleString('en-IN')}
+                      <span className="per-day-muted"> / day</span>
+                    </span>
+                  </td>
+                  <td>
+                    <span className="table-price-muted">
+                      INR {prod.base_security_deposit?.toLocaleString('en-IN')}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      className="table-stock-pill-btn"
+                      onClick={() => handleOpenStockModal(prod)}
+                      title="Click to manage stock items"
+                    >
+                      <FiBox className="stock-icon" />
+                      <span className="stock-count">{items.length} Units</span>
+                      <span className="stock-avail">({availableCount} avail)</span>
+                    </button>
+                  </td>
+                  <td>
+                    <div className="table-sizes-list">
+                      {items.slice(0, 4).map((it) => (
+                        <span key={it.id} className={`size-chip-mini ${getItemStatusBadge(it)}`}>
+                          {it.size || 'STD'}
+                        </span>
+                      ))}
+                      {items.length > 4 && (
+                        <span className="size-more-mini">+{items.length - 4}</span>
+                      )}
+                      {items.length === 0 && <span className="muted-text">0 units</span>}
+                    </div>
+                  </td>
+                  <td className="text-right">
+                    <RowActions
+                      actions={[
+                        {
+                          icon: FiBox,
+                          variant: 'default',
+                          title: 'Manage Stock Units',
+                          onClick: () => handleOpenStockModal(prod)
+                        },
+                        {
+                          icon: FiEdit2,
+                          variant: 'edit',
+                          title: 'Edit Design',
+                          onClick: () => handleOpenEditProduct(prod)
+                        },
+                        {
+                          icon: FiTrash2,
+                          variant: 'delete',
+                          title: 'Delete Design',
+                          onClick: () => setProductToDelete(prod)
+                        }
+                      ]}
+                    />
+                  </td>
+                </>
+              );
+            }}
+          />
+        </div>
+      ) : (
+        /* CARD VIEW (GRID) */
         <div className="collection-grid-container">
           {filteredProducts.map((prod) => {
             const images = Array.isArray(prod.image_urls) ? prod.image_urls : [];
@@ -405,23 +538,26 @@ const CollectionList = () => {
             return (
               <div key={prod.id} className="design-product-card">
                 {/* Photo Header */}
-                <div 
+                <div
                   className="card-media-wrap"
                   onClick={() => images.length > 0 && handleOpenGallery(prod, 0)}
                   style={{ cursor: images.length > 0 ? 'pointer' : 'default' }}
                 >
-                  {firstImg ? (
-                    <img src={firstImg} alt={prod.name} className="card-photo" />
-                  ) : (
-                    <div className="card-photo-placeholder">
-                      <FiImage />
-                      <span>No Photos</span>
-                    </div>
-                  )}
+                  <ProductImageFallback
+                    src={firstImg}
+                    alt={prod.name}
+                    code={prod.product_code}
+                    className="card-photo"
+                  />
 
                   {/* Overlays */}
                   <div className="media-overlay-top">
                     <span className="code-badge">{prod.product_code}</span>
+                    {isSuperAdmin && prod.store?.name && (
+                      <span className="code-badge" style={{ background: 'rgba(99, 102, 241, 0.85)', color: '#fff' }}>
+                        {prod.store.name}
+                      </span>
+                    )}
                     {images.length > 1 && (
                       <span className="photo-count-badge">
                         <FiImage /> {images.length} Photos
@@ -503,142 +639,27 @@ const CollectionList = () => {
                   </button>
 
                   <div className="quick-action-btns">
-                    <button
-                      type="button"
-                      className="icon-btn-edit"
-                      onClick={() => handleOpenEditProduct(prod)}
-                      title="Edit Design"
-                    >
-                      <FiEdit2 />
-                    </button>
-                    <button
-                      type="button"
-                      className="icon-btn-delete"
-                      onClick={() => setProductToDelete(prod)}
-                      title="Delete Design"
-                    >
-                      <FiTrash2 />
-                    </button>
+                    <RowActions
+                      actions={[
+                        {
+                          icon: FiEdit2,
+                          variant: 'edit',
+                          title: 'Edit Design',
+                          onClick: () => handleOpenEditProduct(prod)
+                        },
+                        {
+                          icon: FiTrash2,
+                          variant: 'delete',
+                          title: 'Delete Design',
+                          onClick: () => setProductToDelete(prod)
+                        }
+                      ]}
+                    />
                   </div>
                 </div>
               </div>
             );
           })}
-        </div>
-      ) : (
-        /* TABLE VIEW */
-        <div className="collection-table-card">
-          <div className="table-responsive">
-            <table className="collection-main-table">
-              <thead>
-                <tr>
-                  <th>Design / Code</th>
-                  <th>Category</th>
-                  <th>Rent Rate</th>
-                  <th>Security Deposit</th>
-                  <th>Stock Units</th>
-                  <th>Sizes & Availability</th>
-                  <th className="th-actions">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredProducts.map((prod) => {
-                  const images = Array.isArray(prod.image_urls) ? prod.image_urls : [];
-                  const firstImg = images.length > 0 ? images[0] : null;
-                  const items = prod.productItems || [];
-                  const availableCount = items.filter((it) => it.status === 'AVAILABLE').length;
-
-                  return (
-                    <tr key={prod.id}>
-                      <td>
-                        <div className="table-product-cell">
-                          <div
-                            className="table-thumb"
-                            onClick={() => images.length > 0 && handleOpenGallery(prod, 0)}
-                          >
-                            {firstImg ? (
-                              <img src={firstImg} alt={prod.name} />
-                            ) : (
-                              <div className="thumb-none">
-                                <FiBox />
-                              </div>
-                            )}
-                          </div>
-                          <div className="table-name-wrap">
-                            <span className="table-product-code">{prod.product_code}</span>
-                            <strong className="table-product-name">{prod.name}</strong>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <span
-                          className="category-pill clickable"
-                          onClick={() => prod.categoryId && setSelectedCategory(prod.categoryId)}
-                          title={`Filter by ${prod.category?.name}`}
-                        >
-                          {prod.category?.name || 'Standard'}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="table-price">INR {prod.base_rent_price?.toLocaleString('en-IN')}</span>
-                      </td>
-                      <td>
-                        <span className="table-price-muted">INR {prod.base_security_deposit?.toLocaleString('en-IN')}</span>
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          className="table-stock-pill-btn"
-                          onClick={() => handleOpenStockModal(prod)}
-                        >
-                          <span className="stock-count">{items.length} Units</span>
-                          <span className="stock-avail">({availableCount} avail)</span>
-                        </button>
-                      </td>
-                      <td>
-                        <div className="table-sizes-list">
-                          {items.map((it) => (
-                            <span key={it.id} className={`size-chip-mini ${getItemStatusBadge(it)}`}>
-                              {it.size} ({it.status.slice(0, 4)})
-                            </span>
-                          ))}
-                          {items.length === 0 && <span className="muted-text">0 items</span>}
-                        </div>
-                      </td>
-                      <td className="td-actions">
-                        <div className="row-actions-group">
-                          <button
-                            type="button"
-                            className="btn-table-action"
-                            onClick={() => handleOpenStockModal(prod)}
-                            title="Manage Physical Stock"
-                          >
-                            <FiBox />
-                          </button>
-                          <button
-                            type="button"
-                            className="btn-table-action"
-                            onClick={() => handleOpenEditProduct(prod)}
-                            title="Edit Design"
-                          >
-                            <FiEdit2 />
-                          </button>
-                          <button
-                            type="button"
-                            className="btn-table-action delete"
-                            onClick={() => setProductToDelete(prod)}
-                            title="Delete Design"
-                          >
-                            <FiTrash2 />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
         </div>
       )}
 
@@ -648,9 +669,15 @@ const CollectionList = () => {
         onClose={() => setIsProductModalOpen(false)}
         product={selectedProductForEdit}
         categories={categories}
+        onCategoryCreated={(newCat) => {
+          setCategories((prev) => [newCat, ...prev.filter((c) => c.id !== newCat.id)]);
+          fetchData();
+        }}
         onProductSaved={fetchData}
         token={token}
         storeId={selectedStoreId}
+        stores={stores}
+        isSuperAdmin={isSuperAdmin}
       />
 
       <StockModal
@@ -661,15 +688,6 @@ const CollectionList = () => {
         token={token}
         storeId={selectedStoreId}
         limits={limits}
-      />
-
-      <CategoryModal
-        isOpen={isCategoryModalOpen}
-        onClose={() => setIsCategoryModalOpen(false)}
-        categories={categories}
-        onCategoryUpdated={fetchData}
-        token={token}
-        storeId={selectedStoreId}
       />
 
       <ImageGalleryModal

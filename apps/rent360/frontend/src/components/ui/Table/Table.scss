@@ -1,0 +1,334 @@
+@import '../../../styles/variables';
+
+/* ─────────────────────────────────────────────────────────────
+   Bond CRM Table Card Container
+   Encloses DataTable with luxury dark border, background, and rounded corners
+───────────────────────────────────────────────────────────── */
+.bond-card-container {
+  background-color: $bg-card;
+  border-radius: $border-radius-card;
+  border: 1px solid $border-main;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto !important;
+  min-height: unset !important;
+  flex: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Responsive Table Wrapper
+   Slim scrollbar that never clips or overlaps bottom container borders
+───────────────────────────────────────────────────────────── */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  flex: none !important;
+  height: auto !important;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 9999px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.22);
+    border-radius: 9999px;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.38);
+    }
+  }
+}
+
+.dark .table-responsive,
+body.dark .table-responsive {
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.42);
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Bond CRM Minimalist Table
+───────────────────────────────────────────────────────────── */
+.bond-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.88rem;
+
+  th {
+    background-color: $bg-card-alt;
+    padding: 10px 18px;
+    text-align: left;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: $text-muted;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 1px solid $border-main;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 11px 18px;
+    text-align: left;
+    border-bottom: 1px solid $border-main;
+    color: $text-main;
+    vertical-align: middle;
+    font-size: 0.86rem;
+  }
+
+  tbody tr {
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: $bg-card-hover;
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Bond CRM Table Pagination Footer
+───────────────────────────────────────────────────────────── */
+.bond-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  background-color: $bg-card;
+  border-top: 1px solid $border-main;
+  font-size: 0.82rem;
+  color: $text-muted;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 0 !important;
+  border-radius: 0 0 $border-radius-card $border-radius-card;
+
+  .table-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .pagination-info {
+      font-weight: 500;
+      color: $text-muted;
+
+      strong {
+        color: $text-main;
+        font-weight: 600;
+      }
+    }
+
+    .rows-per-page-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+
+      .rows-select-wrapper {
+        width: 74px;
+        min-width: 68px;
+
+        .bond-select-container.sm {
+          .bond-select-trigger {
+            min-height: 28px;
+            height: 28px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+          }
+        }
+      }
+
+      select {
+        background-color: $bg-card-alt;
+        border: 1px solid $border-main;
+        border-radius: 6px;
+        color: $text-main;
+        padding: 3px 22px 3px 8px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .table-footer-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .pagination-page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background-color: $bg-card-alt;
+      border: 1px solid $border-main;
+      font-size: 0.8rem;
+      color: $text-muted;
+      white-space: nowrap;
+
+      strong {
+        color: $text-main;
+        font-weight: 700;
+      }
+
+      .pagination-badge-divider {
+        opacity: 0.35;
+        margin: 0 2px;
+      }
+    }
+
+    .pagination-nav-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid $border-main;
+      background-color: $bg-card-alt;
+      color: $text-main;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.15s ease;
+
+      &:hover:not(:disabled) {
+        background-color: $bg-card-hover;
+        border-color: $border-pill;
+        color: $accent;
+      }
+
+      &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Shared Cell Helpers (StatusPill & AvatarCell)
+───────────────────────────────────────────────────────────── */
+.bond-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 14px;
+  border-radius: $border-radius-pill;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-sizing: border-box;
+
+  .status-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  &.active {
+    background-color: $accent-light;
+    color: $accent;
+    border: 1px solid $accent-border;
+
+    .status-indicator {
+      background-color: $accent;
+    }
+  }
+
+  &.inactive {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+
+    .status-indicator {
+      background-color: #ef4444;
+    }
+  }
+}
+
+.store-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .avatar-initials {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: $accent-light;
+    color: $accent;
+    font-weight: 700;
+    font-size: 0.78rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $accent-border;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .avatar-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid $border-main;
+    flex-shrink: 0;
+  }
+
+  .identity-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .primary-title {
+      font-weight: 600;
+      color: $text-main;
+      font-size: 0.9rem;
+    }
+
+    .subtitle-desc {
+      font-size: 0.78rem;
+      color: $text-muted;
+    }
+  }
+}

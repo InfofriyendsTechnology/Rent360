@@ -60,6 +60,81 @@
         }
       }
 
+      .store-selector-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 42px;
+        background-color: $bg-card;
+        border: 1px solid $border-main;
+        padding: 0 14px;
+        border-radius: $border-radius-pill;
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: $text-main;
+        box-shadow: $shadow-sm;
+        box-sizing: border-box;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+        &:hover, &:focus-within {
+          border-color: $accent;
+        }
+
+        .store-pill-icon {
+          color: $accent;
+          font-size: 1rem;
+          flex-shrink: 0;
+          pointer-events: none;
+        }
+
+        label {
+          color: $text-muted;
+          font-size: 0.76rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          white-space: nowrap;
+          cursor: pointer;
+          flex-shrink: 0;
+          pointer-events: none;
+        }
+
+        select {
+          background: transparent;
+          border: none;
+          outline: none;
+          color: $text-main;
+          font-size: 0.88rem;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: inherit;
+          padding: 0;
+          margin: 0;
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          max-width: 175px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          option {
+            background-color: #1a1a22;
+            color: #ffffff;
+            padding: 8px 12px;
+          }
+        }
+
+        .chevron-icon {
+          pointer-events: none;
+          color: $text-muted;
+          font-size: 0.85rem;
+          flex-shrink: 0;
+          margin-left: 2px;
+        }
+      }
+
       .pill-btn-primary {
         display: inline-flex;
         align-items: center;
@@ -99,8 +174,10 @@
     background-color: $bg-card;
     border-radius: $border-radius-card;
     border: 1px solid $border-main;
-    box-shadow: $shadow-md;
+    box-shadow: $shadow-sm;
     overflow: hidden;
+    width: 100%;
+    height: auto;
   }
 
   .table-responsive {
@@ -108,26 +185,24 @@
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 6px;
+    padding-bottom: 0;
+    margin-bottom: 0;
 
-    /* Prominent visible scrollbar at the bottom of the table */
     &::-webkit-scrollbar {
-      height: 9px !important;
-      display: block !important;
+      height: 6px;
     }
 
     &::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.05) !important;
+      background: rgba(0, 0, 0, 0.04);
       border-radius: 9999px;
-      margin: 0 10px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.28) !important;
+      background: rgba(0, 0, 0, 0.25);
       border-radius: 9999px;
 
       &:hover {
-        background: rgba(0, 0, 0, 0.45) !important;
+        background: rgba(0, 0, 0, 0.4);
       }
     }
   }
@@ -135,14 +210,14 @@
   .dark & .table-responsive,
   body.dark .table-responsive {
     &::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.06) !important;
+      background: rgba(255, 255, 255, 0.04);
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.35) !important;
+      background: rgba(255, 255, 255, 0.25);
 
       &:hover {
-        background: rgba(255, 255, 255, 0.55) !important;
+        background: rgba(255, 255, 255, 0.45);
       }
     }
   }
@@ -151,34 +226,33 @@
   .bond-table {
     width: 100%;
     min-width: 720px;
-    border-collapse: collapse;
-    font-size: 0.9rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.88rem;
 
     th {
       background-color: transparent;
-      padding: 16px 26px;
+      padding: 9px 18px;
       text-align: left;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: $text-muted;
       letter-spacing: 0.04em;
       border-bottom: 1px solid $border-main;
+      white-space: nowrap;
     }
 
     td {
-      padding: 18px 26px;
+      padding: 9px 18px;
       text-align: left;
       border-bottom: 1px solid $border-main;
       color: $text-main;
       vertical-align: middle;
+      font-size: 0.86rem;
     }
 
     tr {
       transition: background-color 0.15s ease;
-
-      &:last-child td {
-        border-bottom: none;
-      }
 
       &:hover {
         background-color: $bg-card-hover;
@@ -204,13 +278,13 @@
       gap: 14px;
 
       .avatar-initials {
-        width: 42px;
-        height: 42px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background-color: $accent-light;
         color: $accent;
         font-weight: 700;
-        font-size: 0.9rem;
+        font-size: 0.78rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -221,8 +295,8 @@
       }
 
       .avatar-image {
-        width: 42px;
-        height: 42px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         object-fit: cover;
         border: 1px solid $border-main;
@@ -412,11 +486,11 @@
     .row-action-btns {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
 
       .icon-action-btn {
-        width: 36px;
-        height: 36px;
+        width: 30px;
+        height: 30px;
         border-radius: $border-radius-pill;
         border: 1px solid transparent;
         background-color: $bg-card-alt;
@@ -425,7 +499,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        font-size: 0.95rem;
+        font-size: 0.85rem;
         transition: all 0.15s ease;
 
         &:hover {

@@ -34,7 +34,10 @@ export const updateUser = async (req: Request, res: Response) => {
       return responseHandler.notFound(res, "User not found");
     }
 
-    if (existingUser.storeId !== (req as any).user?.storeId) {
+    const reqUser = (req as any).user;
+    const isSuperAdmin = reqUser?.role === "SUPER_ADMIN";
+
+    if (!isSuperAdmin && existingUser.storeId !== reqUser?.storeId) {
       return responseHandler.unauthorized(res, "You can only update users in your own store");
     }
 
@@ -52,11 +55,10 @@ export const updateUser = async (req: Request, res: Response) => {
       }
     }
 
-    const currentUserId = (req as any).user?.id;
-    const currentUserRole = (req as any).user?.role;
+    const currentUserId = reqUser?.id;
     const dbCurrentUser = await prisma.user.findUnique({ where: { id: currentUserId }, include: { role: true } });
     const userPermissions = (dbCurrentUser?.role?.permissions as string[]) || [];
-    const hasManageStaff = userPermissions.includes("ALL") || userPermissions.includes("SETTINGS_MANAGE");
+    const hasManageStaff = isSuperAdmin || userPermissions.includes("ALL") || userPermissions.includes("SETTINGS_MANAGE");
 
     // If updating someone else, must have manage staff permission
     if (existingUser.id !== currentUserId && !hasManageStaff) {
@@ -103,9 +105,9 @@ export const updateUser = async (req: Request, res: Response) => {
     } 
     // If user uploads a new picture
     else if (updateData.profile_pic && updateData.profile_pic.startsWith("data:image")) {
-      const isSuperAdmin = existingUser.role?.name === 'SUPER_ADMIN' || !existingUser.roleId;
+      const targetIsSuperAdmin = existingUser.role?.name === 'SUPER_ADMIN' || !existingUser.roleId;
       let folderPath = '';
-      if (isSuperAdmin) {
+      if (targetIsSuperAdmin) {
         folderPath = `rent360/super_admin/profiles`;
       } else {
         folderPath = getStoreAssetFolder(existingUser.store?.name || 'default_store', 'profiles');
@@ -151,6 +153,4 @@ export const updateUser = async (req: Request, res: Response) => {
     }
     return responseHandler.internalServerError(res, error.message || error);
   }
-
 };
-

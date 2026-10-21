@@ -13,9 +13,9 @@
   --text-muted: #71717A;     /* Clean secondary text */
   --text-inverse: #FFFFFF;   /* Text on dark pills */
   
-  --border-main: rgba(0, 0, 0, 0.06);  /* Soft hairline border */
-  --border-muted: rgba(0, 0, 0, 0.03);
-  --border-pill: rgba(0, 0, 0, 0.08);
+  --border-main: #E2E8F0;  /* Crisp, uniform, visible border */
+  --border-muted: #F1F5F9;
+  --border-pill: #CBD5E1;
   
   /* Blue Highlight (replacing yellow in reference image) */
   --accent: #0B60B0;
@@ -49,9 +49,9 @@
   --text-muted: #A1A1AA;
   --text-inverse: #18181B;
   
-  --border-main: rgba(255, 255, 255, 0.08);
-  --border-muted: rgba(255, 255, 255, 0.04);
-  --border-pill: rgba(255, 255, 255, 0.12);
+  --border-main: rgba(255, 255, 255, 0.12);
+  --border-muted: rgba(255, 255, 255, 0.06);
+  --border-pill: rgba(255, 255, 255, 0.16);
   
   --accent: #3B82F6;
   --accent-hover: #60A5FA;

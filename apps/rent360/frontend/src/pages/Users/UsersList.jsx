@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit2, FiTrash2, FiX } from 'react-icons/fi';
+import { FiPlus, FiEdit2, FiTrash2, FiX, FiShoppingBag, FiChevronDown } from 'react-icons/fi';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss'; // Reuse store styles for consistency
-import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import { DataTable, AvatarCell, StatusPill, RowActions, Select, Checkbox } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
 const UsersList = () => {
-  const { token } = useSelector((state) => state.auth);
+  const { user, token } = useSelector((state) => state.auth);
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
+
+  // Stores for super admin
+  const [stores, setStores] = useState([]);
+  const [selectedStoreId, setSelectedStoreId] = useState(() => {
+    return isSuperAdmin ? '' : userStoreId;
+  });
   
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -22,7 +30,7 @@ const UsersList = () => {
   const [isDeletingUser, setIsDeletingUser] = useState(false);
   const [isSavingMember, setIsSavingMember] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
-  const [userForm, setUserForm] = useState({ name: '', mobile: '', password: '', roleId: '' });
+  const [userForm, setUserForm] = useState({ name: '', mobile: '', password: '', roleId: '', storeId: '' });
 
   // Quick Role Creation state
   const [isQuickRoleModalOpen, setIsQuickRoleModalOpen] = useState(false);
@@ -43,16 +51,38 @@ const UsersList = () => {
     'SETTINGS_MANAGE'
   ];
 
+  // Fetch stores if Super Admin
+  useEffect(() => {
+    if (isSuperAdmin && token) {
+      axios
+        .get(`${API_BASE_URL}/api/stores`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        .then((res) => {
+          setStores(res.data.data || []);
+        })
+        .catch(() => {});
+    } else if (userStoreId) {
+      setSelectedStoreId(userStoreId);
+    }
+  }, [isSuperAdmin, userStoreId, token]);
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedStoreId, token]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
+      const usersUrl = selectedStoreId 
+        ? `${API_BASE_URL}/api/users?storeId=${selectedStoreId}`
+        : `${API_BASE_URL}/api/users`;
+      const rolesUrl = selectedStoreId 
+        ? `${API_BASE_URL}/api/roles?storeId=${selectedStoreId}`
+        : `${API_BASE_URL}/api/roles`;
       const [usersRes, rolesRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/api/users`, { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get(`${API_BASE_URL}/api/roles`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(usersUrl, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(rolesUrl, { headers: { Authorization: `Bearer ${token}` } })
       ]);
       const staffRoles = (rolesRes.data.data || []).filter(
         r => r.name !== 'STORE_ADMIN' && r.name !== 'SUPER_ADMIN'
@@ -74,12 +104,19 @@ const UsersList = () => {
         name: userData.name || '', 
         mobile: userData.mobile || '', 
         password: '', 
-        roleId: userData.roleId || '' 
+        roleId: userData.roleId || '',
+        storeId: userData.storeId || ''
       });
     } else {
       setEditingUserId(null);
       const defaultRole = roles.find(r => r.name !== 'STORE_ADMIN' && r.name !== 'SUPER_ADMIN');
-      setUserForm({ name: '', mobile: '', password: '', roleId: defaultRole ? defaultRole.id : '' });
+      setUserForm({ 
+        name: '', 
+        mobile: '', 
+        password: '', 
+        roleId: defaultRole ? defaultRole.id : '',
+        storeId: selectedStoreId || (stores[0]?.id || '')
+      });
     }
     setIsUserModalOpen(true);
   };
@@ -91,6 +128,13 @@ const UsersList = () => {
       setFieldErrors({});
       setIsSavingMember(true);
       const payload = { ...userForm };
+      
+      const effectiveStoreId = isSuperAdmin
+        ? (userForm.storeId || selectedStoreId)
+        : (userStoreId || userForm.storeId);
+      if (!editingUserId && effectiveStoreId) {
+        payload.storeId = effectiveStoreId;
+      }
       if (editingUserId && !payload.password) {
         delete payload.password;
       }
@@ -120,7 +164,6 @@ const UsersList = () => {
     }
   };
 
-
   const handleQuickRoleSubmit = async (e) => {
     e.preventDefault();
     if (!quickRoleName.trim()) {
@@ -129,9 +172,13 @@ const UsersList = () => {
     }
     try {
       setIsSavingQuickRole(true);
+      const roleStoreId = isSuperAdmin
+        ? (userForm.storeId || selectedStoreId)
+        : (userStoreId || undefined);
       const res = await axios.post(`${API_BASE_URL}/api/roles`, {
         name: quickRoleName.trim(),
-        permissions: quickRolePermissions
+        permissions: quickRolePermissions,
+        storeId: roleStoreId || undefined
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -155,7 +202,6 @@ const UsersList = () => {
       prev.includes(perm) ? prev.filter(p => p !== perm) : [...prev, perm]
     );
   };
-
 
   const handleConfirmDeleteUser = async () => {
     if (!userToDelete) return;
@@ -189,11 +235,41 @@ const UsersList = () => {
         <div className="title-section">
           <h1 className="main-title">Team Members</h1>
           <p className="subtitle">
-            Manage your store staff, their access roles, and status
+            {isSuperAdmin
+              ? 'Browse and manage all staff members across tenant stores'
+              : 'Manage your store staff, their access roles, and status'}
           </p>
         </div>
 
         <div className="top-actions">
+          {/* Super Admin Store Selector with All Stores default */}
+          {isSuperAdmin && stores.length > 0 && (
+            <div className="store-selector-pill">
+              <FiShoppingBag className="store-pill-icon" />
+              <label>Store:</label>
+              <select
+                value={selectedStoreId}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedStoreId(val);
+                  if (val) {
+                    localStorage.setItem('rent360_active_store_id', val);
+                  } else {
+                    localStorage.removeItem('rent360_active_store_id');
+                  }
+                }}
+              >
+                <option value="">All Stores</option>
+                {stores.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name || s.store_name}
+                  </option>
+                ))}
+              </select>
+              <FiChevronDown className="chevron-icon" />
+            </div>
+          )}
+
           <div className="pill-filter">
             <span className="dot" />
             <span>Total Members ({users.length})</span>
@@ -207,59 +283,50 @@ const UsersList = () => {
       </div>
 
       <div className="bond-card-container">
-        <div className="table-responsive">
-          <table className="bond-table">
-            <thead>
-              <tr>
-                <th>Team Member</th>
-                <th>Mobile Number</th>
-                <th>Assigned Role</th>
-                <th>Status</th>
-                <th className="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <TableRowSkeleton rows={5} columns={5} />
-              ) : users.length === 0 ? (
-                <tr><td colSpan="5" className="text-center state-message">No team members found</td></tr>
-              ) : (
-                users.map(u => (
-                  <tr key={u.id}>
-                    <td>
-                      <div className="store-identity">
-                        <div className="avatar-initials">
-                          {getInitials(u.name)}
-                        </div>
-                        <div className="store-text">
-                          <span className="store-name">{u.name}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td><span className="phone-text">{u.mobile}</span></td>
-                    <td>
-                      <span className="bond-status-pill" style={{ background: 'var(--bg-card-alt)', color: 'var(--text-main)', border: '1px solid var(--border-main)' }}>
-                        {u.role?.name || 'No Role'}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`bond-status-pill ${(u.status || 'ACTIVE').toLowerCase()}`}>
-                        <span className="status-indicator" />
-                        {u.status || 'ACTIVE'}
-                      </span>
-                    </td>
-                    <td className="text-right">
-                      <div className="row-action-btns">
-                        <button className="icon-action-btn edit" onClick={() => openUserModal(u)}><FiEdit2 /></button>
-                        <button className="icon-action-btn delete" onClick={() => setUserToDelete(u)}><FiTrash2 /></button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+        <DataTable
+          columns={[
+            { label: 'Team Member' },
+            ...(isSuperAdmin ? [{ label: 'Store' }] : []),
+            { label: 'Mobile Number' },
+            { label: 'Assigned Role' },
+            { label: 'Status' },
+            { label: 'Actions', align: 'right' }
+          ]}
+          data={users}
+          loading={loading}
+          emptyMessage="No team members found. Click + Add Member to invite staff."
+          keyExtractor={(u) => u.id}
+          renderRow={(u) => (
+            <>
+              <td>
+                <AvatarCell
+                  title={u.name}
+                  fallbackChars={getInitials(u.name)}
+                />
+              </td>
+              {isSuperAdmin && (
+                <td>
+                  <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-main)' }}>
+                    {u.store?.name || 'All Platform'}
+                  </span>
+                </td>
               )}
-            </tbody>
-          </table>
-        </div>
+              <td><span className="phone-text">{u.mobile}</span></td>
+              <td>
+                <span className="bond-status-pill" style={{ background: 'var(--bg-card-alt)', color: 'var(--text-main)', border: '1px solid var(--border-main)' }}>
+                  {u.role?.name || 'No Role'}
+                </span>
+              </td>
+              <td><StatusPill status={u.status || 'ACTIVE'} /></td>
+              <td className="text-right">
+                <RowActions
+                  onEdit={() => openUserModal(u)}
+                  onDelete={() => setUserToDelete(u)}
+                />
+              </td>
+            </>
+          )}
+        />
       </div>
 
       {isUserModalOpen && (
@@ -279,6 +346,21 @@ const UsersList = () => {
                     {fieldErrors.general}
                   </div>
                 )}
+                
+                {isSuperAdmin && !editingUserId && (
+                  <div className="form-group" style={{ marginBottom: '14px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '6px', textTransform: 'uppercase' }}>
+                      Assign to Store *
+                    </label>
+                    <Select
+                      value={userForm.storeId}
+                      placeholder="-- Select Store --"
+                      onChange={(e) => setUserForm({ ...userForm, storeId: e.target.value })}
+                      options={stores.map((s) => ({ value: s.id, label: s.name || s.store_name }))}
+                    />
+                  </div>
+                )}
+
                 <div className="form-row-2">
                   <div className="form-field">
                     <label>Full Name *</label>
@@ -330,9 +412,10 @@ const UsersList = () => {
                         + Create Role
                       </button>
                     </div>
-                    <select 
+                    <Select 
                       required 
                       value={userForm.roleId} 
+                      placeholder="Select a role..."
                       onChange={e => {
                         if (e.target.value === '__create_new__') {
                           setIsQuickRoleModalOpen(true);
@@ -348,7 +431,7 @@ const UsersList = () => {
                       <option value="__create_new__" style={{ fontWeight: 600, color: '#0B60B0' }}>
                         + Create New Custom Role...
                       </option>
-                    </select>
+                    </Select>
                   </div>
                   <div className="form-field">
                     <label>{editingUserId ? 'New Password (Optional)' : 'Password *'}</label>
@@ -396,20 +479,17 @@ const UsersList = () => {
                     onChange={e => setQuickRoleName(e.target.value)} 
                     autoFocus
                   />
-
                 </div>
                 <div className="form-field" style={{ marginTop: '16px' }}>
                   <label>Permissions</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '10px' }}>
                     {AVAILABLE_PERMISSIONS.map(perm => (
-                      <label key={perm} className="perm-checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
-                        <input 
-                          type="checkbox" 
-                          checked={quickRolePermissions.includes(perm)}
-                          onChange={() => toggleQuickPermission(perm)}
-                        />
-                        <span>{perm === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : perm.replace('_', ' ')}</span>
-                      </label>
+                      <Checkbox
+                        key={perm}
+                        checked={quickRolePermissions.includes(perm)}
+                        onChange={() => toggleQuickPermission(perm)}
+                        label={perm === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : perm.replace('_', ' ')}
+                      />
                     ))}
                   </div>
                 </div>
@@ -424,7 +504,6 @@ const UsersList = () => {
           </div>
         </div>
       )}
-
 
       <ConfirmModal 
         isOpen={!!userToDelete}

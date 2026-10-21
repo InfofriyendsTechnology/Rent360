@@ -36,16 +36,5 @@
   font-size: 14px !important;
   color: var(--text-main) !important;
   font-weight: 500 !important;
-  
-  input[type="checkbox"] {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-    flex-shrink: 0;
-    accent-color: var(--accent);
-    cursor: pointer;
-    margin: 0 !important;
-    border: none !important;
-    appearance: auto !important; /* Ensure it looks like a checkbox */
-  }
 }
+

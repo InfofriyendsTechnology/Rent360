@@ -46,39 +46,6 @@
     }
   }
 
-  /* Store Selector Pill */
-  .store-selector-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 42px;
-    background-color: $bg-card;
-    border: 1px solid $border-main;
-    padding: 0 16px;
-    border-radius: $border-radius-pill;
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: $text-main;
-    box-shadow: $shadow-sm;
-
-    label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: $text-muted;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    select {
-      background: transparent;
-      border: none;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: $text-main;
-      outline: none;
-      cursor: pointer;
-    }
-  }
 
   /* Metrics Summary Bar */
   .category-metrics-grid {
@@ -220,9 +187,15 @@
       }
     }
 
-    .toolbar-count {
-      font-size: 0.85rem;
+    .toolbar-count,
+    .items-count-badge {
+      font-size: 0.82rem;
+      font-weight: 600;
       color: $text-muted;
+      background-color: $bg-card;
+      border: 1px solid $border-main;
+      padding: 6px 14px;
+      border-radius: $border-radius-pill;
       strong { color: $text-main; }
     }
   }
@@ -427,36 +400,11 @@
   }
 
   /* ─────────────────────────────────────────────────────────────
-     TABLE VIEW: Bond CRM Table
+     TABLE VIEW: Category-specific Bond CRM Table styling
   ───────────────────────────────────────────────────────────── */
-  .cat-bond-table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th {
-      background-color: $bg-card-alt !important;
-      padding: 14px 22px !important;
-      font-size: 0.78rem !important;
-      font-weight: 700 !important;
-      color: $text-muted !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.05em !important;
-      border-bottom: 1px solid $border-main !important;
-    }
-
-    td {
-      padding: 16px 22px !important;
-      border-bottom: 1px solid $border-main !important;
-      color: $text-main !important;
-      vertical-align: middle !important;
-    }
-
-    tr:hover {
-      background-color: $bg-card-hover !important;
-    }
-
+  .bond-table {
     .row-index-text {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       color: $text-muted;
       font-family: monospace;
@@ -465,12 +413,14 @@
     .table-cat-code {
       display: inline-flex;
       align-items: center;
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
       font-weight: 800;
       letter-spacing: 0.04em;
-      border: 1px solid transparent;
+      background-color: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.28);
       font-family: monospace;
     }
 
@@ -502,9 +452,9 @@
       align-items: center;
       gap: 6px;
       padding: 6px 14px;
-      background-color: rgba(11, 96, 176, 0.08);
-      color: $accent;
-      border: 1px solid rgba(11, 96, 176, 0.2);
+      background-color: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.28);
       border-radius: $border-radius-pill;
       font-size: 0.82rem;
       font-weight: 700;
@@ -512,7 +462,7 @@
       transition: all 0.15s ease;
 
       &:hover {
-        background-color: $accent;
+        background-color: #3b82f6;
         color: #fff;
         transform: translateY(-1px);
       }

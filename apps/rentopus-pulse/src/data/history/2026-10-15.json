@@ -1,0 +1,60 @@
+{
+  "date": "15-10-2026",
+  "dayNumber": 21,
+  "title": "System Setup Panel, Size Master & Real-World Size-wise Barcode/SKU Architecture",
+  "titleGu": "સિસ્ટમ સેટઅપ પેનલ, સાઇઝ માસ્ટર અને રિયલ-વર્લ્ડ સાઇઝ-વાઇઝ બારકોડ/SKU આર્કિટેક્ચર",
+  "members": [
+    "001"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Engineered dedicated System Setup panel (/settings) strictly focused on high-priority catalog configuration: Categories and Garment Sizes, seamlessly unified under the native Bond CRM theme."
+    },
+    {
+      "member": "001",
+      "text": "Built persistent Store Sizes Master architecture with real-world garment rental size-wise unit SKU generation ([code]-[size]-[number]), allowing independent tracking of each physical size unit for booking, laundry, and inventory."
+    },
+    {
+      "member": "001",
+      "text": "Integrated dynamic size master into ProductModal (design creation) and StockModal (inventory replenishment), generating real-time size-specific barcodes and units."
+    },
+    {
+      "member": "001",
+      "text": "Unified UI layout with full-width common DataTable, top pill toggle switcher (Categories vs Sizes), live search filtering, and standard RowActions, eliminating foreign colors and awkward split layouts."
+    },
+    {
+      "member": "001",
+      "text": "Centralized size constants and persistence utilities in src/constants/sizes.js, resolving Vite Fast Refresh warnings and optimizing HMR development workflow."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "હાઇ-પ્રાયોરિટી કેટલોગ કન્ફિગરેશન માટે ડેડિકેટેડ સિસ્ટમ સેટઅપ પેનલ (/settings) બનાવી: કેટેગરીઝ અને ગારમેન્ટ સાઇઝિસને નેટિવ Bond CRM થીમ હેઠળ એકીકૃત કરી."
+    },
+    {
+      "member": "001",
+      "text": "પરમેનન્ટ સ્ટોર સાઇઝ માસ્ટર અને રિયલ-વર્લ્ડ સાઇઝ-વાઇઝ યુનિક SKU બારકોડ સિસ્ટમ ([code]-[size]-[number]) ડેવલપ કરી, જેથી દરેક સાઇઝના પીસનું બુકિંગ, લોન્ડ્રી અને સ્ટોક અલગથી ટ્રેક થઈ શકે."
+    },
+    {
+      "member": "001",
+      "text": "નવી ડિઝાઇન ક્રિએશન (ProductModal) અને સ્ટોક એડિશન (StockModal) બંનેમાં સાઇઝ માસ્ટર ડ્રોપડાઉન અને રિયલ-ટાઇમ સાઇઝ-વાઇઝ બારકોડ જનરેશન કનેક્ટ કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "ફુલ-વિડ્થ કોમન DataTable, ટોપ પિલ સ્વીચર (Categories vs Sizes), લાઈવ સર્ચ ફિલ્ટરિંગ અને સ્ટાન્ડર્ડ RowActions સાથે લેઆઉટ એકરૂપ બનાવ્યું, તમામ એક્સ્ટ્રા કલર્સ અને સાઈડ-સ્પ્લિટ સ્પેસિંગ દૂર કર્યા."
+    },
+    {
+      "member": "001",
+      "text": "સાઇઝ કોન્સ્ટન્ટ્સ અને હેલ્પર્સને src/constants/sizes.js માં સેન્ટ્રલાઇઝ કરી Vite Fast Refresh વોર્નિંગ્સ સોલ્વ કરી અને HMR ડેવલપમેન્ટ ઓપ્ટિમાઇઝ કર્યું."
+    }
+  ],
+  "deliverables": [
+    "Dedicated System Setup Panel (/settings) with Categories & Sizes Master",
+    "Real-World Garment Rental Size-wise Unique SKU/Barcode Architecture",
+    "Integrated Dynamic Size Selection in ProductModal & StockModal",
+    "Common Full-Width DataTable & Native Theme Pill Switcher Layout",
+    "Centralized Size Constants & Vite HMR Fast Refresh Optimization"
+  ]
+}

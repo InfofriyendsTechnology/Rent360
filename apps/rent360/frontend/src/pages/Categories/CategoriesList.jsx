@@ -4,13 +4,13 @@ import { useSelector } from 'react-redux';
 import { 
   FiPlus, FiEdit2, FiTrash2, FiSearch, FiTag, FiLayers, 
   FiArrowUpRight, FiX, FiCheck, FiFolder, FiGrid, FiList,
-  FiTrendingUp, FiBox, FiCheckCircle
+  FiTrendingUp, FiBox, FiCheckCircle, FiChevronDown, FiShoppingBag
 } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
-import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import { DataTable, RowActions } from '../../components/ui';
 
 import '../Stores/StoresList.scss';
 import './CategoriesList.scss';
@@ -29,14 +29,14 @@ const CategoriesList = () => {
   const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
-  const userStoreId = user?.store?.id || user?.storeId || '';
-
-  // View Mode: 'cards' or 'table'
-  const [viewMode, setViewMode] = useState(localStorage.getItem('rent360_cat_view') || 'cards');
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
 
   // Stores for super admin
   const [stores, setStores] = useState([]);
-  const [selectedStoreId, setSelectedStoreId] = useState(userStoreId);
+  const [selectedStoreId, setSelectedStoreId] = useState(() => {
+    return isSuperAdmin ? '' : (userStoreId || '');
+  });
+  const [modalStoreId, setModalStoreId] = useState('');
 
   // Categories & UI state
   const [categories, setCategories] = useState([]);
@@ -58,11 +58,6 @@ const CategoriesList = () => {
   });
   const [formErrors, setFormErrors] = useState({});
 
-  const handleToggleViewMode = (mode) => {
-    setViewMode(mode);
-    localStorage.setItem('rent360_cat_view', mode);
-  };
-
   // Fetch stores if Super Admin
   useEffect(() => {
     if (isSuperAdmin && token) {
@@ -73,13 +68,6 @@ const CategoriesList = () => {
         .then((res) => {
           const list = res.data.data || [];
           setStores(list);
-          if (list.length > 0) {
-            const hasExisting = selectedStoreId && list.some((s) => s.id === selectedStoreId);
-            if (!hasExisting) {
-              const matched = userStoreId && list.some((s) => s.id === userStoreId);
-              setSelectedStoreId(matched ? userStoreId : list[0].id);
-            }
-          }
         })
         .catch(() => {});
     } else if (userStoreId) {
@@ -113,6 +101,7 @@ const CategoriesList = () => {
   const handleOpenCreateModal = () => {
     setEditingCategory(null);
     setFormData({ name: '', category_code: '', description: '' });
+    setModalStoreId(selectedStoreId || (stores[0]?.id || ''));
     setFormErrors({});
     setIsModalOpen(true);
   };
@@ -124,6 +113,7 @@ const CategoriesList = () => {
       category_code: cat.category_code || '',
       description: cat.description || ''
     });
+    setModalStoreId(cat.storeId || cat.store?.id || '');
     setFormErrors({});
     setIsModalOpen(true);
   };
@@ -146,6 +136,9 @@ const CategoriesList = () => {
 
   const validate = () => {
     const errs = {};
+    if (isSuperAdmin && !editingCategory && !modalStoreId) {
+      errs.storeId = 'Please select a store';
+    }
     if (!formData.name.trim()) errs.name = 'Category name is required';
     if (!formData.category_code.trim()) errs.category_code = 'Category code is required';
     setFormErrors(errs);
@@ -158,11 +151,15 @@ const CategoriesList = () => {
 
     setIsSaving(true);
     try {
+      const effectiveStoreId = isSuperAdmin
+        ? (editingCategory ? (editingCategory.storeId || editingCategory.store?.id) : modalStoreId)
+        : (userStoreId || undefined);
+
       const payload = {
         name: formData.name.trim(),
         category_code: formData.category_code.trim().toUpperCase(),
         description: formData.description.trim() || undefined,
-        storeId: selectedStoreId || undefined
+        storeId: effectiveStoreId || undefined
       };
 
       if (editingCategory) {
@@ -224,43 +221,32 @@ const CategoriesList = () => {
       {/* Top Header */}
       <div className="stores-top-bar">
         <div className="title-section">
-          <h1 className="main-title">Category Pipelines</h1>
+          <h1 className="main-title">Categories</h1>
           <p className="subtitle">
-            Configure catalog taxonomy, SKU codes, and rental attire pipelines
+            Configure catalog taxonomy, SKU codes, and rental attire categories
           </p>
         </div>
 
         <div className="top-actions">
-          {/* View Mode Toggle: Cards vs Table */}
-          <div className="view-mode-toggle" title="Switch layout">
-            <button 
-              type="button"
-              className={`view-btn ${viewMode === 'cards' ? 'active' : ''}`}
-              onClick={() => handleToggleViewMode('cards')}
-            >
-              <FiGrid className="icon" />
-              <span>Pipelines</span>
-            </button>
-            <button 
-              type="button"
-              className={`view-btn ${viewMode === 'table' ? 'active' : ''}`}
-              onClick={() => handleToggleViewMode('table')}
-            >
-              <FiList className="icon" />
-              <span>Table</span>
-            </button>
-          </div>
-
           {isSuperAdmin && stores.length > 0 && (
             <div className="store-selector-pill">
               <label>Store:</label>
               <select
                 value={selectedStoreId}
-                onChange={(e) => setSelectedStoreId(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedStoreId(val);
+                  if (val) {
+                    localStorage.setItem('rent360_active_store_id', val);
+                  } else {
+                    localStorage.removeItem('rent360_active_store_id');
+                  }
+                }}
               >
+                <option value="">All Stores</option>
                 {stores.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.store_name}
+                    {s.name || s.store_name}
                   </option>
                 ))}
               </select>
@@ -275,41 +261,6 @@ const CategoriesList = () => {
             <FiPlus className="plus-icon" />
             <span>Add Category</span>
           </button>
-        </div>
-      </div>
-
-      {/* Metrics Bar */}
-      <div className="category-metrics-grid">
-        <div className="metric-pill-card">
-          <div className="metric-icon-wrap">
-            <FiTag />
-          </div>
-          <div className="metric-info">
-            <span className="metric-label">Total Categories</span>
-            <span className="metric-value">{totalCategories}</span>
-          </div>
-        </div>
-
-        <div className="metric-pill-card">
-          <div className="metric-icon-wrap accent">
-            <FiLayers />
-          </div>
-          <div className="metric-info">
-            <span className="metric-label">Mapped Designs</span>
-            <span className="metric-value">{totalDesigns}</span>
-          </div>
-        </div>
-
-        <div className="metric-pill-card">
-          <div className="metric-icon-wrap success">
-            <FiTrendingUp />
-          </div>
-          <div className="metric-info">
-            <span className="metric-label">Top Pipeline</span>
-            <span className="metric-value text-ellipsis">
-              {topCategory ? `${topCategory.name} (${topCategory._count?.products || 0})` : 'None'}
-            </span>
-          </div>
         </div>
       </div>
 
@@ -333,220 +284,90 @@ const CategoriesList = () => {
             </button>
           )}
         </div>
-        <div className="toolbar-count">
-          Showing <strong>{filteredCategories.length}</strong> of {totalCategories} categories
+        <div className="items-count-badge">
+          Total Categories: {filteredCategories.length}
         </div>
       </div>
 
-      {/* Content: Cards View (CRM Pipeline Cards) */}
-      {viewMode === 'cards' ? (
-        <div className="category-cards-grid">
-          {loading ? (
-            Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="cat-card skeleton-card">
-                <div className="cat-card-header">
-                  <div className="skeleton-line w-30" />
-                  <div className="skeleton-line w-20" />
-                </div>
-                <div className="skeleton-line w-60 h-24" />
-                <div className="skeleton-line w-90" />
-                <div className="skeleton-line w-40" />
-              </div>
-            ))
-          ) : filteredCategories.length === 0 ? (
-            <div className="empty-pipeline-card">
-              <FiTag className="empty-icon" />
-              <h3>No categories found</h3>
-              <p>
-                {searchQuery
-                  ? 'No categories match your search query.'
-                  : 'Get started by creating your first rental category pipeline.'}
-              </p>
-              {!searchQuery && (
-                <button
-                  type="button"
-                  className="pill-btn-primary"
-                  onClick={handleOpenCreateModal}
-                  style={{ marginTop: 14 }}
-                >
-                  <FiPlus />
-                  <span>Create Category</span>
-                </button>
-              )}
-            </div>
-          ) : (
-            filteredCategories.map((cat, idx) => {
-              const colorTheme = CATEGORY_COLORS[idx % CATEGORY_COLORS.length];
-              const productCount = cat._count?.products || 0;
-              const formattedIdx = String(idx + 1).padStart(2, '0');
-
-              return (
-                <div key={cat.id} className="cat-pipeline-card">
-                  {/* Card Header */}
-                  <div className="pipeline-card-top">
-                    <div className="pipeline-id-tag">
-                      <span className="pipeline-index">#{formattedIdx}</span>
-                      <span 
-                        className="pipeline-code-pill"
-                        style={{
-                          backgroundColor: colorTheme.bg,
-                          color: colorTheme.color,
-                          borderColor: colorTheme.border
-                        }}
-                      >
-                        {cat.category_code}
-                      </span>
-                    </div>
-
-                    <div className="pipeline-actions">
-                      <button
-                        type="button"
-                        className="card-action-btn"
-                        title="Edit Category"
-                        onClick={() => handleOpenEditModal(cat)}
-                      >
-                        <FiEdit2 />
-                      </button>
-                      <button
-                        type="button"
-                        className="card-action-btn danger"
-                        title="Delete Category"
-                        onClick={() => setCategoryToDelete(cat)}
-                      >
-                        <FiTrash2 />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Card Body */}
-                  <div className="pipeline-card-body">
-                    <h3 className="pipeline-name">{cat.name}</h3>
-                    <p className="pipeline-desc">
-                      {cat.description || 'Standard catalog attire pipeline for wedding and rental bookings.'}
-                    </p>
-                  </div>
-
-                  {/* Card Footer / Metrics */}
-                  <div className="pipeline-card-footer">
-                    <div className="designs-count-badge">
-                      <FiLayers className="badge-icon" />
-                      <span>{productCount} {productCount === 1 ? 'Design' : 'Designs'}</span>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="open-collection-link"
-                      onClick={() => navigate('/collection')}
-                      title="Browse designs in Collection"
+      {/* Content: Clean Bond CRM DataTable */}
+      <div className="bond-card-container">
+        <DataTable
+          columns={[
+            { label: '#', width: '70px' },
+            ...(isSuperAdmin ? [{ label: 'Store', width: '160px' }] : []),
+            { label: 'Category Code', width: '180px' },
+            { label: 'Category Name', width: '220px' },
+            { label: 'Description' },
+            { label: 'Total Designs', align: 'center', width: '160px' },
+            { label: 'Actions', align: 'right', width: '120px' }
+          ]}
+          data={filteredCategories}
+          loading={loading}
+          emptyMessage="No categories found. Create a category to organize your inventory."
+          keyExtractor={(cat) => cat.id}
+          renderRow={(cat) => {
+            const productCount = cat._count?.products || 0;
+            const formattedIdx = String(filteredCategories.indexOf(cat) + 1).padStart(2, '0');
+            return (
+              <>
+                <td>
+                  <span className="row-index-text">{formattedIdx}</span>
+                </td>
+                {isSuperAdmin && (
+                  <td>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        padding: '3px 8px',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        borderRadius: '6px',
+                        backgroundColor: 'var(--bg-card-alt)',
+                        border: '1px solid var(--border-main)',
+                        color: 'var(--text-main)'
+                      }}
                     >
-                      <span>Collection</span>
-                      <FiArrowUpRight className="arrow-icon" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-      ) : (
-        /* Content: Table View (Bond CRM Table) */
-        <div className="bond-card-container">
-          <div className="table-responsive">
-            <table className="bond-table cat-bond-table">
-              <thead>
-                <tr>
-                  <th style={{ width: '80px' }}>#</th>
-                  <th style={{ width: '180px' }}>Category Code</th>
-                  <th style={{ width: '220px' }}>Category Name</th>
-                  <th>Description</th>
-                  <th style={{ width: '160px', textAlign: 'center' }}>Total Designs</th>
-                  <th style={{ width: '120px', textAlign: 'right' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <TableRowSkeleton key={i} columns={6} />
-                  ))
-                ) : filteredCategories.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" className="state-message">
-                      No categories found. Create a category pipeline to organize your inventory.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredCategories.map((cat, idx) => {
-                    const colorTheme = CATEGORY_COLORS[idx % CATEGORY_COLORS.length];
-                    const productCount = cat._count?.products || 0;
-                    const formattedIdx = String(idx + 1).padStart(2, '0');
-
-                    return (
-                      <tr key={cat.id} className="cat-table-row">
-                        <td>
-                          <span className="row-index-text">{formattedIdx}</span>
-                        </td>
-                        <td>
-                          <span 
-                            className="table-cat-code"
-                            style={{
-                              backgroundColor: colorTheme.bg,
-                              color: colorTheme.color,
-                              borderColor: colorTheme.border
-                            }}
-                          >
-                            {cat.category_code}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="table-cat-title-cell">
-                            <span className="table-cat-name">{cat.name}</span>
-                          </div>
-                        </td>
-                        <td>
-                          <span className="table-cat-desc">
-                            {cat.description || <span className="muted-italic">No description provided</span>}
-                          </span>
-                        </td>
-                        <td style={{ textAlign: 'center' }}>
-                          <button
-                            type="button"
-                            className="table-designs-pill"
-                            onClick={() => navigate('/collection')}
-                            title="View designs in Collection"
-                          >
-                            <FiLayers />
-                            <span>{productCount} designs</span>
-                          </button>
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                          <div className="table-actions-cell">
-                            <button
-                              type="button"
-                              className="tbl-btn-action"
-                              title="Edit Category"
-                              onClick={() => handleOpenEditModal(cat)}
-                            >
-                              <FiEdit2 />
-                            </button>
-                            <button
-                              type="button"
-                              className="tbl-btn-action danger"
-                              title="Delete Category"
-                              onClick={() => setCategoryToDelete(cat)}
-                            >
-                              <FiTrash2 />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
+                      {cat.store?.name || 'Unassigned'}
+                    </span>
+                  </td>
                 )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+                <td>
+                  <span className="table-cat-code">
+                    {cat.category_code}
+                  </span>
+                </td>
+                <td>
+                  <div className="table-cat-title-cell">
+                    <span className="table-cat-name">{cat.name}</span>
+                  </div>
+                </td>
+                <td>
+                  <span className="table-cat-desc">
+                    {cat.description || <span className="muted-italic">No description provided</span>}
+                  </span>
+                </td>
+                <td className="text-center">
+                  <button
+                    type="button"
+                    className="table-designs-pill"
+                    onClick={() => navigate('/collection')}
+                    title="View designs in Collection"
+                  >
+                    <FiLayers />
+                    <span>{productCount} designs</span>
+                  </button>
+                </td>
+                <td className="text-right">
+                  <RowActions
+                    onEdit={() => handleOpenEditModal(cat)}
+                    onDelete={() => setCategoryToDelete(cat)}
+                  />
+                </td>
+              </>
+            );
+          }}
+        />
+      </div>
 
       {/* Add / Edit Category Modal */}
       {isModalOpen && (
@@ -576,6 +397,39 @@ const CategoriesList = () => {
 
             <form onSubmit={handleSaveCategory}>
               <div className="modal-body">
+                {isSuperAdmin && !editingCategory && (
+                  <div className="form-field" style={{ marginBottom: '16px' }}>
+                    <label>Store *</label>
+                    <select
+                      value={modalStoreId}
+                      onChange={(e) => {
+                        setModalStoreId(e.target.value);
+                        if (formErrors.storeId) {
+                          setFormErrors((prev) => ({ ...prev, storeId: '' }));
+                        }
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        border: '1px solid var(--border-main)',
+                        backgroundColor: 'var(--bg-card-alt)',
+                        color: 'var(--text-main)',
+                        fontSize: '0.9rem',
+                        outline: 'none'
+                      }}
+                    >
+                      <option value="">-- Select Store --</option>
+                      {stores.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name || s.store_name}
+                        </option>
+                      ))}
+                    </select>
+                    {formErrors.storeId && <span className="field-error">{formErrors.storeId}</span>}
+                  </div>
+                )}
+
                 <div className="form-field">
                   <label>Category Name *</label>
                   <input

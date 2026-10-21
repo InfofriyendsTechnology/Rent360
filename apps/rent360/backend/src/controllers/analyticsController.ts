@@ -4,15 +4,20 @@ import responseHandler from "../utils/responseHandler";
 
 export const getDashboardStats = async (req: any, res: Response) => {
   try {
-    const storeId = req.user.storeId;
+    let storeId = req.user?.storeId;
+    if (req.user?.role === "SUPER_ADMIN") {
+      storeId = (req.query?.storeId as string) || undefined;
+    }
+
+    const whereClause: any = storeId ? { storeId } : {};
 
     // 1. Total Customers
-    const totalCustomers = await prisma.customer.count({ where: { storeId } });
+    const totalCustomers = await prisma.customer.count({ where: whereClause });
 
     // 2. Active Bookings (Upcoming + Picked Up)
     const activeBookings = await prisma.booking.count({
       where: {
-        storeId,
+        ...whereClause,
         status: { in: ["UPCOMING", "PICKED_UP"] },
       },
     });
@@ -23,7 +28,7 @@ export const getDashboardStats = async (req: any, res: Response) => {
 
     const transactions = await prisma.transaction.findMany({
       where: {
-        storeId,
+        ...whereClause,
         createdAt: { gte: today },
       },
     });
@@ -39,7 +44,7 @@ export const getDashboardStats = async (req: any, res: Response) => {
     // 4. Pending Reminders
     const pendingReminders = await prisma.reminder.findMany({
       where: {
-        storeId,
+        ...whereClause,
         status: "PENDING",
         reminder_date: { lte: new Date() },
       },

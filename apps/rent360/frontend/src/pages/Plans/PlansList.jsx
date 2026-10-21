@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import './PlansList.scss';
 import { CardSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import { DataTable, RowActions, StatusPill } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
@@ -377,6 +378,12 @@ const PlansList = () => {
             </button>
           </div>
 
+          {/* Pill Filter for Total Count at the top */}
+          <div className="pill-filter">
+            <span className="dot" />
+            <span>Total Plans ({plans.length})</span>
+          </div>
+
           <button className="pill-btn-primary" onClick={openAddModal}>
             <FiPlus className="plus-icon" />
             <span>Create Plan</span>
@@ -563,35 +570,31 @@ const PlansList = () => {
                 </button>
               )}
             </div>
-
-            <div className="table-count-badge">
-              <span>{filteredPlans.length} plans configured</span>
-            </div>
           </div>
 
-          <div className="plans-table-card">
-            <div className="table-responsive">
-              <table className="bond-data-table">
-                <thead>
-                  <tr>
-                    <th>PLAN NAME</th>
-                <th>MONTHLY PRICE</th>
-                <th>ANNUAL PRICE</th>
-                <th>STAFF LIMIT</th>
-                <th>INCLUDED FEATURES</th>
-                <th>SUBSCRIBERS</th>
-                <th>STATUS</th>
-                <th className="actions-header">ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredPlans.map((plan) => {
+          <div className="bond-card-container">
+            <DataTable
+              columns={[
+                { label: 'Plan Name' },
+                { label: 'Monthly Price' },
+                { label: 'Annual Price' },
+                { label: 'Staff Limit' },
+                { label: 'Included Features' },
+                { label: 'Subscribers' },
+                { label: 'Status' },
+                { label: 'Actions', align: 'right' }
+              ]}
+              data={filteredPlans}
+              loading={loading}
+              emptyMessage="No plans configured."
+              keyExtractor={(plan) => plan.id}
+              renderRow={(plan) => {
                 const subCount = plan._count?.storeSubscriptions || 0;
                 const features = Array.isArray(plan.features) ? plan.features : [];
                 return (
-                  <tr key={plan.id} className={!plan.is_active ? 'row-inactive' : ''}>
+                  <>
                     <td className="plan-name-cell">
-                      <span className="name-bold">{plan.name}</span>
+                      <strong className="name-bold">{plan.name}</strong>
                     </td>
                     <td className="price-cell">
                       <span className="price-val">₹{plan.price_per_month.toLocaleString('en-IN')}</span>
@@ -622,38 +625,21 @@ const PlansList = () => {
                       </button>
                     </td>
                     <td>
-                      <span className={`status-pill ${plan.is_active ? 'active' : 'paused'}`}>
-                        <span className="dot" />
-                        {plan.is_active ? 'Active' : 'Paused'}
-                      </span>
+                      <StatusPill status={plan.is_active ? 'ACTIVE' : 'PAUSED'} />
                     </td>
-                    <td className="actions-cell">
-                      <div className="action-buttons">
-                        <button 
-                          className="table-btn edit" 
-                          onClick={() => handleEdit(plan)}
-                          title="Edit Plan"
-                        >
-                          <FiEdit2 />
-                        </button>
-                        <button 
-                          className="table-btn delete" 
-                          onClick={() => handleDelete(plan)}
-                          title="Delete Plan"
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </div>
+                    <td className="text-right">
+                      <RowActions
+                        onEdit={() => handleEdit(plan)}
+                        onDelete={() => handleDelete(plan)}
+                      />
                     </td>
-                  </tr>
+                  </>
                 );
-              })}
-            </tbody>
-          </table>
+              }}
+            />
+          </div>
         </div>
-      </div>
-    </div>
-  )}
+      )}
 
       {/* CREATE / EDIT PLAN MODAL */}
       {isModalOpen && (

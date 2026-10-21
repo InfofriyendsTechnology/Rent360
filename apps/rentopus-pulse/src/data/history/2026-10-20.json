@@ -1,0 +1,37 @@
+{
+  "date": "20-10-2026",
+  "dayNumber": 26,
+  "title": "Super Admin Multi-Tenant Isolation & Store Setup Decoupling",
+  "titleGu": "સુપર એડમિન મલ્ટી-ટેનન્ટ આઇસોલેશન અને સ્ટોર સેટઅપ ડીકપલિંગ",
+  "members": [
+    "001"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Fixed Super Admin default store bug: replaced forced 'Virasar Studio' selection with 'All Stores' default view and filter across all listing pages."
+    },
+    {
+      "member": "001",
+      "text": "Decoupled Store Setup from Super Admin sidebar navigation and replaced store settings with Platform Admin Profile & management view."
+    },
+    {
+      "member": "001",
+      "text": "Added Store column to Users and Customers tables and integrated store assignment selectors in creation modals for Super Admin."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "સુપર એડમિનમાં બાય-ડિફોલ્ટ 'વિરાસર સ્ટુડિયો' સિલેક્ટ થઈ જતો બગ ફિક્સ કરી તમામ પેજીસ પર 'All Stores' ડિફોલ્ટ વ્યુ અને ફિલ્ટર આપ્યું."
+    },
+    {
+      "member": "001",
+      "text": "સુપર એડમિન સાઈડબારમાંથી Store Setup અને સેટિંગ્સમાંથી Store Information હટાવી પ્લેટફોર્મ એડમિન પ્રોફાઇલ વ્યુ સેટ કર્યો."
+    },
+    {
+      "member": "001",
+      "text": "સુપર એડમિન માટે Users અને Customers લિસ્ટમાં Store નું નામ બતાવ્યું અને Add મોડલ્સમાં સ્ટોર સિલેક્ટ કરવાનું ઓપ્શન આપ્યું."
+    }
+  ]
+}

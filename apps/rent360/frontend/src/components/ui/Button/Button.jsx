@@ -1,4 +1,5 @@
 import React from 'react';
+import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 
 // Reusable standard button (Primary/Secondary)
 export const Button = ({ variant = 'primary', className = '', children, ...props }) => {
@@ -24,11 +25,16 @@ export const IconButton = ({ variant = 'default', icon: Icon, title, onClick, cl
   );
 };
 
-// Standard Row Actions block (Ensures 3-icon theme consistency everywhere)
-export const RowActions = ({ actions }) => {
+// Standard Row Actions block (Supports both actions array and direct onEdit / onDelete props)
+export const RowActions = ({ actions, onEdit, onDelete, editTitle = "Edit", deleteTitle = "Delete" }) => {
+  const finalActions = Array.isArray(actions) ? actions : [
+    ...(onEdit ? [{ icon: FiEdit2, variant: 'edit', title: editTitle, onClick: onEdit }] : []),
+    ...(onDelete ? [{ icon: FiTrash2, variant: 'delete', title: deleteTitle, onClick: onDelete }] : [])
+  ];
+
   return (
     <div className="row-action-btns">
-      {actions.map((act, index) => (
+      {finalActions.map((act, index) => (
         <IconButton 
           key={index}
           variant={act.variant}

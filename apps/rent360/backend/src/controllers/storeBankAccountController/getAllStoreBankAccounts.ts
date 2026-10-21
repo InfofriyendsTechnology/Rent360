@@ -7,6 +7,7 @@ export const getAllStoreBankAccounts = async (req: AuthRequest, res: Response) =
   try {
     const user = req.user;
     let storeId = req.query.storeId as string;
+    const { search } = req.query;
 
     if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
       storeId = user.storeId;
@@ -17,13 +18,20 @@ export const getAllStoreBankAccounts = async (req: AuthRequest, res: Response) =
       whereClause.storeId = storeId;
     }
 
+    if (search && typeof search === "string" && search.trim() !== "") {
+      whereClause.OR = [
+        { account_name: { contains: search.trim(), mode: "insensitive" } },
+        { account_number: { contains: search.trim(), mode: "insensitive" } },
+      ];
+    }
+
     let accounts = await prisma.storeBankAccount.findMany({
       where: whereClause,
       orderBy: { account_name: "asc" },
     });
 
     // Auto-seed default Cash Drawer if empty for this store
-    if (accounts.length === 0 && storeId) {
+    if (accounts.length === 0 && storeId && !search) {
       await prisma.storeBankAccount.create({
         data: {
           storeId,

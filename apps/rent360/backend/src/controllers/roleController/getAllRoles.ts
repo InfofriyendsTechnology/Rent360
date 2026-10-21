@@ -19,27 +19,45 @@ export const DEFAULT_STORE_ROLES = [
 
 export const getAllRoles = async (req: Request | any, res: Response) => {
   try {
-    const storeId = req.user?.storeId;
-    if (!storeId) {
-      return responseHandler.success(res, "Fetched successfully", []);
+    const user = req.user;
+    let storeId = (req.query.storeId as string) || (user?.role !== "SUPER_ADMIN" ? user?.storeId : undefined);
+
+    const where: any = {
+      name: { notIn: ['STORE_ADMIN', 'SUPER_ADMIN'] }
+    };
+    if (storeId) {
+      where.storeId = storeId;
     }
 
     let roles = await prisma.role.findMany({
-      where: { 
-        storeId,
-        name: { notIn: ['STORE_ADMIN', 'SUPER_ADMIN'] }
+      where,
+      include: {
+        store: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
       },
       orderBy: { createdAt: 'asc' }
     });
 
-    // Auto-seed default staff roles if store has no staff roles
-    if (roles.length === 0) {
+    // Auto-seed default staff roles if store has no staff roles and a specific storeId was given
+    if (roles.length === 0 && storeId) {
       for (const def of DEFAULT_STORE_ROLES) {
         const newRole = await prisma.role.create({
           data: {
             storeId,
             name: def.name,
             permissions: def.permissions
+          },
+          include: {
+            store: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
           }
         });
         roles.push(newRole);
@@ -52,4 +70,3 @@ export const getAllRoles = async (req: Request | any, res: Response) => {
     return responseHandler.internalServerError(res, error.message || error);
   }
 };
-

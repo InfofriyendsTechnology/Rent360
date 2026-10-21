@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit2, FiTrash2, FiX } from 'react-icons/fi';
+import { FiPlus, FiEdit2, FiTrash2, FiX, FiShoppingBag, FiChevronDown } from 'react-icons/fi';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import '../Stores/StoresList.scss'; // Reuse store styles for consistency
-import { TableRowSkeleton } from '../../components/ui/Skeleton/Skeleton';
+import { DataTable, AvatarCell, RowActions } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
 const CustomersList = () => {
-  const { token } = useSelector((state) => state.auth);
+  const { user, token } = useSelector((state) => state.auth);
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
+  const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
+
+  // Stores for super admin
+  const [stores, setStores] = useState([]);
+  const [selectedStoreId, setSelectedStoreId] = useState(() => {
+    return isSuperAdmin ? '' : (userStoreId || '');
+  });
   
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,18 +34,39 @@ const CustomersList = () => {
     address: '', 
     city: '', 
     pincode: '', 
-    reference_by: '' 
+    reference_by: '',
+    storeId: ''
   });
   const [formErrors, setFormErrors] = useState({});
 
+  // Fetch stores if Super Admin
+  useEffect(() => {
+    if (isSuperAdmin && token) {
+      axios
+        .get(`${API_BASE_URL}/api/stores`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        .then((res) => {
+          const list = res.data.data || [];
+          setStores(list);
+        })
+        .catch(() => {});
+    } else if (userStoreId) {
+      setSelectedStoreId(userStoreId);
+    }
+  }, [isSuperAdmin, userStoreId, token]);
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedStoreId, token]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/customers`, { headers: { Authorization: `Bearer ${token}` } });
+      const url = selectedStoreId
+        ? `${API_BASE_URL}/api/customers?storeId=${selectedStoreId}`
+        : `${API_BASE_URL}/api/customers`;
+      const res = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
       setCustomers(res.data.data || []);
     } catch (error) {
       toast.error('Failed to load customers');
@@ -57,11 +86,21 @@ const CustomersList = () => {
         address: customerData.address || '',
         city: customerData.city || '',
         pincode: customerData.pincode || '',
-        reference_by: customerData.reference_by || ''
+        reference_by: customerData.reference_by || '',
+        storeId: customerData.storeId || ''
       });
     } else {
       setEditingCustomerId(null);
-      setCustomerForm({ full_name: '', mobile: '', alternate_mobile: '', address: '', city: '', pincode: '', reference_by: '' });
+      setCustomerForm({ 
+        full_name: '', 
+        mobile: '', 
+        alternate_mobile: '', 
+        address: '', 
+        city: '', 
+        pincode: '', 
+        reference_by: '',
+        storeId: selectedStoreId || (stores[0]?.id || '')
+      });
     }
     setIsCustomerModalOpen(true);
   };
@@ -86,6 +125,9 @@ const CustomersList = () => {
     if (customerForm.pincode && !/^[0-9]{6}$/.test(customerForm.pincode)) {
       errs.pincode = 'Pincode must be exactly 6 digits';
     }
+    if (isSuperAdmin && !editingCustomerId && !customerForm.storeId && !selectedStoreId) {
+      errs.storeId = 'Please assign a store for this customer';
+    }
     setFormErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -99,7 +141,14 @@ const CustomersList = () => {
         await axios.put(`${API_BASE_URL}/api/customers/${editingCustomerId}`, customerForm, { headers: { Authorization: `Bearer ${token}` } });
         toast.success('Customer updated successfully');
       } else {
-        await axios.post(`${API_BASE_URL}/api/customers`, customerForm, { headers: { Authorization: `Bearer ${token}` } });
+        const payload = { ...customerForm };
+        const effectiveStoreId = isSuperAdmin
+          ? (customerForm.storeId || selectedStoreId)
+          : (userStoreId || customerForm.storeId);
+        if (effectiveStoreId) {
+          payload.storeId = effectiveStoreId;
+        }
+        await axios.post(`${API_BASE_URL}/api/customers`, payload, { headers: { Authorization: `Bearer ${token}` } });
         toast.success('Customer added successfully');
       }
       closeCustomerModal();
@@ -144,6 +193,34 @@ const CustomersList = () => {
         </div>
 
         <div className="top-actions">
+          {/* Super Admin Store Selector */}
+          {isSuperAdmin && stores.length > 0 && (
+            <div className="store-selector-pill">
+              <FiShoppingBag className="store-pill-icon" />
+              <label>Store:</label>
+              <select
+                value={selectedStoreId}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedStoreId(val);
+                  if (val) {
+                    localStorage.setItem('rent360_active_store_id', val);
+                  } else {
+                    localStorage.removeItem('rent360_active_store_id');
+                  }
+                }}
+              >
+                <option value="">All Stores</option>
+                {stores.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name || s.store_name}
+                  </option>
+                ))}
+              </select>
+              <FiChevronDown className="chevron-icon" />
+            </div>
+          )}
+
           <div className="pill-filter">
             <span className="dot" />
             <span>Total Customers ({customers.length})</span>
@@ -157,71 +234,74 @@ const CustomersList = () => {
       </div>
 
       <div className="bond-card-container">
-        <div className="table-responsive">
-          <table className="bond-table">
-            <thead>
-              <tr>
-                <th>Customer Name</th>
-                <th>Mobile Number</th>
-                <th>City & Address</th>
-                <th className="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <TableRowSkeleton rows={5} columns={4} />
-              ) : customers.length === 0 ? (
-                <tr><td colSpan="4" className="text-center state-message">No customers found</td></tr>
-              ) : (
-                customers.map(c => (
-                  <tr key={c.id}>
-                    <td>
-                      <div className="store-identity">
-                        <div className="avatar-initials">
-                          {getInitials(c.full_name)}
-                        </div>
-                        <div className="store-text">
-                          <span className="store-name">{c.full_name}</span>
-                          {c.reference_by && (
-                            <span style={{fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block'}}>
-                              Ref: {c.reference_by}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="store-text">
-                        <span className="phone-text">{c.mobile}</span>
-                        {c.alternate_mobile && (
-                          <span style={{fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block'}}>
-                            Alt: {c.alternate_mobile}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="store-text">
-                        <span className="store-name">{c.city || 'N/A'}</span>
-                        {c.address && (
-                          <span style={{fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block'}}>
-                            {c.address} {c.pincode ? `- ${c.pincode}` : ''}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="text-right">
-                      <div className="row-action-btns">
-                        <button className="icon-action-btn edit" onClick={() => openCustomerModal(c)}><FiEdit2 /></button>
-                        <button className="icon-action-btn delete" onClick={() => setCustomerToDelete(c)}><FiTrash2 /></button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+        <DataTable
+          columns={[
+            { label: 'Customer Name' },
+            ...(isSuperAdmin ? [{ label: 'Store' }] : []),
+            { label: 'Mobile Number' },
+            { label: 'City & Address' },
+            { label: 'Actions', align: 'right' }
+          ]}
+          data={customers}
+          loading={loading}
+          emptyMessage="No customers found. Click + Add Customer to register one."
+          keyExtractor={(c) => c.id}
+          renderRow={(c) => (
+            <>
+              <td>
+                <AvatarCell
+                  title={c.full_name}
+                  subtitle={c.reference_by ? `Ref: ${c.reference_by}` : null}
+                  fallbackChars={getInitials(c.full_name)}
+                />
+              </td>
+              {isSuperAdmin && (
+                <td>
+                  <span
+                    style={{
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      background: 'var(--bg-tertiary, #f1f5f9)',
+                      color: 'var(--primary, #6366f1)',
+                      border: '1px solid var(--border-color, #e2e8f0)',
+                      display: 'inline-block'
+                    }}
+                  >
+                    {c.store?.name || 'Unknown Store'}
+                  </span>
+                </td>
               )}
-            </tbody>
-          </table>
-        </div>
+              <td>
+                <div className="store-text">
+                  <span className="phone-text">{c.mobile}</span>
+                  {c.alternate_mobile && (
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block' }}>
+                      Alt: {c.alternate_mobile}
+                    </span>
+                  )}
+                </div>
+              </td>
+              <td>
+                <div className="store-text">
+                  <span className="store-name">{c.city || '—'}</span>
+                  {c.address && (
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block' }}>
+                      {c.address} {c.pincode ? `- ${c.pincode}` : ''}
+                    </span>
+                  )}
+                </div>
+              </td>
+              <td className="text-right">
+                <RowActions
+                  onEdit={() => openCustomerModal(c)}
+                  onDelete={() => setCustomerToDelete(c)}
+                />
+              </td>
+            </>
+          )}
+        />
       </div>
 
       {isCustomerModalOpen && (
@@ -236,6 +316,40 @@ const CustomersList = () => {
             </div>
             <form onSubmit={handleCustomerSubmit} autoComplete="off">
               <div className="modal-body">
+                {isSuperAdmin && !editingCustomerId && (
+                  <div className="form-field" style={{ marginBottom: '14px' }}>
+                    <label>Assign to Store *</label>
+                    <select
+                      style={{
+                        width: '100%',
+                        padding: '9px 12px',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '6px',
+                        background: 'var(--bg-primary)',
+                        color: 'var(--text-primary)',
+                        fontSize: '13px'
+                      }}
+                      value={customerForm.storeId || ''}
+                      onChange={(e) => {
+                        setCustomerForm({ ...customerForm, storeId: e.target.value });
+                        if (formErrors.storeId) setFormErrors({ ...formErrors, storeId: null });
+                      }}
+                    >
+                      <option value="">-- Select Store --</option>
+                      {stores.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name || s.store_name}
+                        </option>
+                      ))}
+                    </select>
+                    {formErrors.storeId && (
+                      <span style={{ color: 'var(--danger)', fontSize: '0.75rem', marginTop: '2px', display: 'block' }}>
+                        {formErrors.storeId}
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 <div className="form-row-2">
                   <div className="form-field">
                     <label>Full Name *</label>
