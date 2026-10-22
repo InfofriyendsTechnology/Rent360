@@ -207,7 +207,7 @@ const StockInventoryPage = () => {
       )
     },
     {
-      header: 'Collection Design',
+      header: 'Outfit / Design',
       accessor: 'product',
       width: '30%',
       cell: (row) => {
@@ -327,7 +327,7 @@ const StockInventoryPage = () => {
           <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="Search by Barcode / SKU, Collection name, or code..."
+            placeholder="Search by Barcode / SKU, Outfit name, or code..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -364,7 +364,7 @@ const StockInventoryPage = () => {
         data={items}
         loading={loading}
         emptyStateTitle="No stock pieces found"
-        emptyStateSubtitle="Add sizes and barcode pieces in the Collection section to see inventory units here"
+        emptyStateSubtitle="Add sizes and barcode pieces in the Outfits section to see inventory units here"
       />
 
       {/* Edit Status Modal */}

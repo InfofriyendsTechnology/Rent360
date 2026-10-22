@@ -23,7 +23,7 @@ export const updateProduct = async (req: AuthRequest, res: Response) => {
     });
 
     if (!existing) {
-      return responseHandler.notFound(res, "Product not found");
+      return responseHandler.notFound(res, "Outfit not found");
     }
 
     const updateData: any = {};
@@ -88,7 +88,7 @@ export const updateProduct = async (req: AuthRequest, res: Response) => {
       },
     });
 
-    return responseHandler.success(res, "Product updated successfully", updated);
+    return responseHandler.success(res, "Outfit updated successfully", updated);
   } catch (error) {
     console.error("Error updating product:", error);
     return responseHandler.internalServerError(res, error);

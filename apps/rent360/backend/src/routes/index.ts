@@ -47,6 +47,7 @@ router.use("/roles", roleRoutes);
 router.use("/users", userRoutes);
 router.use("/categorys", categoryRoutes);
 router.use("/categories", categoryRoutes);
+router.use("/outfits", productRoutes);
 router.use("/products", productRoutes);
 router.use("/productItems", productItemRoutes);
 router.use("/customers", customerRoutes);

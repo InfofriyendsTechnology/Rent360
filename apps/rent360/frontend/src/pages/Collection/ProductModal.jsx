@@ -172,7 +172,7 @@ const ProductModal = ({
     }
     if (!formData.categoryId) errs.categoryId = 'Please select a category';
     if (!formData.name.trim()) errs.name = 'Design name is required';
-    if (!formData.product_code.trim()) errs.product_code = 'Product code is required';
+    if (!formData.product_code.trim()) errs.product_code = 'Outfit code is required';
     if (formData.base_rent_price === '' || isNaN(Number(formData.base_rent_price)) || Number(formData.base_rent_price) < 0) {
       errs.base_rent_price = 'Base rent must be a valid number';
     }
@@ -202,7 +202,7 @@ const ProductModal = ({
         await axios.put(`${API_BASE_URL}/api/products/${product.id}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        toast.success('Design updated successfully');
+        toast.success('Outfit updated successfully');
       } else {
         const effectiveStoreId = isSuperAdmin ? productStoreId : (storeId || undefined);
         const payload = {
@@ -225,7 +225,7 @@ const ProductModal = ({
       onProductSaved();
       onClose();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to save product');
+      toast.error(err.response?.data?.message || 'Failed to save outfit');
     } finally {
       setSubmitting(false);
     }
@@ -236,8 +236,8 @@ const ProductModal = ({
       <div className="bond-modal-card product-modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div>
-            <h2>{isEditing ? 'Edit Design' : 'Add New Design'}</h2>
-            <p>{isEditing ? 'Update pricing, category, or photos' : 'Register a new ethnic apparel design in your catalog'}</p>
+            <h2>{isEditing ? 'Edit Outfit' : 'Add New Outfit'}</h2>
+            <p>{isEditing ? 'Update outfit pricing, category, or photos' : 'Register a new ethnic outfit in your collection'}</p>
           </div>
           <button type="button" className="modal-close" onClick={onClose} aria-label="Close">
             <FiX />
@@ -439,7 +439,7 @@ const ProductModal = ({
               Cancel
             </button>
             <button type="submit" className="pill-btn-primary" disabled={submitting}>
-              {submitting ? 'Saving...' : isEditing ? 'Save Changes' : 'Create Design'}
+              {submitting ? 'Saving...' : isEditing ? 'Save Outfit' : 'Create Outfit'}
             </button>
           </div>
         </form>

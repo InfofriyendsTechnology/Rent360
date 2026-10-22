@@ -69,7 +69,7 @@ export const getAllProducts = async (req: AuthRequest, res: Response) => {
       },
     });
 
-    return responseHandler.success(res, "Products fetched successfully", products);
+    return responseHandler.success(res, "Outfits fetched successfully", products);
   } catch (error) {
     console.error("Error fetching products:", error);
     return responseHandler.internalServerError(res, error);

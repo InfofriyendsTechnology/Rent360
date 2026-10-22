@@ -89,7 +89,7 @@ const BulkImportPage = () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'Rent360_Collection_Template.csv');
+    link.setAttribute('download', 'Rent360_Outfits_Template.csv');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -149,7 +149,7 @@ const BulkImportPage = () => {
         }
 
         setParsedRows(rows);
-        toast.success(`Parsed ${rows.length} collection items from CSV`);
+        toast.success(`Parsed ${rows.length} outfits from CSV`);
       } catch (err) {
         toast.error('Failed to parse CSV file');
       }
@@ -201,7 +201,7 @@ const BulkImportPage = () => {
     }
 
     setIsImporting(false);
-    toast.success(`Import complete! ${successCount} collection items created.`);
+    toast.success(`Import complete! ${successCount} outfits created.`);
     if (failCount > 0) {
       toast.error(`${failCount} items failed or already exist`);
     }
@@ -230,7 +230,7 @@ const BulkImportPage = () => {
   const handleSaveQuickRows = async () => {
     const validRows = quickRows.filter((r) => r.name.trim() && r.categoryId);
     if (validRows.length === 0) {
-      toast.error('Please enter at least one collection name');
+      toast.error('Please enter at least one outfit name');
       return;
     }
 
@@ -263,14 +263,14 @@ const BulkImportPage = () => {
         successCount++;
       }
 
-      toast.success(`${successCount} collection items saved successfully!`);
+      toast.success(`${successCount} outfits saved successfully!`);
       setQuickRows([
         { product_code: '', name: '', categoryId: categories[0]?.id || '', base_rent_price: '', base_security_deposit: '', initial_stock: 1 },
         { product_code: '', name: '', categoryId: categories[0]?.id || '', base_rent_price: '', base_security_deposit: '', initial_stock: 1 },
         { product_code: '', name: '', categoryId: categories[0]?.id || '', base_rent_price: '', base_security_deposit: '', initial_stock: 1 },
       ]);
     } catch (err) {
-      toast.error('Failed to save some collection items');
+      toast.error('Failed to save some outfits');
     } finally {
       setIsQuickSaving(false);
     }
@@ -281,7 +281,7 @@ const BulkImportPage = () => {
       <div className="view-header">
         <div>
           <h2>Bulk Import & Quick Add</h2>
-          <p className="subtitle">Upload multiple collection items via CSV spreadsheet or rapid batch entry</p>
+          <p className="subtitle">Upload multiple outfits via CSV spreadsheet or rapid batch entry</p>
         </div>
         <div className="header-actions">
           {isSuperAdmin && stores.length > 0 && (
@@ -362,7 +362,7 @@ const BulkImportPage = () => {
                   onClick={handleExecuteImport}
                   disabled={isImporting}
                 >
-                  <FiCheck /> {isImporting ? `Importing... (${importProgress}%)` : `Import All ${parsedRows.length} Collection Items`}
+                  <FiCheck /> {isImporting ? `Importing... (${importProgress}%)` : `Import All ${parsedRows.length} Outfits`}
                 </button>
               </div>
 
@@ -378,7 +378,7 @@ const BulkImportPage = () => {
                     <tr>
                       <th>Status</th>
                       <th>Product Code</th>
-                      <th>Collection Name</th>
+                      <th>Outfit Name</th>
                       <th>Category</th>
                       <th>Rent Price (₹)</th>
                       <th>Deposit (₹)</th>
@@ -432,7 +432,7 @@ const BulkImportPage = () => {
               <thead>
                 <tr>
                   <th style={{ width: '18%' }}>Product Code</th>
-                  <th style={{ width: '32%' }}>Collection Name *</th>
+                  <th style={{ width: '32%' }}>Outfit Name *</th>
                   <th style={{ width: '22%' }}>Category *</th>
                   <th style={{ width: '14%' }}>Rent Price (₹)</th>
                   <th style={{ width: '14%' }}>Deposit (₹)</th>
@@ -500,7 +500,7 @@ const BulkImportPage = () => {
               onClick={handleSaveQuickRows}
               disabled={isQuickSaving}
             >
-              <FiCheck /> {isQuickSaving ? 'Saving Collection...' : 'Save Collection'}
+              <FiCheck /> {isQuickSaving ? 'Saving Outfits...' : 'Save All Outfits'}
             </button>
           </div>
         </div>

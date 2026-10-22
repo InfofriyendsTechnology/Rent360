@@ -26,7 +26,7 @@ export const deleteProduct = async (req: AuthRequest, res: Response) => {
     });
 
     if (!existing) {
-      return responseHandler.notFound(res, "Product not found");
+      return responseHandler.notFound(res, "Outfit not found");
     }
 
     // Check if any productItem is currently booked
@@ -63,7 +63,7 @@ export const deleteProduct = async (req: AuthRequest, res: Response) => {
       }
     }
 
-    return responseHandler.success(res, `Product '${existing.name}' deleted successfully`);
+    return responseHandler.success(res, `Outfit '${existing.name}' deleted successfully`);
   } catch (error) {
     console.error("Error deleting product:", error);
     return responseHandler.internalServerError(res, error);

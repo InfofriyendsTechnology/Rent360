@@ -221,9 +221,9 @@ const CollectionList = () => {
       {/* Top Header Bar matching Bond CRM Header */}
       <div className="stores-top-bar">
         <div className="title-section">
-          <h1 className="main-title">Collection & Inventory</h1>
+          <h1 className="main-title">Outfits</h1>
           <p className="subtitle">
-            Manage ethnic apparel designs, rental prices, security deposits, and individual physical size SKUs
+            Manage designer ethnic outfits, bridal wear, sherwanis, rental pricing, and barcode SKUs
           </p>
         </div>
 
@@ -283,7 +283,7 @@ const CollectionList = () => {
             onClick={handleOpenAddProduct}
           >
             <FiPlus className="plus-icon" />
-            <span>New Design</span>
+            <span>Add Outfit</span>
           </button>
         </div>
       </div>
@@ -700,7 +700,7 @@ const CollectionList = () => {
 
       <ConfirmModal
         isOpen={Boolean(productToDelete)}
-        title="Delete Design"
+        title="Delete Outfit"
         message={`Are you sure you want to remove design "${productToDelete?.name}" (${productToDelete?.product_code}) from your collection? This will also remove its physical items.`}
         confirmText={isDeleting ? 'Deleting...' : 'Delete Design'}
         cancelText="Cancel"

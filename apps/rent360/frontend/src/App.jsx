@@ -68,7 +68,9 @@ const App = () => {
           {/* Store Admin & Staff Routes */}
           {(user?.role !== 'SUPER_ADMIN' && user?.role) && (
             <>
+              <Route path="outfits" element={<CollectionList />} />
               <Route path="collection" element={<CollectionList />} />
+              <Route path="collection/outfits" element={<CollectionList />} />
               <Route path="inventory" element={<Navigate to="/collection" replace />} />
               <Route path="cashbook" element={<Cashbook />} />
               <Route path="transactions" element={<Navigate to="/cashbook" replace />} />

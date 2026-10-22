@@ -176,7 +176,7 @@ const LookbookPage = () => {
             className={`cat-pill ${selectedCategory === 'ALL' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('ALL')}
           >
-            All Collection ({products.length})
+            All Outfits ({products.length})
           </button>
           {categories.map((cat) => {
             const count = products.filter((p) => p.categoryId === cat.id).length;
@@ -197,7 +197,7 @@ const LookbookPage = () => {
           <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="Search by collection name or code..."
+            placeholder="Search by outfit name or code..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -210,8 +210,8 @@ const LookbookPage = () => {
       ) : filteredProducts.length === 0 ? (
         <div className="empty-state-wrap">
           <FiShoppingBag className="empty-icon" />
-          <h3>No designs found in this category</h3>
-          <p>Add new designs in the Collection section to populate the lookbook</p>
+          <h3>No outfits found in this category</h3>
+          <p>Add new outfits in the Outfits section to populate the lookbook</p>
         </div>
       ) : (
         <div className="lookbook-grid">

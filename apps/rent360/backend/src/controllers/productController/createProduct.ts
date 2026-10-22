@@ -12,7 +12,9 @@ export const createProduct = async (req: AuthRequest, res: Response) => {
       storeId,
       categoryId,
       name,
+      outfit_name,
       product_code,
+      outfit_code,
       base_rent_price,
       base_security_deposit,
       images,
@@ -165,7 +167,7 @@ export const createProduct = async (req: AuthRequest, res: Response) => {
       };
     });
 
-    return responseHandler.created(res, "Product created successfully", result);
+    return responseHandler.created(res, "Outfit created successfully", result);
   } catch (error) {
     console.error("Error creating product:", error);
     return responseHandler.internalServerError(res, error);
