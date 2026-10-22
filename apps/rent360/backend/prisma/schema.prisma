@@ -251,19 +251,25 @@ model StoreBankAccount {
   storeId        String
   store          Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
   account_name   String
-  account_number String
+  account_number String?
   ifsc_code      String?
   transactions   Transaction[]
 }
 
 // 13. TRANSACTION_CATEGORIES
 model TransactionCategory {
-  id            String        @id @default(uuid())
-  storeId       String
-  store         Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  category_type String // INCOME, EXPENSE
-  name          String
-  transactions  Transaction[]
+  id              String        @id @default(uuid())
+  storeId         String
+  store           Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  category_type   String        @default("EXPENSE") // INCOME, EXPENSE
+  name            String
+  contact_no      String?
+  account_group   String?       @default("EXPENSES")
+  opening_balance Float?        @default(0)
+  opening_date    DateTime?
+  address         String?
+  remark          String?
+  transactions    Transaction[]
 }
 
 // 14. TRANSACTIONS

@@ -25,34 +25,31 @@ export const createTransactionCategory = async (
     }
 
     const name = (req.body.name || "").trim();
-    const category_type = (req.body.category_type || "EXPENSE").toUpperCase();
-
     if (!name) {
-      return responseHandler.badRequest(res, "Category name is required");
+      return responseHandler.badRequest(res, "Account name is required");
     }
 
-    // Check if category already exists for this store
-    const existing = await prisma.transactionCategory.findFirst({
-      where: {
-        storeId,
-        name: { equals: name, mode: "insensitive" },
-        category_type,
-      },
-    });
-
-    if (existing) {
-      return responseHandler.success(res, "Category already exists", existing);
+    const { contact_no, account_group, opening_balance, opening_date, address, remark } = req.body;
+    let category_type = (req.body.category_type || "").toUpperCase();
+    if (!category_type) {
+      category_type = (account_group === "Income" || account_group === "INCOME") ? "INCOME" : "EXPENSE";
     }
 
     const data = await prisma.transactionCategory.create({
       data: {
         name,
         category_type,
+        contact_no: contact_no ? contact_no.trim() : null,
+        account_group: account_group ? account_group.trim() : "Expenses",
+        opening_balance: opening_balance !== undefined && opening_balance !== null ? Number(opening_balance) : 0,
+        opening_date: opening_date ? new Date(opening_date) : null,
+        address: address ? address.trim() : null,
+        remark: remark ? remark.trim() : null,
         storeId,
       },
     });
 
-    return responseHandler.created(res, "Category created successfully", data);
+    return responseHandler.created(res, "Account created successfully", data);
   } catch (error) {
     console.error("Error creating transaction category:", error);
     return responseHandler.internalServerError(res, error);

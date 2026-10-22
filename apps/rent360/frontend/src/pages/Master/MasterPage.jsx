@@ -69,7 +69,13 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
     category_type: 'INCOME',
     account_name: '',
     account_number: '',
-    ifsc_code: ''
+    ifsc_code: '',
+    contact_no: '',
+    account_group: 'Expenses',
+    opening_balance: 0,
+    opening_date: new Date().toISOString().split('T')[0],
+    address: '',
+    remark: ''
   });
 
   // Fetch Stores for Super Admin
@@ -161,6 +167,12 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       account_name: '',
       account_number: '',
       ifsc_code: '',
+      contact_no: '',
+      account_group: 'Expenses',
+      opening_balance: 0,
+      opening_date: new Date().toISOString().split('T')[0],
+      address: '',
+      remark: '',
       storeId: selectedStoreId || (stores[0]?.id || '')
     });
     setIsModalOpen(true);
@@ -181,9 +193,15 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       reminder_date: item.reminder_date ? item.reminder_date.split('T')[0] : '',
       status: item.status || 'PENDING',
       category_type: item.category_type || 'INCOME',
-      account_name: item.account_name || '',
+      account_name: item.account_name || item.name || '',
       account_number: item.account_number || '',
       ifsc_code: item.ifsc_code || '',
+      contact_no: item.contact_no || '',
+      account_group: item.account_group || (item.category_type === 'INCOME' ? 'Income' : 'Expenses'),
+      opening_balance: item.opening_balance ?? 0,
+      opening_date: item.opening_date ? item.opening_date.split('T')[0] : new Date().toISOString().split('T')[0],
+      address: item.address || '',
+      remark: item.remark || '',
       storeId: item.storeId || ''
     });
     setIsModalOpen(true);
@@ -201,6 +219,19 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
         ? (formData.storeId || selectedStoreId)
         : (userStoreId || formData.storeId);
       if (effectiveStoreId) payload.storeId = effectiveStoreId;
+
+      if (currentTab === 'security-accounts') {
+        payload.account_name = (formData.name || formData.account_name || '').trim();
+        payload.account_number = formData.account_number || null;
+      }
+      if (currentTab === 'accounts') {
+        payload.opening_balance = Number(formData.opening_balance || 0);
+        if (formData.account_group === 'Income') {
+          payload.category_type = 'INCOME';
+        } else {
+          payload.category_type = 'EXPENSE';
+        }
+      }
 
       if (editingItem) {
         await axios.put(`${endpoint}/${editingItem.id}`, payload, {
@@ -401,18 +432,39 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       case 'accounts':
         return [
           {
-            header: 'Account / Category Name',
+            header: 'Account Name',
             accessor: 'name',
-            width: '50%',
-            cell: (row) => <span className="cell-strong">{row.name}</span>
+            width: '30%',
+            cell: (row) => (
+              <div className="account-name-cell">
+                <span className="name-main">{row.name}</span>
+                {row.address && <span className="address-hint" title={row.address}>{row.address}</span>}
+              </div>
+            )
           },
           {
-            header: 'Type',
-            accessor: 'category_type',
-            width: '32%',
+            header: 'Account Group',
+            accessor: 'account_group',
+            width: '22%',
+            cell: (row) => {
+              const grp = row.account_group || (row.category_type === 'INCOME' ? 'Income' : 'Expenses');
+              const cls = grp.toLowerCase().replace(/\s+/g, '-');
+              return <span className={`group-pill ${cls}`}>{grp}</span>;
+            }
+          },
+          {
+            header: 'Contact No',
+            accessor: 'contact_no',
+            width: '20%',
+            cell: (row) => <span className="cell-text">{row.contact_no || '—'}</span>
+          },
+          {
+            header: 'Opening Balance',
+            accessor: 'opening_balance',
+            width: '16%',
             cell: (row) => (
-              <span className={`type-badge ${row.category_type === 'INCOME' ? 'income' : 'expense'}`}>
-                {row.category_type || 'INCOME'}
+              <span className="op-balance-text">
+                ₹ {(row.opening_balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </span>
             )
           },
@@ -420,7 +472,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
             header: 'Actions',
             accessor: 'actions',
             align: 'right',
-            width: '18%',
+            width: '12%',
             cell: (row) => (
               <RowActions
                 onEdit={() => handleOpenEditModal(row)}
@@ -434,33 +486,27 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       case 'security-accounts':
         return [
           {
-            header: 'Account Name',
+            header: 'Security Account Name',
             accessor: 'account_name',
-            width: '36%',
-            cell: (row) => <span className="cell-strong">{row.account_name}</span>
+            width: '65%',
+            cell: (row) => <span className="cell-strong">{row.account_name || row.name}</span>
           },
           {
-            header: 'Account Number',
-            accessor: 'account_number',
-            width: '30%',
-            cell: (row) => <span className="cell-code">{row.account_number}</span>
-          },
-          {
-            header: 'IFSC Code',
-            accessor: 'ifsc_code',
-            width: '20%',
-            cell: (row) => <span className="cell-text">{row.ifsc_code || 'N/A'}</span>
+            header: 'Type',
+            accessor: 'type',
+            width: '23%',
+            cell: () => <span className="slot-badge">Deposit Guarantee</span>
           },
           {
             header: 'Actions',
             accessor: 'actions',
             align: 'right',
-            width: '14%',
+            width: '12%',
             cell: (row) => (
               <RowActions
                 onEdit={() => handleOpenEditModal(row)}
                 onDelete={() => setItemToDelete(row)}
-                deleteTitle={`Delete ${row.account_name}`}
+                deleteTitle={`Delete ${row.account_name || row.name}`}
               />
             )
           }
@@ -496,12 +542,12 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       case 'accounts':
         return {
           title: 'Accounts',
-          subtitle: 'Manage income and expense transaction categories'
+          subtitle: 'Manage financial ledger accounts, party and vendor contacts'
         };
       case 'security-accounts':
         return {
           title: 'Security Accounts',
-          subtitle: 'Configure security deposit bank accounts and IFSC codes'
+          subtitle: 'Configure deposit & collateral holders (e.g. Cash, Cheque, ID Card, Bank/UPI)'
         };
       default:
         return {
@@ -765,62 +811,102 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
                   </>
                 )}
 
-                {/* Accounts Form */}
+                {/* Accounts Form (Competitor-Aligned Ledger) */}
                 {currentTab === 'accounts' && (
                   <>
+                    <div className="form-row-2col">
+                      <div className="form-group">
+                        <label>Account Name *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. Royal Drycleaners, HDFC Current A/C"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Contact No</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. 9876543210"
+                          value={formData.contact_no}
+                          onChange={(e) => setFormData({ ...formData, contact_no: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row-2col">
+                      <div className="form-group">
+                        <label>Account Group *</label>
+                        <Select
+                          value={formData.account_group}
+                          onChange={(e) => setFormData({ ...formData, account_group: e.target.value })}
+                        >
+                          <option value="Parties">Parties</option>
+                          <option value="Vendors">Vendors</option>
+                          <option value="Income">Income</option>
+                          <option value="Expenses">Expenses</option>
+                          <option value="Bank Accounts">Bank Accounts</option>
+                          <option value="Cash Accounts">Cash Accounts</option>
+                          <option value="Capital Account">Capital Account</option>
+                          <option value="Loans">Loans</option>
+                        </Select>
+                      </div>
+
+                      <div className="form-group">
+                        <label>Opening Balance</label>
+                        <input
+                          type="number"
+                          step="any"
+                          placeholder="0.00"
+                          value={formData.opening_balance}
+                          onChange={(e) => setFormData({ ...formData, opening_balance: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
                     <div className="form-group">
-                      <label>Account / Category Name *</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Rental Revenue, Dry Cleaning Expense"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      <label>Opening Date</label>
+                      <DatePicker
+                        value={formData.opening_date}
+                        onChange={(e) => setFormData({ ...formData, opening_date: e.target.value })}
                       />
                     </div>
+
                     <div className="form-group">
-                      <label>Category Type *</label>
-                      <Select
-                        value={formData.category_type}
-                        onChange={(e) => setFormData({ ...formData, category_type: e.target.value })}
-                      >
-                        <option value="INCOME">Income</option>
-                        <option value="EXPENSE">Expense</option>
-                      </Select>
+                      <label>Address (Optional)</label>
+                      <textarea
+                        rows={2}
+                        placeholder="Enter physical address or store location..."
+                        value={formData.address}
+                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Remark (Optional)</label>
+                      <textarea
+                        rows={2}
+                        placeholder="Enter remarks or payment terms..."
+                        value={formData.remark}
+                        onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+                      />
                     </div>
                   </>
                 )}
 
-                {/* Security Accounts Form */}
+                {/* Security Accounts Form (Single Name Field matching Competitor) */}
                 {currentTab === 'security-accounts' && (
                   <>
                     <div className="form-group">
-                      <label>Account Holder / Name *</label>
+                      <label>Security Account Name *</label>
                       <input
                         type="text"
                         required
-                        placeholder="e.g. Store Security Deposit A/C"
-                        value={formData.account_name}
-                        onChange={(e) => setFormData({ ...formData, account_name: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Account Number *</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. 50100456789123"
-                        value={formData.account_number}
-                        onChange={(e) => setFormData({ ...formData, account_number: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>IFSC Code</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. HDFC0001234"
-                        value={formData.ifsc_code}
-                        onChange={(e) => setFormData({ ...formData, ifsc_code: e.target.value.toUpperCase() })}
+                        placeholder="e.g. Cash Security, Cheque Guarantee, Original ID / Document, Bank Security"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value, account_name: e.target.value })}
                       />
                     </div>
                   </>

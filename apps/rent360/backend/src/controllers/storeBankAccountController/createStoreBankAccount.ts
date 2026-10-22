@@ -21,20 +21,26 @@ export const createStoreBankAccount = async (req: AuthRequest, res: Response) =>
       return responseHandler.badRequest(res, "storeId is required");
     }
 
-    const { account_name, account_number, ifsc_code } = req.body;
+    const rawName = req.body.account_name || req.body.name;
+    if (!rawName || !rawName.trim()) {
+      return responseHandler.badRequest(res, "Account name is required");
+    }
+
+    const account_name = rawName.trim();
+    const account_number = req.body.account_number ? req.body.account_number.trim() : null;
+    const ifsc_code = req.body.ifsc_code ? req.body.ifsc_code.trim() : null;
 
     const data = await prisma.storeBankAccount.create({
       data: {
-        account_name: account_name.trim(),
-        account_number: account_number.trim(),
-        ifsc_code: ifsc_code ? ifsc_code.trim() : null,
+        account_name,
+        account_number,
+        ifsc_code,
         storeId,
       },
     });
-    return responseHandler.created(res, "Bank account created successfully", data);
+    return responseHandler.created(res, "Security / Bank account created successfully", data);
   } catch (error) {
     console.error("Error creating bank account:", error);
     return responseHandler.internalServerError(res, error);
   }
 };
-
