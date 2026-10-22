@@ -2,6 +2,34 @@
 @import '../Master/MasterPage.scss';
 
 .stock-inventory-view {
+  .controls-right-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .filter-select-wrap {
+      min-width: 175px;
+
+      .bond-select-trigger {
+        min-height: 42px;
+        height: 42px;
+        border-radius: $border-radius-pill;
+        background-color: $bg-card;
+        border: 1px solid $border-main;
+        box-shadow: $shadow-sm;
+        padding: 0 16px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: $text-main;
+
+        &:hover {
+          border-color: $accent;
+        }
+      }
+    }
+  }
+
   .sku-cell {
     display: flex;
     align-items: center;

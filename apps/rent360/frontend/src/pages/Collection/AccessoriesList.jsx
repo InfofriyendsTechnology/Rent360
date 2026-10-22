@@ -7,7 +7,7 @@ import {
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
-import { DataTable, RowActions } from '../../components/ui';
+import { DataTable, RowActions, Select } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import '../Stores/StoresList.scss';
 import '../Master/MasterPage.scss';
@@ -513,18 +513,17 @@ const AccessoriesList = () => {
 
         {activeTab === 'accessories' && (
           <div className="controls-right-group">
-            <div className="store-selector-pill category-filter-pill">
-              <label>Category:</label>
-              <select
+            <div className="category-select-wrap">
+              <Select
                 value={selectedCategoryFilter}
                 onChange={(e) => setSelectedCategoryFilter(e.target.value)}
+                size="md"
               >
                 <option value="ALL">All Categories</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
-              </select>
-              <FiChevronDown className="chevron-icon" />
+              </Select>
             </div>
 
             <label className="checkbox-filter-pill">

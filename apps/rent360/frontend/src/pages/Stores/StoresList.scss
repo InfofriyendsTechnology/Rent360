@@ -114,6 +114,9 @@
           appearance: none;
           -webkit-appearance: none;
           -moz-appearance: none;
+          &::-ms-expand {
+            display: none !important;
+          }
           max-width: 175px;
           white-space: nowrap;
           overflow: hidden;

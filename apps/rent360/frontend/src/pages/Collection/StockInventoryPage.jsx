@@ -7,7 +7,7 @@ import {
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
-import { DataTable, RowActions } from '../../components/ui';
+import { DataTable, RowActions, Select } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import '../Stores/StoresList.scss';
 import '../Master/MasterPage.scss';
@@ -359,24 +359,23 @@ const StockInventoryPage = () => {
         </div>
 
         <div className="controls-right-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div className="store-selector-pill">
-            <label>Status:</label>
-            <select
+          <div className="filter-select-wrap">
+            <Select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
+              size="md"
             >
               {STATUS_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </select>
-            <FiChevronDown className="chevron-icon" />
+            </Select>
           </div>
 
-          <div className="store-selector-pill">
-            <label>Size:</label>
-            <select
+          <div className="filter-select-wrap">
+            <Select
               value={sizeFilter}
               onChange={(e) => setSizeFilter(e.target.value)}
+              size="md"
             >
               <option value="ALL">All Sizes</option>
               <option value="36 (XS)">36 (XS)</option>
@@ -386,8 +385,7 @@ const StockInventoryPage = () => {
               <option value="44 (XL)">44 (XL)</option>
               <option value="46 (XXL)">46 (XXL)</option>
               <option value="Free Size">Free Size</option>
-            </select>
-            <FiChevronDown className="chevron-icon" />
+            </Select>
           </div>
         </div>
       </div>

@@ -28,43 +28,66 @@
   .controls-right-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
-  }
 
-  .category-filter-pill {
-    height: 42px;
-    select {
+    .category-select-wrap {
+      min-width: 190px;
+
+      .bond-select-trigger {
+        min-height: 42px;
+        height: 42px;
+        border-radius: $border-radius-pill;
+        background-color: $bg-card;
+        border: 1px solid $border-main;
+        box-shadow: $shadow-sm;
+        padding: 0 16px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: $text-main;
+
+        &:hover {
+          border-color: $accent;
+        }
+      }
+    }
+
+    .checkbox-filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 42px;
+      padding: 0 18px;
+      border-radius: $border-radius-pill;
+      border: 1px solid $border-main;
+      background-color: $bg-card;
       font-size: 0.88rem;
-    }
-  }
-
-  .checkbox-filter-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 42px;
-    padding: 0 16px;
-    border-radius: $border-radius-pill;
-    border: 1px solid $border-main;
-    background: $bg-card;
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: $text-main;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: $shadow-sm;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-
-    &:hover {
-      border-color: $accent;
-    }
-
-    input[type="checkbox"] {
+      font-weight: 500;
+      color: $text-main;
       cursor: pointer;
-      width: 15px;
-      height: 15px;
-      accent-color: $accent;
+      user-select: none;
+      box-shadow: $shadow-sm;
+      box-sizing: border-box;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+      &:hover {
+        border-color: $accent;
+      }
+
+      input[type="checkbox"] {
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        accent-color: $accent;
+        margin: 0;
+      }
+
+      span {
+        color: $text-main;
+        font-size: 0.88rem;
+        font-weight: 500;
+        white-space: nowrap;
+      }
     }
   }
 
