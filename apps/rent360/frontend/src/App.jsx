@@ -53,42 +53,65 @@ const App = () => {
         >
           <Route index element={<DashboardHome />} />
           
-          {/* Super Admin Routes */}
+          {/* Super Admin Specific Routes */}
           {(user?.role === 'SUPER_ADMIN' || !user?.role) && (
             <>
               <Route path="stores" element={<StoresList />} />
               <Route path="bucket" element={<BucketExplorer />} />
               <Route path="plans" element={<PlansList />} />
               <Route path="subscriptions" element={<SubscriptionsList />} />
-              <Route path="cashbook" element={<Navigate to="/stores" replace />} />
-              <Route path="transactions" element={<Navigate to="/stores" replace />} />
             </>
           )}
 
-          {/* Store Admin & Staff Routes */}
-          {(user?.role !== 'SUPER_ADMIN' && user?.role) && (
-            <>
-              <Route path="outfits" element={<CollectionList />} />
-              <Route path="collection" element={<CollectionList />} />
-              <Route path="collection/outfits" element={<CollectionList />} />
-              <Route path="inventory" element={<Navigate to="/collection" replace />} />
-              <Route path="cashbook" element={<Cashbook />} />
-              <Route path="transactions" element={<Navigate to="/cashbook" replace />} />
-              <Route path="customers" element={<CustomersList />} />
-              <Route path="roles" element={<RolesList />} />
-              <Route path="users" element={<UsersList />} />
-              <Route path="staff" element={<UsersList />} />
-              <Route path="categories" element={<CategoriesList />} />
-              <Route path="master" element={<MasterPage />} />
-              <Route path="sizes" element={<MasterPage defaultTab="sizes" />} />
-              <Route path="colors" element={<MasterPage defaultTab="colors" />} />
-              <Route path="time-slots" element={<MasterPage defaultTab="time-slots" />} />
-              <Route path="reminders" element={<MasterPage defaultTab="reminders" />} />
-              <Route path="accounts" element={<MasterPage defaultTab="accounts" />} />
-              <Route path="security-accounts" element={<MasterPage defaultTab="security-accounts" />} />
-            </>
-          )}
+          {/* Collection / Outfits Section */}
+          <Route path="outfits" element={<CollectionList />} />
+          <Route path="collection" element={<CollectionList />} />
+          <Route path="collection/outfits" element={<CollectionList />} />
+          <Route path="inventory" element={<Navigate to="/outfits" replace />} />
+          <Route path="inventory/products" element={<Navigate to="/outfits" replace />} />
+          <Route path="inventory/product" element={<Navigate to="/outfits" replace />} />
 
+          {/* Accessories Module (Direct & Nested Routes) */}
+          <Route path="accessories" element={<AccessoriesList />} />
+          <Route path="collection/accessories" element={<AccessoriesList />} />
+          <Route path="inventory/accessory" element={<Navigate to="/collection/accessories" replace />} />
+          <Route path="inventory/accessories" element={<Navigate to="/collection/accessories" replace />} />
+
+          {/* Barcode & Stock */}
+          <Route path="stock" element={<StockInventoryPage />} />
+          <Route path="collection/stock" element={<StockInventoryPage />} />
+          <Route path="inventory/items" element={<Navigate to="/collection/stock" replace />} />
+
+          {/* Lookbook / Catalogue */}
+          <Route path="lookbook" element={<LookbookPage />} />
+          <Route path="collection/lookbook" element={<LookbookPage />} />
+          <Route path="catalogue" element={<Navigate to="/collection/lookbook" replace />} />
+          <Route path="inventory/catalogue" element={<Navigate to="/collection/lookbook" replace />} />
+
+          {/* Bulk Import */}
+          <Route path="bulk-import" element={<BulkImportPage />} />
+          <Route path="collection/import" element={<BulkImportPage />} />
+          <Route path="collection/bulk-import" element={<BulkImportPage />} />
+          <Route path="inventory/excel-import" element={<Navigate to="/collection/import" replace />} />
+          <Route path="inventory/bulk-insert" element={<Navigate to="/collection/import" replace />} />
+
+          {/* Store Operations */}
+          <Route path="cashbook" element={<Cashbook />} />
+          <Route path="transactions" element={<Navigate to="/cashbook" replace />} />
+          <Route path="customers" element={<CustomersList />} />
+          <Route path="roles" element={<RolesList />} />
+          <Route path="users" element={<UsersList />} />
+          <Route path="staff" element={<UsersList />} />
+
+          {/* Store Setup & Master Attributes */}
+          <Route path="categories" element={<CategoriesList />} />
+          <Route path="master" element={<MasterPage />} />
+          <Route path="sizes" element={<MasterPage defaultTab="sizes" />} />
+          <Route path="colors" element={<MasterPage defaultTab="colors" />} />
+          <Route path="time-slots" element={<MasterPage defaultTab="time-slots" />} />
+          <Route path="reminders" element={<MasterPage defaultTab="reminders" />} />
+          <Route path="accounts" element={<MasterPage defaultTab="accounts" />} />
+          <Route path="security-accounts" element={<MasterPage defaultTab="security-accounts" />} />
 
           {/* Shared Settings & Profile */}
           <Route path="settings" element={<SettingsPage />} />

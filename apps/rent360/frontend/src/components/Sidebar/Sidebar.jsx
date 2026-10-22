@@ -215,8 +215,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </div>
 
           {/* Collapsible Store Setup Accordion Section (Only for Store Admin / Staff) */}
-          {!isSuperAdmin && (
-            <div className="menu-group master-menu-group">
+          <div className="menu-group master-menu-group">
               <span className="group-title">STORE SETUP</span>
               <div className="accordion-group">
                 <button
@@ -308,11 +307,9 @@ const Sidebar = ({ isOpen, onClose }) => {
                 )}
               </div>
             </div>
-          )}
 
           {/* Collapsible Collection Accordion Section (Fashion & Inventory Management) */}
-          {!isSuperAdmin && (
-            <div className="menu-group master-menu-group">
+          <div className="menu-group master-menu-group">
               <span className="group-title">COLLECTION</span>
               <div className="accordion-group">
                 <button
@@ -340,7 +337,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
                     <NavLink
                       to="/collection/accessories"
-                      className={({ isActive }) => isActive ? "sub-menu-pill active" : "sub-menu-pill"}
+                      className={({ isActive }) => (isActive || location.pathname === "/accessories") ? "sub-menu-pill active" : "sub-menu-pill"}
                       onClick={onClose}
                     >
                       <span className="sub-icon"><FiLayers /></span>
@@ -377,7 +374,6 @@ const Sidebar = ({ isOpen, onClose }) => {
                 )}
               </div>
             </div>
-          )}
 
           <div className="menu-group">
             <span className="group-title">PREFERENCES</span>
