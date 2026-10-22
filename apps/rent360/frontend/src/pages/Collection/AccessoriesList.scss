@@ -12,6 +12,28 @@
     }
   }
 
+  .acc-img-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--border-main);
+    background: var(--bg-card-alt);
+  }
+
+  .acc-img-placeholder {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card-alt);
+    border: 1px dashed var(--border-main);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+  }
+
   .acc-type-pill {
     display: inline-flex;
     align-items: center;
@@ -99,6 +121,249 @@
       background: rgba(220, 38, 38, 0.12);
       padding: 0.15rem 0.4rem;
       border-radius: 4px;
+    }
+  }
+
+  .sale-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    &.can-sell {
+      background: rgba(22, 163, 74, 0.12);
+      color: #15803d;
+      border: 1px solid rgba(22, 163, 74, 0.25);
+    }
+
+    &.rental-only {
+      background: rgba(100, 116, 139, 0.12);
+      color: #475569;
+      border: 1px solid rgba(100, 116, 139, 0.25);
+    }
+  }
+
+  .rent-text {
+    font-weight: 600;
+    color: var(--text-main);
+  }
+
+  .accessories-tabs-bar {
+    display: inline-flex;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-main);
+    border-radius: 9999px;
+    padding: 4px;
+    gap: 4px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+
+    .acc-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+      &:hover:not(.active) {
+        color: var(--text-main);
+        background: var(--bg-card-alt);
+      }
+
+      &.active {
+        background: var(--bg-pill-dark);
+        color: var(--text-inverse);
+        box-shadow: var(--shadow-sm);
+      }
+    }
+  }
+
+  .checkbox-filter-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.5rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-main);
+    background: var(--bg-card);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-main);
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.15s ease;
+
+    &:hover {
+      border-color: var(--accent);
+    }
+
+    input[type="checkbox"] {
+      cursor: pointer;
+      accent-color: var(--accent);
+    }
+  }
+
+  .link-info-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    margin-bottom: 18px;
+    background: var(--accent-light);
+    border: 1px solid var(--accent-border);
+    border-radius: 12px;
+    color: var(--text-main);
+    font-size: 0.88rem;
+    line-height: 1.4;
+
+    .info-icon {
+      font-size: 1.25rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+  }
+
+  .link-category-cell {
+    display: flex;
+    flex-direction: column;
+
+    .category-title {
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+
+    .category-code {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: monospace;
+      margin-top: 2px;
+    }
+  }
+
+  .linked-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+
+    .linked-acc-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: var(--bg-card-alt);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: 1px solid var(--border-main);
+    }
+
+    .no-links-text {
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 0.85rem;
+    }
+  }
+
+  .link-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-main);
+    background: var(--bg-card);
+    color: var(--text-main);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+  }
+}
+
+.link-modal-card {
+  max-width: 640px !important;
+  width: 100%;
+
+  .accessories-checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 4px;
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-main);
+      background: var(--bg-card);
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &:hover {
+        border-color: var(--accent);
+        background: var(--bg-card-hover);
+      }
+
+      &.selected {
+        border-color: var(--accent);
+        background: var(--accent-light);
+      }
+
+      input[type="checkbox"] {
+        width: 17px;
+        height: 17px;
+        accent-color: var(--accent);
+        cursor: pointer;
+      }
+
+      .checklist-meta {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        .acc-item-title {
+          font-weight: 600;
+          font-size: 0.9rem;
+          color: var(--text-main);
+        }
+
+        .acc-item-cat {
+          font-size: 0.75rem;
+          color: var(--text-muted);
+          margin-top: 1px;
+        }
+      }
+
+      .acc-item-rent {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--accent);
+        background: rgba(11, 96, 176, 0.08);
+        padding: 3px 8px;
+        border-radius: 6px;
+      }
     }
   }
 }

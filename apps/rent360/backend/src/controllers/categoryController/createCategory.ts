@@ -6,7 +6,7 @@ import { AuthRequest } from "../../middleware/auth";
 export const createCategory = async (req: AuthRequest, res: Response) => {
   try {
     const user = req.user;
-    let { name, category_code, description, storeId } = req.body;
+    let { name, category_code, description, skip_check_availability, washable, washing_price, storeId } = req.body;
 
     if (!name || typeof name !== "string" || !name.trim()) {
       return responseHandler.badRequest(res, "Category name is required");
@@ -64,6 +64,9 @@ export const createCategory = async (req: AuthRequest, res: Response) => {
         name,
         category_code,
         description: description ? description.trim() : null,
+        skip_check_availability: Boolean(skip_check_availability),
+        washable: washable !== undefined ? Boolean(washable) : true,
+        washing_price: Number(washing_price || 0),
       },
     });
 

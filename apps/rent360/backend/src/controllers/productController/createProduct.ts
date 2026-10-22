@@ -17,6 +17,10 @@ export const createProduct = async (req: AuthRequest, res: Response) => {
       outfit_code,
       base_rent_price,
       base_security_deposit,
+      mrp,
+      purchase_price,
+      hsn_code,
+      remark,
       images,
       image_urls,
       items, // Optional array of physical items: [{ size, color, sku_code, condition_notes }]
@@ -122,6 +126,10 @@ export const createProduct = async (req: AuthRequest, res: Response) => {
           name,
           base_rent_price: rentPrice,
           base_security_deposit: securityDeposit,
+          mrp: mrp !== undefined ? Number(mrp) || 0 : 0,
+          purchase_price: purchase_price !== undefined ? Number(purchase_price) || 0 : 0,
+          hsn_code: hsn_code ? String(hsn_code).trim() : null,
+          remark: remark ? String(remark).trim() : null,
           image_urls: finalImageUrls,
         },
       });

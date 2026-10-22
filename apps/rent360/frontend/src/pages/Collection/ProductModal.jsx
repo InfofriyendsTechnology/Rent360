@@ -63,6 +63,10 @@ const ProductModal = ({
     product_code: '',
     base_rent_price: '',
     base_security_deposit: '',
+    mrp: '',
+    purchase_price: '',
+    hsn_code: '',
+    remark: '',
     images: []
   });
 
@@ -82,6 +86,10 @@ const ProductModal = ({
         product_code: product.product_code || '',
         base_rent_price: product.base_rent_price !== undefined ? String(product.base_rent_price) : '',
         base_security_deposit: product.base_security_deposit !== undefined ? String(product.base_security_deposit) : '',
+        mrp: product.mrp !== undefined && product.mrp !== null ? String(product.mrp) : '',
+        purchase_price: product.purchase_price !== undefined && product.purchase_price !== null ? String(product.purchase_price) : '',
+        hsn_code: product.hsn_code || '',
+        remark: product.remark || '',
         images: Array.isArray(product.image_urls) ? [...product.image_urls] : []
       });
       setSelectedSizes([]);
@@ -93,6 +101,10 @@ const ProductModal = ({
         product_code: '',
         base_rent_price: '',
         base_security_deposit: '',
+        mrp: '',
+        purchase_price: '',
+        hsn_code: '',
+        remark: '',
         images: []
       });
       setSelectedSizes([defaultSize]);
@@ -196,6 +208,10 @@ const ProductModal = ({
           product_code: formData.product_code.trim().toUpperCase(),
           base_rent_price: Number(formData.base_rent_price),
           base_security_deposit: Number(formData.base_security_deposit),
+          mrp: formData.mrp !== '' ? Number(formData.mrp) : 0,
+          purchase_price: formData.purchase_price !== '' ? Number(formData.purchase_price) : 0,
+          hsn_code: formData.hsn_code ? formData.hsn_code.trim() : null,
+          remark: formData.remark ? formData.remark.trim() : null,
           images: formData.images
         };
 
@@ -212,6 +228,10 @@ const ProductModal = ({
           product_code: formData.product_code.trim().toUpperCase(),
           base_rent_price: Number(formData.base_rent_price),
           base_security_deposit: Number(formData.base_security_deposit),
+          mrp: formData.mrp !== '' ? Number(formData.mrp) : 0,
+          purchase_price: formData.purchase_price !== '' ? Number(formData.purchase_price) : 0,
+          hsn_code: formData.hsn_code ? formData.hsn_code.trim() : null,
+          remark: formData.remark ? formData.remark.trim() : null,
           images: formData.images,
           items: selectedSizes.map((sz) => ({ size: sz }))
         };
@@ -365,6 +385,60 @@ const ProductModal = ({
                   />
                 </div>
                 {formErrors.base_security_deposit && <span className="field-error">{formErrors.base_security_deposit}</span>}
+              </div>
+            </div>
+
+            {/* Row 4: MRP & Purchase Price (matching Competitor) */}
+            <div className="form-row-2">
+              <div className="form-field">
+                <label>MRP (Retail Value INR)</label>
+                <div className="input-with-symbol">
+                  <span className="currency-prefix">INR</span>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 45000"
+                    value={formData.mrp}
+                    onChange={(e) => setFormData({ ...formData, mrp: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="form-field">
+                <label>Purchase / Cost Price (INR)</label>
+                <div className="input-with-symbol">
+                  <span className="currency-prefix">INR</span>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 18000"
+                    value={formData.purchase_price}
+                    onChange={(e) => setFormData({ ...formData, purchase_price: e.target.value })}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Row 5: HSN Code & Remark (matching Competitor) */}
+            <div className="form-row-2">
+              <div className="form-field">
+                <label>HSN Code (GST Tax)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 6203 / 6204"
+                  value={formData.hsn_code}
+                  onChange={(e) => setFormData({ ...formData, hsn_code: e.target.value })}
+                />
+              </div>
+
+              <div className="form-field">
+                <label>Remark / Notes</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Handle velvet embroidery with care"
+                  value={formData.remark}
+                  onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+                />
               </div>
             </div>
 

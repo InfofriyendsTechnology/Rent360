@@ -17,9 +17,15 @@ export const getAllAccessorys = async (req: AuthRequest, res: Response) => {
       where.storeId = storeId;
     }
 
-    const { type, search } = req.query;
+    const { type, categoryId, search, isSold } = req.query;
+    if (categoryId && typeof categoryId === "string" && categoryId !== "ALL") {
+      where.categoryId = categoryId;
+    }
     if (type && typeof type === "string" && type !== "ALL") {
       where.item_type = { equals: type.trim(), mode: "insensitive" };
+    }
+    if (isSold !== undefined && isSold !== "") {
+      where.is_sold = isSold === "true";
     }
     if (search && typeof search === "string" && search.trim() !== "") {
       where.item_name = { contains: search.trim(), mode: "insensitive" };
@@ -27,6 +33,15 @@ export const getAllAccessorys = async (req: AuthRequest, res: Response) => {
 
     const data = await prisma.accessory.findMany({
       where,
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            category_code: true,
+          },
+        },
+      },
       orderBy: { createdAt: "desc" },
     });
     return responseHandler.success(res, "Fetched accessories successfully", data);

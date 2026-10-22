@@ -79,6 +79,19 @@ export const updateProduct = async (req: AuthRequest, res: Response) => {
       updateData.image_urls = uploadedUrls;
     }
 
+        if (req.body.mrp !== undefined) {
+      updateData.mrp = Number(req.body.mrp) || 0;
+    }
+    if (req.body.purchase_price !== undefined) {
+      updateData.purchase_price = Number(req.body.purchase_price) || 0;
+    }
+    if (req.body.hsn_code !== undefined) {
+      updateData.hsn_code = req.body.hsn_code ? String(req.body.hsn_code).trim() : null;
+    }
+    if (req.body.remark !== undefined) {
+      updateData.remark = req.body.remark ? String(req.body.remark).trim() : null;
+    }
+
     const updated = await (prisma as any).product.update({
       where: { id },
       data: updateData,

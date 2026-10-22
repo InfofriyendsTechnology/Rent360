@@ -46,6 +46,7 @@ model Store {
   itemServiceLogs       ItemServiceLog[]
   timeSlots             TimeSlot[]
   accessories           Accessory[]
+  categoryAccessoryLinks CategoryAccessoryLink[]
   attendances           Attendance[]
   holidays              Holiday[]
   staffLeaves           StaffLeave[]
@@ -102,15 +103,20 @@ model User {
 
 // 4. CATEGORIES
 model Category {
-  id            String    @id @default(uuid())
-  storeId       String
-  store         Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  category_code String
-  name          String
-  description   String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  products      Product[]
+  id                      String                  @id @default(uuid())
+  storeId                 String
+  store                   Store                   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  category_code           String
+  name                    String
+  description             String?
+  skip_check_availability Boolean                 @default(false)
+  washable                Boolean                 @default(true)
+  washing_price           Float                   @default(0.0)
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  products                Product[]
+  accessories             Accessory[]
+  accessoryLinks          CategoryAccessoryLink[]
 }
 
 // 5. PRODUCTS
@@ -124,6 +130,10 @@ model Product {
   name                  String
   base_rent_price       Float          @default(0.0)
   base_security_deposit Float          @default(0.0)
+  mrp                   Float?         @default(0.0)
+  purchase_price        Float?         @default(0.0)
+  hsn_code              String?
+  remark                String?
   image_urls            Json           @default("[]")
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
@@ -366,15 +376,21 @@ model TimeSlot {
 
 // 20. ACCESSORIES
 model Accessory {
-  id              String           @id @default(uuid())
+  id              String                  @id @default(uuid())
   storeId         String
-  store           Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store           Store                   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  categoryId      String?
+  category        Category?               @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   item_name       String
   item_type       String
-  total_stock     Int              @default(0)
-  alert_limit     Int              @default(0)
-  createdAt       DateTime         @default(now())
+  image_url       String?
+  rent_price      Float                   @default(0.0)
+  is_sold         Boolean                 @default(false)
+  total_stock     Int                     @default(0)
+  alert_limit     Int                     @default(0)
+  createdAt       DateTime                @default(now())
   retailSaleItems RetailSaleItem[]
+  categoryLinks   CategoryAccessoryLink[]
 }
 
 // 21. ATTENDANCE
@@ -622,4 +638,17 @@ model StoreSize {
   sort_order Int     @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model CategoryAccessoryLink {
+  id          String    @id @default(uuid())
+  storeId     String
+  store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  accessoryId String
+  accessory   Accessory @relation(fields: [accessoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  @@unique([categoryId, accessoryId])
 }

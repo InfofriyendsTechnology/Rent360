@@ -54,7 +54,10 @@ const CategoriesList = () => {
   const [formData, setFormData] = useState({
     name: '',
     category_code: '',
-    description: ''
+    description: '',
+    skip_check_availability: false,
+    washable: true,
+    washing_price: 0
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -100,7 +103,7 @@ const CategoriesList = () => {
   // Open modal for Create / Edit
   const handleOpenCreateModal = () => {
     setEditingCategory(null);
-    setFormData({ name: '', category_code: '', description: '' });
+    setFormData({ name: '', category_code: '', description: '', skip_check_availability: false, washable: true, washing_price: 0 });
     setModalStoreId(selectedStoreId || (stores[0]?.id || ''));
     setFormErrors({});
     setIsModalOpen(true);
@@ -111,7 +114,10 @@ const CategoriesList = () => {
     setFormData({
       name: cat.name || '',
       category_code: cat.category_code || '',
-      description: cat.description || ''
+      description: cat.description || '',
+      skip_check_availability: Boolean(cat.skip_check_availability),
+      washable: cat.washable !== undefined ? Boolean(cat.washable) : true,
+      washing_price: cat.washing_price ?? 0
     });
     setModalStoreId(cat.storeId || cat.store?.id || '');
     setFormErrors({});
@@ -159,6 +165,9 @@ const CategoriesList = () => {
         name: formData.name.trim(),
         category_code: formData.category_code.trim().toUpperCase(),
         description: formData.description.trim() || undefined,
+        skip_check_availability: Boolean(formData.skip_check_availability),
+        washable: Boolean(formData.washable),
+        washing_price: Number(formData.washing_price || 0),
         storeId: effectiveStoreId || undefined
       };
 
@@ -459,11 +468,46 @@ const CategoriesList = () => {
                 <div className="form-field">
                   <label>Description (Optional)</label>
                   <textarea
-                    rows={3}
+                    rows={2}
                     placeholder="Brief description of fabrics, styles, or occasions for this pipeline..."
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   />
+                </div>
+
+                {/* Washable & Skip Check Availability options (matching Competitor) */}
+                <div className="form-row-checkboxes" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem', padding: '0.75rem', background: 'rgba(0,0,0,0.02)', borderRadius: '8px', border: '1px solid var(--border-main)' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.88rem', fontWeight: 500 }}>
+                    <input
+                      type="checkbox"
+                      checked={formData.skip_check_availability}
+                      onChange={(e) => setFormData({ ...formData, skip_check_availability: e.target.checked })}
+                    />
+                    <span>Skip Check Availability</span>
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.88rem', fontWeight: 500 }}>
+                    <input
+                      type="checkbox"
+                      checked={formData.washable}
+                      onChange={(e) => setFormData({ ...formData, washable: e.target.checked })}
+                    />
+                    <span>Washable</span>
+                  </label>
+                </div>
+
+                <div className="form-field" style={{ marginTop: '0.85rem' }}>
+                  <label>Washing / Laundry Price (INR)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="0.00"
+                    value={formData.washing_price}
+                    onChange={(e) => setFormData({ ...formData, washing_price: e.target.value })}
+                  />
+                  <span className="field-hint">
+                    Standard dry cleaning / laundry expense for outfits in this category
+                  </span>
                 </div>
               </div>
 
