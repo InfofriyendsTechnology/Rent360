@@ -36,6 +36,18 @@ const Sidebar = ({ isOpen, onClose }) => {
     }
   }, [isMasterRouteActive]);
 
+  const isCollectionRouteActive = [
+    '/collection', '/outfits', '/accessories', '/stock', '/lookbook', '/bulk-import'
+  ].some((p) => location.pathname.startsWith(p));
+
+  const [isCollectionOpen, setIsCollectionOpen] = useState(true);
+
+  useEffect(() => {
+    if (isCollectionRouteActive) {
+      setIsCollectionOpen(true);
+    }
+  }, [isCollectionRouteActive]);
+
   useEffect(() => {
     if (isSuperAdmin) {
       localStorage.removeItem('superAdminToken');
@@ -174,14 +186,6 @@ const Sidebar = ({ isOpen, onClose }) => {
               ) : (
                 <>
                   <NavLink 
-                    to="/collection" 
-                    className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
-                    onClick={onClose}
-                  >
-                    <span className="icon"><FiBox /></span>
-                    <span className="text">Collection</span>
-                  </NavLink>
-                  <NavLink 
                     to="/cashbook" 
                     className={({ isActive }) => isActive ? 'menu-pill active' : 'menu-pill'}
                     onClick={onClose}
@@ -299,6 +303,76 @@ const Sidebar = ({ isOpen, onClose }) => {
                     >
                       <span className="sub-icon"><FiShield /></span>
                       <span className="text">Security Accounts</span>
+                    </NavLink>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Collapsible Collection Accordion Section (Fashion & Inventory Management) */}
+          {!isSuperAdmin && (
+            <div className="menu-group master-menu-group">
+              <span className="group-title">COLLECTION</span>
+              <div className="accordion-group">
+                <button
+                  type="button"
+                  className={`menu-pill accordion-trigger ${isCollectionOpen ? "open" : ""} ${isCollectionRouteActive ? "active-group" : ""}`}
+                  onClick={() => setIsCollectionOpen(!isCollectionOpen)}
+                >
+                  <span className="icon"><FiBox /></span>
+                  <span className="text">Collection</span>
+                  <span className="accordion-chevron">
+                    {isCollectionOpen ? <FiChevronDown /> : <FiChevronRight />}
+                  </span>
+                </button>
+
+                {isCollectionOpen && (
+                  <div className="accordion-submenu">
+                    <NavLink
+                      to="/collection"
+                      end
+                      className={({ isActive }) => (isActive || location.pathname === "/collection/outfits") ? "sub-menu-pill active" : "sub-menu-pill"}
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiTag /></span>
+                      <span className="text">Outfits</span>
+                    </NavLink>
+
+                    <NavLink
+                      to="/collection/accessories"
+                      className={({ isActive }) => isActive ? "sub-menu-pill active" : "sub-menu-pill"}
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiLayers /></span>
+                      <span className="text">Accessories</span>
+                    </NavLink>
+
+                    <NavLink
+                      to="/collection/stock"
+                      className={({ isActive }) => isActive ? "sub-menu-pill active" : "sub-menu-pill"}
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiDatabase /></span>
+                      <span className="text">Barcode & Stock</span>
+                    </NavLink>
+
+                    <NavLink
+                      to="/collection/lookbook"
+                      className={({ isActive }) => isActive ? "sub-menu-pill active" : "sub-menu-pill"}
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiCamera /></span>
+                      <span className="text">Lookbook</span>
+                    </NavLink>
+
+                    <NavLink
+                      to="/collection/import"
+                      className={({ isActive }) => isActive ? "sub-menu-pill active" : "sub-menu-pill"}
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiSliders /></span>
+                      <span className="text">Bulk Import</span>
                     </NavLink>
                   </div>
                 )}

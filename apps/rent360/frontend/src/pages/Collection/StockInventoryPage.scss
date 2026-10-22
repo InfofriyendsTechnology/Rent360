@@ -1,0 +1,242 @@
+@import '../../styles/variables';
+
+.stock-inventory-view {
+  .stock-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .kpi-card {
+      background: $bg-card;
+      border: 1px solid $border-main;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+      .kpi-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+
+        &.total {
+          background: rgba(14, 165, 233, 0.12);
+          color: #0284c7;
+        }
+
+        &.available {
+          background: rgba(34, 197, 94, 0.12);
+          color: #16a34a;
+        }
+
+        &.rented {
+          background: rgba(168, 85, 247, 0.12);
+          color: #9333ea;
+        }
+
+        &.laundry {
+          background: rgba(245, 158, 11, 0.12);
+          color: #d97706;
+        }
+      }
+
+      .kpi-details {
+        display: flex;
+        flex-direction: column;
+
+        .kpi-title {
+          font-size: 0.8rem;
+          color: $text-muted;
+          font-weight: 500;
+        }
+
+        .kpi-value {
+          font-size: 1.4rem;
+          font-weight: 700;
+          color: $text-main;
+        }
+      }
+    }
+  }
+
+  .sku-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .sku-code {
+      font-family: monospace;
+      font-weight: 700;
+      color: $text-main;
+      font-size: 0.88rem;
+      background: rgba(0, 0, 0, 0.04);
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .copy-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: $text-muted;
+      display: flex;
+      align-items: center;
+      padding: 0.2rem;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+
+      &:hover {
+        color: $text-main;
+        background: rgba(0, 0, 0, 0.05);
+      }
+
+      .text-green {
+        color: #16a34a;
+      }
+    }
+  }
+
+  .product-summary-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .product-thumb {
+      width: 40px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid $border-main;
+    }
+
+    .thumb-placeholder {
+      width: 40px;
+      height: 48px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.06);
+      color: $text-muted;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .prod-meta {
+      display: flex;
+      flex-direction: column;
+
+      .prod-name {
+        font-weight: 600;
+        color: $text-main;
+        font-size: 0.9rem;
+      }
+
+      .prod-code {
+        font-size: 0.75rem;
+        color: $text-muted;
+      }
+    }
+  }
+
+  .variant-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    .size-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      background: rgba(14, 165, 233, 0.1);
+      color: #0369a1;
+      font-weight: 700;
+      border-radius: 4px;
+      font-size: 0.78rem;
+    }
+
+    .color-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      background: rgba(100, 116, 139, 0.1);
+      color: #475569;
+      font-weight: 600;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+  }
+
+  .status-cell-wrap {
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    &.available {
+      background: rgba(34, 197, 94, 0.12);
+      color: #15803d;
+      border: 1px solid rgba(34, 197, 94, 0.25);
+    }
+
+    &.booked {
+      background: rgba(14, 165, 233, 0.12);
+      color: #0369a1;
+      border: 1px solid rgba(14, 165, 233, 0.25);
+    }
+
+    &.rented {
+      background: rgba(168, 85, 247, 0.12);
+      color: #7e22ce;
+      border: 1px solid rgba(168, 85, 247, 0.25);
+    }
+
+    &.laundry {
+      background: rgba(245, 158, 11, 0.12);
+      color: #b45309;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    &.damaged {
+      background: rgba(239, 68, 68, 0.12);
+      color: #b91c1c;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+  }
+
+  .piece-summary-banner {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid $border-main;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+
+    .banner-sku {
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: $text-main;
+    }
+
+    .banner-outfit {
+      font-size: 0.85rem;
+      color: $text-muted;
+      margin-top: 0.2rem;
+    }
+  }
+}

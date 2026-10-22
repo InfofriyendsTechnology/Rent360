@@ -18,6 +18,10 @@ import CategoriesList from './pages/Categories/CategoriesList';
 import SettingsPage from './pages/Settings/SettingsPage';
 import Cashbook from './pages/Cashbook/Cashbook';
 import MasterPage from './pages/Master/MasterPage';
+import AccessoriesList from './pages/Collection/AccessoriesList';
+import StockInventoryPage from './pages/Collection/StockInventoryPage';
+import LookbookPage from './pages/Collection/LookbookPage';
+import BulkImportPage from './pages/Collection/BulkImportPage';
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);

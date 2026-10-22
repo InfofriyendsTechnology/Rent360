@@ -1,0 +1,104 @@
+@import '../../styles/variables';
+
+.accessories-view {
+  .accessory-name-cell {
+    display: flex;
+    flex-direction: column;
+
+    .name-main {
+      font-weight: 600;
+      color: $text-main;
+      font-size: 0.95rem;
+    }
+  }
+
+  .acc-type-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+
+    &.jewellery {
+      background: rgba(217, 119, 6, 0.12);
+      color: #b45309;
+      border: 1px solid rgba(217, 119, 6, 0.25);
+    }
+
+    &.headwear {
+      background: rgba(13, 148, 136, 0.12);
+      color: #0f766e;
+      border: 1px solid rgba(13, 148, 136, 0.25);
+    }
+
+    &.footwear {
+      background: rgba(79, 70, 229, 0.12);
+      color: #4338ca;
+      border: 1px solid rgba(79, 70, 229, 0.25);
+    }
+
+    &.brooch-mala {
+      background: rgba(225, 29, 72, 0.12);
+      color: #be123c;
+      border: 1px solid rgba(225, 29, 72, 0.25);
+    }
+
+    &.dupatta-belt {
+      background: rgba(147, 51, 234, 0.12);
+      color: #7e22ce;
+      border: 1px solid rgba(147, 51, 234, 0.25);
+    }
+
+    &.other {
+      background: rgba(100, 116, 139, 0.12);
+      color: #475569;
+      border: 1px solid rgba(100, 116, 139, 0.25);
+    }
+  }
+
+  .stock-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .stock-number {
+      font-weight: 600;
+      font-size: 0.9rem;
+
+      &.ok {
+        color: #16a34a;
+      }
+
+      &.low {
+        color: #ea580c;
+      }
+
+      &.out {
+        color: #dc2626;
+      }
+    }
+
+    .low-stock-alert {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #c2410c;
+      background: rgba(234, 88, 12, 0.12);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    .out-stock-alert {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #b91c1c;
+      background: rgba(220, 38, 38, 0.12);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+    }
+  }
+}

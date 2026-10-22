@@ -71,6 +71,7 @@ router.use("/itemServiceLogs", itemServiceLogRoutes);
 router.use("/timeSlots", timeSlotRoutes);
 router.use("/time-slots", timeSlotRoutes);
 router.use("/accessorys", accessoryRoutes);
+router.use("/accessories", accessoryRoutes);
 router.use("/attendances", attendanceRoutes);
 router.use("/holidays", holidayRoutes);
 router.use("/staffLeaves", staffLeaveRoutes);

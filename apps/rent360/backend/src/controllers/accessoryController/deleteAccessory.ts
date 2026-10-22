@@ -4,7 +4,7 @@ import responseHandler from "../../utils/responseHandler";
 
 export const deleteAccessory = async (req: Request, res: Response) => {
   try {
-    await (prisma as any).accessory.delete({ where: { id: req.params.id } });
+    await (prisma as any).accessory.delete({ where: { id: req.params.id as string } });
     return responseHandler.success(res, "Deleted successfully");
   } catch (error) {
     return responseHandler.internalServerError(res, error);
