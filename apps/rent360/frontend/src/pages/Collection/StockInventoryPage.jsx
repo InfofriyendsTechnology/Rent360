@@ -294,7 +294,7 @@ const StockInventoryPage = () => {
         </div>
       </div>
 
-      {/* KPI Metrics Summary Bar matching CategoriesList */}
+      {/* KPI Metrics Summary Bar matching Bond CRM standard */}
       <div className="category-metrics-grid">
         <div className="metric-pill-card">
           <div className="metric-icon-wrap">
@@ -302,7 +302,7 @@ const StockInventoryPage = () => {
           </div>
           <div className="metric-info">
             <span className="metric-label">Total Stock Pieces</span>
-            <span className="metric-val">{stats.total}</span>
+            <span className="metric-value">{stats.total}</span>
           </div>
         </div>
 
@@ -312,7 +312,7 @@ const StockInventoryPage = () => {
           </div>
           <div className="metric-info">
             <span className="metric-label">Available for Rent</span>
-            <span className="metric-val">{stats.available}</span>
+            <span className="metric-value">{stats.available}</span>
           </div>
         </div>
 
@@ -322,17 +322,17 @@ const StockInventoryPage = () => {
           </div>
           <div className="metric-info">
             <span className="metric-label">Booked / Out on Rent</span>
-            <span className="metric-val">{stats.bookedOrRented}</span>
+            <span className="metric-value">{stats.bookedOrRented}</span>
           </div>
         </div>
 
         <div className="metric-pill-card">
-          <div className="metric-icon-wrap warning" style={{ backgroundColor: 'rgba(245, 158, 11, 0.12)', color: '#d97706' }}>
+          <div className="metric-icon-wrap warning">
             <FiClock />
           </div>
           <div className="metric-info">
             <span className="metric-label">In Dry Cleaning</span>
-            <span className="metric-val">{stats.dryCleaning}</span>
+            <span className="metric-value">{stats.dryCleaning}</span>
           </div>
         </div>
       </div>
