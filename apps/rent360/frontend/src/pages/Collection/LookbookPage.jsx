@@ -2,14 +2,14 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { 
   FiSearch, FiShare2, FiImage, FiCopy, FiCheck, 
-  FiShoppingBag, FiTag, FiDollarSign, FiShield, FiSliders 
+  FiShoppingBag, FiTag, FiDollarSign, FiShield, FiX, FiChevronDown
 } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
-import { Select } from '../../components/ui';
 import ImageGalleryModal from './ImageGalleryModal';
 import '../Stores/StoresList.scss';
+import '../Master/MasterPage.scss';
 import './LookbookPage.scss';
 
 const LookbookPage = () => {
@@ -141,80 +141,112 @@ const LookbookPage = () => {
   };
 
   return (
-    <div className="stores-view lookbook-view">
-      <div className="view-header">
-        <div>
-          <h2>Digital Lookbook</h2>
+    <div className="stores-view master-page-view lookbook-page-view">
+      {/* Top Bar matching Rent360 Master standard */}
+      <div className="stores-top-bar">
+        <div className="title-section">
+          <h1 className="main-title">Digital Lookbook</h1>
           <p className="subtitle">Visual catalogue of designer apparel, bridal wear, and sherwanis for customer showcases</p>
         </div>
-        <div className="header-actions">
+
+        <div className="top-actions">
           {isSuperAdmin && stores.length > 0 && (
-            <div className="store-selector-wrap">
-              <Select
+            <div className="store-selector-pill">
+              <FiShoppingBag className="store-pill-icon" />
+              <label>Store:</label>
+              <select
                 value={selectedStoreId}
-                onChange={(e) => setSelectedStoreId(e.target.value)}
-                className="store-select"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedStoreId(val);
+                  if (val) localStorage.setItem('rent360_active_store_id', val);
+                  else localStorage.removeItem('rent360_active_store_id');
+                }}
               >
+                <option value="">All Stores</option>
                 {stores.map((s) => (
-                  <option key={s.id} value={s.id}>{s.name}</option>
+                  <option key={s.id} value={s.id}>
+                    {s.name || s.store_name}
+                  </option>
                 ))}
-              </Select>
+              </select>
+              <FiChevronDown className="chevron-icon" />
             </div>
           )}
-          <button className="pill-btn-secondary" onClick={handleCopyLink}>
-            <FiShare2 />
+
+          <button
+            type="button"
+            className="pill-btn-primary"
+            onClick={handleCopyLink}
+          >
+            <FiShare2 className="plus-icon" />
             <span>Share Catalogue</span>
           </button>
         </div>
       </div>
 
-      {/* Category Tabs & Search Bar */}
-      <div className="lookbook-controls">
-        <div className="category-pills-bar">
-          <button
-            type="button"
-            className={`cat-pill ${selectedCategory === 'ALL' ? 'active' : ''}`}
-            onClick={() => setSelectedCategory('ALL')}
-          >
-            All Outfits ({products.length})
-          </button>
-          {categories.map((cat) => {
-            const count = products.filter((p) => p.categoryId === cat.id).length;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                className={`cat-pill ${selectedCategory === cat.id ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(cat.id)}
-              >
-                {cat.name} ({count})
-              </button>
-            );
-          })}
-        </div>
+      {/* Category Tabs Pill Bar matching Master */}
+      <div className="master-tabs-bar">
+        <button
+          type="button"
+          className={`master-tab-btn ${selectedCategory === 'ALL' ? 'active' : ''}`}
+          onClick={() => setSelectedCategory('ALL')}
+        >
+          <FiTag className="tab-icon" />
+          <span>All Outfits ({products.length})</span>
+        </button>
 
-        <div className="search-wrap">
+        {categories.map((cat) => {
+          const count = products.filter((p) => p.categoryId === cat.id).length;
+          return (
+            <button
+              key={cat.id}
+              type="button"
+              className={`master-tab-btn ${selectedCategory === cat.id ? 'active' : ''}`}
+              onClick={() => setSelectedCategory(cat.id)}
+            >
+              <FiTag className="tab-icon" />
+              <span>{cat.name} ({count})</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Search Bar */}
+      <div className="setup-controls-bar">
+        <div className="search-pill-wrapper">
           <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="Search by outfit name or code..."
+            placeholder="Search by outfit name or design code..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+          {searchQuery && (
+            <button
+              type="button"
+              className="clear-search"
+              onClick={() => setSearchQuery('')}
+            >
+              <FiX />
+            </button>
+          )}
         </div>
       </div>
 
       {/* Cards Grid */}
       {loading ? (
-        <div className="lookbook-loading">Loading lookbook designs...</div>
+        <div className="lookbook-loading">Loading lookbook collection...</div>
       ) : filteredProducts.length === 0 ? (
-        <div className="empty-state-wrap">
-          <FiShoppingBag className="empty-icon" />
+        <div className="bond-card-container empty-lookbook-container">
+          <div className="empty-icon-box">
+            <FiShoppingBag />
+          </div>
           <h3>No outfits found in this category</h3>
-          <p>Add new outfits in the Outfits section to populate the lookbook</p>
+          <p>Add new designs in the Outfits section to populate your customer lookbook.</p>
         </div>
       ) : (
-        <div className="lookbook-grid">
+        <div className="lookbook-cards-grid">
           {filteredProducts.map((prod) => {
             const images = Array.isArray(prod.image_urls) ? prod.image_urls : [];
             const coverImage = images[0] || '';
@@ -223,9 +255,9 @@ const LookbookPage = () => {
               : [];
 
             return (
-              <div key={prod.id} className="lookbook-card">
+              <div key={prod.id} className="lookbook-item-card">
                 <div 
-                  className="card-media"
+                  className="card-media-wrapper"
                   onClick={() => handleOpenGallery(prod, 0)}
                   title="Click to view full photo gallery"
                 >
@@ -237,55 +269,55 @@ const LookbookPage = () => {
                       <span>No Photo</span>
                     </div>
                   )}
-                  <div className="code-badge">{prod.product_code}</div>
+                  <span className="code-pill">{prod.product_code}</span>
                   {images.length > 1 && (
-                    <div className="gallery-counter">
+                    <span className="photos-counter-pill">
                       +{images.length} Photos
-                    </div>
+                    </span>
                   )}
                 </div>
 
-                <div className="card-content">
-                  <div className="cat-name">{prod.category?.name || 'Collection'}</div>
-                  <h4 className="collection-title" title={prod.name}>{prod.name}</h4>
+                <div className="card-info-body">
+                  <span className="group-pill parties">{prod.category?.name || 'General Outfit'}</span>
+                  <h4 className="outfit-title" title={prod.name}>{prod.name}</h4>
 
-                  <div className="pricing-box">
-                    <div className="price-col">
-                      <span className="price-label">Rental Price</span>
-                      <span className="price-value">
-                        ₹{(prod.base_rent_price || 0).toLocaleString('en-IN')}
+                  <div className="rates-row">
+                    <div className="rate-col">
+                      <span className="rate-lbl">Rental Rate</span>
+                      <span className="op-balance-text">
+                        ₹ {(prod.base_rent_price || 0).toLocaleString('en-IN')}
                       </span>
                     </div>
-                    <div className="price-col deposit">
-                      <span className="price-label">Deposit</span>
-                      <span className="price-value">
-                        ₹{(prod.base_security_deposit || 0).toLocaleString('en-IN')}
+                    <div className="rate-col deposit">
+                      <span className="rate-lbl">Security Deposit</span>
+                      <span className="op-balance-text">
+                        ₹ {(prod.base_security_deposit || 0).toLocaleString('en-IN')}
                       </span>
                     </div>
                   </div>
 
                   {sizes.length > 0 && (
-                    <div className="sizes-row">
-                      <span className="sizes-label">Sizes:</span>
-                      <div className="sizes-chips">
+                    <div className="sizes-strip">
+                      <span className="sizes-strip-label">Sizes:</span>
+                      <div className="sizes-chips-wrap">
                         {sizes.map((sz, idx) => (
-                          <span key={idx} className="size-chip">{sz}</span>
+                          <span key={idx} className="group-pill bank-accounts">{sz}</span>
                         ))}
                       </div>
                     </div>
                   )}
 
-                  <div className="card-actions">
+                  <div className="lookbook-actions-bar">
                     <button
                       type="button"
-                      className="view-gallery-btn"
+                      className="lookbook-pill-btn"
                       onClick={() => handleOpenGallery(prod, 0)}
                     >
                       <FiImage /> View Photos
                     </button>
                     <button
                       type="button"
-                      className="whatsapp-btn"
+                      className="lookbook-pill-btn whatsapp"
                       onClick={() => handleShareWhatsApp(prod)}
                       title="Share details via WhatsApp"
                     >

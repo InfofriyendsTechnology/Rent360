@@ -2,14 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { 
   FiSearch, FiLayers, FiCheckCircle, FiClock, 
-  FiShoppingBag, FiTool, FiAlertOctagon, FiCopy, FiCheck, FiEdit2, FiTrash2 
+  FiShoppingBag, FiTool, FiAlertOctagon, FiCopy, FiCheck, FiX, FiChevronDown
 } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
-import { DataTable, RowActions, Select } from '../../components/ui';
+import { DataTable, RowActions } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import '../Stores/StoresList.scss';
+import '../Master/MasterPage.scss';
 import './StockInventoryPage.scss';
 
 const STATUS_OPTIONS = [
@@ -141,12 +142,11 @@ const StockInventoryPage = () => {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast.success('Stock item updated successfully');
+      toast.success('Piece status updated');
       setStatusModalOpen(false);
-      setEditingItem(null);
       fetchItems();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to update stock item');
+      toast.error(err.response?.data?.message || 'Failed to update status');
     } finally {
       setIsSavingStatus(false);
     }
@@ -159,7 +159,7 @@ const StockInventoryPage = () => {
       await axios.delete(`${API_BASE_URL}/api/productItems/${itemToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      toast.success('Stock piece removed');
+      toast.success('Piece deleted from inventory');
       setItemToDelete(null);
       fetchItems();
     } catch (err) {
@@ -173,17 +173,17 @@ const StockInventoryPage = () => {
     const s = (status || 'AVAILABLE').toUpperCase();
     switch (s) {
       case 'AVAILABLE':
-        return <span className="status-pill available">Available</span>;
+        return <span className="status-pill completed">Available</span>;
       case 'BOOKED':
-        return <span className="status-pill booked">Reserved</span>;
+        return <span className="status-pill pending">Booked</span>;
       case 'RENTED':
-        return <span className="status-pill rented">Out on Rent</span>;
+        return <span className="group-pill parties">On Rent</span>;
       case 'DRY_CLEANING':
-        return <span className="status-pill laundry">Dry Cleaning</span>;
+        return <span className="group-pill loans">Dry Cleaning</span>;
       case 'DAMAGED':
-        return <span className="status-pill damaged">Damaged</span>;
+        return <span className="group-pill expenses">Damaged</span>;
       default:
-        return <span className="status-pill available">{s}</span>;
+        return <span className="status-pill pending">{s}</span>;
     }
   };
 
@@ -191,43 +191,31 @@ const StockInventoryPage = () => {
     {
       header: 'Barcode / SKU',
       accessor: 'sku_code',
-      width: '20%',
+      width: '26%',
       cell: (row) => (
         <div className="sku-cell">
           <span className="sku-code">{row.sku_code}</span>
           <button
             type="button"
-            className="copy-btn"
-            title="Copy SKU / Barcode"
+            className="copy-sku-btn"
             onClick={() => handleCopySku(row.sku_code)}
+            title="Copy Barcode SKU"
           >
-            {copiedSku === row.sku_code ? <FiCheck className="text-green" /> : <FiCopy />}
+            {copiedSku === row.sku_code ? <FiCheck className="copied" /> : <FiCopy />}
           </button>
         </div>
       )
     },
     {
-      header: 'Outfit / Design',
+      header: 'Outfit Design',
       accessor: 'product',
-      width: '30%',
-      cell: (row) => {
-        const prod = row.product || {};
-        const images = Array.isArray(prod.image_urls) ? prod.image_urls : [];
-        const thumb = images[0] || '';
-        return (
-          <div className="product-summary-cell">
-            {thumb ? (
-              <img src={thumb} alt={prod.name} className="product-thumb" />
-            ) : (
-              <div className="thumb-placeholder">{prod.name ? prod.name.charAt(0) : 'P'}</div>
-            )}
-            <div className="prod-meta">
-              <span className="prod-name">{prod.name || 'Unnamed Design'}</span>
-              <span className="prod-code">{prod.product_code || '—'}</span>
-            </div>
-          </div>
-        );
-      }
+      width: '32%',
+      cell: (row) => (
+        <div className="account-name-cell">
+          <span className="cell-strong">{row.product?.name || 'Unnamed Outfit'}</span>
+          <span className="cell-code">{row.product?.product_code}</span>
+        </div>
+      )
     },
     {
       header: 'Size & Color',
@@ -235,17 +223,22 @@ const StockInventoryPage = () => {
       width: '18%',
       cell: (row) => (
         <div className="variant-cell">
-          <span className="size-badge">{row.size || 'Free Size'}</span>
-          {row.color && <span className="color-badge">{row.color}</span>}
+          <span className="group-pill bank-accounts">{row.size || 'Free Size'}</span>
+          {row.color && <span className="group-pill capital-account">{row.color}</span>}
         </div>
       )
     },
     {
       header: 'Status',
       accessor: 'status',
-      width: '18%',
+      width: '14%',
       cell: (row) => (
-        <div className="status-cell-wrap" onClick={() => handleOpenStatusModal(row)} title="Click to change status">
+        <div
+          className="status-cell-wrap"
+          onClick={() => handleOpenStatusModal(row)}
+          title="Click to change status"
+          style={{ cursor: 'pointer' }}
+        >
           {getStatusBadge(row.status)}
         </div>
       )
@@ -254,7 +247,7 @@ const StockInventoryPage = () => {
       header: 'Actions',
       accessor: 'actions',
       align: 'right',
-      width: '14%',
+      width: '10%',
       cell: (row) => (
         <RowActions
           onEdit={() => handleOpenStatusModal(row)}
@@ -266,64 +259,87 @@ const StockInventoryPage = () => {
   ], [copiedSku]);
 
   return (
-    <div className="stores-view stock-inventory-view">
-      <div className="view-header">
-        <div>
-          <h2>Barcode & Stock Items</h2>
+    <div className="stores-view master-page-view stock-inventory-view">
+      {/* Top Bar matching Rent360 Master standard */}
+      <div className="stores-top-bar">
+        <div className="title-section">
+          <h1 className="main-title">Barcode & Stock</h1>
           <p className="subtitle">Track physical rental garments, barcode SKUs, availability, and dry cleaning cycles</p>
         </div>
-        <div className="header-actions">
+
+        <div className="top-actions">
           {isSuperAdmin && stores.length > 0 && (
-            <div className="store-selector-wrap">
-              <Select
+            <div className="store-selector-pill">
+              <FiShoppingBag className="store-pill-icon" />
+              <label>Store:</label>
+              <select
                 value={selectedStoreId}
-                onChange={(e) => setSelectedStoreId(e.target.value)}
-                className="store-select"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedStoreId(val);
+                  if (val) localStorage.setItem('rent360_active_store_id', val);
+                  else localStorage.removeItem('rent360_active_store_id');
+                }}
               >
+                <option value="">All Stores</option>
                 {stores.map((s) => (
-                  <option key={s.id} value={s.id}>{s.name}</option>
+                  <option key={s.id} value={s.id}>
+                    {s.name || s.store_name}
+                  </option>
                 ))}
-              </Select>
+              </select>
+              <FiChevronDown className="chevron-icon" />
             </div>
           )}
         </div>
       </div>
 
-      {/* KPI Stats Cards */}
-      <div className="stock-kpi-grid">
-        <div className="kpi-card">
-          <div className="kpi-icon total"><FiLayers /></div>
-          <div className="kpi-details">
-            <span className="kpi-title">Total Pieces</span>
-            <span className="kpi-value">{stats.total}</span>
+      {/* KPI Metrics Summary Bar matching CategoriesList */}
+      <div className="category-metrics-grid">
+        <div className="metric-pill-card">
+          <div className="metric-icon-wrap">
+            <FiLayers />
+          </div>
+          <div className="metric-info">
+            <span className="metric-label">Total Stock Pieces</span>
+            <span className="metric-val">{stats.total}</span>
           </div>
         </div>
-        <div className="kpi-card">
-          <div className="kpi-icon available"><FiCheckCircle /></div>
-          <div className="kpi-details">
-            <span className="kpi-title">Available</span>
-            <span className="kpi-value">{stats.available}</span>
+
+        <div className="metric-pill-card">
+          <div className="metric-icon-wrap success">
+            <FiCheckCircle />
+          </div>
+          <div className="metric-info">
+            <span className="metric-label">Available for Rent</span>
+            <span className="metric-val">{stats.available}</span>
           </div>
         </div>
-        <div className="kpi-card">
-          <div className="kpi-icon rented"><FiShoppingBag /></div>
-          <div className="kpi-details">
-            <span className="kpi-title">Booked / Out</span>
-            <span className="kpi-value">{stats.bookedOrRented}</span>
+
+        <div className="metric-pill-card">
+          <div className="metric-icon-wrap accent">
+            <FiShoppingBag />
+          </div>
+          <div className="metric-info">
+            <span className="metric-label">Booked / Out on Rent</span>
+            <span className="metric-val">{stats.bookedOrRented}</span>
           </div>
         </div>
-        <div className="kpi-card">
-          <div className="kpi-icon laundry"><FiClock /></div>
-          <div className="kpi-details">
-            <span className="kpi-title">Dry Cleaning</span>
-            <span className="kpi-value">{stats.dryCleaning}</span>
+
+        <div className="metric-pill-card">
+          <div className="metric-icon-wrap warning" style={{ backgroundColor: 'rgba(245, 158, 11, 0.12)', color: '#d97706' }}>
+            <FiClock />
+          </div>
+          <div className="metric-info">
+            <span className="metric-label">In Dry Cleaning</span>
+            <span className="metric-val">{stats.dryCleaning}</span>
           </div>
         </div>
       </div>
 
-      {/* Table Filters */}
-      <div className="table-controls-bar">
-        <div className="search-wrap">
+      {/* Search and Filters Bar */}
+      <div className="setup-controls-bar">
+        <div className="search-pill-wrapper">
           <FiSearch className="search-icon" />
           <input
             type="text"
@@ -331,60 +347,91 @@ const StockInventoryPage = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+          {searchQuery && (
+            <button
+              type="button"
+              className="clear-search"
+              onClick={() => setSearchQuery('')}
+            >
+              <FiX />
+            </button>
+          )}
         </div>
 
-        <div className="filters-group">
-          <Select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            {STATUS_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </Select>
+        <div className="controls-right-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div className="store-selector-pill">
+            <label>Status:</label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              {STATUS_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+            <FiChevronDown className="chevron-icon" />
+          </div>
 
-          <Select
-            value={sizeFilter}
-            onChange={(e) => setSizeFilter(e.target.value)}
-          >
-            <option value="ALL">All Sizes</option>
-            <option value="XS">XS</option>
-            <option value="S">S</option>
-            <option value="M">M</option>
-            <option value="L">L</option>
-            <option value="XL">XL</option>
-            <option value="XXL">XXL</option>
-            <option value="Free Size">Free Size</option>
-          </Select>
+          <div className="store-selector-pill">
+            <label>Size:</label>
+            <select
+              value={sizeFilter}
+              onChange={(e) => setSizeFilter(e.target.value)}
+            >
+              <option value="ALL">All Sizes</option>
+              <option value="36 (XS)">36 (XS)</option>
+              <option value="38 (S)">38 (S)</option>
+              <option value="40 (M)">40 (M)</option>
+              <option value="42 (L)">42 (L)</option>
+              <option value="44 (XL)">44 (XL)</option>
+              <option value="46 (XXL)">46 (XXL)</option>
+              <option value="Free Size">Free Size</option>
+            </select>
+            <FiChevronDown className="chevron-icon" />
+          </div>
         </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={items}
-        loading={loading}
-        emptyStateTitle="No stock pieces found"
-        emptyStateSubtitle="Add sizes and barcode pieces in the Outfits section to see inventory units here"
-      />
+      {/* DataTable in Bond Card Container */}
+      <div className="bond-card-container">
+        <DataTable
+          columns={columns}
+          data={items}
+          loading={loading}
+          keyExtractor={(row) => row.id}
+          emptyTitle="No stock pieces found"
+          emptyDescription="Add sizes and barcode pieces in the Outfits section to see inventory units here."
+        />
+      </div>
 
-      {/* Edit Status Modal */}
+      {/* Edit Status Modal matching Master bond-modal standard */}
       {statusModalOpen && editingItem && (
-        <div className="modal-backdrop">
-          <div className="modal-card">
+        <div className="bond-modal-overlay" onClick={() => setStatusModalOpen(false)}>
+          <div className="bond-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>Update Piece Status</h3>
-              <button className="close-btn" onClick={() => setStatusModalOpen(false)}>×</button>
+              <div>
+                <h2>Update Piece Status</h2>
+                <p>Manage barcode physical status and dry cleaning notes</p>
+              </div>
+              <button
+                type="button"
+                className="modal-close"
+                onClick={() => setStatusModalOpen(false)}
+              >
+                <FiX />
+              </button>
             </div>
-            <form onSubmit={handleSaveStatus}>
+
+            <form onSubmit={handleSaveStatus} autoComplete="off">
               <div className="modal-body">
                 <div className="piece-summary-banner">
-                  <span className="banner-sku">{editingItem.sku_code}</span>
-                  <span className="banner-collection">{editingItem.product?.name} ({editingItem.size})</span>
+                  <span className="cell-code banner-sku">{editingItem.sku_code}</span>
+                  <span className="banner-collection">{editingItem.product?.name} ({editingItem.size || 'Free Size'})</span>
                 </div>
 
                 <div className="form-group">
                   <label>Current Status *</label>
-                  <Select
+                  <select
                     value={modalStatus}
                     onChange={(e) => setModalStatus(e.target.value)}
                     required
@@ -394,7 +441,7 @@ const StockInventoryPage = () => {
                     <option value="RENTED">Out on Rent</option>
                     <option value="DRY_CLEANING">In Dry Cleaning / Laundry</option>
                     <option value="DAMAGED">Damaged / Under Repair</option>
-                  </Select>
+                  </select>
                 </div>
 
                 <div className="form-group">
