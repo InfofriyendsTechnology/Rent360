@@ -488,20 +488,14 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Security Account Name',
             accessor: 'account_name',
-            width: '65%',
+            width: '80%',
             cell: (row) => <span className="cell-strong">{row.account_name || row.name}</span>
-          },
-          {
-            header: 'Type',
-            accessor: 'type',
-            width: '23%',
-            cell: () => <span className="slot-badge">Deposit Guarantee</span>
           },
           {
             header: 'Actions',
             accessor: 'actions',
             align: 'right',
-            width: '12%',
+            width: '20%',
             cell: (row) => (
               <RowActions
                 onEdit={() => handleOpenEditModal(row)}
