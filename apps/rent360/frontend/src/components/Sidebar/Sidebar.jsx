@@ -37,7 +37,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   }, [isMasterRouteActive]);
 
   const isCollectionRouteActive = [
-    '/collection', '/outfits', '/accessories', '/stock', '/lookbook', '/bulk-import'
+    '/collection', '/accessories', '/stock', '/lookbook', '/bulk-import'
   ].some((p) => location.pathname.startsWith(p));
 
   const [isCollectionOpen, setIsCollectionOpen] = useState(true);
@@ -332,11 +332,11 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <NavLink
                       to="/collection"
                       end
-                      className={({ isActive }) => (isActive || location.pathname === "/collection/outfits") ? "sub-menu-pill active" : "sub-menu-pill"}
+                      className={({ isActive }) => isActive ? "sub-menu-pill active" : "sub-menu-pill"}
                       onClick={onClose}
                     >
                       <span className="sub-icon"><FiTag /></span>
-                      <span className="text">Outfits</span>
+                      <span className="text">Collection</span>
                     </NavLink>
 
                     <NavLink

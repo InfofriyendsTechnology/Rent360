@@ -110,7 +110,7 @@ const LookbookPage = () => {
   const handleOpenGallery = (prod, index = 0) => {
     const images = Array.isArray(prod.image_urls) ? prod.image_urls : [];
     if (images.length === 0) {
-      toast.error('No photos uploaded for this outfit yet');
+      toast.error('No photos uploaded for this design yet');
       return;
     }
     setGalleryState({
@@ -176,7 +176,7 @@ const LookbookPage = () => {
             className={`cat-pill ${selectedCategory === 'ALL' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('ALL')}
           >
-            All Outfits ({products.length})
+            All Collection ({products.length})
           </button>
           {categories.map((cat) => {
             const count = products.filter((p) => p.categoryId === cat.id).length;
@@ -197,7 +197,7 @@ const LookbookPage = () => {
           <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="Search by outfit name or code..."
+            placeholder="Search by collection name or code..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -211,7 +211,7 @@ const LookbookPage = () => {
         <div className="empty-state-wrap">
           <FiShoppingBag className="empty-icon" />
           <h3>No designs found in this category</h3>
-          <p>Add new designs in the Outfits section to populate the lookbook</p>
+          <p>Add new designs in the Collection section to populate the lookbook</p>
         </div>
       ) : (
         <div className="lookbook-grid">
@@ -247,7 +247,7 @@ const LookbookPage = () => {
 
                 <div className="card-content">
                   <div className="cat-name">{prod.category?.name || 'Collection'}</div>
-                  <h4 className="outfit-title" title={prod.name}>{prod.name}</h4>
+                  <h4 className="collection-title" title={prod.name}>{prod.name}</h4>
 
                   <div className="pricing-box">
                     <div className="price-col">
