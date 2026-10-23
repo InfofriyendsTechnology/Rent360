@@ -1,0 +1,69 @@
+{
+  "date": "23-10-2026",
+  "dayNumber": 29,
+  "title": "Full-Page Inline Outlay Form, Silent Soft Refresh, Custom Inline Validation & Hairline Scrollbars",
+  "titleGu": "ફુલ-પેજ ઇનલાઇન આઉટલે ફોર્મ, સાયલન્ટ સોફ્ટ રિફ્રેશ, કસ્ટમ ઇનલાઇન વેલિડેશન અને હેરલાઇન સ્ક્રોલબાર",
+  "members": [
+    "001"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Eliminated cramped modal popup workflows for Outfit creation and editing; engineered a dedicated full-page creative outlay canvas (/collection/create and /collection/edit/:id) featuring two responsive columns: primary cover dropzone with automatic WebP optimization on the left, and organized form fields outlay, 4-angle gallery uploader, and physical barcode stock previews on the right."
+    },
+    {
+      "member": "001",
+      "text": "Implemented silent, in-place soft refresh across the active outlet: wired a global 'rent360:refresh' event bus to the Header refresh button with a 600ms micro-spin animation, completely removing page reloads, draft loss, and toast notification spam."
+    },
+    {
+      "member": "001",
+      "text": "Applied Rent360 theme design tokens to form actions: updated Reset and Submit buttons to signature .pill-btn-primary (solid dark background, inverse text, subtle elevation) and .pill-btn-secondary (bordered card with hover accent translation), ensuring 100% aesthetic consistency with Master and Stores."
+    },
+    {
+      "member": "001",
+      "text": "Resolved persistent Windows Chromium 121+ scrollbar issues: identified that @supports not selector(::-webkit-scrollbar) and unconditional scrollbar-width: thin were triggering native OS scrollbars with arrow buttons; scoped standard scrollbars strictly to Firefox (@supports (-moz-appearance: none)), enforcing ultra-sleek 3px hairline scrollbars with hidden arrows and transparent tracks across all dropdowns (Size, Color, Category) and sidebar hover."
+    },
+    {
+      "member": "001",
+      "text": "Cleaned up number inputs across the entire application: completely removed native browser increment/decrement spin boxes (::-webkit-inner-spin-button and ::-webkit-outer-spin-button) with ugly white boxes inside dark inputs (Rent, MRP, Purchase Price, Security Amount, Qty), matching clean Magento and Bond CRM styling."
+    },
+    {
+      "member": "001",
+      "text": "Replaced ugly native browser validation tooltip popups ('Please fill out this field') with professional inline validation: added noValidate to form canvas, auto-focusing invalid fields, rendering a crisp red border with glow (#ef4444), and displaying smooth animated error text directly underneath fields with instant real-time clearance upon typing."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "આઉટફિટ ક્રિએટ અને એડિટ માટે સંકુચિત મોડલ પોપઅપ દૂર કર્યું; કોમ્પિટિટર કરતા શ્રેષ્ઠ ફુલ-પેજ ક્રિએટિવ આઉટલે કેનવાસ (/collection/create અને /collection/edit/:id) તૈયાર કર્યું, જેમાં ડાબી બાજુ ઓટો-વેબપી ઓપ્ટિમાઇઝેશન સાથે કવર ઇમેજ ડ્રોપઝોન અને જમણી બાજુ સુવ્યવસ્થિત ફીલ્ડ્સ આઉટલે, 4-એંગલ ગેલેરી અને બારકોડ સ્ટોક પ્રીવ્યૂ આપ્યું."
+    },
+    {
+      "member": "001",
+      "text": "સાઇટ રિલોડ અને ટોસ્ટ મેસેજ વગર સાયલન્ટ સોફ્ટ રિફ્રેશ સિસ્ટમ લાગુ કરી: હેડરના રિફ્રેશ બટન સાથે 600ms સ્પીન એનિમેશન અને rent360:refresh કસ્ટમ ઇવેન્ટ બસ જોડી, જેથી પેજ રીલોડ થયા વગર અથવા ડ્રાફ્ટ ગુમાવ્યા વગર એક્ટિવ આઉટલેટ ડેટા શાંતિથી રિફ્રેશ થાય."
+    },
+    {
+      "member": "001",
+      "text": "ફોર્મ એક્શન્સમાં Rent360 ના સિગ્નેચર થીમ પિલ બટનો લાગુ કર્યા: જૂના ફ્લેટ બટનો બદલીને .pill-btn-primary (ડાર્ક પિલ, ઇનવર્સ ટેક્સ્ટ, બોન્ડ શેડો) અને .pill-btn-secondary (બોર્ડર્ડ કાર્ડ, હોવર એક્સેન્ટ ટ્રાન્સલેશન) સેટ કર્યા, જે માસ્ટર અને સ્ટોર્સ મોડ્યુલ્સ સાથે 100% મેચ થાય છે."
+    },
+    {
+      "member": "001",
+      "text": "વિન્ડોઝ ક્રોમિયમ 121+ ની જાડી સ્ક્રોલબાર અને એરો બટન્સનું કાયમી સોલ્યુશન કર્યું: scrollbar-width: thin ના નિયમો માત્ર ફાયરફોક્સ પૂરતા સીમિત કરી, તમામ સિલેક્ટ ડ્રોપડાઉન્સ (Size, Color, Category) અને સાઇડબાર હોવર પર અલ્ટ્રા-સ્લીક 3px હેરલાઇન સ્ક્રોલબાર, ટ્રાન્સપરન્ટ ટ્રેક અને સ્મૂથ પિલ થમ્બ લાગુ કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "નંબર ઇનપુટ્સમાંથી બ્રાઉઝરના કદરૂપા Increase/Decrease સ્પીનર બોક્સ દૂર કર્યા: તમામ નંબર ઇનપુટ્સ (Rent, MRP, Purchase Price, Security Amount, Qty) પરથી ડાર્ક મોડમાં દેખાતા સફેદ ચોરસ બોક્સ અને એરો હટાવી મેજેન્ટો અને બોન્ડ CRM જેવો ક્લીન લુક આપ્યો."
+    },
+    {
+      "member": "001",
+      "text": "બ્રાઉઝરના ડિફોલ્ટ 'Please fill out this field' પોપઅપ ટૂલટિપને બદલે પ્રોફેશનલ ઇનલાઇન વેલિડેશન આપ્યું: ફોર્મ પર noValidate લગાવી, પ્રથમ ભૂલ વાળા ફીલ્ડ પર ઓટો-ફોકસ, રેડ બોર્ડર ગ્લો (#ef4444) અને ફીલ્ડની બરાબર નીચે સ્મૂથ એનિમેટેડ એરર ટેક્સ્ટ બતાવ્યું, જે ટાઇપ કરતા જ તુરંત ક્લિયર થાય છે."
+    }
+  ],
+  "deliverables": [
+    "Full-Page Creative Outfit Outlay Canvas (/collection/create & /collection/edit/:id)",
+    "Silent In-Place Soft Refresh System with rent360:refresh Event Bus",
+    "Signature Rent360 Theme Pill Action Buttons (.pill-btn-primary & .pill-btn-secondary)",
+    "Cross-Browser Hairline 3px Scrollbars & Windows Native Arrow Button Elimination",
+    "Clean Number Inputs with Global Browser Spin-Box Suppression",
+    "Inline Field Validation with Red Border & Real-Time Error Feedback"
+  ]
+}
