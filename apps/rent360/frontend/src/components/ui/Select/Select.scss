@@ -92,6 +92,12 @@
     box-shadow: 0 0 0 3px var(--accent-light);
   }
 
+  // Error / Invalid State on Trigger
+  &.is-invalid .bond-select-trigger {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+  }
+
   // Size variations
   &.sm .bond-select-trigger {
     min-height: 32px;

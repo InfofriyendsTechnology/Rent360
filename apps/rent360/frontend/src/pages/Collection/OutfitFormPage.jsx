@@ -48,6 +48,7 @@ const OutfitFormPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [optimizingMain, setOptimizingMain] = useState(false);
   const [optimizingGallery, setOptimizingGallery] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
 
   // Form Fields
   const [formData, setFormData] = useState({
@@ -237,6 +238,14 @@ const OutfitFormPage = () => {
 
   // Handle Form Change
   const handleChange = (field, value) => {
+    if (formErrors[field]) {
+      setFormErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
+
     setFormData((prev) => {
       const updated = { ...prev, [field]: value };
 
@@ -316,6 +325,7 @@ const OutfitFormPage = () => {
 
   // Reset Button
   const handleReset = () => {
+    setFormErrors({});
     if (isEditing && originalStateRef.current) {
       setFormData(originalStateRef.current.form);
       setPrimaryImage(originalStateRef.current.primary);
@@ -343,20 +353,39 @@ const OutfitFormPage = () => {
     }
   };
 
+  // Form Validation
+  const validateForm = () => {
+    const errs = {};
+    if (!formData.categoryId) {
+      errs.categoryId = 'Please select a Category';
+    }
+    if (!formData.name || !formData.name.trim()) {
+      errs.name = 'Product Name is required';
+    }
+    if (formData.base_rent_price === '' || isNaN(Number(formData.base_rent_price)) || Number(formData.base_rent_price) < 0) {
+      errs.base_rent_price = 'Valid Rent price is required';
+    }
+    if (!formData.product_code || !formData.product_code.trim()) {
+      errs.product_code = 'Product Code is required';
+    }
+
+    setFormErrors(errs);
+
+    if (Object.keys(errs).length > 0) {
+      // Focus first error field for smooth interaction
+      const firstField = Object.keys(errs)[0];
+      const targetInput = document.querySelector(`[name="${firstField}"], .has-error input, .has-error .bond-select-trigger`);
+      targetInput?.focus?.();
+      return false;
+    }
+    return true;
+  };
+
   // Submit Handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name.trim()) {
-      toast.error('Please enter a Product / Outfit Name');
-      return;
-    }
-    if (!formData.categoryId) {
-      toast.error('Please select a Category');
-      return;
-    }
-    if (formData.base_rent_price === '' || Number(formData.base_rent_price) < 0) {
-      toast.error('Please enter a valid Rent price');
+    if (!validateForm()) {
       return;
     }
 
@@ -486,7 +515,7 @@ const OutfitFormPage = () => {
       </div>
 
       {/* Main Outlay Card Canvas */}
-      <form onSubmit={handleSubmit} className="outfit-form-canvas" autoComplete="off">
+      <form onSubmit={handleSubmit} className="outfit-form-canvas" autoComplete="off" noValidate>
         <div className="canvas-grid-layout">
           
           {/* Left Column: Primary Cover Image Upload Dropzone */}
@@ -537,30 +566,34 @@ const OutfitFormPage = () => {
             
             {/* Row 1: 4 Fields (Category, Product Name, Color, Size) */}
             <div className="form-fields-row row-four-cols">
-              <div className="form-field-group">
+              <div className={`form-field-group ${formErrors.categoryId ? 'has-error' : ''}`}>
                 <label className="field-label required">Category*</label>
                 <Select
+                  name="categoryId"
                   value={formData.categoryId}
                   onChange={(e) => handleChange('categoryId', e.target.value)}
                   size="md"
+                  className={formErrors.categoryId ? 'is-invalid' : ''}
                 >
                   <option value="" disabled>Select</option>
                   {categories.map((c) => (
                     <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
                 </Select>
+                {formErrors.categoryId && <span className="field-error-text">{formErrors.categoryId}</span>}
               </div>
 
-              <div className="form-field-group name-field-group">
+              <div className={`form-field-group name-field-group ${formErrors.name ? 'has-error' : ''}`}>
                 <label className="field-label required">Product Name*</label>
                 <input
                   type="text"
-                  className="outfit-input"
+                  name="name"
+                  className={`outfit-input ${formErrors.name ? 'is-invalid' : ''}`}
                   placeholder="Product Name"
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
-                  required
                 />
+                {formErrors.name && <span className="field-error-text">{formErrors.name}</span>}
               </div>
 
               <div className="form-field-group">
@@ -594,18 +627,19 @@ const OutfitFormPage = () => {
 
             {/* Row 2: 7 Fields (Rent*, MRP, Purchase Price, Security Amt, Code*, HSN Code, Qty) */}
             <div className="form-fields-row row-seven-cols">
-              <div className="form-field-group">
+              <div className={`form-field-group ${formErrors.base_rent_price ? 'has-error' : ''}`}>
                 <label className="field-label required">Rent*</label>
                 <input
                   type="number"
+                  name="base_rent_price"
                   min="0"
                   step="any"
-                  className="outfit-input"
+                  className={`outfit-input ${formErrors.base_rent_price ? 'is-invalid' : ''}`}
                   value={formData.base_rent_price}
                   onChange={(e) => handleChange('base_rent_price', e.target.value)}
                   placeholder="0"
-                  required
                 />
+                {formErrors.base_rent_price && <span className="field-error-text">{formErrors.base_rent_price}</span>}
               </div>
 
               <div className="form-field-group">
@@ -647,16 +681,17 @@ const OutfitFormPage = () => {
                 />
               </div>
 
-              <div className="form-field-group">
+              <div className={`form-field-group ${formErrors.product_code ? 'has-error' : ''}`}>
                 <label className="field-label required">Code*</label>
                 <input
                   type="text"
-                  className="outfit-input code-input"
+                  name="product_code"
+                  className={`outfit-input code-input ${formErrors.product_code ? 'is-invalid' : ''}`}
                   value={formData.product_code}
                   onChange={(e) => handleChange('product_code', e.target.value.toUpperCase())}
                   placeholder="Code"
-                  required
                 />
+                {formErrors.product_code && <span className="field-error-text">{formErrors.product_code}</span>}
               </div>
 
               <div className="form-field-group">
