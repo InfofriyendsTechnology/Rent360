@@ -196,8 +196,6 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding: 6px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
 
     &::-webkit-scrollbar {
       width: 3px !important;
@@ -225,13 +223,13 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.22) !important;
       border-radius: 9999px !important;
       border: none !important;
       transition: background 0.2s ease;
 
       &:hover {
-        background: rgba(0, 0, 0, 0.45);
+        background: rgba(0, 0, 0, 0.48) !important;
       }
     }
 
@@ -347,13 +345,11 @@
     }
 
     .select-options-list {
-      scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
-
       &::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.22) !important;
 
         &:hover {
-          background: rgba(255, 255, 255, 0.5);
+          background: rgba(255, 255, 255, 0.52) !important;
         }
       }
 
@@ -422,5 +418,18 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+/* Firefox Only Scrollbar Fallback */
+@supports (-moz-appearance: none) {
+  .select-options-list {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+  }
+
+  .dark .select-options-list,
+  body.dark .select-options-list {
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
   }
 }

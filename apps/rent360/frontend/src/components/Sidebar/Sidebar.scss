@@ -539,7 +539,7 @@ body.dark {
   }
 }
 
-@supports not selector(::-webkit-scrollbar) {
+@supports (-moz-appearance: none) {
   .sidebar .sidebar-scroll {
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;

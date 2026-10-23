@@ -144,10 +144,10 @@ body.dark input[type="checkbox"]:not(.pill-slider-input):not(.toggle-input) {
 }
 
 
-/* Modern Minimalist Scrollbar (Clearly visible at bottom and sides) */
+/* Modern Professional Hairline Scrollbar (Ultra-sleek 4px, zero native arrow buttons) */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 9px;
+  width: 4px !important;
+  height: 4px !important;
 }
 
 ::-webkit-scrollbar-button,
@@ -164,45 +164,66 @@ body.dark input[type="checkbox"]:not(.pill-slider-input):not(.toggle-input) {
 }
 
 ::-webkit-scrollbar-corner {
+  display: none !important;
   background: transparent !important;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.04);
-  border-radius: 9999px;
+  background: transparent !important;
+  border: none !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.28);
-  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.22) !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  transition: background 0.2s ease;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.48) !important;
   }
 }
 
-.dark ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 9999px;
+.dark ::-webkit-scrollbar-track,
+body.dark ::-webkit-scrollbar-track {
+  background: transparent !important;
+  border: none !important;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.32);
-  border-radius: 9999px;
+.dark ::-webkit-scrollbar-thumb,
+body.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-radius: 9999px !important;
+  border: none !important;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.52) !important;
   }
 }
 
-@supports not selector(::-webkit-scrollbar) {
+/* Firefox Only Scrollbar Fallback (never applied in Chromium so custom webkit scrollbar stays pristine) */
+@supports (-moz-appearance: none) {
   * {
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
   }
 
   .dark *, body.dark * {
-    scrollbar-color: rgba(255, 255, 255, 0.32) transparent;
+    scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+  }
+}
+
+/* Global Clean Number Inputs - Remove browser native increment/decrement spin boxes */
+input[type="number"] {
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    margin: 0 !important;
+    display: none !important;
   }
 }
 
