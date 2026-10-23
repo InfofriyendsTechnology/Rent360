@@ -4,6 +4,9 @@
 
 .outfit-form-view {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
   margin: 0 auto;
 
   &.loading-state {
@@ -32,9 +35,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
 
     .header-left {
       display: flex;
@@ -67,7 +72,7 @@
       }
 
       .page-heading {
-        font-size: 1.35rem;
+        font-size: 1.3rem;
         font-weight: 700;
         color: $text-main;
         letter-spacing: -0.01em;
@@ -143,30 +148,41 @@
 
   /* Main Form Canvas Card */
   .outfit-form-canvas {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     background: $bg-card;
     border: 1px solid $border-main;
     border-radius: 14px;
-    padding: 26px 30px;
+    padding: 24px;
     box-shadow: $shadow-sm;
+    overflow: hidden;
 
     .canvas-grid-layout {
       display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 32px;
+      grid-template-columns: 210px minmax(0, 1fr);
+      gap: 24px;
       align-items: flex-start;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
 
       @media (max-width: 1024px) {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 20px;
       }
     }
   }
 
   /* Left Column: Primary Cover Dropzone */
   .cover-image-column {
+    width: 100%;
+    min-width: 0;
+
     .primary-dropzone-box {
       width: 100%;
-      height: 240px;
+      height: 230px;
+      box-sizing: border-box;
       border: 2px dashed $border-main;
       border-radius: 12px;
       background: $bg-card-alt;
@@ -193,16 +209,16 @@
         padding: 16px;
 
         .cloud-icon-circle {
-          width: 56px;
-          height: 56px;
+          width: 52px;
+          height: 52px;
           border-radius: 50%;
           background: rgba(11, 96, 176, 0.1);
           color: $accent;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 1.6rem;
-          margin-bottom: 4px;
+          font-size: 1.5rem;
+          margin-bottom: 2px;
 
           .spin-icon {
             animation: spin 1s linear infinite;
@@ -210,13 +226,13 @@
         }
 
         .upload-prompt-text {
-          font-size: 0.92rem;
+          font-size: 0.9rem;
           font-weight: 600;
           color: $text-main;
         }
 
         .upload-hint {
-          font-size: 0.74rem;
+          font-size: 0.72rem;
           color: $text-muted;
           text-transform: uppercase;
           letter-spacing: 0.04em;
@@ -250,7 +266,7 @@
 
           .change-text {
             color: #ffffff;
-            font-size: 0.84rem;
+            font-size: 0.82rem;
             font-weight: 600;
             background: rgba(255, 255, 255, 0.2);
             padding: 4px 12px;
@@ -288,16 +304,25 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 
     .form-field-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
 
       .field-label {
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         font-weight: 600;
         color: $text-main;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &.required {
           color: $text-main;
@@ -305,12 +330,15 @@
       }
 
       .outfit-input {
-        height: 40px;
-        padding: 0 14px;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        height: 38px;
+        padding: 0 10px;
         background: $bg-card;
         border: 1px solid $border-main;
-        border-radius: 8px;
-        font-size: 0.88rem;
+        border-radius: 6px;
+        font-size: 0.86rem;
         color: $text-main;
         outline: none;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -333,11 +361,14 @@
       }
 
       .outfit-textarea {
-        padding: 10px 14px;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 8px 12px;
         background: $bg-card;
         border: 1px solid $border-main;
-        border-radius: 8px;
-        font-size: 0.88rem;
+        border-radius: 6px;
+        font-size: 0.86rem;
         color: $text-main;
         outline: none;
         resize: vertical;
@@ -355,19 +386,34 @@
         }
       }
 
-      /* Custom Select Integration matching 40px height */
-      .bond-select-trigger {
-        min-height: 40px !important;
-        height: 40px !important;
-        border-radius: 8px !important;
-        font-size: 0.88rem !important;
-        padding: 0 14px !important;
-        background-color: $bg-card !important;
-        border: 1px solid $border-main !important;
-        box-shadow: $shadow-sm !important;
+      /* Custom Select Integration matching 38px height and 100% width */
+      .bond-select-container {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
 
-        &:hover {
-          border-color: $accent !important;
+        .bond-select-trigger {
+          width: 100% !important;
+          min-width: 0 !important;
+          box-sizing: border-box !important;
+          min-height: 38px !important;
+          height: 38px !important;
+          border-radius: 6px !important;
+          font-size: 0.86rem !important;
+          padding: 0 10px !important;
+          background-color: $bg-card !important;
+          border: 1px solid $border-main !important;
+          box-shadow: $shadow-sm !important;
+
+          &:hover {
+            border-color: $accent !important;
+          }
+
+          .trigger-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
         }
       }
     }
@@ -375,11 +421,15 @@
     /* Row 1: 4 columns */
     .row-four-cols {
       display: grid;
-      grid-template-columns: 1.2fr 2.4fr 1.1fr 1.1fr;
-      gap: 14px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr) minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 12px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
 
       @media (max-width: 900px) {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 10px;
       }
 
       @media (max-width: 550px) {
@@ -390,15 +440,19 @@
     /* Row 2: 7 columns */
     .row-seven-cols {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
 
       @media (max-width: 1200px) {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
       }
 
-      @media (max-width: 800px) {
-        grid-template-columns: repeat(2, 1fr);
+      @media (max-width: 768px) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       @media (max-width: 480px) {
@@ -408,6 +462,10 @@
 
     /* Row 3: Remark */
     .row-remark {
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+
       .full-width {
         width: 100%;
       }
@@ -418,6 +476,9 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
 
       .section-label {
         margin: 0;
@@ -425,15 +486,18 @@
 
       .gallery-slots-strip {
         display: flex;
-        gap: 14px;
+        gap: 12px;
         flex-wrap: wrap;
+        width: 100%;
+        box-sizing: border-box;
 
         .gallery-slot-wrap {
           .gallery-dropzone-box {
-            width: 96px;
-            height: 96px;
+            width: 88px;
+            height: 88px;
+            box-sizing: border-box;
             border: 2px dashed $border-main;
-            border-radius: 10px;
+            border-radius: 8px;
             background: $bg-card-alt;
             display: flex;
             align-items: center;
@@ -450,7 +514,7 @@
 
             .thumb-empty-content {
               color: $text-muted;
-              font-size: 1.5rem;
+              font-size: 1.4rem;
               display: flex;
               align-items: center;
               justify-content: center;
@@ -521,6 +585,8 @@
       margin-top: 14px;
       padding-top: 16px;
       border-top: 1px solid $border-main;
+      width: 100%;
+      box-sizing: border-box;
 
       .btn-action-reset {
         height: 38px;
@@ -529,7 +595,7 @@
         background: $bg-card-alt;
         border: 1px solid $border-main;
         color: $text-main;
-        font-size: 0.88rem;
+        font-size: 0.86rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
@@ -553,7 +619,7 @@
         background: #4f46e5;
         border: none;
         color: #ffffff;
-        font-size: 0.88rem;
+        font-size: 0.86rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);

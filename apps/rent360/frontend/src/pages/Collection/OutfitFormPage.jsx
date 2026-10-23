@@ -91,7 +91,7 @@ const OutfitFormPage = () => {
   }, [isSuperAdmin, token]);
 
   // Fetch Categories, Colors, Sizes
-  useEffect(() => {
+  const fetchLookups = () => {
     if (!token) return;
     const storeParam = selectedStoreId ? `?storeId=${selectedStoreId}` : '';
 
@@ -143,6 +143,10 @@ const OutfitFormPage = () => {
       .catch(() => {
         setSizes(getStoreSizes().map((s) => s.name));
       });
+  };
+
+  useEffect(() => {
+    fetchLookups();
   }, [selectedStoreId, token]);
 
   // Helper: auto-generate product code
@@ -154,7 +158,7 @@ const OutfitFormPage = () => {
   };
 
   // Fetch existing product for Edit mode
-  useEffect(() => {
+  const fetchOutfitDetails = () => {
     if (!isEditing || !token) return;
 
     setLoading(true);
@@ -212,7 +216,25 @@ const OutfitFormPage = () => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchOutfitDetails();
   }, [id, isEditing, token]);
+
+  // Listen for Header refresh button (refresh outlet data in-place without reloading window)
+  useEffect(() => {
+    const handleOutletRefresh = () => {
+      fetchLookups();
+      if (isEditing) {
+        fetchOutfitDetails();
+      }
+      toast.success('Outfit outlet refreshed');
+    };
+
+    window.addEventListener('rent360:refresh', handleOutletRefresh);
+    return () => window.removeEventListener('rent360:refresh', handleOutletRefresh);
+  }, [selectedStoreId, isEditing, id, token]);
 
   // Handle Form Change
   const handleChange = (field, value) => {

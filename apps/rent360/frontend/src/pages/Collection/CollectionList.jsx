@@ -105,6 +105,16 @@ const CollectionList = () => {
     fetchData();
   }, [selectedStoreId, token]);
 
+  // Listen for header refresh button event (refresh outlet data without reloading window)
+  useEffect(() => {
+    const handleOutletRefresh = () => {
+      fetchData();
+      toast.success('Collection data refreshed');
+    };
+    window.addEventListener('rent360:refresh', handleOutletRefresh);
+    return () => window.removeEventListener('rent360:refresh', handleOutletRefresh);
+  }, [selectedStoreId, token]);
+
   const fetchData = async () => {
     setLoading(true);
     try {

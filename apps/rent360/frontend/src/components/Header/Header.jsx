@@ -55,7 +55,11 @@ const Header = ({ onToggleSidebar }) => {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
-    window.location.reload();
+    // Refresh only the active outlet/module without reloading the whole window
+    window.dispatchEvent(new CustomEvent('rent360:refresh'));
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 600);
   };
 
   const handleCartClick = () => {
