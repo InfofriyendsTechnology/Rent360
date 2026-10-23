@@ -588,51 +588,53 @@
       width: 100%;
       box-sizing: border-box;
 
-      .btn-action-reset {
-        height: 38px;
-        padding: 0 20px;
-        border-radius: 6px;
-        background: $bg-card-alt;
+      .pill-btn-secondary {
+        height: 40px;
+        padding: 0 24px;
+        border-radius: $border-radius-pill;
+        background: $bg-card;
         border: 1px solid $border-main;
         color: $text-main;
-        font-size: 0.86rem;
+        font-size: 0.88rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         box-shadow: $shadow-sm;
 
         &:hover:not(:disabled) {
-          border-color: $text-muted;
-          background: rgba(255, 255, 255, 0.08);
+          border-color: $accent;
+          color: $accent;
+          transform: translateY(-1px);
         }
 
         &:disabled {
-          opacity: 0.6;
+          opacity: 0.55;
           cursor: not-allowed;
         }
       }
 
-      .btn-action-submit {
-        height: 38px;
-        padding: 0 24px;
-        border-radius: 6px;
-        background: #4f46e5;
-        border: none;
-        color: #ffffff;
-        font-size: 0.86rem;
+      .pill-btn-primary {
+        height: 40px;
+        padding: 0 28px;
+        border-radius: $border-radius-pill;
+        background-color: $bg-pill-dark;
+        color: $text-inverse;
+        border: 1px solid transparent;
+        font-size: 0.88rem;
         font-weight: 600;
         cursor: pointer;
+        box-shadow: $shadow-pill;
+        box-sizing: border-box;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 0 2px 6px rgba(79, 70, 229, 0.35);
 
         &:hover:not(:disabled) {
-          background: #4338ca;
+          filter: brightness(1.15);
           transform: translateY(-1px);
-          box-shadow: 0 4px 10px rgba(79, 70, 229, 0.45);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         &:disabled {
-          opacity: 0.65;
+          opacity: 0.6;
           cursor: not-allowed;
           transform: none;
         }

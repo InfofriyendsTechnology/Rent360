@@ -109,7 +109,6 @@ const CollectionList = () => {
   useEffect(() => {
     const handleOutletRefresh = () => {
       fetchData();
-      toast.success('Collection data refreshed');
     };
     window.addEventListener('rent360:refresh', handleOutletRefresh);
     return () => window.removeEventListener('rent360:refresh', handleOutletRefresh);

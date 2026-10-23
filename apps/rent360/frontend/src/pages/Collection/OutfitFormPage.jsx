@@ -229,7 +229,6 @@ const OutfitFormPage = () => {
       if (isEditing) {
         fetchOutfitDetails();
       }
-      toast.success('Outfit outlet refreshed');
     };
 
     window.addEventListener('rent360:refresh', handleOutletRefresh);
@@ -755,7 +754,7 @@ const OutfitFormPage = () => {
             <div className="outfit-form-footer-actions">
               <button
                 type="button"
-                className="btn-action-reset"
+                className="pill-btn-secondary"
                 onClick={handleReset}
                 disabled={submitting}
               >
@@ -764,10 +763,10 @@ const OutfitFormPage = () => {
               
               <button
                 type="submit"
-                className="btn-action-submit"
+                className="pill-btn-primary"
                 disabled={submitting}
               >
-                {submitting ? 'Saving...' : 'Submit'}
+                {submitting ? 'Saving...' : (isEditing ? 'Save Changes' : 'Submit')}
               </button>
             </div>
 

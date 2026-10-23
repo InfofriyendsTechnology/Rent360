@@ -190,20 +190,49 @@
     }
   }
 
-  // Options list
+  // Options list with ultra-minimalist professional hairline scrollbar matching sidebar
   .select-options-list {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 6px;
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
+    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
 
     &::-webkit-scrollbar {
-      width: 5px;
+      width: 3px !important;
     }
+
+    &::-webkit-scrollbar-track {
+      background: transparent !important;
+      border: none !important;
+    }
+
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-button:single-button,
+    &::-webkit-scrollbar-button:vertical:decrement,
+    &::-webkit-scrollbar-button:vertical:increment {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      background: transparent !important;
+      border: none !important;
+    }
+
+    &::-webkit-scrollbar-corner {
+      display: none !important;
+      background: transparent !important;
+    }
+
     &::-webkit-scrollbar-thumb {
       background: rgba(0, 0, 0, 0.2);
-      border-radius: 4px;
+      border-radius: 9999px !important;
+      border: none !important;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.45);
+      }
     }
 
     .no-options {
@@ -318,10 +347,14 @@
     }
 
     .select-options-list {
-      scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+      scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
 
       &::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.28);
+        background: rgba(255, 255, 255, 0.22);
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.5);
+        }
       }
 
       .select-option-item {
