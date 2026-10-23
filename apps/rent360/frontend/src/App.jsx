@@ -22,6 +22,7 @@ import AccessoriesList from './pages/Collection/AccessoriesList';
 import StockInventoryPage from './pages/Collection/StockInventoryPage';
 import LookbookPage from './pages/Collection/LookbookPage';
 import BulkImportPage from './pages/Collection/BulkImportPage';
+import OutfitFormPage from './pages/Collection/OutfitFormPage';
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -67,6 +68,11 @@ const App = () => {
           <Route path="outfits" element={<CollectionList />} />
           <Route path="collection" element={<CollectionList />} />
           <Route path="collection/outfits" element={<CollectionList />} />
+          <Route path="collection/create" element={<OutfitFormPage />} />
+          <Route path="collection/edit/:id" element={<OutfitFormPage />} />
+          <Route path="outfits/create" element={<Navigate to="/collection/create" replace />} />
+          <Route path="outfits/edit/:id" element={<OutfitFormPage />} />
+          <Route path="inventory/create" element={<Navigate to="/collection/create" replace />} />
           <Route path="inventory" element={<Navigate to="/outfits" replace />} />
           <Route path="inventory/products" element={<Navigate to="/outfits" replace />} />
           <Route path="inventory/product" element={<Navigate to="/outfits" replace />} />

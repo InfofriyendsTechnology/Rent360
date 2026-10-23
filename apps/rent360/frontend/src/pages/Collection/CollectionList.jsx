@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { 
   FiBox, FiPlus, FiSearch, FiGrid, FiList, 
@@ -8,7 +9,6 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import { DataTable, RowActions } from '../../components/ui';
-import ProductModal from './ProductModal';
 import StockModal from './StockModal';
 import ImageGalleryModal from './ImageGalleryModal';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
@@ -44,6 +44,7 @@ const ProductImageFallback = ({ src, alt, code, className = '', onClick }) => {
 };
 
 const CollectionList = () => {
+  const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
 
@@ -70,10 +71,7 @@ const CollectionList = () => {
     localStorage.setItem('rent360_collection_view', mode);
   };
 
-  // Modals
-  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
-  const [selectedProductForEdit, setSelectedProductForEdit] = useState(null);
-
+  // Modals & Drawers
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [selectedProductForStock, setSelectedProductForStock] = useState(null);
 
@@ -162,13 +160,11 @@ const CollectionList = () => {
 
   // Handlers
   const handleOpenAddProduct = () => {
-    setSelectedProductForEdit(null);
-    setIsProductModalOpen(true);
+    navigate('/collection/create');
   };
 
   const handleOpenEditProduct = (prod) => {
-    setSelectedProductForEdit(prod);
-    setIsProductModalOpen(true);
+    navigate(`/collection/edit/${prod.id}`);
   };
 
   const handleOpenStockModal = (prod) => {
@@ -664,22 +660,6 @@ const CollectionList = () => {
       )}
 
       {/* Modals */}
-      <ProductModal
-        isOpen={isProductModalOpen}
-        onClose={() => setIsProductModalOpen(false)}
-        product={selectedProductForEdit}
-        categories={categories}
-        onCategoryCreated={(newCat) => {
-          setCategories((prev) => [newCat, ...prev.filter((c) => c.id !== newCat.id)]);
-          fetchData();
-        }}
-        onProductSaved={fetchData}
-        token={token}
-        storeId={selectedStoreId}
-        stores={stores}
-        isSuperAdmin={isSuperAdmin}
-      />
-
       <StockModal
         isOpen={isStockModalOpen}
         onClose={() => setIsStockModalOpen(false)}
