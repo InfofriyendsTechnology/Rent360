@@ -1,78 +1,60 @@
 {
   "date": "24-10-2026",
   "dayNumber": 30,
-  "title": "Category Classification Architecture, Outfits vs Accessories Separation, and Compact Competitor-Matched Modals",
-  "titleGu": "કેટેગરી વર્ગીકરણ આર્કિટેક્ચર, આઉટફિટ્સ અને એક્સેસરીઝનું સેપરેશન અને કોમ્પેક્ટ કોમ્પિટિટર-મેચિંગ મોડલ્સ",
+  "title": "Category & Accessories Separation and Compact Modals",
+  "titleGu": "કેટેગરી અને એક્સેસરીઝ સેપરેશન તેમજ કોમ્પેક્ટ મોડલ્સ",
   "members": [
     "001"
   ],
   "tasksEn": [
     {
       "member": "001",
-      "text": "Engineered rental business classification architecture separating Main Outfits (Hero garments booked on strict calendar dates, skip_check_availability: false) from Accessories (pooled inventory commodities like Safa, Mojdi, Dupatta, Mala, Brooch with pooled stock, skip_check_availability: true)."
+      "text": "Added category_type (OUTFIT vs ACCESSORY) in Category database schema and synced Prisma."
     },
     {
       "member": "001",
-      "text": "Updated PostgreSQL database schema with category_type column on Category model; executed targeted non-destructive raw SQL migration on Neon PostgreSQL without colliding with or dropping external foreign tables, and regenerated Prisma Client bindings."
+      "text": "Separated Outfits and Accessories in forms: Outfit form shows only outfits; Accessory form shows only accessories."
     },
     {
       "member": "001",
-      "text": "Enhanced backend category controllers (createCategory, updateCategory, getAllCategorys): added dynamic two-way bridging between category_type and skip_check_availability, auto-setting pooled availability for accessories while preserving explicit calendar locking for outfits."
+      "text": "Filtered Link Accessories matrix so only outfits appear on the left side to pair with accessories."
     },
     {
       "member": "001",
-      "text": "Hardened Attire Pairing Matrix (getCategoryAccessoryLinks): updated categoryAccessoryLinkController query to exclude accessory categories from parent linking rows (category_type: { not: 'ACCESSORY' }, skip_check_availability: false), ensuring only Main Outfits appear on the left column to pair with accessories on the right."
+      "text": "Simplified Create Category modal to match competitor reference: kept only Name, Skip Check Availability, Washable, Washing Price, Reset, and Submit."
     },
     {
       "member": "001",
-      "text": "Upgraded Outfit Form Page (/collection/create & /collection/edit/:id) with strict category filtering: restricted category selection to Main Outfits only, preventing store staff from mistakenly creating or tagging standalone accessories as hero outfits."
-    },
-    {
-      "member": "001",
-      "text": "Redesigned Create Category modal to match competitor reference with extreme minimalism: stripped out bloated classification toggle cards, category code / SKU prefix inputs, and description textareas; established an ultra-clean layout featuring only Name, Skip Check Availability, Washable, Washing Price, Reset, and Submit buttons with automatic background SKU generation."
-    },
-    {
-      "member": "001",
-      "text": "Redesigned Create Accessory modal to match competitor reference: structured a responsive two-column layout with WebP-optimized Image upload dropzone on the left, and Category, Name, Qty, and Rent on the right, backed by dedicated Reset and Submit actions."
+      "text": "Simplified Create Accessory modal to 2 columns: Image uploader on left, and Category, Name, Qty, Rent on right with Reset and Submit."
     }
   ],
   "tasksGu": [
     {
       "member": "001",
-      "text": "રેન્ટલ બિઝનેસ માટે કેટેગરી ક્લાસિફિકેશન આર્કિટેક્ચર તૈયાર કર્યું: મુખ્ય આઉટફિટ્સ (શેરવાની, ઇન્ડો, જોધપુરી - કેલેન્ડર ડેટ લોક, skip_check_availability: false) અને એક્સેસરીઝ (સાફા, મોજડી, દુપટ્ટો, માળા - પૂલ્ડ ઇન્વેન્ટરી, skip_check_availability: true) વચ્ચે સ્પષ્ટ વિભાજન સ્થાપિત કર્યું."
+      "text": "ડેટાબેઝમાં Category માટે category_type (OUTFIT / ACCESSORY) ઉમેર્યું અને Prisma સિન્ક કર્યું."
     },
     {
       "member": "001",
-      "text": "PostgreSQL ડેટાબેઝ સ્કીમામાં Category મોડેલ પર category_type કોલમ ઉમેરી; Neon શેર કરેલા ડેટાબેઝ પર સુરક્ષિત ટાર્ગેટેડ SQL માઇગ્રેશન ચલાવી અન્ય ટેબલ્સને નુકસાન પહોંચાડ્યા વગર Prisma Client રિજનરેટ કર્યું."
+      "text": "આઉટફિટ અને એક્સેસરીઝ ફોર્મ્સ અલગ કર્યા: આઉટફિટ ફોર્મમાં માત્ર આઉટફિટ્સ અને એક્સેસરીઝ ફોર્મમાં માત્ર એક્સેસરીઝ જ દેખાશે."
     },
     {
       "member": "001",
-      "text": "બેકએન્ડ કેટેગરી કંટ્રોલર્સ (createCategory, updateCategory, getAllCategorys) અપડેટ કર્યા: category_type અને skip_check_availability વચ્ચે 2-વે ઓટોમેટિક સિન્ક આપ્યું, જેથી એક્સેસરીઝ બનતા જ ઉપલબ્ધતા ચેકિંગ આપમેળે સ્કિપ થાય."
+      "text": "Link Accessories ટેબમાં ડાબી બાજુ ફક્ત મુખ્ય આઉટફિટ્સ જ દેખાય તેવું ફિલ્ટર લગાવ્યું."
     },
     {
       "member": "001",
-      "text": "એટાયર પેરિંગ મેટ્રિક્સ (Link Accessories) ને મજબૂત કર્યું: પેરેન્ટ કેટેગરી ક્વેરીમાંથી એક્સેસરીઝ કેટેગરીઝને બાકાત રાખી, માત્ર મુખ્ય આઉટફિટ્સ જ ડાબી બાજુ દેખાય અને જમણી બાજુ સંબંધિત એક્સેસરીઝ જોડાઈ શકે તેવી સિસ્ટમ બનાવી."
+      "text": "Create Category મોડલ એકદમ સરળ કર્યું: માત્ર Name, Skip Check Availability, Washable, Washing Price, Reset અને Submit રાખ્યા."
     },
     {
       "member": "001",
-      "text": "આઉટફિટ ફોર્મ પેજ (/collection/create & /collection/edit/:id) માં કેટેગરી ડ્રોપડાઉન ફિલ્ટર કર્યું: સ્ટાફ ભૂલથી સાફા કે મોજડીને આઉટફિટ તરીકે સિલેક્ટ ન કરી શકે તે માટે માત્ર Main Outfits જ લિસ્ટ થાય તેવી વ્યવસ્થા કરી."
-    },
-    {
-      "member": "001",
-      "text": "કોમ્પિટિટર રેફરન્સ મુજબ Create Category મોડલ એકદમ સિમ્પલ અને કોમ્પેક્ટ બનાવ્યું: જૂના ભારે મોડલમાંથી ક્લાસિફિકેશન બટનો, SKU પ્રીફિક્સ અને ડિસ્ક્રિપ્શન હટાવી, માત્ર Name*, Skip Check Availability, Washable, Washing Price, Reset અને Submit સાથે સ્વચ્છ લુક આપ્યો."
-    },
-    {
-      "member": "001",
-      "text": "કોમ્પિટિટર રેફરન્સ મુજબ Create Accessory મોડલને બે-કોલમ લુક આપ્યો: ડાબી બાજુ ઇમેજ અપલોડર અને જમણી બાજુ Category, Name, Qty અને Rent ફીલ્ડ્સ સાથે Reset અને Submit બટન લાગુ કર્યા."
+      "text": "Create Accessory મોડલ 2 કોલમમાં સેટ કર્યું: ડાબી બાજુ ઇમેજ અપલોડર અને જમણી બાજુ Category, Name, Qty, Rent સાથે Reset અને Submit."
     }
   ],
   "deliverables": [
-    "Category Classification Architecture (Main Outfits vs Pooled Accessories)",
-    "PostgreSQL Non-Destructive category_type Schema Migration & Prisma Sync",
-    "Dynamic skip_check_availability Two-Way Synchronization",
-    "Attire Pairing Matrix Strict Category Filtering (getCategoryAccessoryLinks)",
-    "OutfitFormPage Isolated Main Garment Category Selection",
-    "Ultra-Clean Competitor-Matched Create Category Modal (Name, Availability, Washable, Washing Price)",
-    "Two-Column Competitor-Matched Create Accessory Modal with Instant Image Upload"
+    "Category Type (OUTFIT / ACCESSORY) in Database & Prisma",
+    "Isolated Category Dropdowns in Outfit & Accessory Forms",
+    "Filtered Link Accessories Matrix",
+    "Compact Create Category Modal",
+    "Two-Column Create Accessory Modal"
   ]
 }

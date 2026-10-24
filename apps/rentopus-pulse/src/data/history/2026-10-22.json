@@ -1,69 +1,60 @@
 {
   "date": "22-10-2026",
   "dayNumber": 28,
-  "title": "Collection Architecture Suite, Outfit Naming, Master UI Polish & Stock Inventory Bento Grid",
-  "titleGu": "કલેક્શન આર્કિટેક્ચર સ્યુટ, આઉટફિટ નામકરણ, માસ્ટર UI પોલિશ અને સ્ટોક ઇન્વેન્ટરી બેન્ટો ગ્રિડ",
+  "title": "Collection Module, Accessories Subsystem, Master Cleanup & Stock Bento Grid",
+  "titleGu": "કલેક્શન મોડ્યુલ, એક્સેસરીઝ સબસિસ્ટમ, માસ્ટર ક્લીનઅપ અને સ્ટોક બેન્ટો ગ્રિડ",
   "members": [
     "001"
   ],
   "tasksEn": [
     {
       "member": "001",
-      "text": "Architected and deployed the complete Collection module suite with standard domain naming: established 'Collection' as the primary category and 'Outfits' as individual garment designs, fully refactoring all frontend views, routes, controllers, and APIs."
+      "text": "Standardized naming across Collection module: set 'Collection' as menu and 'Outfits' as individual garment items."
     },
     {
       "member": "001",
-      "text": "Developed the full Accessories subsystem with a dual-tab interface: Tab 1 for accessory inventory cataloging with 'Is Sold' filtering, and Tab 2 for direct category linkage, allowing accessories to be paired with attire categories."
+      "text": "Built Accessories management page with Tab 1 for accessory list and Tab 2 for category pairing matrix."
     },
     {
       "member": "001",
-      "text": "Refined Master Setup configurations: eliminated unnecessary 'type' column from Security Accounts to focus purely on clean collateral holder names, and expanded Accounts into a complete double-entry financial ledger with account groups, opening balance, and party contact info."
+      "text": "Added dry cleaning/washing price and washable checkbox in Categories master."
     },
     {
       "member": "001",
-      "text": "Integrated deep rental logic and financial fields: added dry cleaning cost, washing toggle, and availability bypass rule into Categories, along with outfit purchase cost, tailor charge, and rental margin attributes."
+      "text": "Created Lookbook page and Bulk Import page with downloadable CSV template."
     },
     {
       "member": "001",
-      "text": "Engineered Lookbook gallery page with high-res photo modal viewer, alongside Bulk Import supporting both downloadable CSV templates with instant verification and interactive quick-row spreadsheet entry."
-    },
-    {
-      "member": "001",
-      "text": "Harmonized all Collection sub-pages (Accessories, Barcode & Stock, Lookbook, Bulk Import) to the signature Bond CRM Master layout; replaced raw browser selects with Rent360 custom Select to eliminate double chevrons on Windows, aligned 42px pill heights, and redesigned Stock KPI cards into a responsive 4-card Bento Grid."
+      "text": "Unified Collection sub-pages layout with custom theme Select dropdowns and 4 KPI summary cards in Stock Inventory."
     }
   ],
   "tasksGu": [
     {
       "member": "001",
-      "text": "કલેક્શન મોડ્યુલ સ્યુટનું આર્કિટેક્ચર અને સ્ટાન્ડર્ડ નામકરણ અમલમાં મૂક્યું: કોમ્પિટિટરથી અલગ રહી 'Collection' ને મુખ્ય મોડ્યુલ અને પ્રોડક્ટ્સને 'Outfits' તરીકે સેટ કરી તમામ ફ્રન્ટએન્ડ વ્યુઝ, રૂટ્સ અને કંટ્રોલર્સ અપડેટ કર્યા."
+      "text": "પ્રોડક્ટ્સનું નામ બદલીને 'Outfits' કર્યું અને 'Collection' મેનુ હેઠળ ગોઠવ્યું."
     },
     {
       "member": "001",
-      "text": "એક્સેસરીઝ માટે ડ્યુઅલ-ટેબ સબસિસ્ટમ ડેવલપ કરી: ટેબ ૧ માં એક્સેસરીઝ ઇન્વેન્ટરી અને 'Is Sold' ફિલ્ટર આપ્યું, અને ટેબ ૨ માં કેટેગરી લિંકિંગ મેટ્રિક્સ તૈયાર કર્યું જેથી આઉટફિટ કેટેગરી સાથે એક્સેસરીઝ સરળતાથી લિંક કરી શકાય."
+      "text": "એક્સેસરીઝ પેજ બનાવ્યું: ટેબ ૧ માં એક્સેસરીઝ લિસ્ટ અને ટેબ ૨ માં આઉટફિટ સાથે એક્સેસરીઝ લિંક કરવાનો મેટ્રિક્સ આપ્યો."
     },
     {
       "member": "001",
-      "text": "માસ્ટર સેટઅપમાં સિક્યુરિટી એકાઉન્ટ્સમાંથી બિનજરૂરી 'type' ફીલ્ડ હટાવી માત્ર એકાઉન્ટ નામ આધારિત બનાવ્યું, અને Accounts ને ફૂલ લેજર સિસ્ટમમાં અપગ્રેડ કરી એકાઉન્ટ ગ્રુપ્સ (Expenses, Assets, Liabilities વગેરે), ઓપનિંગ બેલેન્સ અને કોન્ટેક્ટ ડિટેલ્સ ઉમેર્યા."
+      "text": "કેટેગરી માસ્ટરમાં વોશિંગ પ્રાઇસ અને વોશેબલ ચેકબોક્સ ઉમેર્યા."
     },
     {
       "member": "001",
-      "text": "કેટેગરીઝમાં ડ્રાય ક્લીનિંગ ચાર્જ, વોશેબલ ટોગલ અને અવેલેબિલિટી બાયપાસ રૂલ ઉમેર્યા, તેમજ આઉટફિટ્સમાં પરચેઝ પ્રાઇસ, ટેલર ખર્ચ અને રેન્ટલ માર્જિન કેલ્ક્યુલેશન જેવા ફાઇનાન્સ ફીલ્ડ્સ ઇન્ટિગ્રેટ કર્યા."
+      "text": "લુકબુક પેજ અને CSV ટેમ્પલેટ સાથે બલ્ક ઇમ્પોર્ટ પેજ બનાવ્યું."
     },
     {
       "member": "001",
-      "text": "હાઇ-રિઝોલ્યુશન ફોટો મોડલ સાથે લુકબુક ગેલેરી પેજ તૈયાર કર્યું, તેમજ ડાઉનલોડેબલ CSV ટેમ્પલેટ વેરિફિકેશન અને ઇન્ટરેક્ટિવ ક્વિક-રો એન્ટ્રી સાથે બલ્ક ઇમ્પોર્ટ પેજ ડેવલપ કર્યું."
-    },
-    {
-      "member": "001",
-      "text": "તમામ કલેક્શન પેજીસને માસ્ટર Bond CRM લેઆઉટ સાથે એકરૂપ કર્યા; વિન્ડોઝ પર આવતા ડબલ એરો દૂર કરવા કસ્ટમ Select લાગુ કર્યું, 42px પિલ હાઇટ્સ અને ડાર્ક મોડ ટોકન્સ સેટ કર્યા, અને સ્ટોક ઇન્વેન્ટરીના KPI કાર્ડ્સને પ્રીમિયમ 4-કાર્ડ બેન્ટો ગ્રિડમાં રી-ડિઝાઇન કર્યા."
+      "text": "કલેક્શનના તમામ પેજીસ પર કસ્ટમ ડ્રોપડાઉન્સ અને સ્ટોક પેજમાં 4 KPI સમરી કાર્ડ્સ સેટ કર્યા."
     }
   ],
   "deliverables": [
-    "Full Collection Management Suite (Outfits, Accessories, Stock, Lookbook, Bulk Import)",
-    "Two-Tab Accessories Subsystem with Attire Category Linking Matrix",
-    "Master Security Accounts & Enhanced Financial Ledger Account System",
-    "Category Dry Cleaning & Availability Bypassing Business Rules",
-    "Signature Bond CRM Master UI Alignment with 4-Card Responsive Stock Bento Grid",
-    "Cross-Browser Custom Select Dropdown & Double Chevron Elimination"
+    "Standardized Collection & Outfits Domain Structure",
+    "Dual-Tab Accessories Subsystem",
+    "Washing Price & Washable Category Attributes",
+    "Lookbook & CSV Bulk Import Pages",
+    "Unified Theme Dropdowns & 4-Card Stock Bento Grid"
   ]
 }
