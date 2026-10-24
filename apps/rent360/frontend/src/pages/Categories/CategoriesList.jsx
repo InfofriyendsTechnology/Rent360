@@ -225,15 +225,14 @@ const CategoriesList = () => {
   const totalCategories = categories.length;
   const totalDesigns = categories.reduce((sum, c) => sum + (c._count?.products || 0), 0);
   const topCategory = categories.slice().sort((a, b) => (b._count?.products || 0) - (a._count?.products || 0))[0];
-  const outfitCount = categories.filter((c) => (c.category_type || 'OUTFIT') === 'OUTFIT').length;
-  const accessoryCount = categories.filter((c) => c.category_type === 'ACCESSORY').length;
+  const outfitCount = categories.filter((c) => c.category_type !== 'ACCESSORY' && !c.skip_check_availability).length;
+  const accessoryCount = categories.filter((c) => c.category_type === 'ACCESSORY' || c.skip_check_availability).length;
 
   // Filtering
   const filteredCategories = categories.filter((cat) => {
-    if (categoryTypeFilter !== 'ALL') {
-      const type = cat.category_type || 'OUTFIT';
-      if (type !== categoryTypeFilter) return false;
-    }
+    const isAccessory = cat.category_type === 'ACCESSORY' || Boolean(cat.skip_check_availability);
+    if (categoryTypeFilter === 'OUTFIT' && isAccessory) return false;
+    if (categoryTypeFilter === 'ACCESSORY' && !isAccessory) return false;
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
@@ -389,7 +388,7 @@ const CategoriesList = () => {
                   </td>
                 )}
                 <td>
-                  {cat.category_type === 'ACCESSORY' ? (
+                  {(cat.category_type === 'ACCESSORY' || cat.skip_check_availability) ? (
                     <span
                       style={{
                         display: 'inline-flex',

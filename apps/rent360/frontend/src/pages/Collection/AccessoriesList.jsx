@@ -32,11 +32,11 @@ const AccessoriesList = () => {
 
   // Filter Categories: Accessories vs Outfits
   const accessoryCategories = useMemo(() => {
-    return categories.filter((c) => c.category_type === 'ACCESSORY');
+    return categories.filter((c) => c.category_type === 'ACCESSORY' || Boolean(c.skip_check_availability));
   }, [categories]);
 
   const outfitCategories = useMemo(() => {
-    return categories.filter((c) => c.category_type !== 'ACCESSORY');
+    return categories.filter((c) => c.category_type !== 'ACCESSORY' && !c.skip_check_availability);
   }, [categories]);
 
   // Filters for Tab 1

@@ -45,7 +45,7 @@ const OutfitFormPage = () => {
 
   // Filter to only Main Outfits (exclude standalone accessories like Mojdi, Safa, Dupatta)
   const outfitCategories = useMemo(() => {
-    return categories.filter((c) => c.category_type !== 'ACCESSORY');
+    return categories.filter((c) => c.category_type !== 'ACCESSORY' && !c.skip_check_availability);
   }, [categories]);
 
   // Loading states
@@ -109,7 +109,7 @@ const OutfitFormPage = () => {
       .then((res) => {
         const catList = res.data.data || [];
         setCategories(catList);
-        const outfitCats = catList.filter((c) => c.category_type !== 'ACCESSORY');
+        const outfitCats = catList.filter((c) => c.category_type !== 'ACCESSORY' && !c.skip_check_availability);
         if (!isEditing && outfitCats.length > 0 && !formData.categoryId) {
           setFormData((prev) => ({
             ...prev,
