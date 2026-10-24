@@ -42,6 +42,7 @@ const CategoriesList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [categoryTypeFilter, setCategoryTypeFilter] = useState('ALL');
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,6 +56,7 @@ const CategoriesList = () => {
     name: '',
     category_code: '',
     description: '',
+    category_type: 'OUTFIT',
     skip_check_availability: false,
     washable: true,
     washing_price: 0
@@ -101,9 +103,17 @@ const CategoriesList = () => {
   };
 
   // Open modal for Create / Edit
-  const handleOpenCreateModal = () => {
+  const handleOpenCreateModal = (defaultType = 'OUTFIT') => {
     setEditingCategory(null);
-    setFormData({ name: '', category_code: '', description: '', skip_check_availability: false, washable: true, washing_price: 0 });
+    setFormData({
+      name: '',
+      category_code: '',
+      description: '',
+      category_type: defaultType,
+      skip_check_availability: defaultType === 'ACCESSORY',
+      washable: true,
+      washing_price: 0
+    });
     setModalStoreId(selectedStoreId || (stores[0]?.id || ''));
     setFormErrors({});
     setIsModalOpen(true);
@@ -115,6 +125,7 @@ const CategoriesList = () => {
       name: cat.name || '',
       category_code: cat.category_code || '',
       description: cat.description || '',
+      category_type: cat.category_type || 'OUTFIT',
       skip_check_availability: Boolean(cat.skip_check_availability),
       washable: cat.washable !== undefined ? Boolean(cat.washable) : true,
       washing_price: cat.washing_price ?? 0
@@ -165,6 +176,7 @@ const CategoriesList = () => {
         name: formData.name.trim(),
         category_code: formData.category_code.trim().toUpperCase(),
         description: formData.description.trim() || undefined,
+        category_type: formData.category_type || 'OUTFIT',
         skip_check_availability: Boolean(formData.skip_check_availability),
         washable: Boolean(formData.washable),
         washing_price: Number(formData.washing_price || 0),
@@ -213,9 +225,15 @@ const CategoriesList = () => {
   const totalCategories = categories.length;
   const totalDesigns = categories.reduce((sum, c) => sum + (c._count?.products || 0), 0);
   const topCategory = categories.slice().sort((a, b) => (b._count?.products || 0) - (a._count?.products || 0))[0];
+  const outfitCount = categories.filter((c) => (c.category_type || 'OUTFIT') === 'OUTFIT').length;
+  const accessoryCount = categories.filter((c) => c.category_type === 'ACCESSORY').length;
 
   // Filtering
   const filteredCategories = categories.filter((cat) => {
+    if (categoryTypeFilter !== 'ALL') {
+      const type = cat.category_type || 'OUTFIT';
+      if (type !== categoryTypeFilter) return false;
+    }
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
@@ -265,7 +283,7 @@ const CategoriesList = () => {
           <button
             type="button"
             className="pill-btn-primary"
-            onClick={handleOpenCreateModal}
+            onClick={() => handleOpenCreateModal('OUTFIT')}
           >
             <FiPlus className="plus-icon" />
             <span>Add Category</span>
@@ -293,8 +311,36 @@ const CategoriesList = () => {
             </button>
           )}
         </div>
+
+        {/* Filter Pills: All | Outfits | Accessories */}
+        <div className="view-mode-toggle" style={{ height: '38px' }}>
+          <button
+            type="button"
+            className={`view-btn ${categoryTypeFilter === 'ALL' ? 'active' : ''}`}
+            onClick={() => setCategoryTypeFilter('ALL')}
+          >
+            <span>All ({totalCategories})</span>
+          </button>
+          <button
+            type="button"
+            className={`view-btn ${categoryTypeFilter === 'OUTFIT' ? 'active' : ''}`}
+            onClick={() => setCategoryTypeFilter('OUTFIT')}
+          >
+            <FiShoppingBag className="icon" />
+            <span>Outfits ({outfitCount})</span>
+          </button>
+          <button
+            type="button"
+            className={`view-btn ${categoryTypeFilter === 'ACCESSORY' ? 'active' : ''}`}
+            onClick={() => setCategoryTypeFilter('ACCESSORY')}
+          >
+            <FiBox className="icon" />
+            <span>Accessories ({accessoryCount})</span>
+          </button>
+        </div>
+
         <div className="items-count-badge">
-          Total Categories: {filteredCategories.length}
+          Showing: {filteredCategories.length}
         </div>
       </div>
 
@@ -302,13 +348,15 @@ const CategoriesList = () => {
       <div className="bond-card-container">
         <DataTable
           columns={[
-            { label: '#', width: '70px' },
-            ...(isSuperAdmin ? [{ label: 'Store', width: '160px' }] : []),
-            { label: 'Category Code', width: '180px' },
-            { label: 'Category Name', width: '220px' },
+            { label: '#', width: '60px' },
+            ...(isSuperAdmin ? [{ label: 'Store', width: '150px' }] : []),
+            { label: 'Type', width: '130px' },
+            { label: 'Category Code', width: '160px' },
+            { label: 'Category Name', width: '200px' },
             { label: 'Description' },
-            { label: 'Total Designs', align: 'center', width: '160px' },
-            { label: 'Actions', align: 'right', width: '120px' }
+            { label: 'Availability', width: '140px' },
+            { label: 'Designs', align: 'center', width: '100px' },
+            { label: 'Actions', align: 'right', width: '100px' }
           ]}
           data={filteredCategories}
           loading={loading}
@@ -341,6 +389,43 @@ const CategoriesList = () => {
                   </td>
                 )}
                 <td>
+                  {cat.category_type === 'ACCESSORY' ? (
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        padding: '3px 10px',
+                        fontSize: '0.76rem',
+                        fontWeight: 700,
+                        borderRadius: '9999px',
+                        backgroundColor: 'rgba(139, 92, 246, 0.12)',
+                        border: '1px solid rgba(139, 92, 246, 0.3)',
+                        color: '#8B5CF6'
+                      }}
+                    >
+                      <FiBox /> Accessory
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        padding: '3px 10px',
+                        fontSize: '0.76rem',
+                        fontWeight: 700,
+                        borderRadius: '9999px',
+                        backgroundColor: 'rgba(11, 96, 176, 0.12)',
+                        border: '1px solid rgba(11, 96, 176, 0.3)',
+                        color: '#0B60B0'
+                      }}
+                    >
+                      <FiShoppingBag /> Outfit
+                    </span>
+                  )}
+                </td>
+                <td>
                   <span className="table-cat-code">
                     {cat.category_code}
                   </span>
@@ -355,21 +440,32 @@ const CategoriesList = () => {
                     {cat.description || <span className="muted-italic">No description provided</span>}
                   </span>
                 </td>
+                <td>
+                  {cat.skip_check_availability ? (
+                    <span style={{ fontSize: '0.76rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+                      Skip Check
+                    </span>
+                  ) : (
+                    <span style={{ fontSize: '0.76rem', fontWeight: 600, color: '#10B981' }}>
+                      Date Locked
+                    </span>
+                  )}
+                </td>
                 <td className="text-center">
                   <button
                     type="button"
-                    className="table-designs-pill"
-                    onClick={() => navigate('/collection')}
-                    title="View designs in Collection"
+                    className="designs-badge-btn"
+                    onClick={() => navigate(`/collection?category=${cat.id}`)}
+                    title={`View ${productCount} designs in this category`}
                   >
-                    <FiLayers />
-                    <span>{productCount} designs</span>
+                    <span>{productCount}</span>
                   </button>
                 </td>
                 <td className="text-right">
                   <RowActions
                     onEdit={() => handleOpenEditModal(cat)}
                     onDelete={() => setCategoryToDelete(cat)}
+                    deleteTitle={`Delete ${cat.name}`}
                   />
                 </td>
               </>
@@ -438,6 +534,66 @@ const CategoriesList = () => {
                     {formErrors.storeId && <span className="field-error">{formErrors.storeId}</span>}
                   </div>
                 )}
+
+                {/* Category Classification: Outfit vs Accessory */}
+                <div className="form-field" style={{ marginBottom: '16px' }}>
+                  <label>Classification *</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '6px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setFormData((prev) => ({
+                        ...prev,
+                        category_type: 'OUTFIT',
+                        skip_check_availability: false
+                      }))}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        padding: '10px 14px',
+                        borderRadius: '10px',
+                        border: formData.category_type !== 'ACCESSORY' ? '2px solid #0B60B0' : '1px solid var(--border-main)',
+                        background: formData.category_type !== 'ACCESSORY' ? 'rgba(11, 96, 176, 0.08)' : 'var(--bg-card-alt)',
+                        color: formData.category_type !== 'ACCESSORY' ? 'var(--text-main)' : 'var(--text-muted)',
+                        cursor: 'pointer',
+                        textAlign: 'left'
+                      }}
+                    >
+                      <FiShoppingBag style={{ fontSize: '1.25rem', color: formData.category_type !== 'ACCESSORY' ? '#0B60B0' : 'inherit' }} />
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>Main Outfit</div>
+                        <div style={{ fontSize: '0.72rem', opacity: 0.8 }}>Sherwani, Indo, Blazer</div>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setFormData((prev) => ({
+                        ...prev,
+                        category_type: 'ACCESSORY',
+                        skip_check_availability: true
+                      }))}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        padding: '10px 14px',
+                        borderRadius: '10px',
+                        border: formData.category_type === 'ACCESSORY' ? '2px solid #8B5CF6' : '1px solid var(--border-main)',
+                        background: formData.category_type === 'ACCESSORY' ? 'rgba(139, 92, 246, 0.08)' : 'var(--bg-card-alt)',
+                        color: formData.category_type === 'ACCESSORY' ? 'var(--text-main)' : 'var(--text-muted)',
+                        cursor: 'pointer',
+                        textAlign: 'left'
+                      }}
+                    >
+                      <FiBox style={{ fontSize: '1.25rem', color: formData.category_type === 'ACCESSORY' ? '#8B5CF6' : 'inherit' }} />
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>Accessory</div>
+                        <div style={{ fontSize: '0.72rem', opacity: 0.8 }}>Safa, Mojdi, Dupatta, Pent</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
 
                 <div className="form-field">
                   <label>Category Name *</label>

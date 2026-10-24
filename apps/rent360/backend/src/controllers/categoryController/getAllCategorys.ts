@@ -6,7 +6,7 @@ import { AuthRequest } from "../../middleware/auth";
 export const getAllCategorys = async (req: AuthRequest, res: Response) => {
   try {
     const user = req.user;
-    const { search } = req.query;
+    const { search, type } = req.query;
     let storeId = req.query.storeId as string;
 
     // Non-super admins are strictly locked to their store
@@ -17,6 +17,13 @@ export const getAllCategorys = async (req: AuthRequest, res: Response) => {
     const whereClause: any = {};
     if (storeId) {
       whereClause.storeId = storeId;
+    }
+
+    if (type && typeof type === "string") {
+      const upperType = type.trim().toUpperCase();
+      if (upperType === "OUTFIT" || upperType === "ACCESSORY") {
+        whereClause.category_type = upperType;
+      }
     }
 
     if (search && typeof search === "string" && search.trim() !== "") {

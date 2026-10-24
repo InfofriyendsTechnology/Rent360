@@ -109,6 +109,7 @@ model Category {
   category_code           String
   name                    String
   description             String?
+  category_type           String                  @default("OUTFIT")
   skip_check_availability Boolean                 @default(false)
   washable                Boolean                 @default(true)
   washing_price           Float                   @default(0.0)

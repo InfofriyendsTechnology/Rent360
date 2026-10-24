@@ -11,7 +11,8 @@ export const QuickCategoryModal = ({
   isOpen,
   onClose,
   onSuccess,
-  storeId
+  storeId,
+  categoryType = 'OUTFIT'
 }) => {
   const { token: reduxToken, user } = useSelector((state) => state.auth);
   const token = reduxToken || localStorage.getItem('token');
@@ -92,6 +93,7 @@ export const QuickCategoryModal = ({
         name: formData.name.trim(),
         category_code: formData.category_code.trim().toUpperCase(),
         description: formData.description.trim() || undefined,
+        category_type: categoryType,
         storeId: activeStoreId || undefined
       };
 

@@ -6,7 +6,7 @@ import { AuthRequest } from "../../middleware/auth";
 export const updateCategory = async (req: AuthRequest, res: Response) => {
   try {
     const id = req.params.id as string;
-    const { name, category_code, description } = req.body;
+    const { name, category_code, description, category_type, skip_check_availability, washable, washing_price } = req.body;
 
     const existing = await (prisma as any).category.findUnique({
       where: { id },
@@ -36,6 +36,18 @@ export const updateCategory = async (req: AuthRequest, res: Response) => {
     }
     if (description !== undefined) {
       updateData.description = description ? description.trim() : null;
+    }
+    if (category_type && (category_type === "OUTFIT" || category_type === "ACCESSORY")) {
+      updateData.category_type = category_type;
+    }
+    if (skip_check_availability !== undefined) {
+      updateData.skip_check_availability = Boolean(skip_check_availability);
+    }
+    if (washable !== undefined) {
+      updateData.washable = Boolean(washable);
+    }
+    if (washing_price !== undefined) {
+      updateData.washing_price = Number(washing_price || 0);
     }
 
     const updated = await (prisma as any).category.update({

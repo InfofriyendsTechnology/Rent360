@@ -30,6 +30,15 @@ const AccessoriesList = () => {
   const [categoryLinks, setCategoryLinks] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Filter Categories: Accessories vs Outfits
+  const accessoryCategories = useMemo(() => {
+    return categories.filter((c) => c.category_type === 'ACCESSORY');
+  }, [categories]);
+
+  const outfitCategories = useMemo(() => {
+    return categories.filter((c) => c.category_type !== 'ACCESSORY');
+  }, [categories]);
+
   // Filters for Tab 1
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('ALL');
@@ -143,9 +152,10 @@ const AccessoriesList = () => {
   // Tab 1 Handlers (Add / Edit Accessory)
   const handleOpenAddModal = () => {
     setEditingItem(null);
+    const targetCats = accessoryCategories.length > 0 ? accessoryCategories : categories;
     setFormData({
       item_name: '',
-      categoryId: categories[0]?.id || '',
+      categoryId: targetCats[0]?.id || '',
       image_url: '',
       rent_price: 0,
       total_stock: 1,
@@ -520,7 +530,7 @@ const AccessoriesList = () => {
                 size="md"
               >
                 <option value="ALL">All Categories</option>
-                {categories.map((c) => (
+                {(accessoryCategories.length > 0 ? accessoryCategories : categories).map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </Select>
@@ -603,17 +613,27 @@ const AccessoriesList = () => {
                 )}
 
                 <div className="form-group">
-                  <label>Category *</label>
-                  <select
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <label style={{ margin: 0 }}>Category *</label>
+                    <span style={{ fontSize: '0.74rem', color: '#8B5CF6', fontWeight: 600 }}>
+                      {accessoryCategories.length > 0 ? 'Accessory Categories Only' : 'All Categories'}
+                    </span>
+                  </div>
+                  <Select
                     value={formData.categoryId}
                     onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                    required
+                    size="md"
                   >
-                    <option value="">-- Select Category --</option>
-                    {categories.map((c) => (
+                    <option value="" disabled>-- Select Accessory Category --</option>
+                    {(accessoryCategories.length > 0 ? accessoryCategories : categories).map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
-                  </select>
+                  </Select>
+                  {accessoryCategories.length === 0 && (
+                    <span className="field-hint" style={{ color: '#8B5CF6', marginTop: '4px', display: 'block' }}>
+                      Tip: Categorize items as 'Accessory' in Categories Master to keep them organized.
+                    </span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -676,12 +696,31 @@ const AccessoriesList = () => {
                 <button
                   type="button"
                   className="pill-btn-secondary"
+                  onClick={() => {
+                    const targetCats = accessoryCategories.length > 0 ? accessoryCategories : categories;
+                    setFormData({
+                      item_name: '',
+                      categoryId: targetCats[0]?.id || '',
+                      image_url: '',
+                      rent_price: 0,
+                      total_stock: 1,
+                      alert_limit: 1,
+                      is_sold: false,
+                      storeId: selectedStoreId || (stores[0]?.id || '')
+                    });
+                  }}
+                >
+                  Reset
+                </button>
+                <button
+                  type="button"
+                  className="pill-btn-secondary"
                   onClick={() => setIsModalOpen(false)}
                 >
                   Cancel
                 </button>
                 <button type="submit" className="pill-btn-primary">
-                  {editingItem ? 'Save Changes' : 'Add Accessory'}
+                  {editingItem ? 'Save Changes' : 'Submit'}
                 </button>
               </div>
             </form>

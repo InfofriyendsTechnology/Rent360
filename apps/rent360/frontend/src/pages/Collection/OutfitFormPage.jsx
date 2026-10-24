@@ -43,6 +43,11 @@ const OutfitFormPage = () => {
   const [colors, setColors] = useState(DEFAULT_COLORS);
   const [sizes, setSizes] = useState([]);
 
+  // Filter to only Main Outfits (exclude standalone accessories like Mojdi, Safa, Dupatta)
+  const outfitCategories = useMemo(() => {
+    return categories.filter((c) => c.category_type !== 'ACCESSORY');
+  }, [categories]);
+
   // Loading states
   const [loading, setLoading] = useState(isEditing);
   const [submitting, setSubmitting] = useState(false);
@@ -104,11 +109,12 @@ const OutfitFormPage = () => {
       .then((res) => {
         const catList = res.data.data || [];
         setCategories(catList);
-        if (!isEditing && catList.length > 0 && !formData.categoryId) {
+        const outfitCats = catList.filter((c) => c.category_type !== 'ACCESSORY');
+        if (!isEditing && outfitCats.length > 0 && !formData.categoryId) {
           setFormData((prev) => ({
             ...prev,
-            categoryId: catList[0].id,
-            product_code: prev.product_code || generateCode(catList[0])
+            categoryId: outfitCats[0].id,
+            product_code: prev.product_code || generateCode(outfitCats[0])
           }));
         }
       })
@@ -575,8 +581,8 @@ const OutfitFormPage = () => {
                   size="md"
                   className={formErrors.categoryId ? 'is-invalid' : ''}
                 >
-                  <option value="" disabled>Select</option>
-                  {categories.map((c) => (
+                  <option value="" disabled>Select Outfit Category</option>
+                  {outfitCategories.map((c) => (
                     <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
                 </Select>

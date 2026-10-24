@@ -12,7 +12,9 @@ export const getCategoryAccessoryLinks = async (req: AuthRequest, res: Response)
       storeId = user.storeId;
     }
 
-    const whereCategory: any = {};
+    const whereCategory: any = {
+      category_type: { not: "ACCESSORY" }
+    };
     if (storeId) {
       whereCategory.storeId = storeId;
     }

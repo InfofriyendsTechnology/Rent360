@@ -6,13 +6,15 @@ import { AuthRequest } from "../../middleware/auth";
 export const createCategory = async (req: AuthRequest, res: Response) => {
   try {
     const user = req.user;
-    let { name, category_code, description, skip_check_availability, washable, washing_price, storeId } = req.body;
+    let { name, category_code, description, category_type, skip_check_availability, washable, washing_price, storeId } = req.body;
 
     if (!name || typeof name !== "string" || !name.trim()) {
       return responseHandler.badRequest(res, "Category name is required");
     }
 
     name = name.trim();
+    const resolvedType = category_type === "ACCESSORY" ? "ACCESSORY" : "OUTFIT";
+    const resolvedSkip = skip_check_availability !== undefined ? Boolean(skip_check_availability) : (resolvedType === "ACCESSORY");
 
     // Assign storeId
     if (user?.role !== "SUPER_ADMIN" && user?.storeId) {
@@ -64,7 +66,8 @@ export const createCategory = async (req: AuthRequest, res: Response) => {
         name,
         category_code,
         description: description ? description.trim() : null,
-        skip_check_availability: Boolean(skip_check_availability),
+        category_type: resolvedType,
+        skip_check_availability: resolvedSkip,
         washable: washable !== undefined ? Boolean(washable) : true,
         washing_price: Number(washing_price || 0),
       },
