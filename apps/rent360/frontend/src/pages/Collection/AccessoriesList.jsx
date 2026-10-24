@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { 
   FiPlus, FiSearch, FiLayers, FiImage, FiCheck, FiX, 
-  FiLink, FiShoppingBag, FiChevronDown, FiBox, FiAlertTriangle 
+  FiLink, FiShoppingBag, FiChevronDown, FiBox, FiAlertTriangle,
+  FiUploadCloud, FiTrash2
 } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
+import { convertToWebP } from '../../utils/imageOptimizer';
 import { DataTable, RowActions, Select } from '../../components/ui';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import '../Stores/StoresList.scss';
@@ -14,6 +16,7 @@ import '../Master/MasterPage.scss';
 import './AccessoriesList.scss';
 
 const AccessoriesList = () => {
+  const fileInputRef = useRef(null);
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
   const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
@@ -179,6 +182,51 @@ const AccessoriesList = () => {
       storeId: item.storeId || selectedStoreId || ''
     });
     setIsModalOpen(true);
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+    try {
+      const optimized = await convertToWebP(file, { maxWidth: 800, maxHeight: 800, quality: 0.85 });
+      setFormData((prev) => ({ ...prev, image_url: optimized.dataUrl }));
+      toast.success('Image ready');
+    } catch {
+      toast.error('Failed to process image');
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleResetModal = () => {
+    if (editingItem) {
+      setFormData({
+        item_name: editingItem.item_name || '',
+        categoryId: editingItem.categoryId || editingItem.category?.id || (categories[0]?.id || ''),
+        image_url: editingItem.image_url || '',
+        rent_price: editingItem.rent_price !== undefined ? editingItem.rent_price : 0,
+        total_stock: editingItem.total_stock !== undefined ? editingItem.total_stock : 1,
+        alert_limit: editingItem.alert_limit !== undefined ? editingItem.alert_limit : 1,
+        is_sold: Boolean(editingItem.is_sold),
+        storeId: editingItem.storeId || selectedStoreId || ''
+      });
+    } else {
+      const targetCats = accessoryCategories.length > 0 ? accessoryCategories : categories;
+      setFormData({
+        item_name: '',
+        categoryId: targetCats[0]?.id || '',
+        image_url: '',
+        rent_price: 0,
+        total_stock: 1,
+        alert_limit: 1,
+        is_sold: false,
+        storeId: selectedStoreId || (stores[0]?.id || '')
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -574,15 +622,12 @@ const AccessoriesList = () => {
         />
       </div>
 
-      {/* Create / Edit Accessory Modal */}
+      {/* Create / Edit Accessory Modal - Matches Competitor Reference Exactly */}
       {isModalOpen && (
         <div className="bond-modal-overlay" onClick={() => setIsModalOpen(false)}>
-          <div className="bond-modal-card" onClick={(e) => e.stopPropagation()}>
+          <div className="bond-modal-card accessory-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <div>
-                <h2>{editingItem ? 'Edit' : 'Add New'} Accessory</h2>
-                <p>Configure matching rental accessory specifications</p>
-              </div>
+              <h2>{editingItem ? 'Edit Accessory' : 'Create Accessory'}</h2>
               <button
                 type="button"
                 className="modal-close"
@@ -593,73 +638,106 @@ const AccessoriesList = () => {
             </div>
 
             <form onSubmit={handleSubmit} autoComplete="off">
-              <div className="modal-body">
-                {isSuperAdmin && !editingItem && (
-                  <div className="form-group">
-                    <label>Store *</label>
-                    <select
-                      value={formData.storeId || ''}
-                      onChange={(e) => setFormData({ ...formData, storeId: e.target.value })}
-                      required
-                    >
-                      <option value="">-- Select Store --</option>
-                      {stores.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.name || s.store_name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-
-                <div className="form-group">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <label style={{ margin: 0 }}>Category *</label>
-                    <span style={{ fontSize: '0.74rem', color: '#8B5CF6', fontWeight: 600 }}>
-                      {accessoryCategories.length > 0 ? 'Accessory Categories Only' : 'All Categories'}
-                    </span>
-                  </div>
-                  <Select
-                    value={formData.categoryId}
-                    onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                    size="md"
+              <div className="acc-modal-two-col">
+                {/* Left Column: Image Upload Box */}
+                <div className="acc-modal-img-col">
+                  <label className="field-label">Image</label>
+                  <div
+                    className="acc-modal-img-box"
+                    onClick={() => fileInputRef.current?.click()}
+                    title="Click to upload accessory photo"
                   >
-                    <option value="" disabled>-- Select Accessory Category --</option>
-                    {(accessoryCategories.length > 0 ? accessoryCategories : categories).map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                  </Select>
-                  {accessoryCategories.length === 0 && (
-                    <span className="field-hint" style={{ color: '#8B5CF6', marginTop: '4px', display: 'block' }}>
-                      Tip: Categorize items as 'Accessory' in Categories Master to keep them organized.
-                    </span>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label>Accessory Name *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Royal Silk Safa, Handcrafted Mojdi, Velvet Dupatta"
-                    value={formData.item_name}
-                    onChange={(e) => setFormData({ ...formData, item_name: e.target.value })}
-                  />
-                </div>
-
-                <div className="form-row-2col">
-                  <div className="form-group">
-                    <label>Stock Quantity *</label>
+                    {formData.image_url ? (
+                      <div className="acc-img-preview-wrap">
+                        <img src={formData.image_url} alt="Accessory" />
+                        <button
+                          type="button"
+                          className="acc-img-remove-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setFormData((prev) => ({ ...prev, image_url: '' }));
+                          }}
+                          title="Remove image"
+                        >
+                          <FiTrash2 />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="acc-img-empty">
+                        <FiUploadCloud className="upload-icon" />
+                        <span>Upload Image</span>
+                      </div>
+                    )}
                     <input
-                      type="number"
-                      min="0"
-                      required
-                      value={formData.total_stock}
-                      onChange={(e) => setFormData({ ...formData, total_stock: e.target.value })}
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      onChange={handleImageUpload}
                     />
                   </div>
+                </div>
+
+                {/* Right Column: Accessory Details */}
+                <div className="acc-modal-fields-col">
+                  {isSuperAdmin && !editingItem && stores.length > 1 && (
+                    <div className="form-group">
+                      <label>Store *</label>
+                      <select
+                        value={formData.storeId || ''}
+                        onChange={(e) => setFormData({ ...formData, storeId: e.target.value })}
+                        required
+                        className="clean-select"
+                      >
+                        <option value="">-- Select Store --</option>
+                        {stores.map((s) => (
+                          <option key={s.id} value={s.id}>
+                            {s.name || s.store_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
                   <div className="form-group">
-                    <label>Rent Rate (INR) *</label>
+                    <label>Category *</label>
+                    <Select
+                      value={formData.categoryId}
+                      onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+                      size="md"
+                    >
+                      <option value="" disabled>Select</option>
+                      {(accessoryCategories.length > 0 ? accessoryCategories : categories).map((c) => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  <div className="form-row-name-qty">
+                    <div className="form-group name-col">
+                      <label>Name *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Accessory Name"
+                        value={formData.item_name}
+                        onChange={(e) => setFormData({ ...formData, item_name: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group qty-col">
+                      <label>Qty</label>
+                      <input
+                        type="number"
+                        min="0"
+                        required
+                        value={formData.total_stock}
+                        onChange={(e) => setFormData({ ...formData, total_stock: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group rent-col">
+                    <label>Rent *</label>
                     <input
                       type="number"
                       min="0"
@@ -669,58 +747,18 @@ const AccessoriesList = () => {
                     />
                   </div>
                 </div>
-
-                <div className="form-group">
-                  <label>Image URL (Optional)</label>
-                  <input
-                    type="text"
-                    placeholder="https://..."
-                    value={formData.image_url}
-                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  />
-                </div>
-
-                <div className="form-group checkbox-form-group">
-                  <label className="checkbox-field-label">
-                    <input
-                      type="checkbox"
-                      checked={formData.is_sold}
-                      onChange={(e) => setFormData({ ...formData, is_sold: e.target.checked })}
-                    />
-                    <span>Is Sold (Available for direct retail customer purchase)</span>
-                  </label>
-                </div>
               </div>
 
               <div className="modal-footer">
                 <button
                   type="button"
-                  className="pill-btn-secondary"
-                  onClick={() => {
-                    const targetCats = accessoryCategories.length > 0 ? accessoryCategories : categories;
-                    setFormData({
-                      item_name: '',
-                      categoryId: targetCats[0]?.id || '',
-                      image_url: '',
-                      rent_price: 0,
-                      total_stock: 1,
-                      alert_limit: 1,
-                      is_sold: false,
-                      storeId: selectedStoreId || (stores[0]?.id || '')
-                    });
-                  }}
+                  className="btn-modal-reset"
+                  onClick={handleResetModal}
                 >
                   Reset
                 </button>
-                <button
-                  type="button"
-                  className="pill-btn-secondary"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="pill-btn-primary">
-                  {editingItem ? 'Save Changes' : 'Submit'}
+                <button type="submit" className="btn-modal-submit">
+                  Submit
                 </button>
               </div>
             </form>

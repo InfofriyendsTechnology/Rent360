@@ -107,9 +107,6 @@ const CategoriesList = () => {
     setEditingCategory(null);
     setFormData({
       name: '',
-      category_code: '',
-      description: '',
-      category_type: defaultType,
       skip_check_availability: defaultType === 'ACCESSORY',
       washable: true,
       washing_price: 0
@@ -123,9 +120,6 @@ const CategoriesList = () => {
     setEditingCategory(cat);
     setFormData({
       name: cat.name || '',
-      category_code: cat.category_code || '',
-      description: cat.description || '',
-      category_type: cat.category_type || 'OUTFIT',
       skip_check_availability: Boolean(cat.skip_check_availability),
       washable: cat.washable !== undefined ? Boolean(cat.washable) : true,
       washing_price: cat.washing_price ?? 0
@@ -135,29 +129,31 @@ const CategoriesList = () => {
     setIsModalOpen(true);
   };
 
-  const handleNameChange = (e) => {
-    const val = e.target.value;
-    const suggested = val
-      .toUpperCase()
-      .replace(/[^A-Z0-9\s]/g, '')
-      .trim()
-      .replace(/\s+/g, '_')
-      .slice(0, 20);
-
-    setFormData((prev) => ({
-      ...prev,
-      name: val,
-      category_code: !editingCategory ? suggested : prev.category_code
-    }));
+  const handleResetForm = () => {
+    if (editingCategory) {
+      setFormData({
+        name: editingCategory.name || '',
+        skip_check_availability: Boolean(editingCategory.skip_check_availability),
+        washable: editingCategory.washable !== undefined ? Boolean(editingCategory.washable) : true,
+        washing_price: editingCategory.washing_price ?? 0
+      });
+    } else {
+      setFormData({
+        name: '',
+        skip_check_availability: false,
+        washable: true,
+        washing_price: 0
+      });
+    }
+    setFormErrors({});
   };
 
   const validate = () => {
     const errs = {};
-    if (isSuperAdmin && !editingCategory && !modalStoreId) {
+    if (isSuperAdmin && !editingCategory && !modalStoreId && stores.length > 1) {
       errs.storeId = 'Please select a store';
     }
     if (!formData.name.trim()) errs.name = 'Category name is required';
-    if (!formData.category_code.trim()) errs.category_code = 'Category code is required';
     setFormErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -172,11 +168,16 @@ const CategoriesList = () => {
         ? (editingCategory ? (editingCategory.storeId || editingCategory.store?.id) : modalStoreId)
         : (userStoreId || undefined);
 
+      const generatedCode = formData.name
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '') || 'CAT';
+
       const payload = {
         name: formData.name.trim(),
-        category_code: formData.category_code.trim().toUpperCase(),
-        description: formData.description.trim() || undefined,
-        category_type: formData.category_type || 'OUTFIT',
+        category_code: editingCategory ? (editingCategory.category_code || generatedCode) : generatedCode,
+        category_type: formData.skip_check_availability ? 'ACCESSORY' : 'OUTFIT',
         skip_check_availability: Boolean(formData.skip_check_availability),
         washable: Boolean(formData.washable),
         washing_price: Number(formData.washing_price || 0),
@@ -473,23 +474,14 @@ const CategoriesList = () => {
         />
       </div>
 
-      {/* Add / Edit Category Modal */}
+      {/* Add / Edit Category Modal - Matches Competitor Reference Exactly */}
       {isModalOpen && (
         <div className="confirm-modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="category-edit-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <div className="modal-header-info">
-                <span className="modal-badge">
-                  <FiTag className="badge-icon" />
-                  Category Pipeline
-                </span>
-                <h2 className="modal-title">
-                  {editingCategory ? 'Edit Category' : 'Create Category'}
-                </h2>
-                <p className="modal-subtitle">
-                  Configure garment classifications and standard SKU codes
-                </p>
-              </div>
+              <h2 className="modal-title">
+                {editingCategory ? 'Edit Category' : 'Create Category'}
+              </h2>
               <button 
                 type="button" 
                 className="modal-close-btn" 
@@ -501,23 +493,24 @@ const CategoriesList = () => {
 
             <form onSubmit={handleSaveCategory}>
               <div className="modal-body">
-                {isSuperAdmin && !editingCategory && (
-                  <div className="form-field" style={{ marginBottom: '16px' }}>
-                    <label>Store *</label>
+                {isSuperAdmin && !editingCategory && stores.length > 1 && (
+                  <div className="form-field" style={{ marginBottom: '12px' }}>
+                    <label className="field-label-req">
+                      Store<span className="req-star">*</span>
+                    </label>
                     <select
                       value={modalStoreId}
                       onChange={(e) => {
                         setModalStoreId(e.target.value);
-                        if (formErrors.storeId) {
-                          setFormErrors((prev) => ({ ...prev, storeId: '' }));
-                        }
+                        if (formErrors.storeId) setFormErrors((prev) => ({ ...prev, storeId: '' }));
                       }}
                       style={{
                         width: '100%',
-                        padding: '10px 14px',
-                        borderRadius: '8px',
+                        height: '38px',
+                        padding: '0 12px',
                         border: '1px solid var(--border-main)',
-                        backgroundColor: 'var(--bg-card-alt)',
+                        borderRadius: '6px',
+                        background: 'var(--bg-card-alt)',
                         color: 'var(--text-main)',
                         fontSize: '0.9rem',
                         outline: 'none'
@@ -534,105 +527,26 @@ const CategoriesList = () => {
                   </div>
                 )}
 
-                {/* Category Classification: Outfit vs Accessory */}
-                <div className="form-field" style={{ marginBottom: '16px' }}>
-                  <label>Classification *</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '6px' }}>
-                    <button
-                      type="button"
-                      onClick={() => setFormData((prev) => ({
-                        ...prev,
-                        category_type: 'OUTFIT',
-                        skip_check_availability: false
-                      }))}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        padding: '10px 14px',
-                        borderRadius: '10px',
-                        border: formData.category_type !== 'ACCESSORY' ? '2px solid #0B60B0' : '1px solid var(--border-main)',
-                        background: formData.category_type !== 'ACCESSORY' ? 'rgba(11, 96, 176, 0.08)' : 'var(--bg-card-alt)',
-                        color: formData.category_type !== 'ACCESSORY' ? 'var(--text-main)' : 'var(--text-muted)',
-                        cursor: 'pointer',
-                        textAlign: 'left'
-                      }}
-                    >
-                      <FiShoppingBag style={{ fontSize: '1.25rem', color: formData.category_type !== 'ACCESSORY' ? '#0B60B0' : 'inherit' }} />
-                      <div>
-                        <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>Main Outfit</div>
-                        <div style={{ fontSize: '0.72rem', opacity: 0.8 }}>Sherwani, Indo, Blazer</div>
-                      </div>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setFormData((prev) => ({
-                        ...prev,
-                        category_type: 'ACCESSORY',
-                        skip_check_availability: true
-                      }))}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        padding: '10px 14px',
-                        borderRadius: '10px',
-                        border: formData.category_type === 'ACCESSORY' ? '2px solid #8B5CF6' : '1px solid var(--border-main)',
-                        background: formData.category_type === 'ACCESSORY' ? 'rgba(139, 92, 246, 0.08)' : 'var(--bg-card-alt)',
-                        color: formData.category_type === 'ACCESSORY' ? 'var(--text-main)' : 'var(--text-muted)',
-                        cursor: 'pointer',
-                        textAlign: 'left'
-                      }}
-                    >
-                      <FiBox style={{ fontSize: '1.25rem', color: formData.category_type === 'ACCESSORY' ? '#8B5CF6' : 'inherit' }} />
-                      <div>
-                        <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>Accessory</div>
-                        <div style={{ fontSize: '0.72rem', opacity: 0.8 }}>Safa, Mojdi, Dupatta, Pent</div>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-
                 <div className="form-field">
-                  <label>Category Name *</label>
+                  <label className="field-label-req">
+                    Name<span className="req-star">*</span>
+                  </label>
                   <input
                     type="text"
-                    placeholder="e.g. Royal Sherwani, Jodhpuri, Indo-Western"
+                    required
+                    placeholder="Category Name"
                     value={formData.name}
-                    onChange={handleNameChange}
+                    onChange={(e) => {
+                      setFormData({ ...formData, name: e.target.value });
+                      if (formErrors.name) setFormErrors((prev) => ({ ...prev, name: '' }));
+                    }}
                     autoFocus
                   />
                   {formErrors.name && <span className="field-error">{formErrors.name}</span>}
                 </div>
 
-                <div className="form-field">
-                  <label>Category Code (SKU Prefix) *</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. SHERWANI, JODHPURI"
-                    value={formData.category_code}
-                    onChange={(e) => setFormData({ ...formData, category_code: e.target.value.toUpperCase() })}
-                  />
-                  <span className="field-hint">
-                    Used as the SKU prefix for product items (e.g. SHERWANI-001)
-                  </span>
-                  {formErrors.category_code && <span className="field-error">{formErrors.category_code}</span>}
-                </div>
-
-                <div className="form-field">
-                  <label>Description (Optional)</label>
-                  <textarea
-                    rows={2}
-                    placeholder="Brief description of fabrics, styles, or occasions for this pipeline..."
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  />
-                </div>
-
-                {/* Washable & Skip Check Availability options (matching Competitor) */}
-                <div className="form-row-checkboxes" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem', padding: '0.75rem', background: 'rgba(0,0,0,0.02)', borderRadius: '8px', border: '1px solid var(--border-main)' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.88rem', fontWeight: 500 }}>
+                <div className="category-compact-row">
+                  <label className="compact-checkbox-label">
                     <input
                       type="checkbox"
                       checked={formData.skip_check_availability}
@@ -641,7 +555,7 @@ const CategoriesList = () => {
                     <span>Skip Check Availability</span>
                   </label>
 
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.88rem', fontWeight: 500 }}>
+                  <label className="compact-checkbox-label">
                     <input
                       type="checkbox"
                       checked={formData.washable}
@@ -649,38 +563,34 @@ const CategoriesList = () => {
                     />
                     <span>Washable</span>
                   </label>
-                </div>
 
-                <div className="form-field" style={{ marginTop: '0.85rem' }}>
-                  <label>Washing / Laundry Price (INR)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="0.00"
-                    value={formData.washing_price}
-                    onChange={(e) => setFormData({ ...formData, washing_price: e.target.value })}
-                  />
-                  <span className="field-hint">
-                    Standard dry cleaning / laundry expense for outfits in this category
-                  </span>
+                  <div className="compact-washing-field">
+                    <label>Washing Price</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.washing_price}
+                      onChange={(e) => setFormData({ ...formData, washing_price: e.target.value })}
+                    />
+                  </div>
                 </div>
               </div>
 
               <div className="modal-footer">
                 <button
                   type="button"
-                  className="cancel-btn"
-                  onClick={() => setIsModalOpen(false)}
+                  className="btn-modal-reset"
+                  onClick={handleResetForm}
                   disabled={isSaving}
                 >
-                  Cancel
+                  Reset
                 </button>
                 <button
                   type="submit"
-                  className="confirm-btn primary"
+                  className="btn-modal-submit"
                   disabled={isSaving}
                 >
-                  {isSaving ? 'Saving...' : editingCategory ? 'Update Category' : 'Create Category'}
+                  {isSaving ? 'Saving...' : 'Submit'}
                 </button>
               </div>
             </form>
