@@ -125,6 +125,18 @@ export const deleteStoreCloudinaryFolders = async (
     await cloudinary.api.delete_resources_by_prefix(base, { invalidate: true });
     const categories = ["logos", "products", "profiles"];
     for (const cat of categories) {
+      if (cat === "products") {
+        try {
+          const prodSub = await cloudinary.api.sub_folders(`${base}/products`).catch(() => ({ folders: [] }));
+          if (prodSub.folders && prodSub.folders.length > 0) {
+            for (const sub of prodSub.folders) {
+              try {
+                await cloudinary.api.delete_folder(sub.path);
+              } catch (e) {}
+            }
+          }
+        } catch (e) {}
+      }
       try {
         await cloudinary.api.delete_folder(`${base}/${cat}`);
       } catch (e) {}
@@ -146,7 +158,13 @@ export const uploadProductImages = async (
   if (!images) return [];
   const imageList = Array.isArray(images) ? images : [images];
   const uploadedUrls: string[] = [];
-  const productFolder = getStoreAssetFolder(storeName, "products");
+  const productBaseFolder = getStoreAssetFolder(storeName, "products");
+  const codeFolder = (productCode || "product")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "") || "product";
+  const targetFolder = `${productBaseFolder}/${codeFolder}`;
 
   for (let i = 0; i < imageList.length; i++) {
     const img = imageList[i];
@@ -161,11 +179,11 @@ export const uploadProductImages = async (
     // If it's a base64 data URL, upload to Cloudinary
     if (img.startsWith("data:image")) {
       try {
-        const publicId = `${productCode.toLowerCase().replace(/[^a-z0-9]+/g, "_")}_${Date.now()}_${i + 1}`;
+        const fileIndex = String(i + 1).padStart(3, "0"); // 001, 002, 003...
         const uploadRes = await cloudinary.uploader.upload(img, {
-          folder: productFolder,
-          asset_folder: productFolder,
-          public_id: publicId,
+          folder: targetFolder,
+          asset_folder: targetFolder,
+          public_id: fileIndex,
           format: "webp",
           transformation: [
             { quality: "auto:good", fetch_format: "webp" }

@@ -2,7 +2,7 @@ import { Response } from "express";
 import prisma from "../../utils/prisma";
 import responseHandler from "../../utils/responseHandler";
 import { AuthRequest } from "../../middleware/auth";
-import { uploadProductImages } from "../../utils/cloudinaryHelper";
+import { uploadProductImages, deleteCloudinaryAsset } from "../../utils/cloudinaryHelper";
 
 export const updateProduct = async (req: AuthRequest, res: Response) => {
   try {
@@ -77,6 +77,16 @@ export const updateProduct = async (req: AuthRequest, res: Response) => {
         rawImages
       );
       updateData.image_urls = uploadedUrls;
+
+      // Delete removed images from Cloudinary to keep bucket clean
+      if (Array.isArray(existing.image_urls)) {
+        const removedUrls = (existing.image_urls as string[]).filter(
+          (oldUrl) => !uploadedUrls.includes(oldUrl)
+        );
+        for (const remUrl of removedUrls) {
+          deleteCloudinaryAsset(remUrl).catch(() => {});
+        }
+      }
     }
 
         if (req.body.mrp !== undefined) {
