@@ -32,7 +32,13 @@ export const createTransactionCategory = async (
     const { contact_no, account_group, opening_balance, opening_date, address, remark } = req.body;
     let category_type = (req.body.category_type || "").toUpperCase();
     if (!category_type) {
-      category_type = (account_group === "Income" || account_group === "INCOME") ? "INCOME" : "EXPENSE";
+      if (account_group === "Cash Accounts" || account_group === "Bank Accounts" || account_group === "Rent") {
+        category_type = "BOTH";
+      } else if (account_group === "Income" || account_group === "Sales") {
+        category_type = "INCOME";
+      } else {
+        category_type = "EXPENSE";
+      }
     }
 
     const data = await prisma.transactionCategory.create({

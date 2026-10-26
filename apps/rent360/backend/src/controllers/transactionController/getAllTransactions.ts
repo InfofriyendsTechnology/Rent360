@@ -105,22 +105,113 @@ export const getAllTransactions = async (req: AuthRequest, res: Response) => {
     let cashDebit = 0;
     let bankCredit = 0;
     let bankDebit = 0;
+    let depositInflow = 0;
+    let depositOutflow = 0;
 
     for (const tx of transactions) {
       const amount = Number(tx.amount) || 0;
       const isCredit = tx.transaction_type === "CREDIT";
       const modeName = tx.paymentMode?.name?.toLowerCase() || "";
       const isCash = modeName.includes("cash");
+      const catName = (tx.transactionCategory?.name || "").toLowerCase();
+      const isDeposit = catName.includes("security") || catName.includes("deposit");
 
       if (isCredit) {
         totalCredit += amount;
         if (isCash) cashCredit += amount;
         else bankCredit += amount;
+        if (isDeposit) depositInflow += amount;
       } else {
         totalDebit += amount;
         if (isCash) cashDebit += amount;
         else bankDebit += amount;
+        if (isDeposit) depositOutflow += amount;
       }
+    }
+
+    // Opening Balance calculation for prior periods
+    let openingCredit = 0;
+    let openingDebit = 0;
+    let openingCashCredit = 0;
+    let openingCashDebit = 0;
+    let openingBankCredit = 0;
+    let openingBankDebit = 0;
+
+    if (startDate && typeof startDate === "string") {
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0);
+
+      const priorWhere: any = { createdAt: { lt: start } };
+      if (storeId) priorWhere.storeId = storeId;
+      if (type && typeof type === "string" && type.toUpperCase() !== "ALL") {
+        priorWhere.transaction_type = type.toUpperCase();
+      }
+      if (categoryId && typeof categoryId === "string" && categoryId !== "ALL") {
+        priorWhere.categoryId = categoryId;
+      }
+      if (paymentModeId && typeof paymentModeId === "string" && paymentModeId !== "ALL") {
+        priorWhere.paymentModeId = paymentModeId;
+      }
+      if (bankAccountId && typeof bankAccountId === "string" && bankAccountId !== "ALL") {
+        priorWhere.bankAccountId = bankAccountId;
+      }
+
+      const priorTxs = await prisma.transaction.findMany({
+        where: priorWhere,
+        include: { paymentMode: true },
+      });
+
+      for (const p of priorTxs) {
+        const amt = Number(p.amount) || 0;
+        const isCred = p.transaction_type === "CREDIT";
+        const isCsh = (p.paymentMode?.name || "").toLowerCase().includes("cash");
+        if (isCred) {
+          openingCredit += amt;
+          if (isCsh) openingCashCredit += amt;
+          else openingBankCredit += amt;
+        } else {
+          openingDebit += amt;
+          if (isCsh) openingCashDebit += amt;
+          else openingBankDebit += amt;
+        }
+      }
+    }
+
+    const openingBalance = openingCredit - openingDebit;
+    const openingCash = openingCashCredit - openingCashDebit;
+    const openingBank = openingBankCredit - openingBankDebit;
+
+    const closingBalance = openingBalance + (totalCredit - totalDebit);
+    const closingCash = openingCash + (cashCredit - cashDebit);
+    const closingBank = openingBank + (bankCredit - bankDebit);
+
+    // All-time Active Security Deposit Held
+    let allTimeDepositHeld = 0;
+    try {
+      const depositWhere: any = {
+        transactionCategory: {
+          OR: [
+            { name: { contains: "security", mode: "insensitive" } },
+            { name: { contains: "deposit", mode: "insensitive" } },
+          ],
+        },
+      };
+      if (storeId) depositWhere.storeId = storeId;
+
+      const allDepositTxs = await prisma.transaction.findMany({
+        where: depositWhere,
+        select: { amount: true, transaction_type: true },
+      });
+
+      let allCred = 0;
+      let allDeb = 0;
+      for (const d of allDepositTxs) {
+        if (d.transaction_type === "CREDIT") allCred += Number(d.amount) || 0;
+        else allDeb += Number(d.amount) || 0;
+      }
+      allTimeDepositHeld = Math.max(0, allCred - allDeb);
+    } catch (e) {
+      // fallback
     }
 
     const summary = {
@@ -134,11 +225,25 @@ export const getAllTransactions = async (req: AuthRequest, res: Response) => {
       cashDebit,
       bankCredit,
       bankDebit,
+      openingBalance,
+      openingCash,
+      openingBank,
+      closingBalance,
+      closingCash,
+      closingBank,
+      depositInflow,
+      depositOutflow,
+      allTimeDepositHeld,
       count: transactions.length,
     };
 
+    const mappedTransactions = transactions.map((t) => ({
+      ...t,
+      category: t.transactionCategory,
+    }));
+
     return responseHandler.success(res, "Transactions fetched successfully", {
-      transactions,
+      transactions: mappedTransactions,
       summary,
     });
   } catch (error) {

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import {
   getAllTransactions,
+  getAccountLedger,
+  getTrialBalance,
   createTransaction,
   getTransactionById,
   updateTransaction,
@@ -15,6 +17,8 @@ import {
 
 const router = Router();
 router.use(authenticate);
+router.get("/ledger", getAccountLedger);
+router.get("/trial-balance", getTrialBalance);
 router.get("/", getAllTransactions);
 router.post(
   "/",

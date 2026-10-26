@@ -1,0 +1,565 @@
+@import '../../styles/variables';
+
+.account-ledger-view {
+  padding: 24px 32px 60px;
+  max-width: 1600px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+
+  /* Top Bar */
+  .ledger-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .title-section {
+      .main-title {
+        font-size: 1.65rem;
+        font-weight: 700;
+        color: $text-main;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px 0;
+      }
+
+      .breadcrumb-sub {
+        font-size: 0.85rem;
+        color: $text-muted;
+        margin: 0;
+      }
+    }
+
+    .store-selector-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: $bg-card;
+      border: 1px solid $border-main;
+      border-radius: 9999px;
+      box-shadow: $shadow-sm;
+
+      .store-pill-icon {
+        color: $accent;
+        font-size: 1rem;
+      }
+
+      label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: $text-muted;
+      }
+
+      select {
+        border: none;
+        background: transparent;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: $text-main;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .chevron-icon {
+        color: $text-muted;
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  /* Competitor-Style Filter Card */
+  .ledger-filter-card {
+    background: $bg-card;
+    border: 1px solid $border-main;
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 24px;
+    box-shadow: $shadow-sm;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    .filter-controls-grid {
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+      flex: 1;
+
+      .filter-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        .field-label {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: $text-muted;
+
+          .required {
+            color: #dc2626;
+            margin-left: 2px;
+          }
+        }
+
+        .select-wrap {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+
+          select {
+            appearance: none;
+            padding: 7px 32px 7px 12px;
+            background: $bg-main;
+            border: 1px solid $border-main;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: $text-main;
+            cursor: pointer;
+            outline: none;
+            min-width: 140px;
+            transition: all 0.2s;
+
+            &:focus {
+              border-color: $accent;
+              box-shadow: 0 0 0 2px rgba(11, 96, 176, 0.15);
+            }
+          }
+
+          .select-arrow {
+            position: absolute;
+            right: 10px;
+            color: $text-muted;
+            pointer-events: none;
+            font-size: 0.85rem;
+          }
+        }
+
+        &.field-account {
+          select {
+            min-width: 180px;
+          }
+        }
+
+        &.field-date {
+          .checkbox-date-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: $bg-main;
+            border: 1px solid $border-main;
+            border-radius: 8px;
+            padding: 4px 10px;
+            height: 38px;
+            box-sizing: border-box;
+            transition: all 0.2s;
+
+            &:focus-within {
+              border-color: $accent;
+              box-shadow: 0 0 0 2px rgba(11, 96, 176, 0.15);
+            }
+
+            .date-checkbox {
+              cursor: pointer;
+              accent-color: #2563eb;
+              width: 16px;
+              height: 16px;
+              margin: 0;
+            }
+
+            .dmy-input-wrapper {
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+
+              .dmy-text-field {
+                border: none;
+                background: transparent;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: $text-main;
+                outline: none;
+                width: 95px;
+                letter-spacing: 0.03em;
+              }
+            }
+          }
+        }
+      }
+
+      .filter-actions-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        .action-icon-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          border: none;
+          color: #ffffff;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: all 0.15s ease;
+
+          &.btn-search {
+            background-color: #2563eb;
+            &:hover { background-color: #1d4ed8; }
+          }
+
+          &.btn-excel {
+            background-color: #16a34a;
+            &:hover { background-color: #15803d; }
+          }
+
+          &.btn-print {
+            background-color: #4b5563;
+            &:hover { background-color: #374151; }
+          }
+        }
+      }
+    }
+
+    /* Top Right Summary Strip matching Rentopus Reference */
+    .ledger-summary-strip {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      padding-left: 20px;
+      border-left: 1px dashed $border-main;
+
+      @media (max-width: 992px) {
+        border-left: none;
+        padding-left: 0;
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .period-box {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+
+        .period-line {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .p-label {
+            font-size: 0.76rem;
+            color: $text-muted;
+          }
+
+          .p-val {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #2563eb;
+          }
+        }
+      }
+
+      .balance-box {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 3px;
+
+        .b-label {
+          font-size: 0.76rem;
+          font-weight: 600;
+          color: $text-muted;
+        }
+
+        .b-val {
+          font-size: 1.1rem;
+          font-weight: 800;
+          font-feature-settings: "tnum";
+
+          &.cr {
+            color: #16a34a; /* Green for Credit */
+          }
+
+          &.dr {
+            color: #dc2626; /* Red for Debit */
+          }
+        }
+
+        &.cl-box {
+          .b-val.cr {
+            color: #dc2626; /* In Rentopus screenshot, Closing Balance is red */
+          }
+        }
+      }
+    }
+  }
+
+  /* Printable Header (Visible only when printing) */
+  .print-only-header {
+    display: none;
+  }
+
+  /* Split T-Account Ledger Table Card */
+  .ledger-table-card {
+    background: $bg-card;
+    border: 1px solid $border-main;
+    border-radius: 12px;
+    box-shadow: $shadow-sm;
+    overflow: hidden;
+
+    .ledger-loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      gap: 12px;
+      color: $text-muted;
+      font-size: 0.95rem;
+
+      .spin-icon {
+        font-size: 1.8rem;
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    .ledger-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+
+      .t-account-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        text-align: left;
+
+        thead {
+          background-color: $bg-card-alt;
+
+          .split-master-header {
+            th {
+              padding: 10px 16px;
+              font-size: 0.95rem;
+              font-weight: 700;
+              text-align: center;
+              border-bottom: 1px solid $border-main;
+
+              &.master-header-dr {
+                background: rgba(220, 38, 38, 0.05);
+                color: #b91c1c;
+                border-right: 2px solid $border-main;
+              }
+
+              &.master-header-cr {
+                background: rgba(22, 163, 74, 0.05);
+                color: #15803d;
+              }
+            }
+          }
+
+          .sub-header-row {
+            border-bottom: 2px solid $border-main;
+
+            th {
+              padding: 9px 12px;
+              font-size: 0.8rem;
+              font-weight: 700;
+              color: $text-main;
+              background-color: $bg-card-alt;
+              white-space: nowrap;
+
+              &.border-left {
+                border-left: 2px solid $border-main;
+              }
+
+              &.right {
+                text-align: right;
+              }
+            }
+          }
+        }
+
+        tbody {
+          .ledger-row {
+            border-bottom: 1px solid $border-muted;
+            transition: background-color 0.1s ease;
+
+            &:hover {
+              background-color: $bg-card-hover;
+            }
+
+            td {
+              padding: 10px 12px;
+              color: $text-main;
+              vertical-align: middle;
+
+              &.border-left {
+                border-left: 2px solid $border-main;
+              }
+
+              &.right {
+                text-align: right;
+              }
+
+              &.font-num {
+                font-feature-settings: "tnum";
+                font-weight: 600;
+              }
+
+              .cell-acc-name {
+                font-weight: 600;
+                color: $text-main;
+              }
+
+              .cell-details {
+                font-size: 0.82rem;
+                color: $text-muted;
+              }
+            }
+          }
+
+          .empty-ledger-cell {
+            padding: 60px 20px;
+            text-align: center;
+
+            .empty-wrap {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 12px;
+
+              .empty-icon {
+                font-size: 2.2rem;
+                color: $text-muted;
+                opacity: 0.5;
+              }
+
+              p {
+                margin: 0;
+                color: $text-muted;
+                font-size: 0.95rem;
+              }
+            }
+          }
+        }
+
+        tfoot {
+          background-color: $bg-card-alt;
+          border-top: 2px solid $border-main;
+
+          .ledger-footer-row {
+            td {
+              padding: 12px 14px;
+              font-weight: 800;
+              font-size: 0.95rem;
+
+              &.footer-total-label {
+                color: $text-main;
+              }
+
+              &.footer-amt {
+                color: $text-main;
+              }
+
+              &.border-left {
+                border-left: 2px solid $border-main;
+              }
+
+              &.right {
+                text-align: right;
+              }
+            }
+          }
+        }
+
+        /* Column Widths */
+        .col-date { width: 11%; }
+        .col-ref { width: 11%; }
+        .col-acc { width: 13%; }
+        .col-details { width: 10%; }
+        .col-amt { width: 5%; }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Print Overrides */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .sidebar,
+  .header,
+  .no-print,
+  .mobile-open,
+  .mobile-sidebar-close {
+    display: none !important;
+  }
+
+  .account-ledger-view {
+    padding: 0 !important;
+    max-width: 100% !important;
+
+    .ledger-top-bar {
+      display: none !important;
+    }
+
+    .print-only-header {
+      display: block !important;
+      margin-bottom: 20px;
+      text-align: center;
+
+      h2 {
+        font-size: 1.4rem;
+        margin: 0 0 4px 0;
+      }
+
+      p {
+        font-size: 0.9rem;
+        color: #333333;
+        margin: 2px 0;
+      }
+    }
+
+    .ledger-table-card {
+      border: 1px solid #000000 !important;
+      box-shadow: none !important;
+
+      .t-account-table {
+        th, td {
+          border-color: #cccccc !important;
+        }
+
+        .master-header-dr,
+        .master-header-cr {
+          border-bottom: 1px solid #000000 !important;
+        }
+
+        .sub-header-row th {
+          border-bottom: 1px solid #000000 !important;
+        }
+
+        tfoot td {
+          border-top: 1px solid #000000 !important;
+        }
+      }
+    }
+  }
+}

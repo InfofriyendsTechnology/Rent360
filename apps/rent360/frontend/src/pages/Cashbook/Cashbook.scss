@@ -1,792 +1,167 @@
 @import '../../styles/variables';
 
-.cashbook-page-view {
+.cashbook-view {
   width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
+  margin: 0 auto;
 
-  /* ----------------- TOP BAR ----------------- */
-  .cashbook-top-bar {
+  /* Search Toolbar matching Rent360 */
+  .cashbook-search-toolbar {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     margin-bottom: 20px;
     gap: 16px;
     flex-wrap: wrap;
 
-    .title-area {
-      .title-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-bottom: 4px;
-
-        .main-heading {
-          font-size: 2.1rem;
-          font-weight: 800;
-          color: $text-main;
-          letter-spacing: -0.035em;
-          line-height: 1.15;
-          margin: 0;
-        }
-
-        .live-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          height: 32px;
-          padding: 0 14px;
-          background-color: $bg-card;
-          border: 1px solid $border-main;
-          border-radius: $border-radius-pill;
-          font-size: 0.82rem;
-          font-weight: 600;
-          color: $text-main;
-          box-shadow: $shadow-sm;
-
-          .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background-color: #16a34a;
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
-          }
-        }
-      }
-
-      .sub-heading {
-        color: $text-muted;
-        font-size: 0.92rem;
-        margin: 0;
-      }
-    }
-
-    .top-actions-wrap {
+    .search-pill-wrapper {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      width: 100%;
+      max-width: 380px;
 
-      .btn-pill-outline {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+      .search-icon {
+        position: absolute;
+        left: 14px;
+        color: $text-muted;
+        font-size: 1rem;
+        pointer-events: none;
+      }
+
+      input {
+        width: 100%;
         height: 42px;
-        padding: 0 18px;
+        padding: 0 38px 0 40px;
         background-color: $bg-card;
         border: 1px solid $border-main;
         border-radius: $border-radius-pill;
-        color: $text-main;
         font-size: 0.88rem;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: $shadow-sm;
-        transition: all 0.15s ease;
-
-        &:hover {
-          background-color: $bg-card-hover;
-          border-color: $border-pill;
-        }
-      }
-
-      .btn-pill-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        height: 42px;
-        padding: 0 22px;
-        background-color: $bg-pill-dark;
-        border: none;
-        border-radius: $border-radius-pill;
-        color: $text-inverse;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: $shadow-sm;
-        transition: all 0.15s ease;
-
-        .plus-icon {
-          font-size: 1.1rem;
-        }
-
-        &:hover {
-          opacity: 0.92;
-          transform: translateY(-1px);
-        }
-      }
-    }
-  }
-
-  /* ----------------- FINANCIAL KPI BENTO GRID ----------------- */
-  .financial-kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 14px;
-    margin-bottom: 20px;
-
-    @media (max-width: 1024px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    @media (max-width: 580px) {
-      grid-template-columns: 1fr;
-    }
-
-    .kpi-bento-card {
-      background-color: $bg-card;
-      border: 1px solid $border-main;
-      border-radius: $border-radius-card;
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: $shadow-sm;
-
-      &:hover {
-        transform: translateY(-2px);
-        border-color: rgba(255, 255, 255, 0.16);
-        box-shadow: $shadow-md;
-      }
-
-      &.active-filter {
-        border-color: $accent;
-        box-shadow: 0 0 0 2px rgba(11, 96, 176, 0.2), $shadow-sm;
-      }
-
-      .kpi-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-
-        .kpi-tag {
-          font-size: 0.74rem;
-          font-weight: 700;
-          color: $text-muted;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-
-        .kpi-icon-pill {
-          width: 32px;
-          height: 32px;
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.95rem;
-          background-color: $bg-card-alt;
-          border: 1px solid $border-main;
-          color: $text-main;
-          transition: all 0.15s ease;
-        }
-      }
-
-      .kpi-figure {
-        font-size: 1.85rem;
-        font-weight: 800;
         color: $text-main;
-        letter-spacing: -0.03em;
-        line-height: 1.15;
-        margin-bottom: 8px;
-        font-feature-settings: "tnum";
-      }
+        outline: none;
+        box-shadow: $shadow-sm;
+        transition: all 0.2s ease;
 
-      .kpi-bottom {
-        display: flex;
-        align-items: center;
+        &:focus {
+          border-color: $accent;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
 
-        .kpi-hint {
-          font-size: 0.76rem;
+        &::placeholder {
           color: $text-muted;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-    }
-  }
-
-  /* ----------------- MAIN UNIFIED CARD CONTAINER ----------------- */
-  .cashbook-main-card {
-    background-color: $bg-card;
-    border: 1px solid $border-main;
-    border-radius: $border-radius-card;
-    box-shadow: $shadow-sm;
-    overflow: hidden;
-
-    /* Toolbar Section */
-    .cashbook-card-toolbar {
-      padding: 16px 20px;
-      border-bottom: 1px solid $border-main;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      background-color: $bg-card;
-
-      /* Row 1: Date Presets & Quick Search */
-      .controls-row-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 14px;
-        flex-wrap: wrap;
-
-        .date-preset-strip {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          flex-wrap: wrap;
-
-          .preset-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            height: 32px;
-            padding: 0 13px;
-            border-radius: $border-radius-pill;
-            border: 1px solid $border-main;
-            background-color: $bg-card-alt;
-            color: $text-main;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s ease;
-
-            &:hover {
-              background-color: $bg-card-hover;
-            }
-
-            &.active {
-              background-color: $bg-pill-dark !important;
-              color: $text-inverse !important;
-              border-color: transparent !important;
-            }
-          }
-
-          .custom-date-inputs {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-left: 4px;
-
-            input[type="date"] {
-              height: 32px;
-              padding: 0 10px;
-              border-radius: $border-radius-pill;
-              border: 1px solid $border-main;
-              background-color: $bg-card-alt;
-              color: $text-main;
-              font-size: 0.8rem;
-              font-weight: 500;
-              outline: none;
-              color-scheme: dark;
-
-              &:focus {
-                border-color: $accent;
-              }
-            }
-
-            .to-txt {
-              font-size: 0.78rem;
-              font-weight: 600;
-              color: $text-muted;
-            }
-          }
-        }
-
-        .search-pill-box {
-          position: relative;
-          display: flex;
-          align-items: center;
-          min-width: 260px;
-          flex: 0 1 320px;
-
-          .search-icon {
-            position: absolute;
-            left: 14px;
-            color: $text-muted;
-            font-size: 0.95rem;
-            pointer-events: none;
-          }
-
-          input {
-            width: 100%;
-            height: 36px;
-            padding: 0 34px 0 38px;
-            border-radius: $border-radius-pill;
-            border: 1px solid $border-main;
-            background-color: $bg-card-alt;
-            color: $text-main;
-            font-size: 0.84rem;
-            outline: none;
-            transition: all 0.18s ease;
-
-            &::placeholder {
-              color: $text-muted;
-            }
-
-            &:focus {
-              border-color: $accent;
-              background-color: $bg-card;
-              box-shadow: 0 0 0 2px rgba(11, 96, 176, 0.15);
-            }
-          }
-
-          .clear-search {
-            position: absolute;
-            right: 10px;
-            background: none;
-            border: none;
-            color: $text-muted;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            padding: 4px;
-            border-radius: 50%;
-
-            &:hover {
-              color: $text-main;
-            }
-          }
+          opacity: 0.8;
         }
       }
 
-      /* Row 2: Account & Type & Category Filters */
-      .controls-row-bottom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-
-        .segmented-filter {
-          display: inline-flex;
-          align-items: center;
-          background-color: $bg-card-alt;
-          border: 1px solid $border-main;
-          border-radius: $border-radius-pill;
-          padding: 3px 4px;
-          gap: 2px;
-
-          .filter-tag {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: $text-muted;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            padding: 0 8px;
-          }
-
-          .seg-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            height: 28px;
-            padding: 0 12px;
-            border-radius: $border-radius-pill;
-            border: none;
-            background: transparent;
-            color: $text-muted;
-            font-size: 0.78rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s ease;
-
-            &:hover {
-              color: $text-main;
-            }
-
-            &.active {
-              background-color: $bg-pill-dark;
-              color: $text-inverse;
-              box-shadow: $shadow-sm;
-            }
-          }
-        }
-
-        .bottom-right-filters {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          flex-wrap: wrap;
-
-          .filter-dropdown-wrap {
-            select {
-              height: 34px;
-              padding: 0 32px 0 14px;
-              border-radius: $border-radius-pill;
-              border: 1px solid $border-main;
-              background-color: $bg-card-alt;
-              color: $text-main;
-              font-size: 0.82rem;
-              font-weight: 600;
-              outline: none;
-              cursor: pointer;
-              appearance: none;
-              background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2371717A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-              background-repeat: no-repeat;
-              background-position: right 12px center;
-              transition: all 0.15s ease;
-
-              &:focus {
-                border-color: $accent;
-              }
-
-              option {
-                background-color: var(--bg-card);
-                color: var(--text-main);
-              }
-            }
-          }
-        }
-      }
-    }
-
-    /* Content Area: Table / Loading / Empty */
-    .cashbook-card-content {
-      /* Table View */
-      .cashbook-table-card {
-        background: transparent;
+      .clear-search-btn {
+        position: absolute;
+        right: 12px;
+        background: none;
         border: none;
-        box-shadow: none;
-        border-radius: 0;
-
-        .table-responsive {
-          width: 100%;
-          overflow-x: auto;
-        }
-
-        .cashbook-table {
-          width: 100%;
-          border-collapse: collapse;
-          text-align: left;
-
-          thead {
-            background-color: $bg-card-alt;
-            border-bottom: 1px solid $border-main;
-
-            th {
-              padding: 13px 18px;
-              font-size: 0.74rem;
-              font-weight: 700;
-              color: $text-muted;
-              text-transform: uppercase;
-              letter-spacing: 0.05em;
-
-              &.th-amount {
-                text-align: right;
-              }
-
-              &.th-actions {
-                text-align: center;
-                width: 70px;
-              }
-            }
-          }
-
-          tbody {
-            tr {
-              border-bottom: 1px solid $border-muted;
-              transition: background-color 0.12s ease;
-
-              &:hover {
-                background-color: $bg-card-hover;
-              }
-
-              &:last-child {
-                border-bottom: none;
-              }
-
-              td {
-                padding: 15px 18px;
-                font-size: 0.88rem;
-                color: $text-main;
-                vertical-align: middle;
-              }
-
-              .td-datetime {
-                .datetime-cell {
-                  display: flex;
-                  align-items: center;
-                  gap: 6px;
-                  color: $text-muted;
-                  font-size: 0.82rem;
-                  font-weight: 500;
-                  white-space: nowrap;
-
-                  .icon {
-                    font-size: 0.88rem;
-                  }
-                }
-              }
-
-              .td-type {
-                .type-badge {
-                  display: inline-flex;
-                  align-items: center;
-                  gap: 5px;
-                  font-size: 0.76rem;
-                  font-weight: 700;
-                  padding: 4px 10px;
-                  border-radius: $border-radius-pill;
-                  letter-spacing: 0.03em;
-                  white-space: nowrap;
-
-                  &.credit {
-                    background-color: rgba(34, 197, 94, 0.12);
-                    color: #16a34a;
-                    border: 1px solid rgba(34, 197, 94, 0.25);
-                  }
-
-                  &.debit {
-                    background-color: rgba(239, 68, 68, 0.12);
-                    color: #dc2626;
-                    border: 1px solid rgba(239, 68, 68, 0.25);
-                  }
-                }
-              }
-
-              .td-category {
-                .cat-desc-cell {
-                  display: flex;
-                  flex-direction: column;
-                  gap: 3px;
-
-                  .cat-name {
-                    font-weight: 600;
-                    color: $text-main;
-                    font-size: 0.88rem;
-                  }
-
-                  .cat-remarks {
-                    font-size: 0.78rem;
-                    color: $text-muted;
-                    line-height: 1.35;
-                    max-width: 320px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                  }
-                }
-              }
-
-              .td-mode {
-                .mode-cell {
-                  display: flex;
-                  flex-direction: column;
-                  gap: 3px;
-
-                  .mode-badge {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 6px;
-                    font-size: 0.78rem;
-                    font-weight: 600;
-                    color: $text-main;
-
-                    svg {
-                      font-size: 0.85rem;
-                      color: $text-muted;
-                    }
-                  }
-
-                  .account-text {
-                    font-size: 0.72rem;
-                    color: $text-muted;
-                  }
-                }
-              }
-
-              .td-ref {
-                .ref-code {
-                  font-family: monospace;
-                  font-size: 0.82rem;
-                  color: $text-muted;
-                }
-              }
-
-              .td-staff {
-                .staff-name {
-                  font-size: 0.82rem;
-                  font-weight: 500;
-                  color: $text-muted;
-                }
-              }
-
-              .td-amount {
-                text-align: right;
-                font-size: 1.02rem;
-                font-weight: 800;
-                white-space: nowrap;
-                font-feature-settings: "tnum";
-
-                &.credit-text {
-                  color: #16a34a;
-                }
-
-                &.debit-text {
-                  color: #dc2626;
-                }
-              }
-
-              .td-actions {
-                text-align: center;
-                white-space: nowrap;
-
-                .actions-cell-wrap {
-                  display: inline-flex;
-                  align-items: center;
-                  gap: 4px;
-                }
-
-                .edit-icon-btn,
-                .delete-icon-btn {
-                  background: none;
-                  border: none;
-                  color: $text-muted;
-                  padding: 6px;
-                  border-radius: 6px;
-                  cursor: pointer;
-                  display: inline-flex;
-                  align-items: center;
-                  justify-content: center;
-                  font-size: 0.95rem;
-                  transition: all 0.15s ease;
-
-                  &:hover {
-                    background-color: $bg-card-hover;
-                    color: $text-main;
-                  }
-                }
-
-                .delete-icon-btn:hover {
-                  background-color: rgba(239, 68, 68, 0.1);
-                  color: #dc2626;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      /* Clean Empty State */
-      .empty-cashbook-card {
-        background: transparent;
-        border: none;
-        padding: 56px 20px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        .empty-icon-pill {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          background-color: $bg-card-alt;
-          border: 1px solid $border-main;
-          color: $text-muted;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.3rem;
-          margin-bottom: 14px;
-        }
-
-        .empty-title {
-          font-size: 1.15rem;
-          font-weight: 700;
-          color: $text-main;
-          margin-bottom: 6px;
-        }
-
-        .empty-desc {
-          color: $text-muted;
-          font-size: 0.88rem;
-          max-width: 420px;
-          margin-bottom: 20px;
-          line-height: 1.45;
-        }
-
-        .empty-actions {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-
-          .btn-pill-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            height: 40px;
-            padding: 0 20px;
-            background-color: $bg-pill-dark;
-            color: $text-inverse;
-            border: none;
-            border-radius: $border-radius-pill;
-            font-size: 0.88rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: $shadow-sm;
-            transition: all 0.15s ease;
-
-            &:hover {
-              opacity: 0.92;
-              transform: translateY(-1px);
-            }
-          }
-
-          .btn-pill-secondary {
-            display: inline-flex;
-            align-items: center;
-            height: 40px;
-            padding: 0 18px;
-            background-color: $bg-card-alt;
-            border: 1px solid $border-main;
-            border-radius: $border-radius-pill;
-            color: $text-main;
-            font-size: 0.86rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s ease;
-
-            &:hover {
-              background-color: $bg-card-hover;
-            }
-          }
-        }
-      }
-
-      /* Loading State */
-      .cashbook-loading-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 60px 20px;
-        gap: 12px;
         color: $text-muted;
-        font-size: 0.92rem;
-        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        border-radius: 50%;
 
-        .spin-icon {
-          font-size: 1.6rem;
-          animation: spin 1s linear infinite;
+        &:hover {
+          color: $text-main;
+          background-color: $bg-card-hover;
         }
       }
     }
   }
-}
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
+  /* Specific Cell Styles inside DataTable */
+  .record-code {
+    font-family: inherit;
+    font-weight: 600;
+    color: $text-main;
+    font-size: 0.86rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .date-text {
+    color: $text-muted;
+    font-size: 0.84rem;
+    white-space: nowrap;
+  }
+
+  .account-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: $border-radius-pill;
+    background-color: $bg-card-alt;
+    border: 1px solid $border-main;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: $text-main;
+
+    .icon {
+      font-size: 0.85rem;
+      color: $text-muted;
+    }
+  }
+
+  .party-name {
+    font-weight: 600;
+    color: $text-main;
+    font-size: 0.86rem;
+  }
+
+  .amount-text {
+    font-weight: 700;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+
+    &.credit {
+      color: #16a34a;
+    }
+
+    &.debit {
+      color: #ef4444;
+    }
+  }
+
+  .payment-mode-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background-color: rgba(59, 130, 246, 0.08);
+    color: $accent;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .details-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-width: 260px;
+
+    .cat-name {
+      font-weight: 600;
+      color: $text-main;
+      font-size: 0.84rem;
+    }
+
+    .remarks-text {
+      color: $text-muted;
+      font-size: 0.78rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .datetime-text {
+    color: $text-muted;
+    font-size: 0.8rem;
+    white-space: nowrap;
   }
 }

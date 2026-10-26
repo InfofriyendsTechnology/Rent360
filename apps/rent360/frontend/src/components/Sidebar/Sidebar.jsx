@@ -4,7 +4,8 @@ import {
   FiHome, FiBox, FiUsers, FiSettings, FiLogOut, FiTrash2,
   FiCreditCard, FiShield, FiSearch, FiBell, FiLayers, FiCamera, FiHardDrive,
   FiCornerUpLeft, FiX, FiTag, FiDollarSign, FiSliders, FiDatabase,
-  FiChevronDown, FiChevronRight, FiMaximize2, FiDroplet, FiClock, FiBookOpen
+  FiChevronDown, FiChevronRight, FiMaximize2, FiDroplet, FiClock, FiBookOpen,
+  FiBarChart2
 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, loginSuccess } from '../../store/authSlice';
@@ -41,6 +42,18 @@ const Sidebar = ({ isOpen, onClose }) => {
   ].some((p) => location.pathname.startsWith(p));
 
   const [isCollectionOpen, setIsCollectionOpen] = useState(true);
+
+  const isFinanceRouteActive = [
+    '/cashbook-reports', '/reports/cashbook', '/account-ledger', '/ledger', '/trial-balance'
+  ].some((p) => location.pathname.startsWith(p));
+
+  const [isFinanceOpen, setIsFinanceOpen] = useState(true);
+
+  useEffect(() => {
+    if (isFinanceRouteActive) {
+      setIsFinanceOpen(true);
+    }
+  }, [isFinanceRouteActive]);
 
   useEffect(() => {
     if (isCollectionRouteActive) {
@@ -213,6 +226,55 @@ const Sidebar = ({ isOpen, onClose }) => {
               )}
             </nav>
           </div>
+
+          {/* Collapsible FINANCIAL REPORTS Accordion Section (Store Admin / Staff) */}
+          {!isSuperAdmin && (
+            <div className="menu-group master-menu-group">
+              <span className="group-title">FINANCIAL REPORTS</span>
+              <div className="accordion-group">
+                <button
+                  type="button"
+                  className={`menu-pill accordion-trigger ${isFinanceOpen ? 'open' : ''} ${isFinanceRouteActive ? 'active-group' : ''}`}
+                  onClick={() => setIsFinanceOpen(!isFinanceOpen)}
+                >
+                  <span className="icon"><FiBarChart2 /></span>
+                  <span className="text">Financial Reports</span>
+                  <span className="accordion-chevron">
+                    {isFinanceOpen ? <FiChevronDown /> : <FiChevronRight />}
+                  </span>
+                </button>
+
+                {isFinanceOpen && (
+                  <div className="accordion-submenu">
+                    <NavLink 
+                      to="/cashbook-reports" 
+                      className={({ isActive }) => (isActive || location.pathname.startsWith('/cashbook-reports')) ? 'sub-menu-pill active' : 'sub-menu-pill'}
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiBarChart2 /></span>
+                      <span className="text">Cash & Bank Summary</span>
+                    </NavLink>
+                    <NavLink 
+                      to="/account-ledger" 
+                      className={({ isActive }) => (isActive || location.pathname === '/ledger') ? 'sub-menu-pill active' : 'sub-menu-pill'}
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiBookOpen /></span>
+                      <span className="text">Account Ledger</span>
+                    </NavLink>
+                    <NavLink 
+                      to="/trial-balance" 
+                      className={({ isActive }) => (isActive || location.pathname.startsWith('/trial-balance')) ? 'sub-menu-pill active' : 'sub-menu-pill'}
+                      onClick={onClose}
+                    >
+                      <span className="sub-icon"><FiLayers /></span>
+                      <span className="text">Trial Balance</span>
+                    </NavLink>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Collapsible Store Setup Accordion Section (Only for Store Admin / Staff) */}
           <div className="menu-group master-menu-group">

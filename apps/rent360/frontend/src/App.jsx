@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { Toaster } from 'react-hot-toast';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
+import { logout } from './store/authSlice';
 import Login from './pages/Login';
 import DashboardLayout from './components/Layout/DashboardLayout';
 import StoresList from './pages/Stores/StoresList';
@@ -17,6 +19,9 @@ import CollectionList from './pages/Collection/CollectionList';
 import CategoriesList from './pages/Categories/CategoriesList';
 import SettingsPage from './pages/Settings/SettingsPage';
 import Cashbook from './pages/Cashbook/Cashbook';
+import CashbookReports from './pages/Cashbook/CashbookReports';
+import AccountLedger from './pages/Finance/AccountLedger';
+import TrialBalance from './pages/Finance/TrialBalance';
 import MasterPage from './pages/Master/MasterPage';
 import AccessoriesList from './pages/Collection/AccessoriesList';
 import StockInventoryPage from './pages/Collection/StockInventoryPage';
@@ -25,6 +30,7 @@ import BulkImportPage from './pages/Collection/BulkImportPage';
 import OutfitFormPage from './pages/Collection/OutfitFormPage';
 
 const App = () => {
+  const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -33,7 +39,24 @@ const App = () => {
     if (theme === 'dark') {
       document.body.classList.add('dark');
     }
-  }, []);
+
+    // Handle session expiry globally
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401 && !error.config?.url?.includes('/api/auth/login')) {
+          console.warn('Session expired or unauthorized (401). Redirecting to login.');
+          dispatch(logout());
+          toast.error('Session expired. Please log in again.');
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
@@ -104,6 +127,11 @@ const App = () => {
           {/* Store Operations */}
           <Route path="cashbook" element={<Cashbook />} />
           <Route path="transactions" element={<Navigate to="/cashbook" replace />} />
+          <Route path="cashbook-reports" element={<CashbookReports />} />
+          <Route path="reports/cashbook" element={<Navigate to="/cashbook-reports" replace />} />
+          <Route path="account-ledger" element={<AccountLedger />} />
+          <Route path="ledger" element={<Navigate to="/account-ledger" replace />} />
+          <Route path="trial-balance" element={<TrialBalance />} />
           <Route path="customers" element={<CustomersList />} />
           <Route path="roles" element={<RolesList />} />
           <Route path="users" element={<UsersList />} />

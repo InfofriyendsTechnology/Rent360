@@ -163,7 +163,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       description: '',
       reminder_date: new Date().toISOString().split('T')[0],
       status: 'PENDING',
-      category_type: 'INCOME',
+      category_type: 'EXPENSE',
       account_name: '',
       account_number: '',
       ifsc_code: '',
@@ -192,7 +192,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       description: item.description || '',
       reminder_date: item.reminder_date ? item.reminder_date.split('T')[0] : '',
       status: item.status || 'PENDING',
-      category_type: item.category_type || 'INCOME',
+      category_type: item.category_type || 'BOTH',
       account_name: item.account_name || item.name || '',
       account_number: item.account_number || '',
       ifsc_code: item.ifsc_code || '',
@@ -226,7 +226,12 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
       }
       if (currentTab === 'accounts') {
         payload.opening_balance = Number(formData.opening_balance || 0);
-        if (formData.account_group === 'Income') {
+        const grp = formData.account_group;
+        if (formData.category_type) {
+          payload.category_type = formData.category_type;
+        } else if (grp === 'Rent' || grp === 'Cash Accounts' || grp === 'Bank Accounts') {
+          payload.category_type = 'BOTH';
+        } else if (grp === 'Income' || grp === 'Sales' || grp === 'Parties') {
           payload.category_type = 'INCOME';
         } else {
           payload.category_type = 'EXPENSE';
@@ -434,7 +439,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Account Name',
             accessor: 'name',
-            width: '30%',
+            width: '26%',
             cell: (row) => (
               <div className="account-name-cell">
                 <span className="name-main">{row.name}</span>
@@ -445,7 +450,7 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
           {
             header: 'Account Group',
             accessor: 'account_group',
-            width: '22%',
+            width: '18%',
             cell: (row) => {
               const grp = row.account_group || (row.category_type === 'INCOME' ? 'Income' : 'Expenses');
               const cls = grp.toLowerCase().replace(/\s+/g, '-');
@@ -453,15 +458,26 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
             }
           },
           {
+            header: 'Type',
+            accessor: 'category_type',
+            width: '16%',
+            cell: (row) => {
+              const type = row.category_type || 'EXPENSE';
+              const cls = type === 'BOTH' ? 'both' : type === 'INCOME' ? 'income' : 'expense';
+              const label = type === 'BOTH' ? 'Both (In & Out)' : type === 'INCOME' ? 'Income (In)' : 'Expense (Out)';
+              return <span className={`type-pill ${cls}`}>{label}</span>;
+            }
+          },
+          {
             header: 'Contact No',
             accessor: 'contact_no',
-            width: '20%',
+            width: '14%',
             cell: (row) => <span className="cell-text">{row.contact_no || '—'}</span>
           },
           {
             header: 'Opening Balance',
             accessor: 'opening_balance',
-            width: '16%',
+            width: '14%',
             cell: (row) => (
               <span className="op-balance-text">
                 ₹ {(row.opening_balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
@@ -835,19 +851,49 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
                         <label>Account Group *</label>
                         <Select
                           value={formData.account_group}
-                          onChange={(e) => setFormData({ ...formData, account_group: e.target.value })}
+                          onChange={(e) => {
+                            const grp = e.target.value;
+                            let autoType = formData.category_type;
+                            if (grp === 'Rent' || grp === 'Cash Accounts' || grp === 'Bank Accounts') {
+                              autoType = 'BOTH';
+                            } else if (grp === 'Income' || grp === 'Sales') {
+                              autoType = 'INCOME';
+                            } else if (grp === 'Expenses' || grp === 'Washing' || grp === 'Credit Note' || grp === 'Purchase') {
+                              autoType = 'EXPENSE';
+                            }
+                            setFormData({ ...formData, account_group: grp, category_type: autoType });
+                          }}
                         >
+                          <option value="Washing">Washing</option>
+                          <option value="Credit Note">Credit Note</option>
+                          <option value="Cash Accounts">Cash Accounts</option>
+                          <option value="Bank Accounts">Bank Accounts</option>
+                          <option value="Expenses">Expenses</option>
+                          <option value="Income">Income</option>
+                          <option value="Purchase">Purchase</option>
+                          <option value="Rent">Rent</option>
+                          <option value="Sales">Sales</option>
                           <option value="Parties">Parties</option>
                           <option value="Vendors">Vendors</option>
-                          <option value="Income">Income</option>
-                          <option value="Expenses">Expenses</option>
-                          <option value="Bank Accounts">Bank Accounts</option>
-                          <option value="Cash Accounts">Cash Accounts</option>
                           <option value="Capital Account">Capital Account</option>
                           <option value="Loans">Loans</option>
                         </Select>
                       </div>
 
+                      <div className="form-group">
+                        <label>Account Type (Flow) *</label>
+                        <Select
+                          value={formData.category_type || 'BOTH'}
+                          onChange={(e) => setFormData({ ...formData, category_type: e.target.value })}
+                        >
+                          <option value="BOTH">Both (Income & Expense)</option>
+                          <option value="INCOME">Income (Cash In)</option>
+                          <option value="EXPENSE">Expense (Cash Out)</option>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="form-row-2col">
                       <div className="form-group">
                         <label>Opening Balance</label>
                         <input
@@ -858,14 +904,14 @@ const MasterPage = ({ defaultTab = 'sizes' }) => {
                           onChange={(e) => setFormData({ ...formData, opening_balance: e.target.value })}
                         />
                       </div>
-                    </div>
 
-                    <div className="form-group">
-                      <label>Opening Date</label>
-                      <DatePicker
-                        value={formData.opening_date}
-                        onChange={(e) => setFormData({ ...formData, opening_date: e.target.value })}
-                      />
+                      <div className="form-group">
+                        <label>Opening Date</label>
+                        <DatePicker
+                          value={formData.opening_date}
+                          onChange={(e) => setFormData({ ...formData, opening_date: e.target.value })}
+                        />
+                      </div>
                     </div>
 
                     <div className="form-group">

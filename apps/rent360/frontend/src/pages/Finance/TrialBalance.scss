@@ -1,0 +1,473 @@
+@import '../../styles/variables';
+
+.trial-balance-clean-view {
+  padding: 24px 32px 60px;
+  max-width: 1600px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+
+  /* ----------------- Top Header ----------------- */
+  .trial-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .page-title {
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: $text-main;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .store-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 12px;
+        background: $bg-card;
+        border: 1px solid $border-main;
+        border-radius: 8px;
+
+        .icon {
+          color: $accent;
+          font-size: 0.9rem;
+        }
+
+        label {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: $text-muted;
+        }
+
+        select {
+          background: transparent;
+          border: none;
+          color: $text-main;
+          font-size: 0.82rem;
+          font-weight: 600;
+          outline: none;
+          cursor: pointer;
+
+          option {
+            background: #141822;
+            color: #fff;
+          }
+        }
+
+        .chevron {
+          color: $text-muted;
+          font-size: 0.8rem;
+        }
+      }
+
+      .breadcrumb-text {
+        font-size: 0.85rem;
+        color: $text-muted;
+        font-weight: 500;
+      }
+    }
+  }
+
+  /* ----------------- Filter Card (Matching Reference UI) ----------------- */
+  .trial-filter-card {
+    background: $bg-card;
+    border: 1px solid $border-main;
+    border-radius: 8px;
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    .filter-controls-left {
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 14px;
+
+      .filter-item {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        .filter-label {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: $text-main;
+
+          .req {
+            color: #ef4444;
+            margin-left: 2px;
+          }
+        }
+
+        .select-box {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          select {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid $border-main;
+            border-radius: 6px;
+            padding: 8px 32px 8px 12px;
+            font-size: 0.85rem;
+            color: $text-main;
+            outline: none;
+            cursor: pointer;
+            min-width: 140px;
+            appearance: none;
+
+            option {
+              background: #18181C;
+              color: #fff;
+            }
+          }
+
+          .arrow {
+            position: absolute;
+            right: 10px;
+            pointer-events: none;
+            color: $text-muted;
+            font-size: 0.8rem;
+          }
+        }
+
+        &.date-item {
+          .input-with-checkbox {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid $border-main;
+            border-radius: 6px;
+            padding: 0 8px;
+            height: 38px;
+
+            .check-input {
+              width: 16px;
+              height: 16px;
+              accent-color: #2563eb;
+              cursor: pointer;
+              margin-right: 8px;
+            }
+
+            .dmy-input-wrapper {
+              position: relative;
+              display: flex;
+              align-items: center;
+
+              .dmy-text-field {
+                background: transparent;
+                border: none;
+                color: $text-main;
+                font-size: 0.85rem;
+                font-weight: 600;
+                width: 95px;
+                outline: none;
+                letter-spacing: 0.03em;
+
+                &::placeholder {
+                  color: $text-muted;
+                  opacity: 0.6;
+                }
+
+                &:disabled {
+                  opacity: 0.4;
+                  cursor: not-allowed;
+                }
+              }
+
+              .calendar-icon-btn {
+                background: transparent;
+                border: none;
+                color: $text-muted;
+                font-size: 0.95rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                padding: 0 4px;
+                transition: color 0.15s;
+
+                &:hover:not(:disabled) {
+                  color: $text-main;
+                }
+
+                &:disabled {
+                  opacity: 0.4;
+                  cursor: not-allowed;
+                }
+              }
+
+              .hidden-native-date-input {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 0;
+                height: 0;
+                opacity: 0;
+                pointer-events: none;
+              }
+            }
+          }
+        }
+      }
+
+      .filter-buttons {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 1px;
+
+        .btn-search-blue {
+          background: #2563eb;
+          color: #ffffff;
+          border: none;
+          width: 38px;
+          height: 38px;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.05rem;
+          cursor: pointer;
+          transition: background 0.2s;
+
+          &:hover {
+            background: #1d4ed8;
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+
+        .btn-excel-green {
+          background: #16a34a;
+          color: #ffffff;
+          border: none;
+          width: 38px;
+          height: 38px;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.25rem;
+          cursor: pointer;
+          transition: background 0.2s;
+
+          &:hover {
+            background: #15803d;
+          }
+        }
+      }
+    }
+
+    /* Right Side 2x2 Inline Metrics */
+    .filter-summary-right {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+
+      @media (max-width: 900px) {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .summary-col {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .summary-item {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+
+          .summary-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: $text-muted;
+          }
+
+          .summary-val {
+            font-size: 0.98rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+
+            &.val-blue {
+              color: #2563eb;
+            }
+
+            &.val-green {
+              color: #16a34a;
+            }
+
+            &.val-red {
+              color: #dc2626;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* ----------------- Table Wrapper & Simple Table ----------------- */
+  .trial-table-wrapper {
+    background: $bg-card;
+    border: 1px solid $border-main;
+    border-radius: 8px;
+    overflow-x: auto;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    .trial-simple-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+
+      thead {
+        background: rgba(255, 255, 255, 0.04);
+
+        tr th {
+          padding: 12px 18px;
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: $text-main;
+          border-bottom: 1px solid $border-main;
+          white-space: nowrap;
+
+          &.th-acc-name {
+            text-align: left;
+            width: 40%;
+          }
+
+          &.th-num {
+            text-align: right;
+            width: 15%;
+          }
+        }
+      }
+
+      tbody {
+        .loading-cell, .empty-cell {
+          text-align: center;
+          padding: 36px 18px;
+          color: $text-muted;
+          font-size: 0.85rem;
+        }
+
+        .acc-row {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          transition: background 0.15s;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.02);
+          }
+
+          td {
+            padding: 12px 18px;
+            color: $text-main;
+            font-size: 0.85rem;
+
+            &.td-acc-name {
+              text-align: left;
+              font-weight: 600;
+
+              .acc-clickable {
+                cursor: pointer;
+                transition: color 0.15s;
+
+                &:hover {
+                  color: #2563eb;
+                  text-decoration: underline;
+                }
+              }
+            }
+
+            &.td-num {
+              text-align: right;
+              font-variant-numeric: tabular-nums;
+            }
+
+            &.td-closing {
+              color: #16a34a;
+              font-weight: 700;
+            }
+          }
+        }
+      }
+
+      tfoot {
+        background: rgba(255, 255, 255, 0.03);
+
+        .footer-total-row {
+          border-top: 1px solid $border-main;
+
+          td {
+            padding: 12px 18px;
+            font-size: 0.88rem;
+            color: $text-main;
+
+            &.td-total-label {
+              font-weight: 700;
+              text-align: left;
+            }
+
+            &.td-num {
+              text-align: right;
+              font-variant-numeric: tabular-nums;
+
+              &.val-blue {
+                color: #2563eb;
+              }
+
+              &.td-closing {
+                color: #16a34a;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* Zero balance accounts toggle */
+  .zero-balance-toggle-row {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+
+    label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: $text-muted;
+      cursor: pointer;
+
+      input {
+        accent-color: #2563eb;
+      }
+
+      &:hover {
+        color: $text-main;
+      }
+    }
+  }
+}

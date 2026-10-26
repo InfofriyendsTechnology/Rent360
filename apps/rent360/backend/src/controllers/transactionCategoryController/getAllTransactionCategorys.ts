@@ -20,8 +20,35 @@ export const getAllTransactionCategorys = async (
     if (storeId) {
       whereClause.storeId = storeId;
     }
+
+    // Auto-sanitize existing CASH ACC and BANK ACC records to ASSET category_type
+    await prisma.transactionCategory.updateMany({
+      where: {
+        name: { in: ["CASH ACC", "BANK ACC"] },
+        category_type: "BOTH",
+      },
+      data: {
+        category_type: "ASSET",
+      },
+    }).catch(() => {});
+
     if (category_type && typeof category_type === "string") {
-      whereClause.category_type = category_type.toUpperCase();
+      const typeUpper = category_type.toUpperCase();
+      if (typeUpper === "BOTH") {
+        whereClause.category_type = "BOTH";
+      } else {
+        whereClause.OR = [
+          { category_type: typeUpper },
+          { category_type: "BOTH" },
+        ];
+      }
+      // Strictly exclude Cash & Bank asset accounts from Income and Expense category queries
+      if (typeUpper === "INCOME" || typeUpper === "EXPENSE") {
+        whereClause.NOT = [
+          { account_group: { in: ["Cash Accounts", "Bank Accounts", "Cash Drawer"] } },
+          { name: { in: ["CASH ACC", "BANK ACC"] } },
+        ];
+      }
     }
     if (search && typeof search === "string" && search.trim() !== "") {
       whereClause.name = { contains: search.trim(), mode: "insensitive" };
@@ -35,30 +62,27 @@ export const getAllTransactionCategorys = async (
     // Auto-seed defaults if empty for this store
     if (categories.length === 0 && storeId && !category_type && !search) {
       const defaultCategories = [
-        // Income
-        { name: "Rental Income", category_type: "INCOME" },
-        { name: "Security Deposit Received", category_type: "INCOME" },
-        { name: "Late Return Fine", category_type: "INCOME" },
-        { name: "Damage / Repair Charge", category_type: "INCOME" },
-        { name: "Retail Sale", category_type: "INCOME" },
-        { name: "Other Income", category_type: "INCOME" },
-        // Expense
-        { name: "Security Deposit Refund", category_type: "EXPENSE" },
-        { name: "Tea & Refreshments", category_type: "EXPENSE" },
-        { name: "Shop Rent", category_type: "EXPENSE" },
-        { name: "Electricity / Utility", category_type: "EXPENSE" },
-        { name: "Laundry & Dry Cleaning", category_type: "EXPENSE" },
-        { name: "Tailoring & Alteration", category_type: "EXPENSE" },
-        { name: "Staff Salary / Advance", category_type: "EXPENSE" },
-        { name: "Repairs & Maintenance", category_type: "EXPENSE" },
-        { name: "Packing & Stationary", category_type: "EXPENSE" },
-        { name: "General Expense", category_type: "EXPENSE" },
+        { name: "WASHING ACC", account_group: "Washing", category_type: "EXPENSE", opening_balance: 0 },
+        { name: "CREDIT NOTE ACC", account_group: "Credit Note", category_type: "EXPENSE", opening_balance: 0 },
+        { name: "CASH ACC", account_group: "Cash Accounts", category_type: "ASSET", opening_balance: 0 },
+        { name: "BANK ACC", account_group: "Bank Accounts", category_type: "ASSET", opening_balance: 0 },
+        { name: "GENERAL EXPENSE", account_group: "Expenses", category_type: "EXPENSE", opening_balance: 0 },
+        { name: "BOOKING CHARGE INCOME", account_group: "Income", category_type: "INCOME", opening_balance: 0 },
+        { name: "SECURITY INCOME", account_group: "Income", category_type: "INCOME", opening_balance: 0 },
+        { name: "GENERAL INCOME", account_group: "Income", category_type: "INCOME", opening_balance: 0 },
+        { name: "PURCHASE ACC", account_group: "Purchase", category_type: "EXPENSE", opening_balance: 0 },
+        { name: "RENT ACC", account_group: "Rent", category_type: "BOTH", opening_balance: 0 },
+        { name: "SALE ACC", account_group: "Sales", category_type: "INCOME", opening_balance: 0 },
+        { name: "CUSTOMER SALE", account_group: "Parties", category_type: "INCOME", opening_balance: 0 },
+        { name: "CUSTOMER RENT", account_group: "Parties", category_type: "INCOME", opening_balance: 0 },
       ];
 
       await prisma.transactionCategory.createMany({
         data: defaultCategories.map((c) => ({
           name: c.name,
+          account_group: c.account_group || "Expenses",
           category_type: c.category_type,
+          opening_balance: c.opening_balance,
           storeId,
         })),
         skipDuplicates: true,

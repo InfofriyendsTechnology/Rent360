@@ -313,6 +313,58 @@
             }
           }
 
+          .date-input-field.dmy-input-wrapper {
+            height: 42px;
+            padding: 0 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-main);
+            background-color: var(--bg-card-alt);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+
+            &:focus-within {
+              border-color: var(--accent);
+              background-color: var(--bg-card);
+              box-shadow: 0 0 0 3px var(--accent-light);
+            }
+
+            .dmy-text-field {
+              flex: 1;
+              color: var(--text-main);
+              font-size: 0.88rem;
+              font-weight: 500;
+              border: none;
+              outline: none;
+              background: transparent;
+
+              &::placeholder {
+                color: var(--text-muted);
+                opacity: 0.6;
+              }
+            }
+
+            .calendar-icon-btn {
+              color: var(--text-muted);
+              font-size: 1.1rem;
+              cursor: pointer;
+              background: transparent;
+              border: none;
+              padding: 0;
+              display: flex;
+              align-items: center;
+              transition: color 0.15s ease, transform 0.1s ease;
+
+              &:hover {
+                color: var(--text-main);
+                transform: scale(1.1);
+              }
+            }
+          }
+
           select.select-field {
             cursor: pointer;
             appearance: none;

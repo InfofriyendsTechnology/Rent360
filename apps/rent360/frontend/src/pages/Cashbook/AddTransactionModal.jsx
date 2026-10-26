@@ -3,6 +3,7 @@ import { FiX, FiArrowDownLeft, FiArrowUpRight, FiCalendar, FiTag, FiCreditCard, 
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
+import { DateInputDMY } from '../../components/ui';
 import './AddTransactionModal.scss';
 
 const AddTransactionModal = ({ 
@@ -17,6 +18,7 @@ const AddTransactionModal = ({
   onCategoryCreated,
   editTransaction = null
 }) => {
+  const effectiveToken = token || localStorage.getItem('token') || '';
   const [type, setType] = useState('CREDIT'); // 'CREDIT' (Cash In) | 'DEBIT' (Cash Out)
   const [amount, setAmount] = useState('');
   const [categoryId, setCategoryId] = useState('');
@@ -24,7 +26,7 @@ const AddTransactionModal = ({
   const [bankAccountId, setBankAccountId] = useState('');
   const [referenceNo, setReferenceNo] = useState('');
   const [remarks, setRemarks] = useState('');
-  const [dateTime, setDateTime] = useState('');
+  const [entryDate, setEntryDate] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Quick category creation state
@@ -37,41 +39,67 @@ const AddTransactionModal = ({
       if (editTransaction) {
         setType(editTransaction.transaction_type || 'CREDIT');
         setAmount(String(editTransaction.amount ?? ''));
-        setCategoryId(editTransaction.categoryId || '');
-        setPaymentModeId(editTransaction.paymentModeId || (paymentModes[0]?.id || ''));
-        setBankAccountId(editTransaction.bankAccountId || '');
+        setCategoryId(editTransaction.categoryId || editTransaction.category?.id || '');
+
+        // Match and set payment mode
+        const matchedMode = paymentModes.find(m => 
+          m.id === editTransaction.paymentModeId || 
+          m.id === editTransaction.paymentMode?.id ||
+          m.name?.toLowerCase() === (editTransaction.paymentMode?.name || '').toLowerCase()
+        );
+        const modeId = matchedMode ? matchedMode.id : (editTransaction.paymentModeId || (paymentModes.length > 0 ? paymentModes[0].id : ''));
+        setPaymentModeId(modeId);
+
+        const isCash = (matchedMode?.name || editTransaction.paymentMode?.name || '').toLowerCase().includes('cash');
+        if (isCash) {
+          const drawer = bankAccounts.find(a => a.account_name.toLowerCase().includes('drawer') || a.account_name.toLowerCase().includes('cash'));
+          setBankAccountId(editTransaction.bankAccountId || drawer?.id || '');
+        } else {
+          const selAcc = bankAccounts.find(a => a.id === editTransaction.bankAccountId);
+          if (selAcc && !selAcc.account_name.toLowerCase().includes('drawer') && !selAcc.account_name.toLowerCase().includes('cash')) {
+            setBankAccountId(selAcc.id);
+          } else {
+            const realBanks = bankAccounts.filter(a => !a.account_name.toLowerCase().includes('drawer') && !a.account_name.toLowerCase().includes('cash'));
+            setBankAccountId(realBanks.length > 0 ? realBanks[0].id : (editTransaction.bankAccountId || ''));
+          }
+        }
         setReferenceNo(editTransaction.reference_no || '');
         setRemarks(editTransaction.remarks || '');
 
         if (editTransaction.createdAt) {
           const d = new Date(editTransaction.createdAt);
-          const offset = d.getTimezoneOffset() * 60000;
-          const localISOTime = (new Date(d.getTime() - offset)).toISOString().slice(0, 16);
-          setDateTime(localISOTime);
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          setEntryDate(`${y}-${m}-${day}`);
         } else {
           const now = new Date();
-          const offset = now.getTimezoneOffset() * 60000;
-          setDateTime((new Date(now.getTime() - offset)).toISOString().slice(0, 16));
+          const y = now.getFullYear();
+          const m = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          setEntryDate(`${y}-${m}-${day}`);
         }
 
         setIsCreatingCategory(false);
         setNewCategoryName('');
       } else {
-        // Set default datetime to local current ISO
+        // Set default date to today's date in YYYY-MM-DD
         const now = new Date();
-        const offset = now.getTimezoneOffset() * 60000;
-        const localISOTime = (new Date(now.getTime() - offset)).toISOString().slice(0, 16);
-        setDateTime(localISOTime);
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        setEntryDate(`${y}-${m}-${day}`);
 
         // Default payment mode to "Cash" if available
         const cashMode = paymentModes.find(m => m.name.toLowerCase().includes('cash'));
-        if (cashMode) setPaymentModeId(cashMode.id);
-        else if (paymentModes.length > 0) setPaymentModeId(paymentModes[0].id);
-
-        // Default bank account / drawer to "Cash Drawer" if available
         const drawer = bankAccounts.find(a => a.account_name.toLowerCase().includes('drawer') || a.account_name.toLowerCase().includes('cash'));
-        if (drawer) setBankAccountId(drawer.id);
-        else if (bankAccounts.length > 0) setBankAccountId(bankAccounts[0].id);
+        if (cashMode) {
+          setPaymentModeId(cashMode.id);
+          setBankAccountId(drawer ? drawer.id : '');
+        } else if (paymentModes.length > 0) {
+          setPaymentModeId(paymentModes[0].id);
+          setBankAccountId('');
+        }
 
         setType('CREDIT');
         setAmount('');
@@ -86,9 +114,23 @@ const AddTransactionModal = ({
 
   if (!isOpen) return null;
 
-  // Filter categories based on transaction type (CREDIT -> INCOME, DEBIT -> EXPENSE)
+  // Filter categories based on transaction type (CREDIT -> INCOME, DEBIT -> EXPENSE, or BOTH)
+  // Strictly exclude Cash and Bank asset ledgers (e.g. CASH ACC, BANK ACC, Drawer) because they are payment modes/accounts, not income/expense categories
   const targetCategoryType = type === 'CREDIT' ? 'INCOME' : 'EXPENSE';
-  const filteredCategories = categories.filter(c => !c.category_type || c.category_type === targetCategoryType);
+  const filteredCategories = categories.filter(c => {
+    const nameUpper = (c.name || '').toUpperCase();
+    const grp = (c.account_group || '').toLowerCase();
+    if (
+      nameUpper === 'CASH ACC' || 
+      nameUpper === 'BANK ACC' || 
+      nameUpper.includes('CASH DRAWER') ||
+      grp.includes('cash account') || 
+      grp.includes('bank account')
+    ) {
+      return false;
+    }
+    return !c.category_type || c.category_type === 'BOTH' || c.category_type === targetCategoryType;
+  });
 
   const handleQuickAddCategory = async () => {
     if (!newCategoryName.trim()) {
@@ -104,7 +146,7 @@ const AddTransactionModal = ({
           category_type: targetCategoryType,
           storeId
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${effectiveToken}` } }
       );
       toast.success('Category created');
       const created = res.data.data;
@@ -134,26 +176,59 @@ const AddTransactionModal = ({
 
     setIsSubmitting(true);
     try {
+      const selMode = paymentModes.find(m => m.id === paymentModeId);
+      const isCash = (selMode?.name || '').toLowerCase().includes('cash');
+      let effectiveBankAccountId = bankAccountId || null;
+      if (isCash) {
+        if (!effectiveBankAccountId) {
+          const drawer = bankAccounts.find(a => a.account_name.toLowerCase().includes('drawer') || a.account_name.toLowerCase().includes('cash'));
+          effectiveBankAccountId = drawer?.id || null;
+        }
+      } else {
+        // If non-cash, ensure it NEVER gets saved as Cash Drawer
+        const selectedAcc = bankAccounts.find(a => a.id === effectiveBankAccountId);
+        if (selectedAcc && (selectedAcc.account_name.toLowerCase().includes('drawer') || selectedAcc.account_name.toLowerCase().includes('cash'))) {
+          effectiveBankAccountId = null;
+        }
+      }
+
+      // Construct ISO timestamp keeping current time if new, or preserving original time on edited date
+      let finalCreatedAtIso;
+      if (entryDate) {
+        const origDate = editTransaction?.createdAt ? new Date(editTransaction.createdAt) : new Date();
+        const parts = entryDate.split('-').map(Number);
+        if (parts.length === 3) {
+          const [y, m, d] = parts;
+          const targetDate = new Date(origDate.getTime());
+          targetDate.setFullYear(y, m - 1, d);
+          finalCreatedAtIso = targetDate.toISOString();
+        } else {
+          finalCreatedAtIso = new Date().toISOString();
+        }
+      } else {
+        finalCreatedAtIso = new Date().toISOString();
+      }
+
       const payload = {
         storeId,
         transaction_type: type,
         amount: numAmount,
         paymentModeId,
         categoryId: categoryId || null,
-        bankAccountId: bankAccountId || null,
+        bankAccountId: effectiveBankAccountId,
         reference_no: referenceNo.trim() || null,
         remarks: remarks.trim() || null,
-        createdAt: dateTime ? new Date(dateTime).toISOString() : new Date().toISOString()
+        createdAt: finalCreatedAtIso
       };
 
       if (editTransaction) {
         await axios.put(`${API_BASE_URL}/api/transactions/${editTransaction.id}`, payload, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${effectiveToken}` }
         });
         toast.success('Transaction updated successfully');
       } else {
         await axios.post(`${API_BASE_URL}/api/transactions`, payload, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${effectiveToken}` }
         });
         toast.success(type === 'CREDIT' ? 'Income recorded successfully' : 'Expense recorded successfully');
       }
@@ -312,10 +387,35 @@ const AddTransactionModal = ({
               </div>
               <select
                 value={paymentModeId}
-                onChange={(e) => setPaymentModeId(e.target.value)}
+                onChange={(e) => {
+                  const newId = e.target.value;
+                  setPaymentModeId(newId);
+                  const sel = paymentModes.find((m) => m.id === newId);
+                  const isCash = (sel?.name || '').toLowerCase().includes('cash');
+                  if (isCash) {
+                    const drawer = bankAccounts.find(
+                      (a) =>
+                        a.account_name.toLowerCase().includes('drawer') ||
+                        a.account_name.toLowerCase().includes('cash')
+                    );
+                    setBankAccountId(drawer ? drawer.id : '');
+                  } else {
+                    const realBanks = bankAccounts.filter(
+                      (a) =>
+                        !a.account_name.toLowerCase().includes('drawer') &&
+                        !a.account_name.toLowerCase().includes('cash')
+                    );
+                    setBankAccountId(realBanks.length > 0 ? realBanks[0].id : '');
+                  }
+                }}
                 required
                 className="select-field"
               >
+                {!paymentModeId && (
+                  <option value="" disabled>
+                    -- Select Payment Mode --
+                  </option>
+                )}
                 {paymentModes.map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.name}
@@ -324,15 +424,45 @@ const AddTransactionModal = ({
               </select>
             </div>
 
-            {/* Date & Time */}
+            {/* Bank Account Selection if Non-Cash and Bank Accounts exist */}
+            {(() => {
+              const selMode = paymentModes.find((m) => m.id === paymentModeId);
+              const isCash = (selMode?.name || '').toLowerCase().includes('cash');
+              const realBanks = bankAccounts.filter(
+                (a) =>
+                  !a.account_name.toLowerCase().includes('drawer') &&
+                  !a.account_name.toLowerCase().includes('cash')
+              );
+
+              if (!isCash && realBanks.length > 0) {
+                return (
+                  <div className="form-group">
+                    <label>Bank Account</label>
+                    <select
+                      value={bankAccountId}
+                      onChange={(e) => setBankAccountId(e.target.value)}
+                      className="select-field"
+                    >
+                      <option value="">-- General Bank / Default --</option>
+                      {realBanks.map((b) => (
+                        <option key={b.id} value={b.id}>
+                          {b.account_name} {b.account_number ? `(${b.account_number})` : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                );
+              }
+              return null;
+            })()}
+
+            {/* Date */}
             <div className="form-group">
-              <label><FiCalendar /> Date & Time</label>
-              <input
-                type="datetime-local"
-                value={dateTime}
-                onChange={(e) => setDateTime(e.target.value)}
-                className="input-field"
-                required
+              <label><FiCalendar /> Date</label>
+              <DateInputDMY
+                value={entryDate}
+                onChange={setEntryDate}
+                className="date-input-field"
               />
             </div>
 

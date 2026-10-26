@@ -1,0 +1,78 @@
+@import '../../../styles/variables';
+
+.dmy-input-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+
+  &.is-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+
+    .dmy-text-field,
+    .calendar-icon-btn {
+      cursor: not-allowed;
+    }
+  }
+
+  .dmy-text-field {
+    background: transparent;
+    border: none;
+    color: $text-main;
+    font-size: 0.85rem;
+    font-weight: 600;
+    width: 95px;
+    outline: none;
+    letter-spacing: 0.03em;
+    font-family: inherit;
+    padding: 0;
+
+    &::placeholder {
+      color: $text-muted;
+      opacity: 0.6;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  .calendar-icon-btn {
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 2px;
+    margin: 0;
+    transition: color 0.15s, transform 0.1s;
+
+    &:hover:not(:disabled) {
+      color: $text-main;
+      transform: scale(1.08);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  .hidden-native-date-input {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
