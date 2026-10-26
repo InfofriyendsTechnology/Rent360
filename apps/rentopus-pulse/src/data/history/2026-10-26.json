@@ -1,0 +1,68 @@
+{
+  "date": "26-10-2026",
+  "dayNumber": 32,
+  "title": "Header Logo, Role Isolation, and Cloudinary Product Image Structure",
+  "titleGu": "હેડર લોગો, રોલ આઇસોલેશન અને ક્લાઉડીનરી પ્રોડક્ટ ઇમેજ સ્ટ્રક્ચર",
+  "members": [
+    "001"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Fixed useMemo ReferenceError in OutfitFormPage."
+    },
+    {
+      "member": "001",
+      "text": "Included store logo_url in login and loginAsStore auth payloads; updated Header to display store logo with fallback auto-fetch."
+    },
+    {
+      "member": "001",
+      "text": "Removed green border ring from profile avatar in Header."
+    },
+    {
+      "member": "001",
+      "text": "Restricted Store Setup and Collection navigation menus in Sidebar strictly to non-superadmin store accounts."
+    },
+    {
+      "member": "001",
+      "text": "Restructured Cloudinary product images into product-code subfolders (products/{product_code}/) with zero-padded sequential naming (001, 002, 003)."
+    },
+    {
+      "member": "001",
+      "text": "Added automatic Cloudinary asset deletion for removed images during outfit updates and recursive folder cleanup."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "OutfitFormPage માં useMemo ReferenceError સોલ્વ કર્યો."
+    },
+    {
+      "member": "001",
+      "text": "લૉગિન અને loginAsStore એપીઆઈમાં logo_url ઉમેર્યું અને હેડરમાં સ્ટોર લોગો ડિસ્પ્લે લૉજિક સેટ કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "હેડરમાં પ્રોફાઇલ અવતાર પરથી ગ્રીન બોર્ડર દૂર કરી."
+    },
+    {
+      "member": "001",
+      "text": "સાઇડબારમાં Store Setup અને Collection મેનૂ સુપર એડમિનથી હટાવી માત્ર સ્ટોર એકાઉન્ટ માટે સીમિત કર્યા."
+    },
+    {
+      "member": "001",
+      "text": "ક્લાઉડીનરીમાં પ્રોડક્ટ ઇમેજ માટે પ્રોડક્ટ કોડનું અલગ સબ-ફોલ્ડર (products/{product_code}/) અને 001, 002, 003 ક્રમિક નેમિંગ લાગુ કર્યું."
+    },
+    {
+      "member": "001",
+      "text": "આઉટફિટ અપડેટ વખતે કાઢી નાખેલી ઇમેજનું ક્લાઉડીનરીમાંથી ઓટો-ડિલીટ અને સબ-ફોલ્ડર્સનું રિકર્સિવ ક્લીનઅપ ઉમેર્યું."
+    }
+  ],
+  "deliverables": [
+    "OutfitFormPage useMemo Fix",
+    "Store Logo Display in Header",
+    "Header Avatar Clean Styling (No Border)",
+    "Super Admin vs Store Admin Sidebar Isolation",
+    "Cloudinary Product Subfolders & 3-Digit Sequential Naming (001, 002, 003)"
+  ]
+}
