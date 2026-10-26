@@ -277,7 +277,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           )}
 
           {/* Collapsible Store Setup Accordion Section (Only for Store Admin / Staff) */}
-          <div className="menu-group master-menu-group">
+          {!isSuperAdmin && (
+            <div className="menu-group master-menu-group">
               <span className="group-title">STORE SETUP</span>
               <div className="accordion-group">
                 <button
@@ -369,9 +370,11 @@ const Sidebar = ({ isOpen, onClose }) => {
                 )}
               </div>
             </div>
+          )}
 
-          {/* Collapsible Collection Accordion Section (Fashion & Inventory Management) */}
-          <div className="menu-group master-menu-group">
+          {/* Collapsible Collection Accordion Section (Fashion & Inventory Management - Only for Store Admin / Staff) */}
+          {!isSuperAdmin && (
+            <div className="menu-group master-menu-group">
               <span className="group-title">COLLECTION</span>
               <div className="accordion-group">
                 <button
@@ -436,6 +439,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 )}
               </div>
             </div>
+          )}
 
           <div className="menu-group">
             <span className="group-title">PREFERENCES</span>

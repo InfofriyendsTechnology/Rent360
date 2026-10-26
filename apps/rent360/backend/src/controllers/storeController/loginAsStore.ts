@@ -104,9 +104,13 @@ export const loginAsStore = async (req: Request, res: Response) => {
         name: user.name,
         role: user.role?.name,
         permissions: (user.role?.permissions as unknown as string[]) || [],
+        profile_pic: user.profile_pic || user.store.logo_url || null,
         store: {
           id: user.store.id,
           name: user.store.name,
+          username: user.store.username,
+          logo_url: user.store.logo_url || null,
+          subscription_status: user.store.subscription_status,
         },
       },
     });

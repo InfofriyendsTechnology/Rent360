@@ -7,8 +7,10 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { logout, loginSuccess } from '../../store/authSlice';
+import axios from 'axios';
+import { logout, loginSuccess, updateUser } from '../../store/authSlice';
 import SearchProductModal from '../SearchProductModal/SearchProductModal';
+import { API_BASE_URL } from '../../config/api';
 import './Header.scss';
 
 const Header = ({ onToggleSidebar }) => {
@@ -104,6 +106,37 @@ const Header = ({ onToggleSidebar }) => {
     return 'Dashboard';
   };
 
+  const [imgError, setImgError] = useState(false);
+  const [storeLogoUrl, setStoreLogoUrl] = useState(user?.store?.logo_url || null);
+
+  // Auto-fetch store logo if logged into a store and logo_url is missing from current session
+  useEffect(() => {
+    const storeId = user?.store?.id || (!isSuperAdmin && user?.storeId ? user.storeId : null);
+    if (!isSuperAdmin && storeId && !user?.store?.logo_url && !storeLogoUrl) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        axios.get(`${API_BASE_URL}/api/stores/${storeId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        .then((res) => {
+          const fetchedLogo = res.data?.data?.logo_url;
+          if (fetchedLogo) {
+            setStoreLogoUrl(fetchedLogo);
+            dispatch(updateUser({
+              store: {
+                ...(user?.store || {}),
+                id: storeId,
+                name: user?.store?.name || res.data?.data?.name,
+                logo_url: fetchedLogo
+              }
+            }));
+          }
+        })
+        .catch(() => {});
+      }
+    }
+  }, [isSuperAdmin, user?.store?.id, user?.store?.logo_url, user?.storeId, storeLogoUrl, dispatch]);
+
   // Profile display name
   const displayName = isSuperAdmin 
     ? (user?.name || 'Super Admin') 
@@ -112,6 +145,14 @@ const Header = ({ onToggleSidebar }) => {
   const avatarInitials = isSuperAdmin
     ? 'SA'
     : (user?.store?.name ? user.store.name.slice(0, 2).toUpperCase() : (user?.name ? user.name.slice(0, 2).toUpperCase() : 'VS'));
+
+  const avatarImage = !isSuperAdmin
+    ? (user?.store?.logo_url || storeLogoUrl || user?.profile_pic)
+    : user?.profile_pic;
+
+  useEffect(() => {
+    setImgError(false);
+  }, [avatarImage]);
 
   return (
     <>
@@ -190,8 +231,12 @@ const Header = ({ onToggleSidebar }) => {
               aria-label="User menu"
             >
               <div className="profile-avatar">
-                {user?.profile_pic ? (
-                  <img src={user.profile_pic} alt="DP" />
+                {avatarImage && !imgError ? (
+                  <img 
+                    src={avatarImage} 
+                    alt={displayName} 
+                    onError={() => setImgError(true)} 
+                  />
                 ) : (
                   <span>{avatarInitials}</span>
                 )}
