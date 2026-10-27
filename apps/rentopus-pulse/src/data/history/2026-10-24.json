@@ -1,10 +1,11 @@
 {
   "date": "24-10-2026",
   "dayNumber": 30,
-  "title": "Category & Accessories Separation and Compact Modals",
-  "titleGu": "કેટેગરી અને એક્સેસરીઝ સેપરેશન તેમજ કોમ્પેક્ટ મોડલ્સ",
+  "title": "Category System, Compact Modals & Trial Balance Reports",
+  "titleGu": "કેટેગરી સિસ્ટમ, કોમ્પેક્ટ મોડલ્સ અને ટ્રાયલ બેલેન્સ રિપોર્ટ્સ",
   "members": [
-    "001"
+    "001",
+    "002"
   ],
   "tasksEn": [
     {
@@ -26,6 +27,18 @@
     {
       "member": "001",
       "text": "Simplified Create Accessory modal to 2 columns: Image uploader on left, and Category, Name, Qty, Rent on right with Reset and Submit."
+    },
+    {
+      "member": "002",
+      "text": "Developed Trial Balance financial statement page (TrialBalance.jsx) with debit/credit reconciliation and difference checking."
+    },
+    {
+      "member": "002",
+      "text": "Created Cashbook Reports page (CashbookReports.jsx) providing Cash & Bank summaries and date-range transaction analysis."
+    },
+    {
+      "member": "002",
+      "text": "Added Financial Reports navigation group in Sidebar (Cash & Bank Summary, Account Ledger, Trial Balance) with app routing."
     }
   ],
   "tasksGu": [
@@ -48,6 +61,18 @@
     {
       "member": "001",
       "text": "Create Accessory મોડલ 2 કોલમમાં સેટ કર્યું: ડાબી બાજુ ઇમેજ અપલોડર અને જમણી બાજુ Category, Name, Qty, Rent સાથે Reset અને Submit."
+    },
+    {
+      "member": "002",
+      "text": "ડેબિટ અને ક્રેડિટ રિકન્સિલિયેશન સાથે સંપૂર્ણ ટ્રાયલ બેલેન્સ ફાઇનાન્સિયલ સ્ટેટમેન્ટ પેજ (TrialBalance.jsx) તૈયાર કર્યું."
+    },
+    {
+      "member": "002",
+      "text": "કેશ અને બેંક સમરી તેમજ તારીખ મુજબના ટ્રાન્ઝેક્શન એનાલિસિસ સાથે Cashbook Reports પેજ (CashbookReports.jsx) બનાવ્યું."
+    },
+    {
+      "member": "002",
+      "text": "સાઇડબારમાં Financial Reports મેનૂ (Cash & Bank Summary, Account Ledger, Trial Balance) ઉમેરી રૂટ્સ કનેક્ટ કર્યા."
     }
   ],
   "deliverables": [
@@ -55,6 +80,9 @@
     "Isolated Category Dropdowns in Outfit & Accessory Forms",
     "Filtered Link Accessories Matrix",
     "Compact Create Category Modal",
-    "Two-Column Create Accessory Modal"
+    "Two-Column Create Accessory Modal",
+    "Trial Balance Financial Statement Module",
+    "Cashbook & Bank Summary Reports Module",
+    "Financial Reports Sidebar Integration"
   ]
 }

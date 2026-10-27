@@ -1,10 +1,11 @@
 {
   "date": "23-10-2026",
   "dayNumber": 29,
-  "title": "Full-Page Outfit Form, Soft Refresh, Pill Buttons, Scrollbars & Validation",
-  "titleGu": "ફુલ-પેજ આઉટફિટ ફોર્મ, સોફ્ટ રિફ્રેશ, પિલ બટન્સ, સ્ક્રોલબાર અને વેલિડેશન",
+  "title": "Full-Page Outfit Form, UI Polish & Account Ledger Development",
+  "titleGu": "ફુલ-પેજ આઉટફિટ ફોર્મ, UI પોલિશ અને એકાઉન્ટ લેજર ડેવલપમેન્ટ",
   "members": [
-    "001"
+    "001",
+    "002"
   ],
   "tasksEn": [
     {
@@ -30,6 +31,14 @@
     {
       "member": "001",
       "text": "Added inline field validation with red borders and error text directly below invalid inputs."
+    },
+    {
+      "member": "002",
+      "text": "Developed Account Ledger frontend page (AccountLedger.jsx) with party filtering, opening balance calculation, debit/credit breakdown, and running ledger statement."
+    },
+    {
+      "member": "002",
+      "text": "Overhauled AddTransactionModal in Cashbook with account selection, payment modes, transaction categories, and date picker."
     }
   ],
   "tasksGu": [
@@ -56,6 +65,14 @@
     {
       "member": "001",
       "text": "ફોર્મમાં ભૂલ હોય ત્યારે રેડ બોર્ડર અને નીચે લાલ એરર ટેક્સ્ટ દેખાય તેવું ઇનલાઇન વેલિડેશન આપ્યું."
+    },
+    {
+      "member": "002",
+      "text": "એકાઉન્ટ સિલેક્શન, ઓપનિંગ બેલેન્સ, ડેબિટ/ક્રેડિટ ડિટેઇલ્સ અને રનિંગ બેલેન્સ સ્ટેટમેન્ટ સાથે એકાઉન્ટ લેજર પેજ (AccountLedger.jsx) ડેવલપ કર્યું."
+    },
+    {
+      "member": "002",
+      "text": "કેશબુકમાં AddTransactionModal ને એકાઉન્ટ લિન્કિંગ, પેમેન્ટ મોડ્સ અને કેટેગરી સાથે અપગ્રેડ કર્યું."
     }
   ],
   "deliverables": [
@@ -64,6 +81,8 @@
     "Theme Pill Action Buttons (Reset & Submit)",
     "Clean 3px Hairline Scrollbars",
     "Removal of Number Input Spin Buttons",
-    "Inline Field Validation with Red Border & Error Text"
+    "Inline Field Validation with Red Border & Error Text",
+    "Account Ledger Management & Statement View",
+    "Enhanced Add Transaction Modal with Multi-Account Linking"
   ]
 }

@@ -1,10 +1,11 @@
 {
   "date": "22-10-2026",
   "dayNumber": 28,
-  "title": "Collection Module, Accessories Subsystem, Master Cleanup & Stock Bento Grid",
-  "titleGu": "કલેક્શન મોડ્યુલ, એક્સેસરીઝ સબસિસ્ટમ, માસ્ટર ક્લીનઅપ અને સ્ટોક બેન્ટો ગ્રિડ",
+  "title": "Collection Module, Accessories Subsystem & Finance Engine Core",
+  "titleGu": "કલેક્શન મોડ્યુલ, એક્સેસરીઝ સબસિસ્ટમ અને ફાઇનાન્સ એન્જિન કોર",
   "members": [
-    "001"
+    "001",
+    "002"
   ],
   "tasksEn": [
     {
@@ -26,6 +27,14 @@
     {
       "member": "001",
       "text": "Unified Collection sub-pages layout with custom theme Select dropdowns and 4 KPI summary cards in Stock Inventory."
+    },
+    {
+      "member": "002",
+      "text": "Built backend financial calculation engines for Trial Balance (getTrialBalance.ts) and Account Ledger (getAccountLedger.ts) with double-entry debits, credits, and running balance."
+    },
+    {
+      "member": "002",
+      "text": "Engineered custom DateInputDMY component with DD/MM/YYYY input masking, validation, and calendar integration."
     }
   ],
   "tasksGu": [
@@ -48,6 +57,14 @@
     {
       "member": "001",
       "text": "કલેક્શનના તમામ પેજીસ પર કસ્ટમ ડ્રોપડાઉન્સ અને સ્ટોક પેજમાં 4 KPI સમરી કાર્ડ્સ સેટ કર્યા."
+    },
+    {
+      "member": "002",
+      "text": "ટ્રાયલ બેલેન્સ (getTrialBalance.ts) અને એકાઉન્ટ લેજર (getAccountLedger.ts) માટે ડેબિટ, ક્રેડિટ અને રનિંગ બેલેન્સની બેકએન્ડ કેલ્ક્યુલેશન એપીઆઈ બનાવી."
+    },
+    {
+      "member": "002",
+      "text": "DD/MM/YYYY ઇન્ડિયન ફોર્મેટ માટે ડાયરેક્ટ ટાઇપિંગ અને કેલેન્ડર સાથે કસ્ટમ DateInputDMY કમ્પોનન્ટ બનાવ્યો."
     }
   ],
   "deliverables": [
@@ -55,6 +72,8 @@
     "Dual-Tab Accessories Subsystem",
     "Washing Price & Washable Category Attributes",
     "Lookbook & CSV Bulk Import Pages",
-    "Unified Theme Dropdowns & 4-Card Stock Bento Grid"
+    "Unified Theme Dropdowns & 4-Card Stock Bento Grid",
+    "Trial Balance & Account Ledger Backend Calculation Engines",
+    "Custom DD/MM/YYYY DateInputDMY Component"
   ]
 }
