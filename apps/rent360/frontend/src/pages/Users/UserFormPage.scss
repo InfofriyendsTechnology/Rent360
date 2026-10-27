@@ -46,6 +46,7 @@
       align-items: center;
       gap: 12px;
 
+      /* Professional Pop-up Back Pill Button */
       .back-pill-btn {
         display: inline-flex;
         align-items: center;
@@ -53,21 +54,35 @@
         width: 38px;
         height: 38px;
         border-radius: $border-radius-pill;
-        background: $bg-card;
-        border: 1px solid $border-main;
-        color: $text-muted;
+        background-color: $bg-pill-dark;
+        border: 1px solid transparent;
+        color: $text-inverse;
         cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: $shadow-sm;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+        box-shadow: $shadow-pill;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, opacity 0.2s ease;
 
         &:hover {
-          color: $text-main;
-          border-color: $accent;
-          transform: translateX(-2px);
+          color: $text-inverse;
+          border-color: transparent;
+          transform: scale(1.06);
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+          opacity: 0.96;
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+
+        &:focus-visible {
+          outline: none;
+          box-shadow: 0 0 0 2px $bg-canvas, 0 0 0 4px $bg-pill-dark;
         }
 
         .back-icon {
-          font-size: 1.1rem;
+          font-size: 1.15rem;
+          color: inherit;
         }
       }
 
@@ -183,26 +198,32 @@
     width: 100%;
 
     .avatar-circle-box {
-      width: 160px;
-      height: 160px;
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
       position: relative;
       cursor: pointer;
       overflow: hidden;
-      border: 3px solid $border-main;
+      border: 2px solid $border-main;
       background: $bg-card-alt;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      box-shadow: $shadow-sm;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
       &:hover {
-        border-color: $accent;
+        border-color: $text-main;
         transform: scale(1.02);
 
         .avatar-hover-overlay {
           opacity: 1;
+        }
+
+        .monochrome-avatar-svg {
+          .avatar-head, .avatar-body {
+            fill: $text-main;
+          }
         }
       }
 
@@ -218,18 +239,27 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
 
-        svg {
-          width: 85%;
-          height: 85%;
+        .monochrome-avatar-svg {
+          width: 100%;
+          height: 100%;
+
+          .avatar-bg {
+            fill: $bg-card-alt;
+            transition: fill 0.2s ease;
+          }
+
+          .avatar-head, .avatar-body {
+            fill: $text-muted;
+            transition: fill 0.2s ease;
+          }
         }
       }
 
       .avatar-hover-overlay {
         position: absolute;
         inset: 0;
-        background: rgba(15, 23, 42, 0.55);
+        background: rgba(15, 23, 42, 0.65);
         color: #ffffff;
         display: flex;
         flex-direction: column;
@@ -241,11 +271,11 @@
         backdrop-filter: blur(2px);
 
         .camera-icon {
-          font-size: 1.6rem;
+          font-size: 1.5rem;
         }
 
         .upload-text {
-          font-size: 0.76rem;
+          font-size: 0.74rem;
           font-weight: 600;
           letter-spacing: 0.02em;
         }
@@ -255,10 +285,13 @@
     .avatar-action-bar {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
 
-      .btn-upload-avatar {
-        padding: 5px 14px;
+      .avatar-pick-btn {
+        height: 34px;
+        padding: 0 16px;
         font-size: 0.8rem;
         font-weight: 600;
         border-radius: $border-radius-pill;
@@ -266,11 +299,11 @@
         background: $bg-card;
         color: $text-main;
         cursor: pointer;
-        transition: all 0.15s ease;
+        transition: all 0.18s ease;
 
         &:hover {
-          border-color: $accent;
-          color: $accent;
+          border-color: $text-main;
+          transform: translateY(-1px);
         }
       }
 
@@ -278,8 +311,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         border: 1px solid #fee2e2;
         background: #fef2f2;
@@ -290,24 +323,23 @@
         &:hover {
           background: #fee2e2;
           color: #dc2626;
+          transform: scale(1.05);
+        }
+
+        body.dark & {
+          background: rgba(239, 68, 68, 0.15);
+          border-color: rgba(239, 68, 68, 0.3);
+          color: #f87171;
         }
       }
     }
 
     .avatar-hint-note {
-      display: flex;
-      align-items: center;
-      gap: 6px;
       font-size: 0.74rem;
       color: $text-muted;
       text-align: center;
       line-height: 1.3;
-
-      .info-icon {
-        font-size: 0.85rem;
-        color: $accent;
-        flex-shrink: 0;
-      }
+      letter-spacing: -0.01em;
     }
   }
 
@@ -367,17 +399,17 @@
         align-items: center;
         gap: 2px;
 
-        .required-star {
-          color: #ef4444;
-          font-weight: 700;
+        &.required {
+          // matching outfit required style
         }
 
         .role-extraordinary-pill {
           margin-left: auto;
-          font-size: 0.68rem;
+          font-size: 0.66rem;
           font-weight: 700;
-          color: #0b60b0;
-          background: rgba(11, 96, 176, 0.08);
+          color: $text-muted;
+          background: $bg-card-alt;
+          border: 1px solid $border-main;
           padding: 1px 7px;
           border-radius: 10px;
           letter-spacing: 0.03em;
@@ -385,59 +417,70 @@
         }
       }
 
-      .field-input,
-      .field-textarea {
+      .outfit-input {
         width: 100%;
+        min-width: 0;
         box-sizing: border-box;
         height: 38px;
         padding: 0 12px;
-        font-size: 0.86rem;
-        font-family: inherit;
-        color: $text-main;
         background: $bg-card;
         border: 1px solid $border-main;
-        border-radius: 8px;
+        border-radius: 6px;
+        font-size: 0.86rem;
+        color: $text-main;
         outline: none;
-        transition: all 0.15s ease;
-
-        &::placeholder {
-          color: $text-muted;
-          opacity: 0.6;
-        }
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: $shadow-sm;
 
         &:focus {
           border-color: $accent;
           box-shadow: 0 0 0 3px rgba(11, 96, 176, 0.12);
         }
 
-        &.read-only-field {
-          background-color: #f1f5f9;
-          color: #475569;
-          cursor: not-allowed;
-          font-weight: 500;
-          border-color: #e2e8f0;
-
-          body.dark & {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: $text-muted;
-            border-color: $border-main;
-          }
+        &::placeholder {
+          color: $text-muted;
+          opacity: 0.6;
         }
 
-        &.has-error {
-          border-color: #ef4444 !important;
-          background-color: #fef2f2;
+        &.read-only-field {
+          background-color: $bg-card-alt;
+          color: $text-muted;
+          cursor: not-allowed;
+          font-weight: 500;
+        }
 
-          body.dark & {
-            background-color: rgba(239, 68, 68, 0.1);
-          }
+        &.is-invalid {
+          border-color: #ef4444 !important;
+          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.16) !important;
         }
       }
 
-      .field-textarea {
-        height: 58px;
+      .outfit-textarea {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
         padding: 8px 12px;
+        background: $bg-card;
+        border: 1px solid $border-main;
+        border-radius: 6px;
+        font-size: 0.86rem;
+        color: $text-main;
+        outline: none;
         resize: vertical;
+        font-family: inherit;
+        height: 60px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: $shadow-sm;
+
+        &:focus {
+          border-color: $accent;
+          box-shadow: 0 0 0 3px rgba(11, 96, 176, 0.12);
+        }
+
+        &::placeholder {
+          color: $text-muted;
+          opacity: 0.6;
+        }
       }
 
       .password-input-wrapper {
@@ -446,7 +489,7 @@
         align-items: center;
         width: 100%;
 
-        .field-input {
+        .outfit-input {
           padding-right: 36px;
         }
 
@@ -472,106 +515,111 @@
         }
       }
 
-      .role-select-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
+      /* Custom Bond Select integration inside form field */
+      .bond-select-container {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
 
-        .role-custom-select {
-          width: 100%;
-          height: 38px;
-          padding: 0 32px 0 12px;
-          font-size: 0.86rem;
-          font-family: inherit;
-          color: $text-main;
-          background: $bg-card;
-          border: 1px solid $border-main;
-          border-radius: 8px;
-          outline: none;
-          appearance: none;
-          cursor: pointer;
-          transition: all 0.15s ease;
+        .bond-select-trigger {
+          width: 100% !important;
+          min-width: 0 !important;
+          box-sizing: border-box !important;
+          min-height: 38px !important;
+          height: 38px !important;
+          border-radius: 6px !important;
+          font-size: 0.86rem !important;
+          padding: 0 10px !important;
+          background-color: $bg-card !important;
+          border: 1px solid $border-main !important;
+          box-shadow: $shadow-sm !important;
 
-          &:focus {
-            border-color: $accent;
-            box-shadow: 0 0 0 3px rgba(11, 96, 176, 0.12);
+          &:hover {
+            border-color: $accent !important;
           }
 
-          &.has-error {
-            border-color: #ef4444 !important;
-            background-color: #fef2f2;
+          .trigger-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
-        }
-
-        .select-chevron-icon {
-          position: absolute;
-          right: 12px;
-          pointer-events: none;
-          color: $text-muted;
-          font-size: 0.95rem;
         }
       }
 
-      .error-hint-text {
-        font-size: 0.74rem;
+      .field-error-text {
+        font-size: 0.73rem;
+        font-weight: 600;
         color: #ef4444;
-        font-weight: 500;
+        line-height: 1.25;
         margin-top: 2px;
+        display: block;
+        animation: fadeInError 0.18s ease-out;
       }
     }
 
-    /* Form Bottom Actions */
-    .form-actions-row {
+    /* Form Bottom Actions - Unified with Outfit Form Theme */
+    .outfit-form-footer-actions {
       display: flex;
-      align-items: center;
       justify-content: flex-end;
+      align-items: center;
       gap: 12px;
-      margin-top: 10px;
+      margin-top: 14px;
       padding-top: 18px;
       border-top: 1px solid $border-main;
+      width: 100%;
+      box-sizing: border-box;
 
-      .btn-cancel-pill {
-        padding: 9px 24px;
+      .pill-btn-secondary {
+        height: 40px;
+        padding: 0 24px;
         border-radius: $border-radius-pill;
+        background: $bg-card;
         border: 1px solid $border-main;
-        background: #64748b;
-        color: #ffffff;
-        font-size: 0.86rem;
+        color: $text-main;
+        font-size: 0.88rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.18s ease;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: $shadow-sm;
 
-        &:hover {
-          background: #475569;
-          border-color: #475569;
+        &:hover:not(:disabled) {
+          border-color: $text-main;
+          transform: translateY(-1px);
+        }
+
+        &:disabled {
+          opacity: 0.55;
+          cursor: not-allowed;
         }
       }
 
-      .btn-submit-pill {
-        padding: 9px 28px;
+      .pill-btn-primary {
+        height: 40px;
+        padding: 0 28px;
         border-radius: $border-radius-pill;
-        border: 1px solid $accent;
-        background: $accent;
-        color: #ffffff;
-        font-size: 0.86rem;
+        background-color: $bg-pill-dark;
+        color: $text-inverse;
+        border: 1px solid transparent;
+        font-size: 0.88rem;
         font-weight: 600;
         cursor: pointer;
-        box-shadow: 0 2px 8px rgba(11, 96, 176, 0.28);
-        transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: $shadow-pill;
+        box-sizing: border-box;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         display: inline-flex;
         align-items: center;
         gap: 8px;
 
         &:hover:not(:disabled) {
-          background: darken(#0B60B0, 5%);
+          filter: brightness(1.15);
           transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(11, 96, 176, 0.35);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         &:disabled {
-          opacity: 0.7;
+          opacity: 0.6;
           cursor: not-allowed;
+          transform: none;
         }
 
         .btn-spin-icon {
@@ -579,5 +627,56 @@
         }
       }
     }
+  }
+}
+
+/* Quick Role Creation Modal */
+.quick-role-modal-card {
+  max-width: 440px !important;
+  width: 90% !important;
+
+  .modal-body {
+    padding: 16px 20px;
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      label {
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: $text-main;
+      }
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-top: 1px solid $border-main;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeInError {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

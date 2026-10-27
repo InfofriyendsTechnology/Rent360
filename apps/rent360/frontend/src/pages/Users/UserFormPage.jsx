@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { 
   FiArrowLeft, FiCamera, FiTrash2, FiEye, FiEyeOff, 
-  FiShoppingBag, FiInfo, FiRefreshCw, FiChevronDown, FiPlus 
+  FiShoppingBag, FiRefreshCw, FiX 
 } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import { convertToWebP } from '../../utils/imageOptimizer';
+import { Select } from '../../components/ui';
+import '../Stores/StoresList.scss';
 import './UserFormPage.scss';
 
 const INDIAN_STATES = [
@@ -78,6 +80,24 @@ const UserFormPage = () => {
     : (user?.store || null);
 
   const activeShopName = activeStore?.name || (isSuperAdmin ? 'Rent360 HQ Store' : 'Virasat THE FASHION STUDIO');
+
+  // Role options for custom Select
+  const roleOptions = useMemo(() => {
+    return roles.map(r => ({
+      value: r.id,
+      label: r.name
+    }));
+  }, [roles]);
+
+  // State options
+  const stateOptions = useMemo(() => {
+    return INDIAN_STATES.map(s => ({ value: s, label: s }));
+  }, []);
+
+  // City options
+  const cityOptions = useMemo(() => {
+    return GUJARAT_CITIES.map(c => ({ value: c, label: c }));
+  }, []);
 
   // Fetch stores if Super Admin
   useEffect(() => {
@@ -349,7 +369,8 @@ const UserFormPage = () => {
       if (newRole) {
         setRoles(prev => [...prev, newRole]);
         setFormData(prev => ({ ...prev, roleId: newRole.id }));
-        toast.success(`Role "${newRole.name}" created and assigned`);
+        if (formErrors.roleId) setFormErrors(prev => ({ ...prev, roleId: null }));
+        toast.success(`Role "${newRole.name}" created and selected`);
       }
       setIsQuickRoleModalOpen(false);
       setQuickRoleName('');
@@ -373,7 +394,7 @@ const UserFormPage = () => {
 
   return (
     <div className="user-form-view">
-      {/* 1. Top Bar Header matching Competitor View */}
+      {/* 1. Top Bar Header */}
       <div className="user-top-header">
         <div className="header-left">
           <button 
@@ -421,7 +442,7 @@ const UserFormPage = () => {
 
       {/* 2. Main Form Canvas Card */}
       <div className="user-form-canvas">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off" noValidate>
           <div className="canvas-grid-layout">
             
             {/* Left Column: Round Avatar Profile Box */}
@@ -443,25 +464,11 @@ const UserFormPage = () => {
                   <img src={avatarImage} alt="User Avatar" className="avatar-preview-img" />
                 ) : (
                   <div className="default-avatar-illustration">
-                    {/* Professional Avatar SVG matching competitor screenshot */}
-                    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="60" cy="60" r="58" fill="#F1F5F9" />
-                      {/* Body & Blue Suit */}
-                      <path d="M26 108C26 88 40 76 60 76C80 76 94 88 94 108H26Z" fill="#1E293B" />
-                      {/* White Collar / Shirt */}
-                      <path d="M48 76L60 92L72 76L67 71L60 77L53 71L48 76Z" fill="#FFFFFF" />
-                      {/* Red Tie matching competitor */}
-                      <path d="M57 77H63L65 98L60 106L55 98L57 77Z" fill="#EF4444" />
-                      {/* Neck */}
-                      <path d="M52 64H68V76H52V64Z" fill="#FDBA74" />
-                      {/* Face */}
-                      <circle cx="60" cy="48" r="22" fill="#FDBA74" />
-                      {/* Hair */}
-                      <path d="M40 44C40 30 48 24 60 24C72 24 80 30 80 44C78 38 72 34 60 34C48 34 42 38 40 44Z" fill="#475569" />
-                      {/* Glasses */}
-                      <rect x="47" y="44" width="10" height="7" rx="2" stroke="#0F172A" strokeWidth="2" fill="none" />
-                      <rect x="63" y="44" width="10" height="7" rx="2" stroke="#0F172A" strokeWidth="2" fill="none" />
-                      <line x1="57" y1="47" x2="63" y2="47" stroke="#0F172A" strokeWidth="2" />
+                    {/* Minimalist monochrome vector avatar matching theme */}
+                    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="monochrome-avatar-svg">
+                      <circle cx="60" cy="60" r="58" className="avatar-bg" />
+                      <circle cx="60" cy="46" r="20" className="avatar-head" />
+                      <path d="M28 98C28 80.3269 42.3269 66 60 66C77.6731 66 92 80.3269 92 98V102H28V98Z" className="avatar-body" />
                     </svg>
                   </div>
                 )}
@@ -477,7 +484,7 @@ const UserFormPage = () => {
               <div className="avatar-action-bar">
                 <button
                   type="button"
-                  className="btn-upload-avatar"
+                  className="pill-btn-secondary avatar-pick-btn"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   Choose Picture
@@ -495,8 +502,7 @@ const UserFormPage = () => {
               </div>
 
               <div className="avatar-hint-note">
-                <FiInfo className="info-icon" />
-                <span>Allowed: JPG, PNG, WEBP (Max 2MB)</span>
+                <span>JPG, PNG, WEBP up to 2MB</span>
               </div>
             </div>
 
@@ -507,23 +513,23 @@ const UserFormPage = () => {
               <div className="fields-grid-row row-4-col">
                 {/* 1. Shop Name */}
                 <div className="form-field-group">
-                  <label className="field-label">
-                    Shop Name<span className="required-star">*</span>
+                  <label className="field-label required">
+                    Shop Name*
                   </label>
                   <input
                     type="text"
                     value={activeShopName}
                     disabled
                     readOnly
-                    className="field-input read-only-field"
+                    className="outfit-input read-only-field"
                     title="Current Store"
                   />
                 </div>
 
                 {/* 2. Full Name */}
-                <div className="form-field-group">
-                  <label className="field-label">
-                    Full Name<span className="required-star">*</span>
+                <div className={`form-field-group ${formErrors.name ? 'has-error' : ''}`}>
+                  <label className="field-label required">
+                    Full Name*
                   </label>
                   <input
                     type="text"
@@ -531,15 +537,15 @@ const UserFormPage = () => {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Full Name"
-                    className={`field-input ${formErrors.name ? 'has-error' : ''}`}
+                    className={`outfit-input ${formErrors.name ? 'is-invalid' : ''}`}
                   />
-                  {formErrors.name && <span className="error-hint-text">{formErrors.name}</span>}
+                  {formErrors.name && <span className="field-error-text">{formErrors.name}</span>}
                 </div>
 
                 {/* 3. Contact No.1 */}
-                <div className="form-field-group">
-                  <label className="field-label">
-                    Contact No.1<span className="required-star">*</span>
+                <div className={`form-field-group ${formErrors.mobile ? 'has-error' : ''}`}>
+                  <label className="field-label required">
+                    Contact No.1*
                   </label>
                   <input
                     type="tel"
@@ -551,9 +557,9 @@ const UserFormPage = () => {
                     }}
                     placeholder="Phone Number"
                     maxLength={10}
-                    className={`field-input ${formErrors.mobile ? 'has-error' : ''}`}
+                    className={`outfit-input ${formErrors.mobile ? 'is-invalid' : ''}`}
                   />
-                  {formErrors.mobile && <span className="error-hint-text">{formErrors.mobile}</span>}
+                  {formErrors.mobile && <span className="field-error-text">{formErrors.mobile}</span>}
                 </div>
 
                 {/* 4. Contact No.2 */}
@@ -571,12 +577,12 @@ const UserFormPage = () => {
                     }}
                     placeholder="Phone Number"
                     maxLength={10}
-                    className="field-input"
+                    className="outfit-input"
                   />
                 </div>
               </div>
 
-              {/* Row 2: Email, Username, Password, Role (The Extraordinary Thing) */}
+              {/* Row 2: Email, Username, Password, Role (Common Dropdown + Add Role) */}
               <div className="fields-grid-row row-4-col">
                 {/* 5. Email */}
                 <div className="form-field-group">
@@ -589,14 +595,14 @@ const UserFormPage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="email address"
-                    className="field-input"
+                    className="outfit-input"
                   />
                 </div>
 
                 {/* 6. Username */}
-                <div className="form-field-group">
-                  <label className="field-label">
-                    Username<span className="required-star">*</span>
+                <div className={`form-field-group ${formErrors.username ? 'has-error' : ''}`}>
+                  <label className="field-label required">
+                    Username*
                   </label>
                   <input
                     type="text"
@@ -604,15 +610,15 @@ const UserFormPage = () => {
                     value={formData.username}
                     onChange={handleChange}
                     placeholder="virasat-mv-admin"
-                    className={`field-input ${formErrors.username ? 'has-error' : ''}`}
+                    className={`outfit-input ${formErrors.username ? 'is-invalid' : ''}`}
                   />
-                  {formErrors.username && <span className="error-hint-text">{formErrors.username}</span>}
+                  {formErrors.username && <span className="field-error-text">{formErrors.username}</span>}
                 </div>
 
                 {/* 7. Password */}
-                <div className="form-field-group">
-                  <label className="field-label">
-                    Password{!isEditing && <span className="required-star">*</span>}
+                <div className={`form-field-group ${formErrors.password ? 'has-error' : ''}`}>
+                  <label className="field-label required">
+                    Password{!isEditing && '*'}
                   </label>
                   <div className="password-input-wrapper">
                     <input
@@ -621,7 +627,7 @@ const UserFormPage = () => {
                       value={formData.password}
                       onChange={handleChange}
                       placeholder={isEditing ? 'Leave blank to keep current' : '••••••••'}
-                      className={`field-input ${formErrors.password ? 'has-error' : ''}`}
+                      className={`outfit-input ${formErrors.password ? 'is-invalid' : ''}`}
                     />
                     <button
                       type="button"
@@ -632,32 +638,32 @@ const UserFormPage = () => {
                       {showPassword ? <FiEyeOff /> : <FiEye />}
                     </button>
                   </div>
-                  {formErrors.password && <span className="error-hint-text">{formErrors.password}</span>}
+                  {formErrors.password && <span className="field-error-text">{formErrors.password}</span>}
                 </div>
 
-                {/* 8. Role (EXTRAORDINARY THING - DO NOT FORGET IT) */}
-                <div className="form-field-group">
-                  <label className="field-label">
-                    Role<span className="required-star">*</span>
+                {/* 8. Role (Common Portal Dropdown with '+ Add New Role' option) */}
+                <div className={`form-field-group ${formErrors.roleId ? 'has-error' : ''}`}>
+                  <label className="field-label required">
+                    Role*
                     <span className="role-extraordinary-pill">Permission Role</span>
                   </label>
-                  <div className="role-select-wrapper">
-                    <select
-                      name="roleId"
-                      value={formData.roleId}
-                      onChange={handleChange}
-                      className={`role-custom-select ${formErrors.roleId ? 'has-error' : ''}`}
-                    >
-                      <option value="">Select User Role...</option>
-                      {roles.map((r) => (
-                        <option key={r.id} value={r.id}>
-                          {r.name}
-                        </option>
-                      ))}
-                    </select>
-                    <FiChevronDown className="select-chevron-icon" />
-                  </div>
-                  {formErrors.roleId && <span className="error-hint-text">{formErrors.roleId}</span>}
+                  <Select
+                    name="roleId"
+                    value={formData.roleId}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, roleId: e.target.value }));
+                      if (formErrors.roleId) setFormErrors(prev => ({ ...prev, roleId: null }));
+                    }}
+                    options={roleOptions}
+                    placeholder="Select User Role..."
+                    size="md"
+                    actionButton={{
+                      label: '+ Add New Role',
+                      onClick: () => setIsQuickRoleModalOpen(true)
+                    }}
+                    className={formErrors.roleId ? 'is-invalid' : ''}
+                  />
+                  {formErrors.roleId && <span className="field-error-text">{formErrors.roleId}</span>}
                 </div>
               </div>
 
@@ -674,52 +680,36 @@ const UserFormPage = () => {
                     onChange={handleChange}
                     placeholder="Type your address here"
                     rows={2}
-                    className="field-textarea"
+                    className="outfit-textarea"
                   />
                 </div>
 
-                {/* 10. State */}
+                {/* 10. State (Common Select) */}
                 <div className="form-field-group">
                   <label className="field-label">
                     State
                   </label>
-                  <div className="role-select-wrapper">
-                    <select
-                      name="state"
-                      value={formData.state}
-                      onChange={handleChange}
-                      className="role-custom-select"
-                    >
-                      {INDIAN_STATES.map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                    <FiChevronDown className="select-chevron-icon" />
-                  </div>
+                  <Select
+                    name="state"
+                    value={formData.state}
+                    onChange={(e) => setFormData(prev => ({ ...prev, state: e.target.value }))}
+                    options={stateOptions}
+                    size="md"
+                  />
                 </div>
 
-                {/* 11. City */}
+                {/* 11. City (Common Select) */}
                 <div className="form-field-group">
                   <label className="field-label">
                     City
                   </label>
-                  <div className="role-select-wrapper">
-                    <select
-                      name="city"
-                      value={formData.city}
-                      onChange={handleChange}
-                      className="role-custom-select"
-                    >
-                      {GUJARAT_CITIES.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </select>
-                    <FiChevronDown className="select-chevron-icon" />
-                  </div>
+                  <Select
+                    name="city"
+                    value={formData.city}
+                    onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
+                    options={cityOptions}
+                    size="md"
+                  />
                 </div>
               </div>
 
@@ -735,16 +725,16 @@ const UserFormPage = () => {
                     onChange={handleChange}
                     placeholder="Enter your remarks"
                     rows={2}
-                    className="field-textarea"
+                    className="outfit-textarea"
                   />
                 </div>
               </div>
 
-              {/* Form Bottom Actions */}
-              <div className="form-actions-row">
+              {/* Form Bottom Actions unified with Outfit form */}
+              <div className="outfit-form-footer-actions">
                 <button
                   type="button"
-                  className="btn-cancel-pill"
+                  className="pill-btn-secondary"
                   onClick={handleCancel}
                 >
                   Cancel
@@ -752,7 +742,7 @@ const UserFormPage = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="btn-submit-pill"
+                  className="pill-btn-primary"
                 >
                   {submitting && <FiRefreshCw className="btn-spin-icon" />}
                   <span>{submitting ? 'Saving...' : (isEditing ? 'Update User' : 'Submit')}</span>
@@ -764,6 +754,59 @@ const UserFormPage = () => {
           </div>
         </form>
       </div>
+
+      {/* Quick Role Creation Modal */}
+      {isQuickRoleModalOpen && (
+        <div className="bond-modal-overlay" onClick={() => setIsQuickRoleModalOpen(false)}>
+          <div className="bond-modal-card quick-role-modal-card" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <h2>Create New Role</h2>
+                <p>Add a new permission role for this store</p>
+              </div>
+              <button 
+                type="button" 
+                className="modal-close" 
+                onClick={() => setIsQuickRoleModalOpen(false)}
+              >
+                <FiX />
+              </button>
+            </div>
+            <form onSubmit={handleCreateQuickRole}>
+              <div className="modal-body">
+                <div className="form-field">
+                  <label>Role Name *</label>
+                  <input
+                    type="text"
+                    required
+                    autoFocus
+                    placeholder="e.g. Sales Executive, Cashier"
+                    value={quickRoleName}
+                    onChange={(e) => setQuickRoleName(e.target.value)}
+                    className="outfit-input"
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="pill-btn-secondary"
+                  onClick={() => setIsQuickRoleModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="pill-btn-primary"
+                  disabled={isSavingQuickRole}
+                >
+                  {isSavingQuickRole ? 'Creating...' : 'Create & Select'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
