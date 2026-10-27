@@ -184,20 +184,20 @@
     }
 
     .quick-btn-save {
-      padding: 8px 18px;
+      padding: 8px 22px;
       font-size: 0.84rem;
       font-weight: 600;
-      color: #ffffff;
-      background-color: var(--accent);
-      border: 1px solid var(--accent);
-      border-radius: 8px;
+      color: var(--text-inverse);
+      background-color: var(--bg-pill-dark);
+      border: 1px solid transparent;
+      border-radius: var(--border-radius-pill, 20px);
       cursor: pointer;
       transition: all 0.15s ease;
       box-shadow: var(--shadow-sm);
 
       &:hover:not(:disabled) {
-        background-color: var(--accent-hover);
-        border-color: var(--accent-hover);
+        filter: brightness(1.15);
+        transform: translateY(-1px);
       }
 
       &:disabled {
@@ -256,12 +256,14 @@
       }
 
       .quick-btn-save {
-        background-color: #2563eb;
-        border-color: #2563eb;
+        background-color: #ffffff;
+        color: #18181b;
+        border-color: transparent;
 
         &:hover:not(:disabled) {
-          background-color: #1d4ed8;
-          border-color: #1d4ed8;
+          background-color: #f4f4f5;
+          color: #18181b;
+          border-color: transparent;
         }
       }
     }

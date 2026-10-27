@@ -277,38 +277,48 @@
 .pill-btn-primary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 7px;
-  padding: 0 18px;
+  padding: 0 20px;
   height: 38px;
-  border-radius: 8px;
-  background: $accent;
-  color: #fff;
+  border-radius: $border-radius-pill;
+  background-color: $bg-pill-dark;
+  color: $text-inverse;
   font-size: 13px;
   font-weight: 600;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: opacity 0.15s;
+  box-shadow: $shadow-pill;
+  transition: all 0.18s ease;
 
-  &:hover { opacity: 0.88; }
+  &:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+  }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
 .pill-btn-secondary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 7px;
   padding: 0 18px;
   height: 38px;
-  border-radius: 8px;
-  background: transparent;
-  color: $text-muted;
+  border-radius: $border-radius-pill;
+  background: $bg-card;
+  color: $text-main;
   font-size: 13px;
   font-weight: 600;
   border: 1px solid $border-main;
   cursor: pointer;
+  box-shadow: $shadow-sm;
   transition: all 0.15s;
 
-  &:hover { color: $text-main; border-color: $text-muted; }
+  &:hover {
+    border-color: $text-main;
+    transform: translateY(-1px);
+  }
 }
 
 // ── Modal ─────────────────────────────────────────────────────

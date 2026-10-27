@@ -97,9 +97,13 @@
         color: white;
 
         &.primary {
-          background: $accent;
+          background-color: $bg-pill-dark;
+          color: $text-inverse;
+          border: 1px solid transparent;
+          border-radius: $border-radius-pill;
           &:hover:not(:disabled) {
-            background: darken(#0B60B0, 5%);
+            filter: brightness(1.15);
+            transform: translateY(-1px);
           }
         }
 

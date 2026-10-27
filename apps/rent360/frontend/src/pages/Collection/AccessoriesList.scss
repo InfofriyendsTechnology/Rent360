@@ -464,34 +464,35 @@
     .btn-modal-reset {
       height: 38px;
       padding: 0 20px;
-      background-color: #64748B;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 6px;
+      background-color: $bg-card;
+      color: $text-main;
+      border: 1px solid $border-main;
+      border-radius: $border-radius-pill;
       font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.15s;
+      transition: all 0.15s ease;
 
       &:hover {
-        background-color: #475569;
+        border-color: $text-main;
       }
     }
 
     .btn-modal-submit {
       height: 38px;
-      padding: 0 22px;
-      background-color: #4F46E5;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 6px;
+      padding: 0 24px;
+      background-color: $bg-pill-dark;
+      color: $text-inverse;
+      border: 1px solid transparent;
+      border-radius: $border-radius-pill;
       font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.15s;
+      box-shadow: $shadow-pill;
+      transition: all 0.15s ease;
 
       &:hover {
-        background-color: #4338CA;
+        filter: brightness(1.15);
       }
     }
   }

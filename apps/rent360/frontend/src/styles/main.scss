@@ -264,3 +264,71 @@ body.dark select {
   font-weight: 500 !important;
   padding: 14px 22px !important;
 }
+
+/* Global Bond CRM Canonical Theme Action Buttons (Black & White Theme Everywhere) */
+.pill-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 24px;
+  background-color: var(--bg-pill-dark) !important;
+  color: var(--text-inverse) !important;
+  border-radius: var(--border-radius-pill, 9999px) !important;
+  border: 1px solid transparent !important;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-pill);
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    filter: brightness(1.15);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.55 !important;
+    cursor: not-allowed;
+  }
+}
+
+.pill-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 22px;
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border-radius: var(--border-radius-pill, 9999px) !important;
+  border: 1px solid var(--border-main) !important;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover:not(:disabled) {
+    border-color: var(--text-main) !important;
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.55 !important;
+    cursor: not-allowed;
+  }
+}

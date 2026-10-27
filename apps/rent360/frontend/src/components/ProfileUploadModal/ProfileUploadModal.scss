@@ -104,12 +104,13 @@
       }
 
       .save-btn {
-        background: $accent;
-        border: 1px solid $accent;
-        color: white;
+        background-color: $bg-pill-dark;
+        border: 1px solid transparent;
+        color: $text-inverse;
+        border-radius: $border-radius-pill;
 
         &:hover {
-          background: darken(#0B60B0, 5%);
+          filter: brightness(1.15);
         }
 
         &:disabled {
