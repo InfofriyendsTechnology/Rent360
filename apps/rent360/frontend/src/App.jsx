@@ -13,6 +13,7 @@ import SubscriptionsList from './pages/Subscriptions/SubscriptionsList';
 import DashboardHome from './pages/Dashboard/DashboardHome';
 import RolesList from './pages/Roles/RolesList';
 import UsersList from './pages/Users/UsersList';
+import UserFormPage from './pages/Users/UserFormPage';
 import CustomersList from './pages/Customers/CustomersList';
 import Profile from './pages/Profile/Profile';
 import CollectionList from './pages/Collection/CollectionList';
@@ -135,6 +136,8 @@ const App = () => {
           <Route path="customers" element={<CustomersList />} />
           <Route path="roles" element={<RolesList />} />
           <Route path="users" element={<UsersList />} />
+          <Route path="users/create" element={<UserFormPage />} />
+          <Route path="users/edit/:id" element={<UserFormPage />} />
           <Route path="staff" element={<UsersList />} />
 
           {/* Store Setup & Master Attributes */}

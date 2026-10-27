@@ -139,6 +139,12 @@ export const updateUser = async (req: Request, res: Response) => {
       updateData.profile_pic = uploadResponse.secure_url;
     }
 
+    delete updateData.store;
+    delete updateData.role;
+    if (!isSuperAdmin) {
+      delete updateData.storeId;
+    }
+
     const data = await prisma.user.update({
       where: { id: userId },
       data: updateData,

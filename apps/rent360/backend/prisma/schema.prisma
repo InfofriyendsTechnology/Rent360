@@ -84,6 +84,12 @@ model User {
   name        String
   username    String?  @unique
   mobile      String   @unique
+  email       String?
+  contact_no_2 String?
+  address     String?
+  state       String?
+  city        String?
+  remarks     String?
   password    String
   profile_pic String?
   status      String   @default("ACTIVE")

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FiPlus, FiEdit2, FiTrash2, FiX, FiShoppingBag, FiChevronDown } from 'react-icons/fi';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -9,6 +10,7 @@ import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { API_BASE_URL } from '../../config/api';
 
 const UsersList = () => {
+  const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN' || !user?.role;
   const userStoreId = isSuperAdmin ? '' : (user?.store?.id || user?.storeId || '');
@@ -275,7 +277,7 @@ const UsersList = () => {
             <span>Total Members ({users.length})</span>
           </div>
 
-          <button className="pill-btn-primary" onClick={() => openUserModal()}>
+          <button className="pill-btn-primary" onClick={() => navigate('/users/create')}>
             <FiPlus className="plus-icon" />
             <span>Add Member</span>
           </button>
@@ -300,7 +302,9 @@ const UsersList = () => {
             <>
               <td>
                 <AvatarCell
+                  src={u.profile_pic}
                   title={u.name}
+                  subtitle={u.username ? `@${u.username}` : (u.email || null)}
                   fallbackChars={getInitials(u.name)}
                 />
               </td>
@@ -320,7 +324,7 @@ const UsersList = () => {
               <td><StatusPill status={u.status || 'ACTIVE'} /></td>
               <td className="text-right">
                 <RowActions
-                  onEdit={() => openUserModal(u)}
+                  onEdit={() => navigate(`/users/edit/${u.id}`)}
                   onDelete={() => setUserToDelete(u)}
                 />
               </td>
