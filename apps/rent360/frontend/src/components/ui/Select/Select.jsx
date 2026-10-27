@@ -322,8 +322,16 @@ export const Select = ({
                     if (actionButton.onClick) actionButton.onClick(e);
                   }}
                 >
-                  {actionButton.icon || <FiPlus className="action-btn-icon" />}
-                  <span>{actionButton.label || 'Add New'}</span>
+                  {actionButton.icon !== undefined ? (
+                    actionButton.icon
+                  ) : (
+                    <FiPlus className="action-btn-icon" />
+                  )}
+                  <span>
+                    {typeof actionButton.label === 'string' && actionButton.label.startsWith('+')
+                      ? actionButton.label.replace(/^\+\s*/, '')
+                      : (actionButton.label || 'Add New')}
+                  </span>
                 </button>
               </div>
             )}

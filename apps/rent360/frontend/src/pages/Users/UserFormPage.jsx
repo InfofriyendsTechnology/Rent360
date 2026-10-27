@@ -9,9 +9,19 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import { convertToWebP } from '../../utils/imageOptimizer';
-import { Select } from '../../components/ui';
+import { Select, Checkbox } from '../../components/ui';
 import '../Stores/StoresList.scss';
+import '../Roles/RolesList.scss';
 import './UserFormPage.scss';
+
+const ALL_PERMISSIONS = [
+  'DASHBOARD_VIEW',
+  'INVENTORY_MANAGE',
+  'CUSTOMERS_MANAGE',
+  'BILLING_CREATE',
+  'REPORTS_VIEW',
+  'SETTINGS_MANAGE'
+];
 
 const INDIAN_STATES = [
   'Gujarat', 'Maharashtra', 'Rajasthan', 'Madhya Pradesh', 
@@ -49,9 +59,12 @@ const UserFormPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formErrors, setFormErrors] = useState({});
 
-  // Quick Role Creation Modal
+  // Quick Role Creation Modal matching RolesList
   const [isQuickRoleModalOpen, setIsQuickRoleModalOpen] = useState(false);
-  const [quickRoleName, setQuickRoleName] = useState('');
+  const [quickRoleForm, setQuickRoleForm] = useState({
+    name: '',
+    permissions: ['INVENTORY_MANAGE', 'CUSTOMERS_MANAGE', 'BILLING_CREATE']
+  });
   const [isSavingQuickRole, setIsSavingQuickRole] = useState(false);
 
   // Form Fields matching competitor screenshot + role
@@ -346,10 +359,22 @@ const UserFormPage = () => {
     }
   };
 
-  // Quick Role Creation
+  // Quick Role Creation (Exact same permissions and structure as RolesList)
+  const toggleQuickPermission = (perm) => {
+    setQuickRoleForm(prev => {
+      const exists = prev.permissions.includes(perm);
+      return {
+        ...prev,
+        permissions: exists
+          ? prev.permissions.filter(p => p !== perm)
+          : [...prev.permissions, perm]
+      };
+    });
+  };
+
   const handleCreateQuickRole = async (e) => {
     e.preventDefault();
-    if (!quickRoleName.trim()) {
+    if (!quickRoleForm.name.trim()) {
       toast.error('Role name is required');
       return;
     }
@@ -359,8 +384,8 @@ const UserFormPage = () => {
       const res = await axios.post(
         `${API_BASE_URL}/api/roles`,
         {
-          name: quickRoleName.trim(),
-          permissions: ['INVENTORY_MANAGE', 'CUSTOMERS_MANAGE', 'BILLING_CREATE'],
+          name: quickRoleForm.name.trim(),
+          permissions: quickRoleForm.permissions,
           storeId: effectiveStoreId || undefined
         },
         { headers: { Authorization: `Bearer ${token}` } }
@@ -373,7 +398,10 @@ const UserFormPage = () => {
         toast.success(`Role "${newRole.name}" created and selected`);
       }
       setIsQuickRoleModalOpen(false);
-      setQuickRoleName('');
+      setQuickRoleForm({
+        name: '',
+        permissions: ['INVENTORY_MANAGE', 'CUSTOMERS_MANAGE', 'BILLING_CREATE']
+      });
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to create role');
     } finally {
@@ -645,7 +673,6 @@ const UserFormPage = () => {
                 <div className={`form-field-group ${formErrors.roleId ? 'has-error' : ''}`}>
                   <label className="field-label required">
                     Role*
-                    <span className="role-extraordinary-pill">Permission Role</span>
                   </label>
                   <Select
                     name="roleId"
@@ -658,7 +685,7 @@ const UserFormPage = () => {
                     placeholder="Select User Role..."
                     size="md"
                     actionButton={{
-                      label: '+ Add New Role',
+                      label: 'Add New Role',
                       onClick: () => setIsQuickRoleModalOpen(true)
                     }}
                     className={formErrors.roleId ? 'is-invalid' : ''}
@@ -755,14 +782,14 @@ const UserFormPage = () => {
         </form>
       </div>
 
-      {/* Quick Role Creation Modal */}
+      {/* Quick Role Creation Modal matching original RolesList panel */}
       {isQuickRoleModalOpen && (
         <div className="bond-modal-overlay" onClick={() => setIsQuickRoleModalOpen(false)}>
-          <div className="bond-modal-card quick-role-modal-card" onClick={e => e.stopPropagation()}>
+          <div className="bond-modal-card" style={{ maxWidth: '520px' }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <h2>Create New Role</h2>
-                <p>Add a new permission role for this store</p>
+                <h2>Create Role</h2>
+                <p>Define role name and select access permissions</p>
               </div>
               <button 
                 type="button" 
@@ -780,11 +807,23 @@ const UserFormPage = () => {
                     type="text"
                     required
                     autoFocus
-                    placeholder="e.g. Sales Executive, Cashier"
-                    value={quickRoleName}
-                    onChange={(e) => setQuickRoleName(e.target.value)}
-                    className="outfit-input"
+                    placeholder="e.g. Sales Executive"
+                    value={quickRoleForm.name}
+                    onChange={(e) => setQuickRoleForm(prev => ({ ...prev, name: e.target.value }))}
                   />
+                </div>
+                <div className="form-field" style={{ marginTop: '20px' }}>
+                  <label>Select Permissions</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '10px' }}>
+                    {ALL_PERMISSIONS.map(perm => (
+                      <Checkbox
+                        key={perm}
+                        checked={quickRoleForm.permissions.includes(perm)}
+                        onChange={() => toggleQuickPermission(perm)}
+                        label={perm === 'INVENTORY_MANAGE' ? 'COLLECTION MANAGE' : perm.replace('_', ' ')}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
               <div className="modal-footer">
@@ -800,7 +839,7 @@ const UserFormPage = () => {
                   className="pill-btn-primary"
                   disabled={isSavingQuickRole}
                 >
-                  {isSavingQuickRole ? 'Creating...' : 'Create & Select'}
+                  {isSavingQuickRole ? 'Saving...' : 'Save Role'}
                 </button>
               </div>
             </form>

@@ -402,19 +402,6 @@
         &.required {
           // matching outfit required style
         }
-
-        .role-extraordinary-pill {
-          margin-left: auto;
-          font-size: 0.66rem;
-          font-weight: 700;
-          color: $text-muted;
-          background: $bg-card-alt;
-          border: 1px solid $border-main;
-          padding: 1px 7px;
-          border-radius: 10px;
-          letter-spacing: 0.03em;
-          text-transform: uppercase;
-        }
       }
 
       .outfit-input {
@@ -630,36 +617,6 @@
   }
 }
 
-/* Quick Role Creation Modal */
-.quick-role-modal-card {
-  max-width: 440px !important;
-  width: 90% !important;
-
-  .modal-body {
-    padding: 16px 20px;
-
-    .form-field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-
-      label {
-        font-size: 0.84rem;
-        font-weight: 600;
-        color: $text-main;
-      }
-    }
-  }
-
-  .modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 20px;
-    border-top: 1px solid $border-main;
-  }
-}
 
 @keyframes spin {
   from {
