@@ -6,7 +6,9 @@
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  overflow-x: hidden;
+  position: relative;
+  z-index: 2;
+  padding: 6px 4px 28px;
   margin: 0 auto;
 
   &.loading-state {
@@ -35,16 +37,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
     gap: 12px;
     width: 100%;
     box-sizing: border-box;
+    position: relative;
+    z-index: 10;
+    padding-top: 4px;
 
     .header-left {
       display: flex;
       align-items: center;
       gap: 12px;
+      position: relative;
+      z-index: 11;
 
       .back-pill-btn {
         display: inline-flex;
@@ -60,6 +67,9 @@
         outline: none;
         -webkit-tap-highlight-color: transparent;
         box-shadow: $shadow-pill;
+        position: relative;
+        z-index: 12;
+        margin: 2px;
         transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, opacity 0.2s ease;
 
         &:hover {

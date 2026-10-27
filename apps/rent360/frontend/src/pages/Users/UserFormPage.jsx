@@ -483,30 +483,35 @@ const UserFormPage = () => {
                 style={{ display: 'none' }}
               />
 
-              <div 
-                className="avatar-circle-box" 
-                onClick={() => fileInputRef.current?.click()}
-                title="Click to upload profile picture"
-              >
-                {avatarImage ? (
-                  <img src={avatarImage} alt="User Avatar" className="avatar-preview-img" />
-                ) : (
-                  <div className="default-avatar-illustration">
-                    {/* Minimalist monochrome vector avatar matching theme */}
-                    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="monochrome-avatar-svg">
-                      <circle cx="60" cy="60" r="58" className="avatar-bg" />
-                      <circle cx="60" cy="46" r="20" className="avatar-head" />
-                      <path d="M28 98C28 80.3269 42.3269 66 60 66C77.6731 66 92 80.3269 92 98V102H28V98Z" className="avatar-body" />
-                    </svg>
-                  </div>
-                )}
-
-                <div className="avatar-hover-overlay">
-                  <FiCamera className="camera-icon" />
-                  <span className="upload-text">
-                    {optimizingAvatar ? 'Optimizing...' : (avatarImage ? 'Change Photo' : 'Upload Photo')}
-                  </span>
+              <div className="avatar-circle-wrapper">
+                <div 
+                  className="avatar-circle-box" 
+                  onClick={() => fileInputRef.current?.click()}
+                  title="Click to upload profile picture"
+                >
+                  {avatarImage ? (
+                    <img src={avatarImage} alt="User Avatar" className="avatar-preview-img" />
+                  ) : (
+                    <div className="default-avatar-illustration">
+                      {/* Minimalist monochrome vector avatar matching theme */}
+                      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="monochrome-avatar-svg">
+                        <circle cx="60" cy="60" r="58" className="avatar-bg" />
+                        <circle cx="60" cy="46" r="20" className="avatar-head" />
+                        <path d="M28 98C28 80.3269 42.3269 66 60 66C77.6731 66 92 80.3269 92 98V102H28V98Z" className="avatar-body" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
+
+                <button
+                  type="button"
+                  className="avatar-camera-badge"
+                  onClick={() => fileInputRef.current?.click()}
+                  title="Upload profile picture"
+                  aria-label="Upload profile picture"
+                >
+                  <FiCamera className="camera-icon" />
+                </button>
               </div>
 
               <div className="avatar-action-bar">

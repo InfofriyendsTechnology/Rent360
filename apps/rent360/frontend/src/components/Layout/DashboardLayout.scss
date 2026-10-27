@@ -17,13 +17,16 @@
     background: transparent;
     border: none;
     box-shadow: none;
+    position: relative;
   }
 
   .dashboard-content {
     flex: 1;
-    padding: 4px 6px;
+    padding: 8px 10px 32px;
     background: transparent;
     overflow-y: auto;
+    position: relative;
+    z-index: 1;
   }
 }
 
