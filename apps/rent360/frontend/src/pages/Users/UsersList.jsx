@@ -30,7 +30,7 @@ const UsersList = () => {
   const [editingUserId, setEditingUserId] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
   const [isDeletingUser, setIsDeletingUser] = useState(false);
-  const [isSavingMember, setIsSavingMember] = useState(false);
+  const [isSavingUser, setIsSavingUser] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
   const [userForm, setUserForm] = useState({ name: '', mobile: '', password: '', roleId: '', storeId: '' });
 
@@ -125,10 +125,10 @@ const UsersList = () => {
 
   const handleUserSubmit = async (e) => {
     e.preventDefault();
-    if (isSavingMember) return;
+    if (isSavingUser) return;
     try {
       setFieldErrors({});
-      setIsSavingMember(true);
+      setIsSavingUser(true);
       const payload = { ...userForm };
       
       const effectiveStoreId = isSuperAdmin
@@ -145,24 +145,24 @@ const UsersList = () => {
         await axios.put(`${API_BASE_URL}/api/users/${editingUserId}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        toast.success('Member updated');
+        toast.success('User updated');
       } else {
         await axios.post(`${API_BASE_URL}/api/users`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        toast.success('Member added');
+        toast.success('User added');
       }
       setIsUserModalOpen(false);
       fetchData();
     } catch (error) {
-      const errMsg = error.response?.data?.message || 'Failed to save member';
+      const errMsg = error.response?.data?.message || 'Failed to save user';
       if (errMsg.toLowerCase().includes('mobile') || errMsg.toLowerCase().includes('exists')) {
         setFieldErrors({ mobile: 'Mobile number already exists' });
       } else {
         setFieldErrors({ general: errMsg });
       }
     } finally {
-      setIsSavingMember(false);
+      setIsSavingUser(false);
     }
   };
 
@@ -212,10 +212,10 @@ const UsersList = () => {
       await axios.delete(`${API_BASE_URL}/api/users/${userToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      toast.success('Member removed successfully');
+      toast.success('User removed successfully');
       fetchData();
     } catch (error) {
-      toast.error('Failed to remove member');
+      toast.error('Failed to remove user');
     } finally {
       setIsDeletingUser(false);
       setUserToDelete(null);
@@ -235,11 +235,11 @@ const UsersList = () => {
     <div className="stores-view">
       <div className="stores-top-bar">
         <div className="title-section">
-          <h1 className="main-title">Team Members</h1>
+          <h1 className="main-title">Users</h1>
           <p className="subtitle">
             {isSuperAdmin
-              ? 'Browse and manage all staff members across tenant stores'
-              : 'Manage your store staff, their access roles, and status'}
+              ? 'Browse and manage all users across tenant stores'
+              : 'Manage your store users, their access roles, and status'}
           </p>
         </div>
 
@@ -274,12 +274,12 @@ const UsersList = () => {
 
           <div className="pill-filter">
             <span className="dot" />
-            <span>Total Members ({users.length})</span>
+            <span>Total Users ({users.length})</span>
           </div>
 
           <button className="pill-btn-primary" onClick={() => navigate('/users/create')}>
             <FiPlus className="plus-icon" />
-            <span>Add Member</span>
+            <span>Add User</span>
           </button>
         </div>
       </div>
@@ -287,7 +287,7 @@ const UsersList = () => {
       <div className="bond-card-container">
         <DataTable
           columns={[
-            { label: 'Team Member' },
+            { label: 'User' },
             ...(isSuperAdmin ? [{ label: 'Store' }] : []),
             { label: 'Mobile Number' },
             { label: 'Assigned Role' },
@@ -296,7 +296,7 @@ const UsersList = () => {
           ]}
           data={users}
           loading={loading}
-          emptyMessage="No team members found. Click + Add Member to invite staff."
+          emptyMessage="No users found. Click + Add User to create one."
           keyExtractor={(u) => u.id}
           renderRow={(u) => (
             <>
@@ -338,7 +338,7 @@ const UsersList = () => {
           <div className="bond-modal-card" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <h2>{editingUserId ? 'Edit Team Member' : 'Add Team Member'}</h2>
+                <h2>{editingUserId ? 'Edit User' : 'Add User'}</h2>
                 <p>Provide contact and role assignment details</p>
               </div>
               <button className="modal-close" onClick={() => setIsUserModalOpen(false)}><FiX /></button>
@@ -452,8 +452,8 @@ const UsersList = () => {
 
               <div className="modal-footer">
                 <button type="button" className="pill-btn-secondary" onClick={() => setIsUserModalOpen(false)}>Cancel</button>
-                <button type="submit" className="pill-btn-primary" disabled={isSavingMember}>
-                  {isSavingMember ? 'Saving...' : 'Save Member'}
+                <button type="submit" className="pill-btn-primary" disabled={isSavingUser}>
+                  {isSavingUser ? 'Saving...' : (editingUserId ? 'Update User' : 'Save User')}
                 </button>
               </div>
             </form>
@@ -511,8 +511,8 @@ const UsersList = () => {
 
       <ConfirmModal 
         isOpen={!!userToDelete}
-        title="Remove Member"
-        message={userToDelete ? `Are you sure you want to remove "${userToDelete.name}"?` : ''}
+        title="Remove User"
+        message={userToDelete ? `Are you sure you want to remove user "${userToDelete.name}"?` : ''}
         confirmText="Remove"
         onConfirm={handleConfirmDeleteUser}
         onCancel={() => setUserToDelete(null)}
