@@ -1,0 +1,24 @@
+{
+  "date": "28-10-2026",
+  "dayNumber": 34,
+  "title": "Users Management Terminology Standardization",
+  "titleGu": "યુઝર્સ મેનેજમેન્ટ પરિભાષા અને યુઆઇ એકરૂપતા",
+  "members": [
+    "001"
+  ],
+  "tasksEn": [
+    {
+      "member": "001",
+      "text": "Standardized all UI terminology across UsersList to consistently use 'User' instead of 'Member', aligning page headers, counter badges, action buttons, table columns, and modals with system design."
+    }
+  ],
+  "tasksGu": [
+    {
+      "member": "001",
+      "text": "UsersList પેજ પર તમામ સ્થળોએ 'Member' ને બદલે 'User' શબ્દ લાગુ કરીને હેડિંગ, કાઉન્ટર બેજ, એક્શન બટન, ટેબલ કોલમ અને મોડલ્સને સિસ્ટમ ડિઝાઇનની સાથે એકરૂપ કર્યા."
+    }
+  ],
+  "deliverables": [
+    "Standardized User Terminology in UsersList (Headers, Buttons, Tables & Modals)"
+  ]
+}
