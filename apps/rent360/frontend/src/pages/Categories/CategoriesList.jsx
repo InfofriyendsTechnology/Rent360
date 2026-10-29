@@ -10,20 +10,10 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../../config/api';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
-import { DataTable, RowActions } from '../../components/ui';
+import { DataTable, RowActions, Select, Checkbox } from '../../components/ui';
 
 import '../Stores/StoresList.scss';
 import './CategoriesList.scss';
-
-// Vibrant accent colors for categories
-const CATEGORY_COLORS = [
-  { bg: 'rgba(11, 96, 176, 0.12)', color: '#0B60B0', border: 'rgba(11, 96, 176, 0.25)' },
-  { bg: 'rgba(139, 92, 246, 0.12)', color: '#8B5CF6', border: 'rgba(139, 92, 246, 0.25)' },
-  { bg: 'rgba(16, 185, 129, 0.12)', color: '#10B981', border: 'rgba(16, 185, 129, 0.25)' },
-  { bg: 'rgba(245, 158, 11, 0.12)', color: '#F59E0B', border: 'rgba(245, 158, 11, 0.25)' },
-  { bg: 'rgba(236, 72, 153, 0.12)', color: '#EC4899', border: 'rgba(236, 72, 153, 0.25)' },
-  { bg: 'rgba(6, 182, 212, 0.12)', color: '#06B6D4', border: 'rgba(6, 182, 212, 0.25)' }
-];
 
 const CategoriesList = () => {
   const navigate = useNavigate();
@@ -107,6 +97,9 @@ const CategoriesList = () => {
     setEditingCategory(null);
     setFormData({
       name: '',
+      category_code: '',
+      description: '',
+      category_type: defaultType,
       skip_check_availability: defaultType === 'ACCESSORY',
       washable: true,
       washing_price: 0
@@ -120,6 +113,9 @@ const CategoriesList = () => {
     setEditingCategory(cat);
     setFormData({
       name: cat.name || '',
+      category_code: cat.category_code || '',
+      description: cat.description || '',
+      category_type: cat.category_type || (cat.skip_check_availability ? 'ACCESSORY' : 'OUTFIT'),
       skip_check_availability: Boolean(cat.skip_check_availability),
       washable: cat.washable !== undefined ? Boolean(cat.washable) : true,
       washing_price: cat.washing_price ?? 0
@@ -129,10 +125,28 @@ const CategoriesList = () => {
     setIsModalOpen(true);
   };
 
+  const handleNameChange = (val) => {
+    setFormData((prev) => {
+      const updated = { ...prev, name: val };
+      if (!editingCategory) {
+        updated.category_code = val
+          .trim()
+          .toUpperCase()
+          .replace(/[^A-Z0-9]+/g, '_')
+          .replace(/^_+|_+$/g, '');
+      }
+      return updated;
+    });
+    if (formErrors.name) setFormErrors((prev) => ({ ...prev, name: '' }));
+  };
+
   const handleResetForm = () => {
     if (editingCategory) {
       setFormData({
         name: editingCategory.name || '',
+        category_code: editingCategory.category_code || '',
+        description: editingCategory.description || '',
+        category_type: editingCategory.category_type || (editingCategory.skip_check_availability ? 'ACCESSORY' : 'OUTFIT'),
         skip_check_availability: Boolean(editingCategory.skip_check_availability),
         washable: editingCategory.washable !== undefined ? Boolean(editingCategory.washable) : true,
         washing_price: editingCategory.washing_price ?? 0
@@ -140,6 +154,9 @@ const CategoriesList = () => {
     } else {
       setFormData({
         name: '',
+        category_code: '',
+        description: '',
+        category_type: 'OUTFIT',
         skip_check_availability: false,
         washable: true,
         washing_price: 0
@@ -174,10 +191,15 @@ const CategoriesList = () => {
         .replace(/[^A-Z0-9]+/g, '_')
         .replace(/^_+|_+$/g, '') || 'CAT';
 
+      const code = formData.category_code?.trim()
+        ? formData.category_code.trim().toUpperCase()
+        : generatedCode;
+
       const payload = {
         name: formData.name.trim(),
-        category_code: editingCategory ? (editingCategory.category_code || generatedCode) : generatedCode,
-        category_type: formData.skip_check_availability ? 'ACCESSORY' : 'OUTFIT',
+        category_code: code,
+        description: formData.description?.trim() || null,
+        category_type: formData.skip_check_availability ? 'ACCESSORY' : (formData.category_type || 'OUTFIT'),
         skip_check_availability: Boolean(formData.skip_check_availability),
         washable: Boolean(formData.washable),
         washing_price: Number(formData.washing_price || 0),
@@ -365,6 +387,7 @@ const CategoriesList = () => {
           renderRow={(cat) => {
             const productCount = cat._count?.products || 0;
             const formattedIdx = String(filteredCategories.indexOf(cat) + 1).padStart(2, '0');
+            const isAccessory = cat.category_type === 'ACCESSORY' || Boolean(cat.skip_check_availability);
             return (
               <>
                 <td>
@@ -372,62 +395,20 @@ const CategoriesList = () => {
                 </td>
                 {isSuperAdmin && (
                   <td>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        padding: '3px 8px',
-                        fontSize: '0.78rem',
-                        fontWeight: 600,
-                        borderRadius: '6px',
-                        backgroundColor: 'var(--bg-card-alt)',
-                        border: '1px solid var(--border-main)',
-                        color: 'var(--text-main)'
-                      }}
-                    >
+                    <span className="cat-store-badge">
                       {cat.store?.name || 'Unassigned'}
                     </span>
                   </td>
                 )}
                 <td>
-                  {(cat.category_type === 'ACCESSORY' || cat.skip_check_availability) ? (
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        padding: '3px 10px',
-                        fontSize: '0.76rem',
-                        fontWeight: 700,
-                        borderRadius: '9999px',
-                        backgroundColor: 'rgba(139, 92, 246, 0.12)',
-                        border: '1px solid rgba(139, 92, 246, 0.3)',
-                        color: '#8B5CF6'
-                      }}
-                    >
-                      <FiBox /> Accessory
-                    </span>
-                  ) : (
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        padding: '3px 10px',
-                        fontSize: '0.76rem',
-                        fontWeight: 700,
-                        borderRadius: '9999px',
-                        backgroundColor: 'rgba(11, 96, 176, 0.12)',
-                        border: '1px solid rgba(11, 96, 176, 0.3)',
-                        color: '#0B60B0'
-                      }}
-                    >
-                      <FiShoppingBag /> Outfit
-                    </span>
-                  )}
+                  <span className="cat-type-pill">
+                    {isAccessory ? <FiBox className="pill-ico" /> : <FiShoppingBag className="pill-ico" />}
+                    <span>{isAccessory ? 'Accessory' : 'Outfit'}</span>
+                  </span>
                 </td>
                 <td>
-                  <span className="table-cat-code">
-                    {cat.category_code}
+                  <span className="cat-code-pill">
+                    {cat.category_code || '—'}
                   </span>
                 </td>
                 <td>
@@ -441,15 +422,10 @@ const CategoriesList = () => {
                   </span>
                 </td>
                 <td>
-                  {cat.skip_check_availability ? (
-                    <span style={{ fontSize: '0.76rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-                      Skip Check
-                    </span>
-                  ) : (
-                    <span style={{ fontSize: '0.76rem', fontWeight: 600, color: '#10B981' }}>
-                      Date Locked
-                    </span>
-                  )}
+                  <span className={`cat-avail-badge ${cat.skip_check_availability ? 'skip' : 'locked'}`}>
+                    <span className="avail-dot" />
+                    <span>{cat.skip_check_availability ? 'Skip Check' : 'Date Locked'}</span>
+                  </span>
                 </td>
                 <td className="text-center">
                   <button
@@ -474,97 +450,115 @@ const CategoriesList = () => {
         />
       </div>
 
-      {/* Add / Edit Category Modal - Matches Competitor Reference Exactly */}
+      {/* Add / Edit Category Modal - Matches Rent360 Monochrome SaaS Theme */}
       {isModalOpen && (
-        <div className="confirm-modal-overlay" onClick={() => setIsModalOpen(false)}>
-          <div className="category-edit-modal-card" onClick={(e) => e.stopPropagation()}>
+        <div className="bond-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="category-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2 className="modal-title">
-                {editingCategory ? 'Edit Category' : 'Create Category'}
-              </h2>
+              <div>
+                <h2>{editingCategory ? 'Edit Category' : 'Create Category'}</h2>
+                <p>Configure category name, taxonomy code, and rental rules</p>
+              </div>
               <button 
                 type="button" 
-                className="modal-close-btn" 
+                className="modal-close" 
                 onClick={() => setIsModalOpen(false)}
+                title="Close"
               >
                 <FiX />
               </button>
             </div>
 
-            <form onSubmit={handleSaveCategory}>
+            <form onSubmit={handleSaveCategory} autoComplete="off">
               <div className="modal-body">
-                {isSuperAdmin && !editingCategory && stores.length > 1 && (
-                  <div className="form-field" style={{ marginBottom: '12px' }}>
-                    <label className="field-label-req">
-                      Store<span className="req-star">*</span>
-                    </label>
-                    <select
+                {isSuperAdmin && !editingCategory && stores.length > 0 && (
+                  <div className="form-field-group">
+                    <label className="field-label required">Store</label>
+                    <Select
                       value={modalStoreId}
+                      placeholder="-- Select Store --"
                       onChange={(e) => {
                         setModalStoreId(e.target.value);
                         if (formErrors.storeId) setFormErrors((prev) => ({ ...prev, storeId: '' }));
                       }}
-                      style={{
-                        width: '100%',
-                        height: '38px',
-                        padding: '0 12px',
-                        border: '1px solid var(--border-main)',
-                        borderRadius: '6px',
-                        background: 'var(--bg-card-alt)',
-                        color: 'var(--text-main)',
-                        fontSize: '0.9rem',
-                        outline: 'none'
-                      }}
-                    >
-                      <option value="">-- Select Store --</option>
-                      {stores.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.name || s.store_name}
-                        </option>
-                      ))}
-                    </select>
-                    {formErrors.storeId && <span className="field-error">{formErrors.storeId}</span>}
+                      options={stores.map((s) => ({ value: s.id, label: s.name || s.store_name }))}
+                    />
+                    {formErrors.storeId && <span className="field-error-text">{formErrors.storeId}</span>}
                   </div>
                 )}
 
-                <div className="form-field">
-                  <label className="field-label-req">
-                    Name<span className="req-star">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Category Name"
-                    value={formData.name}
-                    onChange={(e) => {
-                      setFormData({ ...formData, name: e.target.value });
-                      if (formErrors.name) setFormErrors((prev) => ({ ...prev, name: '' }));
-                    }}
-                    autoFocus
-                  />
-                  {formErrors.name && <span className="field-error">{formErrors.name}</span>}
+                <div className="form-two-cols">
+                  <div className={`form-field-group ${formErrors.name ? 'has-error' : ''}`}>
+                    <label className="field-label required">Category Name</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Sherwani, Jodhpuri, Tuxedo"
+                      value={formData.name}
+                      onChange={(e) => handleNameChange(e.target.value)}
+                      autoFocus
+                    />
+                    {formErrors.name && <span className="field-error-text">{formErrors.name}</span>}
+                  </div>
+
+                  <div className="form-field-group">
+                    <label className="field-label">Category Code</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. SHERWANI, JODHPURI"
+                      value={formData.category_code}
+                      onChange={(e) => setFormData({ ...formData, category_code: e.target.value.toUpperCase() })}
+                    />
+                  </div>
                 </div>
 
-                <div className="category-compact-row">
-                  <label className="compact-checkbox-label">
-                    <input
-                      type="checkbox"
+                <div className="form-field-group">
+                  <label className="field-label">Classification Type</label>
+                  <div className="category-type-toggle-row">
+                    <button
+                      type="button"
+                      className={`type-select-btn ${formData.category_type === 'OUTFIT' && !formData.skip_check_availability ? 'active' : ''}`}
+                      onClick={() => setFormData({ ...formData, category_type: 'OUTFIT', skip_check_availability: false })}
+                    >
+                      <FiShoppingBag />
+                      <span>Outfit (Requires Date Booking)</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`type-select-btn ${formData.category_type === 'ACCESSORY' || formData.skip_check_availability ? 'active' : ''}`}
+                      onClick={() => setFormData({ ...formData, category_type: 'ACCESSORY', skip_check_availability: true })}
+                    >
+                      <FiBox />
+                      <span>Accessory (Skip Booking Check)</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="form-field-group">
+                  <label className="field-label">Description (Optional)</label>
+                  <textarea
+                    rows={2}
+                    placeholder="Brief description of the attire collection"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  />
+                </div>
+
+                <div className="category-settings-box">
+                  <div className="settings-checkboxes">
+                    <Checkbox
                       checked={formData.skip_check_availability}
                       onChange={(e) => setFormData({ ...formData, skip_check_availability: e.target.checked })}
+                      label="Skip Check Availability"
                     />
-                    <span>Skip Check Availability</span>
-                  </label>
-
-                  <label className="compact-checkbox-label">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={formData.washable}
                       onChange={(e) => setFormData({ ...formData, washable: e.target.checked })}
+                      label="Washable Attire"
                     />
-                    <span>Washable</span>
-                  </label>
+                  </div>
 
-                  <div className="compact-washing-field">
+                  <div className="washing-cost-field">
                     <label>Washing Price</label>
                     <input
                       type="number"
@@ -579,18 +573,18 @@ const CategoriesList = () => {
               <div className="modal-footer">
                 <button
                   type="button"
-                  className="btn-modal-reset"
-                  onClick={handleResetForm}
+                  className="pill-btn-secondary"
+                  onClick={() => setIsModalOpen(false)}
                   disabled={isSaving}
                 >
-                  Reset
+                  Cancel
                 </button>
                 <button
                   type="submit"
-                  className="btn-modal-submit"
+                  className="pill-btn-primary"
                   disabled={isSaving}
                 >
-                  {isSaving ? 'Saving...' : 'Submit'}
+                  {isSaving ? 'Saving...' : (editingCategory ? 'Update Category' : 'Save Category')}
                 </button>
               </div>
             </form>
