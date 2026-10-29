@@ -450,15 +450,12 @@ const CategoriesList = () => {
         />
       </div>
 
-      {/* Add / Edit Category Modal - Matches Rent360 Monochrome SaaS Theme */}
+      {/* Add / Edit Category Modal - Clean, Simple & Fast */}
       {isModalOpen && (
         <div className="bond-modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="category-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <div>
-                <h2>{editingCategory ? 'Edit Category' : 'Create Category'}</h2>
-                <p>Configure category name, taxonomy code, and rental rules</p>
-              </div>
+              <h2>{editingCategory ? 'Edit Category' : 'Create Category'}</h2>
               <button 
                 type="button" 
                 className="modal-close" 
@@ -513,53 +510,28 @@ const CategoriesList = () => {
                 </div>
 
                 <div className="form-field-group">
-                  <label className="field-label">Classification Type</label>
-                  <div className="category-type-toggle-row">
-                    <button
-                      type="button"
-                      className={`type-select-btn ${formData.category_type === 'OUTFIT' && !formData.skip_check_availability ? 'active' : ''}`}
-                      onClick={() => setFormData({ ...formData, category_type: 'OUTFIT', skip_check_availability: false })}
-                    >
-                      <FiShoppingBag />
-                      <span>Outfit (Requires Date Booking)</span>
-                    </button>
-                    <button
-                      type="button"
-                      className={`type-select-btn ${formData.category_type === 'ACCESSORY' || formData.skip_check_availability ? 'active' : ''}`}
-                      onClick={() => setFormData({ ...formData, category_type: 'ACCESSORY', skip_check_availability: true })}
-                    >
-                      <FiBox />
-                      <span>Accessory (Skip Booking Check)</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="form-field-group">
                   <label className="field-label">Description (Optional)</label>
-                  <textarea
-                    rows={2}
-                    placeholder="Brief description of the attire collection"
+                  <input
+                    type="text"
+                    placeholder="Short description of the collection"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   />
                 </div>
 
-                <div className="category-settings-box">
-                  <div className="settings-checkboxes">
-                    <Checkbox
-                      checked={formData.skip_check_availability}
-                      onChange={(e) => setFormData({ ...formData, skip_check_availability: e.target.checked })}
-                      label="Skip Check Availability"
-                    />
-                    <Checkbox
-                      checked={formData.washable}
-                      onChange={(e) => setFormData({ ...formData, washable: e.target.checked })}
-                      label="Washable Attire"
-                    />
-                  </div>
-
-                  <div className="washing-cost-field">
-                    <label>Washing Price</label>
+                <div className="category-options-row">
+                  <Checkbox
+                    checked={formData.skip_check_availability}
+                    onChange={(e) => setFormData({ ...formData, skip_check_availability: e.target.checked })}
+                    label="Skip Check Availability"
+                  />
+                  <Checkbox
+                    checked={formData.washable}
+                    onChange={(e) => setFormData({ ...formData, washable: e.target.checked })}
+                    label="Washable"
+                  />
+                  <div className="washing-field-inline">
+                    <label>Washing (₹)</label>
                     <input
                       type="number"
                       min="0"
