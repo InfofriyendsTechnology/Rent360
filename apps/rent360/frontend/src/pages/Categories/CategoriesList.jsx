@@ -315,50 +315,50 @@ const CategoriesList = () => {
 
       {/* Search & Filter Toolbar */}
       <div className="cat-search-bar-wrap">
-        <div className="search-pill-wrapper">
-          <FiSearch className="search-icon" />
-          <input
-            type="text"
-            placeholder="Search category by name or SKU code..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          {searchQuery && (
-            <button 
-              type="button" 
-              className="clear-search-btn"
-              onClick={() => setSearchQuery('')}
-            >
-              <FiX />
-            </button>
-          )}
-        </div>
+        <div className="cat-toolbar-left">
+          <div className="search-pill-wrapper">
+            <FiSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search category by name or SKU code..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button 
+                type="button" 
+                className="clear-search-btn"
+                onClick={() => setSearchQuery('')}
+              >
+                <FiX />
+              </button>
+            )}
+          </div>
 
-        {/* Filter Pills: All | Outfits | Accessories */}
-        <div className="view-mode-toggle" style={{ height: '38px' }}>
-          <button
-            type="button"
-            className={`view-btn ${categoryTypeFilter === 'ALL' ? 'active' : ''}`}
-            onClick={() => setCategoryTypeFilter('ALL')}
-          >
-            <span>All ({totalCategories})</span>
-          </button>
-          <button
-            type="button"
-            className={`view-btn ${categoryTypeFilter === 'OUTFIT' ? 'active' : ''}`}
-            onClick={() => setCategoryTypeFilter('OUTFIT')}
-          >
-            <FiShoppingBag className="icon" />
-            <span>Outfits ({outfitCount})</span>
-          </button>
-          <button
-            type="button"
-            className={`view-btn ${categoryTypeFilter === 'ACCESSORY' ? 'active' : ''}`}
-            onClick={() => setCategoryTypeFilter('ACCESSORY')}
-          >
-            <FiBox className="icon" />
-            <span>Accessories ({accessoryCount})</span>
-          </button>
+          {/* Clean Filter Tabs: All | Outfits | Accessories (Left-aligned, zero mismatched icons) */}
+          <div className="category-filter-tabs">
+            <button
+              type="button"
+              className={`cat-filter-btn ${categoryTypeFilter === 'ALL' ? 'active' : ''}`}
+              onClick={() => setCategoryTypeFilter('ALL')}
+            >
+              <span>All ({totalCategories})</span>
+            </button>
+            <button
+              type="button"
+              className={`cat-filter-btn ${categoryTypeFilter === 'OUTFIT' ? 'active' : ''}`}
+              onClick={() => setCategoryTypeFilter('OUTFIT')}
+            >
+              <span>Outfits ({outfitCount})</span>
+            </button>
+            <button
+              type="button"
+              className={`cat-filter-btn ${categoryTypeFilter === 'ACCESSORY' ? 'active' : ''}`}
+              onClick={() => setCategoryTypeFilter('ACCESSORY')}
+            >
+              <span>Accessories ({accessoryCount})</span>
+            </button>
+          </div>
         </div>
 
         <div className="items-count-badge">
