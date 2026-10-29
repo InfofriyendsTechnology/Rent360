@@ -509,16 +509,6 @@ const CategoriesList = () => {
                   </div>
                 </div>
 
-                <div className="form-field-group">
-                  <label className="field-label">Description (Optional)</label>
-                  <input
-                    type="text"
-                    placeholder="Short description of the collection"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  />
-                </div>
-
                 <div className="category-options-row">
                   <Checkbox
                     checked={formData.skip_check_availability}
